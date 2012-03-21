@@ -7,7 +7,7 @@ public class Node {
 	
 	public Node(double[] coords) {
 		this.coords = coords;
-		roads = new HashSet<>();
+		roads = new HashSet<Road>();
 	}
 	
 	public void addRoad(Road r) {
