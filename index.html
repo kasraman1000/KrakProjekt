@@ -1,20 +1,11 @@
 <html>
 <head>
 	<style type="text/css" media="screen">
-<<<<<<< HEAD
-	    body { background:#eee; margin:10; overflow:hidden; height:90%;}
+	    body { background:#eee; margin:10; overflow:hidden; }
 	    svg {
 	      display:block; border:1px solid #ccc; 
 		  width:88%; background:#fff; float: left;
 	    }
-		everything { height:90%; }
-=======
-	    body { background:#eee; margin:0; height:100% }
-	    svg {
-	      display:block; border:1px solid #ccc; position: absolute;
-	      top:5%; left:5%; width:90%; height:90%; background:#fff; float: left;
-	    }
->>>>>>> 320d941530718a44407b020d3f1dc844ab5c3e50
 	</style>
 <script type="text/javascript">
 var roads;
@@ -86,10 +77,10 @@ function getPosition(){
 </script>
 </head>
 <body onLoad="init()">
-<div id = "everything" >
-<svg xmlns="http://www.w3.org/2000/svg" type="everything" id="svgframe"
+
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe"
 	viewBox = "0 0 350 250"></svg>
-<div type="everything" id = "buttons" style="float: right; width: 10%;">
+<div id = "buttons" style="float: right; width: 10%;">
 <button id="buttonUp" type="button" onClick="clickUp()">Up</button></br>
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonRight" type="button" onClick="clickRight()">Right</button></br>
