@@ -1,6 +1,8 @@
 
+
 		<g>
-			<line x1="0" y1="0" x2="200" y2="200" style="stroke:black;stroke-width:5" ></line>
-			<line x1="100" y1="0" x2="300" y2="200" style="stroke:black;stroke-width:5"  ></line>
-			<line x1="0" y1="0" x2="20" y2="200" style="stroke:black;stroke-width:5"  ></line>
+			<line x1="400" y1="200" x2="0" y2="0" style="stroke:black;stroke-width:5" />
+			<line x1="400" y1="200" x2="0" y2="400" style="stroke:yellow;stroke-width:5"/>
+			<line x1="400" y1="200" x2="800" y2="0" style="stroke:red;stroke-width:5"/>
+			<line x1="400" y1="200" x2="800" y2="400" style="stroke:green;stroke-width:5"/>
 		</g>
