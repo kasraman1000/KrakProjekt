@@ -41,9 +41,14 @@ public class XML{
 //	final BigDecimal KRAX_HEIGHT = new BigDecimal(352136).divide(SCALE); //6402050.98297-6049914.43018 ~ 352136
 //	final BigDecimal KRAX_WIDTH = new BigDecimal(450384).divide(SCALE); //892638.21114-442254.35659 ~ 450384
 	
+//	final double kraxHeight = 352136/SCALE; //6402050.98297-6049914.43018 ~ 352136
+//	final double kraxWidth = 450384/SCALE; //892638.21114-442254.35659 ~ 450384
+	
+	
 	final double SCALE = 1;
-	double kraxHeight = 352136/SCALE; //6402050.98297-6049914.43018 ~ 352136
-	double kraxWidth = 450384/SCALE; //892638.21114-442254.35659 ~ 450384
+	double kraxHeight;
+	double kraxWidth;
+	
 	
 	//Might be used later to add other shapes than just lines
 	//String[] elements = new String[]{"line", "line","line","line"}; 
@@ -64,49 +69,74 @@ public class XML{
 	HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 
+	/**
+	 * The main method - only used for testing this specific class
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		XML xml = new XML();
+		long startTime = System.currentTimeMillis();
+		xml.findMinAndMaxValue(xml.createRoadsForTesting());
+	//	KrakLoader krakLoader = new KrakLoader();
+		try {
+	//		KrakEdgeGraph krakEdgeGraph = krakLoader.load();
+			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
+	//		xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
+		} catch (Exception e){
+			System.out.println("Exception thrown: " + e.getMessage());
+		}
+		long endTime = System.currentTimeMillis();
+		double elapsedTimeInSeconds = (double) (endTime-startTime)/1000;
+		System.out.println("It took " + elapsedTimeInSeconds + " seconds");
+	}
 	
-	
+	/**
+	 * The Constructor
+	 * Makes sure all the road colors and widths are loaded when instantiating this class
+	 */
 	public XML(){
 		loadAllRoadColors();
 		loadAllRoadWidths();
 	}
 	
+	/**
+	 * Will load all the predefined road colors to a HashMap - only called in the constructor
+	 */
 	private void loadAllRoadColors(){
-		//TODO Define actual colors
-		Color largeRoads = Color.black;
-		Color mediumRoads = Color.black;
+		Color largeRoads = Color.red;
+		Color mediumRoads = Color.yellow;
 		Color smallRoads = Color.black;
-		Color tunnels = Color.yellow;
+		Color tinyRoads = Color.pink;
+		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-		Color bicycle = Color.orange;
+//		Color bicyclePaths = Color.gray;
 		
-		//Just a temp color
-		Color roads = Color.gray;
+		Color unknownRoads = Color.cyan;
 		
-		roadColors.put(0, roads); //"Unknown0"
-		roadColors.put(95, roads); //"Unknown95"
-		roadColors.put(1, roads); //"Motorvej"
-		roadColors.put(2, roads); //"Motortrafikvej"
-		roadColors.put(3, roads); //"PrimearruteOver6m"
-		roadColors.put(4, roads); //"SekundearOver6m"
-		roadColors.put(5, roads); //"Vej3til6m"
-		roadColors.put(6, roads); //"AndenVej"
-		roadColors.put(8, paths); //"Sti"
-		roadColors.put(10, roads); //"Markvej"
-		roadColors.put(11, paths); //"Gaagader //"
-		roadColors.put(21, roads); //"Proj.motorvej"
-		roadColors.put(22, roads); //"Proj.motortrafikvej"
-		roadColors.put(23, roads); //"Proj.primearvej"
-		roadColors.put(24, roads); //"Proj.sekundearvej"
-		roadColors.put(25, roads); //"Proj.vej3til6m"
-		roadColors.put(26, roads); //"Proj.vejUnder3m"
-		roadColors.put(28, roads); //"Proj.sti"
-		roadColors.put(31, roads); //"Motorvejsafkoersel"
-		roadColors.put(32, roads); //"Motortrafikvejsafkoersel"
-		roadColors.put(33, roads); //"Primearvejsafkoersel"
-		roadColors.put(34, roads); //"Sekundearvejsafkoersel"
-		roadColors.put(35, roads); //"AndenVejafkoersel"
+		roadColors.put(0, unknownRoads); //"Unknown0"
+		roadColors.put(95, unknownRoads); //"Unknown95"
+		roadColors.put(1, largeRoads); //"Motorvej"
+		roadColors.put(2, mediumRoads); //"Motortrafikvej"
+		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
+		roadColors.put(4, mediumRoads); //"SekundearOver6m"
+		roadColors.put(5, smallRoads); //"Vej3til6m"
+		roadColors.put(6, smallRoads); //"AndenVej"
+		roadColors.put(8, walkingPaths); //"Sti"
+		roadColors.put(10, tinyRoads); //"Markvej"
+		roadColors.put(11, walkingPaths); //"Gaagader //"
+		roadColors.put(21, largeRoads); //"Proj.motorvej"
+		roadColors.put(22, mediumRoads); //"Proj.motortrafikvej"
+		roadColors.put(23, mediumRoads); //"Proj.primearvej"
+		roadColors.put(24, mediumRoads); //"Proj.sekundearvej"
+		roadColors.put(25, smallRoads); //"Proj.vej3til6m"
+		roadColors.put(26, smallRoads); //"Proj.vejUnder3m"
+		roadColors.put(28, walkingPaths); //"Proj.sti"
+		roadColors.put(31, largeRoads); //"Motorvejsafkoersel"
+		roadColors.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
+		roadColors.put(33, mediumRoads); //"Primearvejsafkoersel"
+		roadColors.put(34, mediumRoads); //"Sekundearvejsafkoersel"
+		roadColors.put(35, smallRoads); //"AndenVejafkoersel"
 		roadColors.put(41, tunnels); //"Motorvejstunnel"
 		roadColors.put(42, tunnels); //"Motortrafikvejstunnel"
 		roadColors.put(43, tunnels); //"Primaerstunnel"
@@ -115,40 +145,48 @@ public class XML{
 		roadColors.put(46, tunnels); //"MindreVejtunnel"
 		roadColors.put(48, tunnels); //"Stitunnel"
 		roadColors.put(80, seaWays); //"Faergeforbindelser"
-		roadColors.put(99, roads); //"StednavneEksaktBeliggendeUkendt"
+		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 	
+	
+	/**
+	 * Will load all the predefined road widths to a HashMap - only called in the constructor
+	 */
 	private void loadAllRoadWidths(){
-		//TODO Define actual widths
-		int roads = 3;
-		int tunnels = 3;
-		int seaWays  = 3; 
-		int paths = 1;
-		int bicycle = 1; 
+		int largeRoads = 5;
+		int mediumRoads = 4;
+		int smallRoads = 3;
+		int tinyRoads = 2;
+		int tunnels = 4;
+		int seaWays  = 5; 
+		int walkingPaths = 2;
+//		int bicyclePaths = 2;
 		
-		roadWidths.put(0, roads); //"Unknown0"
-		roadWidths.put(95, roads); //"Unknown95"
-		roadWidths.put(1, roads); //"Motorvej"
-		roadWidths.put(2, roads); //"Motortrafikvej"
-		roadWidths.put(3, roads); //"PrimearruteOver6m"
-		roadWidths.put(4, roads); //"SekundearOver6m"
-		roadWidths.put(5, roads); //"Vej3til6m"
-		roadWidths.put(6, roads); //"AndenVej"
-		roadWidths.put(8, paths); //"Sti"
-		roadWidths.put(10, roads); //"Markvej"
-		roadWidths.put(11, paths); //"Gaagader //"
-		roadWidths.put(21, roads); //"Proj.motorvej"
-		roadWidths.put(22, roads); //"Proj.motortrafikvej"
-		roadWidths.put(23, roads); //"Proj.primearvej"
-		roadWidths.put(24, roads); //"Proj.sekundearvej"
-		roadWidths.put(25, roads); //"Proj.vej3til6m"
-		roadWidths.put(26, roads); //"Proj.vejUnder3m"
-		roadWidths.put(28, roads); //"Proj.sti"
-		roadWidths.put(31, roads); //"Motorvejsafkoersel"
-		roadWidths.put(32, roads); //"Motortrafikvejsafkoersel"
-		roadWidths.put(33, roads); //"Primearvejsafkoersel"
-		roadWidths.put(34, roads); //"Sekundearvejsafkoersel"
-		roadWidths.put(35, roads); //"AndenVejafkoersel"
+		int unknownRoads = 4;
+				
+		roadWidths.put(0, unknownRoads); //"Unknown0"
+		roadWidths.put(95, unknownRoads); //"Unknown95"
+		roadWidths.put(1, largeRoads); //"Motorvej"
+		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
+		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
+		roadWidths.put(4, mediumRoads); //"SekundearOver6m"
+		roadWidths.put(5, smallRoads); //"Vej3til6m"
+		roadWidths.put(6, smallRoads); //"AndenVej"
+		roadWidths.put(8, walkingPaths); //"Sti"
+		roadWidths.put(10, tinyRoads); //"Markvej"
+		roadWidths.put(11, walkingPaths); //"Gaagader //"
+		roadWidths.put(21, largeRoads); //"Proj.motorvej"
+		roadWidths.put(22, mediumRoads); //"Proj.motortrafikvej"
+		roadWidths.put(23, mediumRoads); //"Proj.primearvej"
+		roadWidths.put(24, mediumRoads); //"Proj.sekundearvej"
+		roadWidths.put(25, smallRoads); //"Proj.vej3til6m"
+		roadWidths.put(26, smallRoads); //"Proj.vejUnder3m"
+		roadWidths.put(28, walkingPaths); //"Proj.sti"
+		roadWidths.put(31, largeRoads); //"Motorvejsafkoersel"
+		roadWidths.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
+		roadWidths.put(33, mediumRoads); //"Primearvejsafkoersel"
+		roadWidths.put(34, mediumRoads); //"Sekundearvejsafkoersel"
+		roadWidths.put(35, smallRoads); //"AndenVejafkoersel"
 		roadWidths.put(41, tunnels); //"Motorvejstunnel"
 		roadWidths.put(42, tunnels); //"Motortrafikvejstunnel"
 		roadWidths.put(43, tunnels); //"Primaerstunnel"
@@ -157,14 +195,16 @@ public class XML{
 		roadWidths.put(46, tunnels); //"MindreVejtunnel"
 		roadWidths.put(48, tunnels); //"Stitunnel"
 		roadWidths.put(80, seaWays); //"Faergeforbindelser"
-		roadWidths.put(99, roads); //"StednavneEksaktBeliggendeUkendt"
+		
+		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 	
 	
 	
 	/**
-	 * 
-	 * @param allRoads
+	 * This is called every time the class will make a string or file
+	 * Will find the highest and lowest x-coordinate and y-coordinate
+	 * @param allRoads The roads to find coordinates from
 	 */
 	public void findMinAndMaxValue(Road[] allRoads){
 		double tempX1;
@@ -215,7 +255,27 @@ public class XML{
 		return roads;
 	}
 	
-
+	/**
+	 * Method used for testing performance
+	 * @param numberOfRoads The number of roads to be created
+	 * @return Road[] The roads created
+	 */
+	public Road[] createRoadsForTesting(int numberOfRoads){
+		Road[] roads = new Road[numberOfRoads];
+		
+		for(int index=0; index<numberOfRoads; index++){
+			roads[index] = new Road(0+1, 0+1, 100+1, 100+1, 1, "Road number: 0" + index);
+		}
+		
+		return roads;
+	}
+	
+	/**
+	 *	Will create a xml-string with a svg-element containing lines
+	 * 
+	 * @param roads All the roads to put into the xml-string
+	 * @return String with the xml containing the svg-element
+	 */
 	public String createString(Road[] roads){
 		findMinAndMaxValue(roads);
 		String root = "root_element";
@@ -273,58 +333,8 @@ public class XML{
 		
 	}
 	
-/**	private Color getRoadColor(int roadType){
-		//TODO May want to make these definitions fields because of system speed
-		//TODO Maybe make it a HashMap (or even better: An enum, which has a runtime as the primitive types)
-		//TODO Define actual colors
-		Color roads = Color.black;
-		Color tunnels = Color.yellow;
-		Color seaWays  = Color.blue;
-		Color paths = Color.green;
-		Color bicycle = Color.orange;
-		Color defaultColor = Color.gray;
-		
-		switch (roadType){
-			case 0: return roads; //"Unknown0"0
-			case 95: return roads; //"Unknown95"0
-			case 1: return roads; //"Motorvej"1
-			case 2: return roads; //"Motortrafikvej"1
-			case 3: return roads; //"PrimearruteOver6m"2
-			case 4: return roads; //"SekundearOver6m"2
-			case 5: return roads; //"Vej3til6m"3
-			case 6: return roads; //"AndenVej"3
-			case 8: return paths; //"Sti"4
-			case 10: return roads; //"Markvej"5
-			case 11: return paths; //"Gaagader //"6
-			case 21: return roads; //"Proj.motorvej"
-			case 22: return roads; //"Proj.motortrafikvej"
-			case 23: return roads; //"Proj.primearvej"
-			case 24: return roads; //"Proj.sekundearvej"
-			case 25: return roads; //"Proj.vej3til6m"
-			case 26: return roads; //"Proj.vejUnder3m"
-			case 28: return roads; //"Proj.sti"
-			case 31: return roads; //"Motorvejsafkoersel"1
-			case 32: return roads; //"Motortrafikvejsafkoersel"1
-			case 33: return roads; //"Primearvejsafkoersel"2
-			case 34: return roads; //"Sekundearvejsafkoersel"2
-			case 35: return roads; //"AndenVejafkoersel"3
-			case 41: return tunnels; //"Motorvejstunnel"1
-			case 42: return tunnels; //"Motortrafikvejstunnel"1
-			case 43: return tunnels; //"Primaerstunnel"2
-			case 44: return tunnels; //"Sekundaervejstunnel"2
-			case 45: return tunnels; //"AndenVejtunnel"3
-			case 46: return tunnels; //"MindreVejtunnel"3
-			case 48: return tunnels; //"Stitunnel"4
-			case 80: return seaWays; //"Faergeforbindelser //"7
-			case 99: return roads; //"StednavneEksaktBeliggendeUkendt"0
-			default: return defaultColor; //8
-		}
-	}
-*/	
-	
 	/**
 	 * Will compare the two nodes connected to an edge object and create a .xml file with the coordinates from the two Node objects.
-	 * The class has a feature implemented (set DEBUGGING to "true") for calculating the max and min value of the X and Y-coordinates. 
 	 * 
 	 * @param krakEdgeGraph Will need to use the notes and edges created during the load() method in KrakEdgeGraph
 	 * @param colorForRoad The color which will be used for the roads
@@ -406,6 +416,12 @@ public class XML{
 		}
 	}		
 	
+	/**
+	 * Used by the createXML method.
+	 * Will put all the road types (being groups in the root element) into the root element
+	 * @param roadTypes All the different types of roads 
+	 * @param rootElement The root element
+	 */
 	private void loadRoadTypesIntoRootElement(HashMap<Integer, Element> roadTypes, Element rootElement){
 		for(Element element : roadTypes.values()){
 			rootElement.appendChild(element);
