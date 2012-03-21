@@ -38,6 +38,28 @@ public class KDTree
 			return node;
 		}
 		
+		private Node median(ArrayList<Node> nodes, int depth) {
+			int dimension = depth % k;
+			int median = nodes.size() / 2;
+			ArrayList<Node> below = new ArrayList<Node>();
+			ArrayList<Node> above = new ArrayList<Node>();
+			Node pivot = nodes.get(0);
+			nodes.remove(0);
+			for (Node n : nodes) {
+				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
+				else above.add(n);
+			}
+			int i = below.size();
+			int j = nodes.size() - above.size();
+			
+			
+			
+			if (median < i) return median(below,depth);
+			else if (median >= j) return median(above, 	median-j);
+			else return pivot;
+			
+		}
+		
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
 			if (nodes.size() > 2)
