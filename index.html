@@ -1,30 +1,52 @@
 <html>
 <head>
 	<style type="text/css" media="screen">
-		body { background:#eee; margin:10 }
-		svg { 
-			display:block; border:1px solid #ccc; position:absolute;
-			width:100%; max-width:800px; margin-right:auto; margin-left:auto;
-		}
+	    body { background:#eee; margin:0; height:100% }
+	    svg {
+	      display:block; border:1px solid #ccc; position: absolute;
+	      top:5%; left:5%; width:90%; height:90%; background:#fff; float: left;
+	    }
 	</style>
 <script type="text/javascript">
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
-document.getElementById("temp").innerHTML = "test";
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 		  	roads = xmlhttp.responseXML.documentElement;
 		  	//alert(roads.evaluate("//g",document,null));
 		  	svgFrame = document.getElementById("svgframe");
+			initialView();
+			
 	    }
 	  }
 	  uri = "roads.xml";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
 }
-function onClickMotorvej(){
+function clickUp(){
+	moveViewBox(0, -25);
+}
+function clickDown(){
+	moveViewBox(0, 25);
+}
+
+function clickRight(){
+	moveViewBox(25, 0);
+	 
+}
+
+function clickLeft(){
+	moveViewBox(-25, 0);
+}
+
+function moveViewBox(x,y){
+	xView += x;
+	yView += y;
+	svgFrame.setAttribute("viewBox", xView+" " + yView+ " 100 100");
+}
+function initialView(){
 	for(var g = 0; g < roads.childNodes.length; g++){
 		var xmlNode = roads.childNodes[g];
 		
@@ -37,21 +59,32 @@ function onClickMotorvej(){
 		for(var a =0; a < xmlNode.attributes.length; a++){
 			svgObject.setAttributeNS(null, xmlNode.attributes[a].name, xmlNode.attributes[a].value); 
 		}
-		svgFrame.appendChild(svgObject); 
+		svgFrame.appendChild(svgObject); 	
+	}	
+	xView = 300;
+	yView = 150;
+	wView = 100;
+	hView = 100;
+	svgFrame.setAttribute("viewBox", xView +" " + yView + " " + wView + " " + hView);
 	}
-}
-function onClickCykelsti(){
-		  	document.getElementById("svgframe").appendChild(roads);
-}
+	
+function getPosition(){
+	xViewCenter = xView + wView;
+	yViewCenter = yView + hView;
+		
+	}
+
 </script>
 </head>
 <body onLoad="init()">
-<div id="temp" ></div>
-<button id="testButton" type="button" onClick="onClickMotorvej()">motorvej</button></br>
-<button id="testButton" type="button" onClick="onClickCykelsti()">cykelsti</button></br>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%"
-	baseprofile="full" viewBox="-350 -250 700 500" id="svgframe">
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" width="800" height="400" viewBox = "0 0 100 100"></svg>
+<div id = "buttons" style="float: right;">
+<button id="buttonUp" type="button" onClick="clickUp()">Up</button></br>
+<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
+<button id="buttonRight" type="button" onClick="clickRight()">Right</button></br>
+<button id="buttonLeft" type="button" onClick="clickLeft()">Left</button></br>
+
+</div>
 
 </body>
 </html>
