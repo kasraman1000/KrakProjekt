@@ -14,34 +14,55 @@ public class KDTree
 	
 	public void build(ArrayList<Node> nodes)
 	{
-		root = new KDNode(nodes, 0);
+		new KDNode(nodes, 0);
 	}
 	
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		double[] coords = {1 ,2};
+		double[] coords = {1 ,1};
 		nodes.add(new Node(coords));
-		double[] coords1 = {5 ,8};
+		double[] coords1 = {0.5 ,1.5};
 		nodes.add(new Node(coords1));
-		double[] coords2 = {0 ,9};
+		double[] coords2 = {4 ,4};
 		nodes.add(new Node(coords2));
-		double[] coords3 = {8 ,0};
+		double[] coords3 = {3 ,1};
 		nodes.add(new Node(coords3));
-		double[] coords4 = {2 ,2};
+		double[] coords4 = {2 ,3};
 		nodes.add(new Node(coords4));
-		double[] coords5 = {4 ,3};
+		double[] coords5 = {4 ,0.5};
 		nodes.add(new Node(coords5));
-		double[] coords6 = {4 ,9};
-		nodes.add(new Node(coords6));
-		double[] coords7 = {7 ,7};
-		nodes.add(new Node(coords7));
-		double[] coords8 = {0 ,5};
-		nodes.add(new Node(coords8));
+
 		
 		tree.build(nodes);
+		System.out.println(tree.root.toString());
+		
+		System.out.println("-----------");
+
+		System.out.println(tree.root.getLeftChild());
+		System.out.println(tree.root.getRightChild());
+		
+		System.out.println("-----------");
+		
+		System.out.println(tree.root.getLeftChild().getRightChild());
+		System.out.println(tree.root.getLeftChild().getLeftChild());
+		
+		System.out.println(tree.root.getRightChild().getRightChild());
+		System.out.println(tree.root.getRightChild().getLeftChild());
+		
+		System.out.println("-----------");
+		
+		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
+		System.out.println(tree.root.getLeftChild().getRightChild().getLeftChild());
+		System.out.println(tree.root.getLeftChild().getLeftChild().getRightChild());
+		System.out.println(tree.root.getLeftChild().getLeftChild().getLeftChild());
+		
+		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild());
+		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
+
 	}
+	
 	
 	//Nested class
 	private class KDNode
@@ -56,7 +77,25 @@ public class KDTree
 		
 		private KDNode(ArrayList<Node> nodes, int depth)
 		{
-			node = expand(nodes, depth).getNode();
+			KDNode kdn = expand(nodes, depth);
+			node = kdn.getNode();
+			root = kdn;
+		}
+
+		
+		public String toString()
+		{
+			return "X= " + node.coords[0] + " Y= " + node.coords[1];
+		}
+		
+		public KDNode getLeftChild()
+		{
+			return left;
+		}
+		
+		public KDNode getRightChild()
+		{
+			return right;
 		}
 		
 		public Node getNode()
@@ -72,11 +111,10 @@ public class KDTree
 			for (Node n : nodes) {
 				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
 				else if (n.coords[dimension] < pivot.coords[dimension]) above.add(n);
+				else if (pivot != n) above.add(n);
 			}
 			int i = below.size();
 			int j = nodes.size() - above.size();
-			
-			
 			
 			if (nth < i) return median(below, nth, depth);
 			else if (nth >= j) return median(above, nth-j, depth);
@@ -86,18 +124,18 @@ public class KDTree
 		
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
-			System.out.println("Nodes.size(): " + nodes.size());
-			System.out.println("At depth: " + depth);
-			for (Node n : nodes) {
-				System.out.print(n.coords[0] + ", " + n.coords[1] + "\t");
-			}
-			System.out.println();
+			//System.out.println("Nodes.size(): " + nodes.size());
+			//System.out.println("At depth: " + depth);
+			//for (Node n : nodes) {
+				//System.out.print(n.coords[0] + ", " + n.coords[1] + "\t");
+			//}
+			//System.out.println();
 			
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-				System.out.println("Median:" + medianNode.coords[0] + ", " + medianNode.coords[1] + "\t");
+				//System.out.println("Median:" + medianNode.coords[0] + ", " + medianNode.coords[1] + "\t");
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
@@ -110,7 +148,7 @@ public class KDTree
 					{
 						leftNodes.add(n);
 					}
-					else if(n.getCoord(dimension) > relevantCoord)
+					else if(n.getCoord(dimension) >= relevantCoord)
 					{
 						rightNodes.add(n);
 					}
