@@ -13,6 +13,7 @@ var xmlns = "http://www.w3.org/2000/svg";
 function init(){
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
+		  alert("status: "+xmlhttp.status);
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 		  	roads = xmlhttp.responseXML.documentElement;
 		  	//alert(roads.evaluate("//g",document,null));
@@ -21,7 +22,8 @@ function init(){
 			
 	    }
 	  }
-	  uri = "roads.xml";
+//	  uri = "roads.xml?x=1&y=1&width=800&height=400";
+	  uri = "localhost/roads.xml?x=1&y=1&width=800&height=400";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
 }
