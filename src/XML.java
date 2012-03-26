@@ -1,7 +1,5 @@
 import java.awt.Color;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,12 +60,11 @@ public class XML{
 		XML xml = new XML();
 		long startTime = System.currentTimeMillis();
 //		xml.findMinAndMaxValue(xml.createRoadsForTesting());
-		KrakLoader krakLoader = new KrakLoader();
 		HashSet<Road> tempRoadHash = new HashSet<Road>();
 		Road[] roads;
 		try {
 			double krakLoadStart = System.currentTimeMillis();
-			Collection<Node> nodes =KrakLoader.load("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
+			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
 					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
 			double krakLoadEnd = System.currentTimeMillis();
 			double rearrangeStart = System.currentTimeMillis();
@@ -92,7 +89,7 @@ public class XML{
 			
 			
 			System.out.println("Time taken in seconds");
-			System.out.println("KrakLoader.load: " + (krakLoadEnd - krakLoadStart)/1000);
+			System.out.println("KrakLoader.load(): " + (krakLoadEnd - krakLoadStart)/1000);
 			System.out.println("Rearrange: " + (rearrangeEnd - rearrangeStart)/1000);
 			System.out.println("Create file: " + (xmlFileEnd - xmlFileStart)/1000);
 			System.out.println("\nTotal: " + (endTime - startTime)/1000);
@@ -247,10 +244,10 @@ public class XML{
 		repositionY = minY/SCALE;
 		kraxWidth = maxX/SCALE - repositionX;
 		kraxHeight = maxY/SCALE - repositionY;
-		System.out.println("MinX: " + minX + " (not affected by the scale!)");
-		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
-		System.out.println("MinY: " + minY + " (not affected by the scale!)");
-		System.out.println("MaxY: " + maxY + " (not affected by the scale!)");
+//		System.out.println("MinX: " + minX + " (not affected by the scale!)");
+//		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
+//		System.out.println("MinY: " + minY + " (not affected by the scale!)");
+//		System.out.println("MaxY: " + maxY + " (not affected by the scale!)");
 	}
 	
 	/**
@@ -358,7 +355,6 @@ public class XML{
 	public void createFile(Road[] roads, String filename){
 		findMinAndMaxValue(roads);
 		String root = "root_element";
-		String xmlString = "";
 		
 		try{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -398,8 +394,6 @@ public class XML{
 		    
 	      	transformer.transform(source, result);
 		    
-		    
-		    
 		    //TODO Create better error handling
 		} catch (ParserConfigurationException e){
 			System.out.println("ParserConfigurationException: " + e.getMessage());
@@ -408,8 +402,6 @@ public class XML{
 		} catch (TransformerException e){
 			System.out.println("TransformerException: " + e.getMessage());
 		}
-		System.out.println("Height: " + kraxHeight);
-		System.out.println("Width: " + kraxWidth);
 	}		
 	
 	/**
