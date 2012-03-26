@@ -60,7 +60,19 @@ public class KDTree
 		double[] coords8 = {7 ,1};
 		nodes.add(new Node(coords8));
 
+		
 		tree.build(nodes);
+		
+		double[] lower = {4, 3};
+		double[] upper = {7, 6};
+		
+		Road[] result = tree.search(lower, upper);
+		
+		System.out.println(result[0]);
+		
+		
+		/*
+		
 		System.out.println(tree.root.toString());
 
 		System.out.println("-----------");
@@ -83,6 +95,7 @@ public class KDTree
 		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
 		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild().getRightChild());
 		System.out.println(tree.root.getRightChild().getRightChild());
+		*/
 
 
 
