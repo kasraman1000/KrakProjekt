@@ -33,7 +33,6 @@ public class KDTree
 		nodes.add(new Node(coords4));
 		double[] coords5 = {4 ,0.5};
 		nodes.add(new Node(coords5));
-
 		
 		tree.build(nodes);
 		System.out.println(tree.root.toString());
@@ -45,21 +44,15 @@ public class KDTree
 		
 		System.out.println("-----------");
 		
-		System.out.println(tree.root.getLeftChild().getRightChild());
 		System.out.println(tree.root.getLeftChild().getLeftChild());
+		System.out.println(tree.root.getLeftChild().getRightChild());
 		
-		System.out.println(tree.root.getRightChild().getRightChild());
 		System.out.println(tree.root.getRightChild().getLeftChild());
+		System.out.println(tree.root.getRightChild().getRightChild());
 		
 		System.out.println("-----------");
 		
-		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
-		System.out.println(tree.root.getLeftChild().getRightChild().getLeftChild());
-		System.out.println(tree.root.getLeftChild().getLeftChild().getRightChild());
-		System.out.println(tree.root.getLeftChild().getLeftChild().getLeftChild());
 		
-		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
 
 	}
 	
@@ -103,6 +96,7 @@ public class KDTree
 			return node;
 		}
 		
+		
 		private Node median(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
@@ -110,7 +104,7 @@ public class KDTree
 			Node pivot = nodes.get(0);
 			for (Node n : nodes) {
 				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
-				else if (n.coords[dimension] < pivot.coords[dimension]) above.add(n);
+				else if (n.coords[dimension] > pivot.coords[dimension]) above.add(n);
 				else if (pivot != n) above.add(n);
 			}
 			int i = below.size();
@@ -134,8 +128,16 @@ public class KDTree
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
-				Node medianNode = median(nodes, nodes.size()/2, depth);
-				//System.out.println("Median:" + medianNode.coords[0] + ", " + medianNode.coords[1] + "\t");
+				Node medianNode;
+				if (nodes.size()%2 == 0)
+				{
+					medianNode = median(nodes, (nodes.size()/2)-1, depth);
+				}
+				else
+				{
+					medianNode = median(nodes, (nodes.size()/2), depth);
+				}
+				
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
@@ -159,17 +161,32 @@ public class KDTree
 			}
 			else if (nodes.size() == 2)
 			{
-				if (nodes.get(0).getCoord(depth%k) > nodes.get(1).getCoord(depth%k))
+				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
 				{
-					KDNode result = new KDNode(nodes.get(0));
-					result.left = new KDNode(nodes.get(1));
+					KDNode result = new KDNode(nodes.get(1));
+					if (nodes.get(1).coords[(depth+1)%k] > nodes.get(0).coords[(depth+1)%k])
+					{
+						result.left = new KDNode(nodes.get(0));
+					}
+					else
+					{
+						result.right = new KDNode(nodes.get(0));
+					}
+					
 					return result;
 					
 				}
 				else
 				{
-					KDNode result = new KDNode(nodes.get(1));
-					result.left = new KDNode(nodes.get(0));
+					KDNode result = new KDNode(nodes.get(0));
+					if (nodes.get(0).coords[(depth+1)%k] > nodes.get(1).coords[(depth+1)%k])
+					{
+						result.left = new KDNode(nodes.get(1));
+					}
+					else
+					{
+						result.right = new KDNode(nodes.get(1));
+					}
 					return result;
 				}
 
@@ -181,4 +198,57 @@ public class KDTree
 		}
 		
 	}
+	
+	/*
+	private Node medianSlow(ArrayList<Node> nodes, int depth)
+	{
+			
+	}
+	
+	
+    private void quickSort(ArrayList<Node> a, int lo, int hi, int d) { 
+        if (hi <= lo) return;
+        int j = partition(a, lo, hi, d);
+        quickSort(a, lo, j-1, d);
+        quickSort(a, j+1, hi, d);
+    }
+    
+    private int partition(ArrayList<Node> a, int lo, int hi, int d) {
+        int i = lo;
+        int j = hi + 1;
+        Node v = a.get(lo);
+        while (true) { 
+
+            // find item on lo to swap
+            while (less(a.get(i++), v, d))
+                if (i == hi) break;
+
+            // find item on hi to swap
+            while (less(v, a.get(j--), d))
+                if (j == lo) break;      // redundant since a[lo] acts as sentinel
+
+            // check if pointers cross
+            if (i >= j) break;
+
+            exch(a, i, j);
+        }
+
+        // put v = a[j] into position
+        exch(a, lo, j);
+
+        // with a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
+    }
+    
+    private boolean less(Node v, Node w, int d) {
+        return v.coords[d%k] < w.coords[d%k];
+    }
+    
+    private void exch(ArrayList<Node> a, int i, int j) {
+        Node swap = a.get(i);
+        a.get(i) = a.get(j);
+        a[j] = swap;
+    }
+    
+    */
 }
