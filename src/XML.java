@@ -80,6 +80,7 @@ public class XML{
 			}
 			double rearrangeEnd = System.currentTimeMillis();
 			double xmlFileStart = System.currentTimeMillis();
+//			xml.createString(roads);
 			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\krax.xml");
 			double xmlFileEnd = System.currentTimeMillis();
 //			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
