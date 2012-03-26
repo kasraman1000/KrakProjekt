@@ -21,18 +21,24 @@ public class KDTree
 	{
 		KDTree tree = new KDTree(2);
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		double[] coords = {1 ,1};
+		double[] coords = {9 ,6};
 		nodes.add(new Node(coords));
-		double[] coords1 = {0.5 ,1.5};
+		double[] coords1 = {0 ,6};
 		nodes.add(new Node(coords1));
-		double[] coords2 = {4 ,4};
+		double[] coords2 = {7 ,6};
 		nodes.add(new Node(coords2));
-		double[] coords3 = {3 ,1};
+		double[] coords3 = {8 ,4};
 		nodes.add(new Node(coords3));
-		double[] coords4 = {2 ,3};
+		double[] coords4 = {4 ,9};
 		nodes.add(new Node(coords4));
-		double[] coords5 = {4 ,0.5};
+		double[] coords5 = {9 ,0};
 		nodes.add(new Node(coords5));
+		double[] coords6 = {10 ,3};
+		nodes.add(new Node(coords6));
+		double[] coords7 = {3 ,6};
+		nodes.add(new Node(coords7));
+		double[] coords8 = {7 ,1};
+		nodes.add(new Node(coords8));
 		
 		tree.build(nodes);
 		System.out.println(tree.root.toString());
@@ -51,6 +57,12 @@ public class KDTree
 		System.out.println(tree.root.getRightChild().getRightChild());
 		
 		System.out.println("-----------");
+		
+		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
+		
+		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
+		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild().getRightChild());
+		System.out.println(tree.root.getRightChild().getRightChild());
 		
 		
 
@@ -147,7 +159,7 @@ public class KDTree
 						rightNodes.add(n);
 					}
 				}
-				result.left = expand(leftNodes, depth+1);
+				if (!leftNodes.isEmpty()) result.left = expand(leftNodes, depth+1);
 				result.right = expand(rightNodes, depth+1);
 				return result;
 			}
@@ -156,14 +168,14 @@ public class KDTree
 				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
 				{
 					KDNode result = new KDNode(nodes.get(1));
-					result.left = new KDNode(nodes.get(0));					
+					result.right = new KDNode(nodes.get(0));					
 					return result;
 					
 				}
 				else
 				{
 					KDNode result = new KDNode(nodes.get(0));
-					result.left = new KDNode(nodes.get(1));
+					result.right = new KDNode(nodes.get(1));
 					return result;
 				}
 
