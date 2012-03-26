@@ -332,14 +332,14 @@ public class XML{
 		return xmlString;
 		
 	}
-	
-	/**
+	/*
+	*//**
 	 * Will compare the two nodes connected to an edge object and create a .xml file with the coordinates from the two Node objects.
 	 * 
 	 * @param krakEdgeGraph Will need to use the notes and edges created during the load() method in KrakEdgeGraph
 	 * @param colorForRoad The color which will be used for the roads
 	 * @param widthForRoad The width which will be used for the roads
-	 */
+	 *//*
 	public void createXML(KrakEdgeGraph krakEdgeGraph, Color colorForRoad, int widthForRoad, String nameForOutputFile) throws Exception{
 		//findMinAndMaxValue(roads);
 		Bag<Edge> edges = krakEdgeGraph.edges();
@@ -360,12 +360,12 @@ public class XML{
 			document.appendChild(rootElement);
 		
 			//The outer svg element - actually not needed, but is used for defining the height and width 
-	/**		Element svgElement = document.createElement("svg");
+	*//**		Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
 			svgElement.setAttribute("width", KRAX_WIDTH +"");
 			svgElement.setAttribute("height",KRAX_HEIGHT +"");
-		*/
+		*//*
 			
 		
 			int id1;
@@ -414,7 +414,7 @@ public class XML{
 		} catch (TransformerException e){
 			System.out.println("TransformerException: " + e.getMessage());
 		}
-	}		
+	}*/		
 	
 	/**
 	 * Used by the createXML method.

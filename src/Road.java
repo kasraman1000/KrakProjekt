@@ -1,8 +1,4 @@
 /**
- * 
- */
-
-/**
  * @author Yndal
  *
  */
@@ -23,6 +19,13 @@ public class Road {
 		this.y2 = y2;
 		this.type = type;
 		this.name = name;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Road [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2
+				+ ", type=" + type + ", name=" + name + "]";
 	}
 
 }
