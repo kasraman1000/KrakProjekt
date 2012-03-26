@@ -16,9 +16,8 @@ public class KDTree
 
 	public void build(ArrayList<Node> nodes)
 	{
-		root = new KDNode(nodes, 0);
+		new KDNode(nodes, 0);
 	}
-
 	
 	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
@@ -84,7 +83,6 @@ public class KDTree
 		
 			if (kdn.right != null)
 			{
-				System.out.println(changePoint(kdn, depth, cr1)[depth%k] + " , " + cr2[depth%k]);
 				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
 				{
 					nodes.add(kdn.right.getNode());
@@ -97,7 +95,6 @@ public class KDTree
 				
 				if(kdn.left != null)
 				{
-					System.out.println(cr1[depth%k] + " , " + changePoint(kdn, depth, cr2)[depth%k]);
 					if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
 					{
 						nodes.add(kdn.left.getNode());
@@ -113,7 +110,6 @@ public class KDTree
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
-		/*
 		try {
 			long time1 = System.currentTimeMillis();
 			ArrayList<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
@@ -126,7 +122,8 @@ public class KDTree
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
+		
+		/*
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		double[] coords = {9 ,6};
 		nodes.add(new Node(coords));
@@ -146,24 +143,17 @@ public class KDTree
 		nodes.add(new Node(coords7));
 		double[] coords8 = {7 ,1};
 		nodes.add(new Node(coords8));
+		*/
 		
-		double[] origo = {0 ,0};
-		double[] top = {10, 10};
+		double[] origo = {442254.35659 ,6049914.43018};
+		double[] top = {892638.21114, 6402050.98297};
 		
-		double[] a = {0 ,0};
-		double[] b = {10 ,10};
+		double[] a = {600000 ,6050000};
+		double[] b = {700000 ,6100000};
 		
-		double[] c = {7, 10};
-		
-		tree.build(nodes);
 		ArrayList<Node> searchResult = new ArrayList<Node>();
 		tree.searchRange(tree.root, searchResult, 0, origo, top, a, b);
-		for(Node n: searchResult)
-		{
-			System.out.println(n.coords[0] + ", " + n.coords[1]);
-		}
 		System.out.println(searchResult.size());
-
 	}
 
 
