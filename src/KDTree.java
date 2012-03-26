@@ -92,6 +92,12 @@ public class KDTree
 				{
 					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
 				}
+				//test
+				else if(nodeContained(kdn.right, r1, r2))
+				{
+					System.out.println("Node missed at depth: " + depth);
+				}
+				//
 				
 				if(kdn.left != null)
 				{
@@ -104,6 +110,12 @@ public class KDTree
 					{
 						searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
 					}
+					//test
+					else if(nodeContained(kdn.left, r1, r2))
+					{
+						System.out.println("Node missed at depth: " + depth);
+					}
+					//
 				}
 			}
 		}
@@ -115,9 +127,14 @@ public class KDTree
 			ArrayList<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 			System.out.println(System.currentTimeMillis()-time1);
 			System.out.println("Building tree...");
-			long time2 = System.currentTimeMillis();
 			tree.build(nodes);
-			System.out.println(System.currentTimeMillis()-time2);
+			ArrayList<Node> searchResult2 = new ArrayList<Node>();;
+			for(Node n : nodes)
+			{
+				if (n.coords[0] > 600000 && n.coords[0] < 700000 && n.coords[1] > 6050000 && n.coords[1] > 6100000)
+					searchResult2.add(n);
+			}
+			System.out.println("Nodes in region: " + searchResult2.size());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -153,7 +170,9 @@ public class KDTree
 		
 		ArrayList<Node> searchResult = new ArrayList<Node>();
 		tree.searchRange(tree.root, searchResult, 0, origo, top, a, b);
-		System.out.println(searchResult.size());
+		System.out.println("Search result size: " + searchResult.size());
+		System.out.println("-----------------");
+
 	}
 
 
@@ -217,7 +236,17 @@ public class KDTree
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
-			Node pivot = nodes.get(0);
+			Node pivot;
+			if(depth < 4 && nodes.size() > 150)
+			{
+				pivot = nodes.get(100);
+			}
+			else
+			{
+				pivot = nodes.get(0);
+			}
+			
+			
 			for (Node n : nodes) {
 				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
 				else if (n.coords[dimension] > pivot.coords[dimension]) above.add(n);
@@ -238,8 +267,11 @@ public class KDTree
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
+				//Testing
+				long time = System.currentTimeMillis();
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-
+				if(depth < 5) System.out.println(time-System.currentTimeMillis() + "  at depth: " + depth);
+				//
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
