@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class KDTree
 {
@@ -11,12 +12,31 @@ public class KDTree
 	{
 		this.k = k;
 	}
-	
+
 	public void build(ArrayList<Node> nodes)
 	{
-		new KDNode(nodes, 0);
+		root = new KDNode(nodes, 0);
 	}
-	
+
+	public Road[] search(double[] lowerRange, double[] upperRange) {
+
+		HashSet<Node> nodes = new HashSet<Node>();
+
+		root.searchRange(nodes, 0, lowerRange, upperRange);
+
+		HashSet<Road> roads = new HashSet<Road>();
+
+		// Add Road objects from nodes to a result HashSet containing Roads
+		for (Node n : nodes) {
+			for (Road r : n.getRoads()) {
+				roads.add(r);
+			}
+		}
+
+		// Convert to array and return
+		return roads.toArray(new Road[0]);
+	}
+
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
@@ -39,47 +59,47 @@ public class KDTree
 		nodes.add(new Node(coords7));
 		double[] coords8 = {7 ,1};
 		nodes.add(new Node(coords8));
-		
+
 		tree.build(nodes);
 		System.out.println(tree.root.toString());
-		
+
 		System.out.println("-----------");
 
 		System.out.println(tree.root.getLeftChild());
 		System.out.println(tree.root.getRightChild());
-		
+
 		System.out.println("-----------");
-		
+
 		System.out.println(tree.root.getLeftChild().getLeftChild());
 		System.out.println(tree.root.getLeftChild().getRightChild());
-		
+
 		System.out.println(tree.root.getRightChild().getLeftChild());
 		System.out.println(tree.root.getRightChild().getRightChild());
-		
+
 		System.out.println("-----------");
-		
+
 		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
-		
+
 		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
 		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild().getRightChild());
 		System.out.println(tree.root.getRightChild().getRightChild());
-		
-		
+
+
 
 	}
-	
-	
+
+
 	//Nested class
 	private class KDNode
 	{
 		private KDNode right, left;
 		private Node node;
-		
+
 		private KDNode(Node n)
 		{
 			node = n;
 		}
-		
+
 		private KDNode(ArrayList<Node> nodes, int depth)
 		{
 			KDNode kdn = expand(nodes, depth);
@@ -87,28 +107,28 @@ public class KDTree
 			root = kdn;
 		}
 
-		
+
 		public String toString()
 		{
 			return "X= " + node.coords[0] + " Y= " + node.coords[1];
 		}
-		
+
 		public KDNode getLeftChild()
 		{
 			return left;
 		}
-		
+
 		public KDNode getRightChild()
 		{
 			return right;
 		}
-		
+
 		public Node getNode()
 		{
 			return node;
 		}
-		
-		
+
+
 		private Node median(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
@@ -121,26 +141,27 @@ public class KDTree
 			}
 			int i = below.size();
 			int j = nodes.size() - above.size();
-			
+
 			if (nth < i) return median(below, nth, depth);
 			else if (nth >= j) return median(above, nth-j, depth);
 			else return pivot;
-			
+
 		}
-		
+
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
+
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-				
+
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
 				ArrayList<Node> leftNodes = new ArrayList<Node>();
 				double relevantCoord = medianNode.coords[dimension];
-				
+
 				for(Node n: nodes)
 				{
 					if(n.coords[dimension] < relevantCoord)
@@ -163,7 +184,7 @@ public class KDTree
 					KDNode result = new KDNode(nodes.get(1));
 					result.right = new KDNode(nodes.get(0));					
 					return result;
-					
+
 				}
 				else
 				{
@@ -178,6 +199,34 @@ public class KDTree
 				return new KDNode(nodes.get(0));
 			}
 		}
-		
+
+		/**
+		 * checks to see if node and children nodes are in range, 
+		 * and adds them to collection if they are...
+		 * This is naïve implementation, could use tons of optimization!
+		 */
+		public void searchRange(Collection<Node> result, int depth, double[] lower, double[] upper) {
+
+			// Figure what dimension to sort after at this depth
+			int dimension = depth%k;
+
+			// If this node is in range, return it.
+			if (node.coords[0] >= lower[0] &&
+					node.coords[0] <= upper[0] &&
+					node.coords[1] >= lower[1] &&
+					node.coords[1] <= upper[0]) result.add(node);
+
+
+			// If there are children nodes, check them as well, if they're towards the search range
+			if (right != null)
+				if (node.coords[dimension] <= lower[dimension]) 
+					right.searchRange(result, depth+1, lower, upper);
+			
+			if (left != null)
+				if (node.coords[dimension] >= upper[dimension]) 
+					left.searchRange(result, depth+1, lower, upper);
+		}
+
 	}
+
 }
