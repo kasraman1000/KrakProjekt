@@ -22,7 +22,7 @@ public class KDTree
 	{
 		for(int i = 0; i < k; i++)
 		{
-			if(r1[i] > h2[i] || r2[i] < h1[i]) return false;
+			if(r1[i] >= h2[i] || r2[i] <= h1[i]) return false;
 		}
 		return true;
 	}
@@ -64,39 +64,55 @@ public class KDTree
 	
 	public double[] changePoint(KDNode kdn, int depth, double[] r)
 	{
-		r[depth%k] = kdn.getNode().coords[depth%k];
-		return r;
-	}
-
-	public void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] r1, double[] r2)
-	{
-		if(kdn.isLeaf())
+		if(depth%k==0)
 		{
-			if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
+			double[] result = {kdn.getNode().coords[0], r[1]};
+			return result;
 		}
 		else
 		{
-			if (fullyContained(changePoint(kdn, depth, r1), r2, r1, r2))
-			{
-				fillWithSubTree(kdn, nodes);
-			}
-			else if (intersecting(changePoint(kdn, depth, r1), r2, r1, r2))
-			{
-				searchRange(kdn.left, nodes, depth, changePoint(kdn, depth, r1), r2);
-			}
-			
-			
+			double[] result = {r[0] ,kdn.getNode().coords[1]};
+			return result;
 		}
-
-		
-		
 	}
-	
+
+	public void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
+	{
+		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
+		
+			if (kdn.right != null)
+			{
+				System.out.println(changePoint(kdn, depth, cr1)[depth%k] + " , " + cr2[depth%k]);
+				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
+				{
+					nodes.add(kdn.right.getNode());
+					fillWithSubTree(kdn.right, nodes);
+				}
+				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
+				{
+					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
+				}
+				
+				if(kdn.left != null)
+				{
+					System.out.println(cr1[depth%k] + " , " + changePoint(kdn, depth, cr2)[depth%k]);
+					if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
+					{
+						nodes.add(kdn.left.getNode());
+						fillWithSubTree(kdn.left, nodes);
+					}
+					else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
+					{
+						searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
+					}
+				}
+			}
+		}
 	
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
-
+		/*
 		try {
 			long time1 = System.currentTimeMillis();
 			ArrayList<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
@@ -109,15 +125,15 @@ public class KDTree
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/*
+		*/
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		double[] coords = {1 ,1};
+		double[] coords = {9 ,6};
 		nodes.add(new Node(coords));
-		double[] coords1 = {7 ,9};
+		double[] coords1 = {0 ,6};
 		nodes.add(new Node(coords1));
-		double[] coords2 = {2 ,8};
+		double[] coords2 = {7 ,6};
 		nodes.add(new Node(coords2));
-		double[] coords3 = {10 ,10};
+		double[] coords3 = {8 ,4};
 		nodes.add(new Node(coords3));
 		double[] coords4 = {4 ,9};
 		nodes.add(new Node(coords4));
@@ -129,33 +145,39 @@ public class KDTree
 		nodes.add(new Node(coords7));
 		double[] coords8 = {7 ,1};
 		nodes.add(new Node(coords8));
-		*/
 		
-
-		System.out.println(tree.root.toString());
+		double[] origo = {0 ,0};
+		double[] top = {10, 10};
 		
-		System.out.println("-----------");
+		double[] a = {0 ,0};
+		double[] b = {10 ,10};
+		
+		double[] c = {7, 10};
+		
+		tree.build(nodes);
+		ArrayList<Node> searchResult = new ArrayList<Node>();
+		tree.searchRange(tree.root, searchResult, 0, origo, top, a, b);
+		for(Node n: searchResult)
+		{
+			System.out.println(n.coords[0] + ", " + n.coords[1]);
+		}
+		System.out.println(searchResult.size());
 
+		/*
+		System.out.println(tree.root);
+		System.out.println("-----------------------");
 		System.out.println(tree.root.getLeftChild());
 		System.out.println(tree.root.getRightChild());
-		
-		System.out.println("-----------");
-		
+		System.out.println("-----------------------");
 		System.out.println(tree.root.getLeftChild().getLeftChild());
 		System.out.println(tree.root.getLeftChild().getRightChild());
-		
 		System.out.println(tree.root.getRightChild().getLeftChild());
 		System.out.println(tree.root.getRightChild().getRightChild());
-		
-		System.out.println("-----------");
-		
+		System.out.println("-----------------------");	
 		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
-		
-		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
-		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getRightChild());
-		
-
+		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild());
+		System.out.println(tree.root.getRightChild().getRightChild().getRightChild());
+		*/
 	}
 	
 	
@@ -201,6 +223,12 @@ public class KDTree
 		public boolean isLeaf()
 		{
 			if(right == null) return true;
+			else return false;
+		}
+		
+		public boolean isWithered()
+		{
+			if(right == null || left == null) return true;
 			else return false;
 		}
 		
