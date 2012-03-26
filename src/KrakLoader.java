@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 class KrakLoader {
 
-	public static Collection<Node> load(String nodePath, String edgePath) throws IOException{
-		HashMap<Integer, Node> result = new HashMap<Integer, Node>();
+	public static ArrayList<Node> load(String nodePath, String edgePath) throws IOException{
+		HashMap<Integer, Node> map = new HashMap<Integer, Node>(1000000);
 		//reads the nodes file
 		File file = new File(nodePath);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -22,7 +22,7 @@ class KrakLoader {
 			String[] lineArray = curLine.split(",");
 			double[] coords = {Double.valueOf(lineArray[3]), Double.valueOf(lineArray[4])};
 			Node node = new Node(coords);
-			result.put(Integer.valueOf(lineArray[2]), node);
+			map.put(Integer.valueOf(lineArray[2]), node);
 		}
 
 		//reads the edgeList 
@@ -35,8 +35,8 @@ class KrakLoader {
 		//Creating roads and adding references from nodes to roads. Coordinates from nodes is added to roads.
 		while((curLine2 = reader2.readLine()) != null){
 			String[] lineArray2 = curLine2.split(",");
-			Node node1 = result.get(Integer.valueOf(lineArray2[0]));
-			Node node2 = result.get(Integer.valueOf(lineArray2[1]));
+			Node node1 = map.get(Integer.valueOf(lineArray2[0]));
+			Node node2 = map.get(Integer.valueOf(lineArray2[1]));
 
 
 			Road road = new Road(
@@ -51,8 +51,11 @@ class KrakLoader {
 			node2.addRoad(road);
 		}
 
-		return result.values();
+		ArrayList<Node> result = new ArrayList<Node>(1000000);
+		result.addAll(map.values());
+		return result;
 	}
+	
 	public static void main(String[] args) {
 		try {
 			Collection<Node> nodes =KrakLoader.load("C:\\Users\\DE\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
