@@ -1,7 +1,11 @@
 import java.awt.Color;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,26 +36,10 @@ import org.w3c.dom.Element;
  * @author Group KRAX
  *
  */
-
-
-
-
 public class XML{
-//	final BigDecimal SCALE = new BigDecimal(1000);
-//	final BigDecimal KRAX_HEIGHT = new BigDecimal(352136).divide(SCALE); //6402050.98297-6049914.43018 ~ 352136
-//	final BigDecimal KRAX_WIDTH = new BigDecimal(450384).divide(SCALE); //892638.21114-442254.35659 ~ 450384
-	
-//	final double kraxHeight = 352136/SCALE; //6402050.98297-6049914.43018 ~ 352136
-//	final double kraxWidth = 450384/SCALE; //892638.21114-442254.35659 ~ 450384
-	
-	
-	final double SCALE = 1;
+	final double SCALE = 500;
 	double kraxHeight;
 	double kraxWidth;
-	
-	
-	//Might be used later to add other shapes than just lines
-	//String[] elements = new String[]{"line", "line","line","line"}; 
 	
 	//Is to find the height and width of the data set
 	double maxX = 0; //Is 892638.21114
@@ -59,10 +47,7 @@ public class XML{
 	double maxY = 0; //Is 6402050.98297
 	double minY = 6500000; //Is 6049914.43018
 	
-	//To reposition the out so it is moved to the right spot (for some reason it's not showed at the place)
-//	final BigDecimal REPOSITION_X = new BigDecimal(-442254.356590).divide(SCALE);
-//	final BigDecimal REPOSITION_Y = new BigDecimal(6049914.43018).divide(SCALE);
-	
+	//To reposition the output so it is moved to the right spot
 	double repositionX;
 	double repositionY;
 	
@@ -76,18 +61,47 @@ public class XML{
 	public static void main(String[] args) {
 		XML xml = new XML();
 		long startTime = System.currentTimeMillis();
-		xml.findMinAndMaxValue(xml.createRoadsForTesting());
-	//	KrakLoader krakLoader = new KrakLoader();
+//		xml.findMinAndMaxValue(xml.createRoadsForTesting());
+		KrakLoader krakLoader = new KrakLoader();
+		HashSet<Road> tempRoadHash = new HashSet<Road>();
+		Road[] roads;
 		try {
-	//		KrakEdgeGraph krakEdgeGraph = krakLoader.load();
-			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
-	//		xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
+			double krakLoadStart = System.currentTimeMillis();
+			Collection<Node> nodes =KrakLoader.load("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
+					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+			double krakLoadEnd = System.currentTimeMillis();
+			double rearrangeStart = System.currentTimeMillis();
+			for (Node n : nodes) {
+				for (Road r : n.getRoads()) {
+					tempRoadHash.add(r);
+				}
+			}
+			roads = new Road[tempRoadHash.size()];
+			Iterator<Road> tempRoadIt = tempRoadHash.iterator();
+			for(int index=0; index<tempRoadHash.size(); index++){
+				roads[index] = tempRoadIt.next();
+			}
+			double rearrangeEnd = System.currentTimeMillis();
+			double xmlFileStart = System.currentTimeMillis();
+			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\krax.xml");
+			double xmlFileEnd = System.currentTimeMillis();
+//			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
+//			xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
+			double endTime = System.currentTimeMillis();
+			
+			
+			
+			System.out.println("Time taken in seconds");
+			System.out.println("KrakLoader.load: " + (krakLoadEnd - krakLoadStart)/1000);
+			System.out.println("Rearrange: " + (rearrangeEnd - rearrangeStart)/1000);
+			System.out.println("Create file: " + (xmlFileEnd - xmlFileStart)/1000);
+			System.out.println("\nTotal: " + (endTime - startTime)/1000);
+			
 		} catch (Exception e){
 			System.out.println("Exception thrown: " + e.getMessage());
 		}
-		long endTime = System.currentTimeMillis();
-		double elapsedTimeInSeconds = (double) (endTime-startTime)/1000;
-		System.out.println("It took " + elapsedTimeInSeconds + " seconds");
+		
+		
 	}
 	
 	/**
@@ -233,10 +247,10 @@ public class XML{
 		repositionY = minY/SCALE;
 		kraxWidth = maxX/SCALE - repositionX;
 		kraxHeight = maxY/SCALE - repositionY;
-//		System.out.println("MinX: " + minX + " (not effected by the scale!)");
-//		System.out.println("MaxX: " + maxX + " (not effected by the scale!)");
-//		System.out.println("MinY: " + minY + " (not effected by the scale!)");
-//		System.out.println("MaxY: " + maxY + " (not effected by the scale!)");
+		System.out.println("MinX: " + minX + " (not affected by the scale!)");
+		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
+		System.out.println("MinY: " + minY + " (not affected by the scale!)");
+		System.out.println("MaxY: " + maxY + " (not affected by the scale!)");
 	}
 	
 	/**
@@ -293,8 +307,8 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-//			svgElement.setAttribute("width", kraxWidth +"");
-//			svgElement.setAttribute("height", kraxHeight +"");
+			svgElement.setAttribute("width", kraxWidth +"");
+			svgElement.setAttribute("height", kraxHeight +"");
 			
 			for(Road road : roads){
 				Element line = document.createElement("line");
@@ -330,8 +344,9 @@ public class XML{
 			System.out.println("TransformerException: " + e.getMessage());
 		}
 		return xmlString;
-		
 	}
+	
+	
 	/*
 	*//**
 	 * Will compare the two nodes connected to an edge object and create a .xml file with the coordinates from the two Node objects.
@@ -339,73 +354,52 @@ public class XML{
 	 * @param krakEdgeGraph Will need to use the notes and edges created during the load() method in KrakEdgeGraph
 	 * @param colorForRoad The color which will be used for the roads
 	 * @param widthForRoad The width which will be used for the roads
-	 *//*
-	public void createXML(KrakEdgeGraph krakEdgeGraph, Color colorForRoad, int widthForRoad, String nameForOutputFile) throws Exception{
-		//findMinAndMaxValue(roads);
-		Bag<Edge> edges = krakEdgeGraph.edges();
-		Iterator<Edge> edgesIt = edges.iterator();
-		HashMap<Integer, Node> nodes = krakEdgeGraph.getNotesUntouched();
-		int roadWidth = widthForRoad;
-		
-		String roadColor = "RGB(" + colorForRoad.getRed() + "," + colorForRoad.getGreen() + "," + colorForRoad.getBlue() + ")";
+	 */
+	public void createFile(Road[] roads, String filename){
+		findMinAndMaxValue(roads);
 		String root = "root_element";
+		String xmlString = "";
 		
 		try{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
-			HashMap<Integer, Element> roadTypes = createRoadTypes(document);
 			
 			Element rootElement = document.createElement(root);
 			document.appendChild(rootElement);
 		
-			//The outer svg element - actually not needed, but is used for defining the height and width 
-	*//**		Element svgElement = document.createElement("svg");
+			//The outer svg element 
+			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", KRAX_WIDTH +"");
-			svgElement.setAttribute("height",KRAX_HEIGHT +"");
-		*//*
+			svgElement.setAttribute("width", kraxWidth +"");
+			svgElement.setAttribute("height", kraxHeight +"");
 			
-		
-			int id1;
-			int id2;
-			Edge tempEdge;
-						
-			while(edgesIt.hasNext()){
-				tempEdge =  (Edge) edgesIt.next();
-				id1 = tempEdge.either();
-				id2 = tempEdge.other(id1);
-				
-				Element line = document.createElement("line"); //Could use elements[index] if different shapes are going to be added
-				
-				
-				line.setAttribute("x1", "" + nodes.get(id1).getX().doubleValue()/SCALE + repositionX); // (X/SCALE) + (REPOSITION_X)
-				line.setAttribute("y1", "" + (nodes.get(id1).getY().doubleValue()/SCALE)*(-1) + kraxHeight + repositionY); // (Y/SCALE)*(-1) + KRAX_HEIGHT + REPOSITION_Y this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", "" + nodes.get(id2).getX().doubleValue()/SCALE + repositionX); // (X/SCALE) + (REPOSITION_X)
-				line.setAttribute("y2", "" + (nodes.get(id2).getY().doubleValue()/SCALE)*(-1) + kraxHeight + repositionY); // (Y/SCALE)*(-1) + KRAX_HEIGHT + REPOSITION_Y
-				line.setAttribute("style", "stroke:" + roadColor + "; strokeWidth:" + roadWidth);
-				
-				roadTypes.get(tempEdge.getRoadType()).getElementsByTagName("svg").item(0).appendChild(line);
-				
+			for(Road road : roads){
+				Element line = document.createElement("line");
+
+				line.setAttribute("x1", Double.toString((road.x1/SCALE) - repositionX)); // (X/SCALE) + (repositionX)
+				line.setAttribute("y1", Double.toString((road.y1/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
+				line.setAttribute("x2", Double.toString((road.x2/SCALE) - repositionX)); // (X/SCALE) + (repositionX)
+				line.setAttribute("y2", Double.toString((road.y2/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY
+				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
+						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
+						"); strokeWidth:" + roadWidths.get(road.type));
+				svgElement.appendChild(line);
 			}
-			loadRoadTypesIntoRootElement(roadTypes, rootElement);
+			rootElement.appendChild(svgElement);
+			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		    Transformer transformer = transformerFactory.newTransformer();
 		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		    DOMSource source = new DOMSource(document);
 		    
-		    System.out.println("Creating file...");
+		    StreamResult result = new StreamResult(new File(filename));
 		    
-		    StreamResult result = new StreamResult(new File(nameForOutputFile));
-	    		    
-		    //The line below is used for getting the result to the console :o)
-//		    StreamResult result =  new StreamResult(System.out);
-	
-		    transformer.transform(source, result);
+	      	transformer.transform(source, result);
 		    
-		    System.out.println("File created!");
-		   
+		    
+		    
 		    //TODO Create better error handling
 		} catch (ParserConfigurationException e){
 			System.out.println("ParserConfigurationException: " + e.getMessage());
@@ -414,7 +408,9 @@ public class XML{
 		} catch (TransformerException e){
 			System.out.println("TransformerException: " + e.getMessage());
 		}
-	}*/		
+		System.out.println("Height: " + kraxHeight);
+		System.out.println("Width: " + kraxWidth);
+	}		
 	
 	/**
 	 * Used by the createXML method.
@@ -422,16 +418,16 @@ public class XML{
 	 * @param roadTypes All the different types of roads 
 	 * @param rootElement The root element
 	 */
-	private void loadRoadTypesIntoRootElement(HashMap<Integer, Element> roadTypes, Element rootElement){
+/*	private void loadRoadTypesIntoRootElement(HashMap<Integer, Element> roadTypes, Element rootElement){
 		for(Element element : roadTypes.values()){
 			rootElement.appendChild(element);
 		}
 	}
-	
+*/	
 	/**
 	* Method for the creation of all the different road types according to the krak-file
 	*/
-	private HashMap<Integer, Element> createRoadTypes(Document document){
+/*	private HashMap<Integer, Element> createRoadTypes(Document document){
 			HashMap<Integer, Element> roadTypes = new HashMap<Integer, Element>();
 			
 			roadTypes.put(0, document.createElement("Unknown0"));
@@ -501,7 +497,7 @@ public class XML{
 			
 		return roadTypes;
 	}
-	
+*/	
 	/**
 	 * Used to put every type of road into a group called "svg" (to make it drawable)
 	 * but with the attributes: typ and name, describing the type of road and the
@@ -511,11 +507,11 @@ public class XML{
 	 * @param roadTypes The HashMap containing all the elements
 	 * @param document The document for creating the xml structure
 	 */
-	private void createRoadTypesHelper(int key, HashMap<Integer, Element> roadTypes, Document document){
+/*	private void createRoadTypesHelper(int key, HashMap<Integer, Element> roadTypes, Document document){
 		Element tempElement = document.createElement("svg");
 		tempElement.setAttribute("typ", key + "");
 		tempElement.setAttribute("name", roadTypes.get(key).getTagName());
 		roadTypes.get(key).appendChild(tempElement);
-
 	}
+*/	
 }

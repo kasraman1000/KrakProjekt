@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class KDTree
 {
@@ -12,11 +13,12 @@ public class KDTree
 	{
 		this.k = k;
 	}
-	
+
 	public void build(ArrayList<Node> nodes)
 	{
-		new KDNode(nodes, 0);
+		root = new KDNode(nodes, 0);
 	}
+
 	
 	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
@@ -108,7 +110,6 @@ public class KDTree
 				}
 			}
 		}
-	
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
@@ -163,35 +164,20 @@ public class KDTree
 		}
 		System.out.println(searchResult.size());
 
-		/*
-		System.out.println(tree.root);
-		System.out.println("-----------------------");
-		System.out.println(tree.root.getLeftChild());
-		System.out.println(tree.root.getRightChild());
-		System.out.println("-----------------------");
-		System.out.println(tree.root.getLeftChild().getLeftChild());
-		System.out.println(tree.root.getLeftChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getLeftChild());
-		System.out.println(tree.root.getRightChild().getRightChild());
-		System.out.println("-----------------------");	
-		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getRightChild().getRightChild());
-		*/
 	}
-	
-	
+
+
 	//Nested class
 	private class KDNode
 	{
 		private KDNode right, left;
 		private Node node;
-		
+
 		private KDNode(Node n)
 		{
 			node = n;
 		}
-		
+
 		private KDNode(ArrayList<Node> nodes, int depth)
 		{
 			KDNode kdn = expand(nodes, depth);
@@ -199,26 +185,27 @@ public class KDTree
 			root = kdn;
 		}
 
-		
+
 		public String toString()
 		{
 			return "X= " + node.coords[0] + " Y= " + node.coords[1];
 		}
-		
+
 		public KDNode getLeftChild()
 		{
 			return left;
 		}
-		
+
 		public KDNode getRightChild()
 		{
 			return right;
 		}
-		
+
 		public Node getNode()
 		{
 			return node;
 		}
+
 		
 		public boolean isLeaf()
 		{
@@ -235,6 +222,7 @@ public class KDTree
 
 		
 		
+
 		private Node median(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
@@ -247,26 +235,27 @@ public class KDTree
 			}
 			int i = below.size();
 			int j = nodes.size() - above.size();
-			
+
 			if (nth < i) return median(below, nth, depth);
 			else if (nth >= j) return median(above, nth-j, depth);
 			else return pivot;
-			
+
 		}
-		
+
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
+
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-				
+
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
 				ArrayList<Node> leftNodes = new ArrayList<Node>();
 				double relevantCoord = medianNode.coords[dimension];
-				
+
 				for(Node n: nodes)
 				{
 					if(n.coords[dimension] < relevantCoord)
@@ -289,7 +278,7 @@ public class KDTree
 					KDNode result = new KDNode(nodes.get(1));
 					result.right = new KDNode(nodes.get(0));					
 					return result;
-					
+
 				}
 				else
 				{
@@ -305,8 +294,6 @@ public class KDTree
 				return new KDNode(nodes.get(0));
 			}
 		}
-		
-
-		
 	}
+
 }

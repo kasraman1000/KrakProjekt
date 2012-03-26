@@ -56,6 +56,7 @@ class KrakLoader {
 		result.addAll(map.values());
 		return result;
 	}
+	
 	public static void main(String[] args) {
 		try {
 			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
