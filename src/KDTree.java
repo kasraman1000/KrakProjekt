@@ -128,29 +128,21 @@ public class KDTree
 			if (nodes.size() > 2)
 			{
 				int dimension = depth%k;
-				Node medianNode;
-				if (nodes.size()%2 == 0)
-				{
-					medianNode = median(nodes, (nodes.size()/2)-1, depth);
-				}
-				else
-				{
-					medianNode = median(nodes, (nodes.size()/2), depth);
-				}
+				Node medianNode = median(nodes, nodes.size()/2, depth);
 				
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
 				ArrayList<Node> leftNodes = new ArrayList<Node>();
-				double relevantCoord = medianNode.getCoord(dimension);
+				double relevantCoord = medianNode.coords[dimension];
 				
 				for(Node n: nodes)
 				{
-					if(n.getCoord(dimension) < relevantCoord)
+					if(n.coords[dimension] < relevantCoord)
 					{
 						leftNodes.add(n);
 					}
-					else if(n.getCoord(dimension) >= relevantCoord)
+					else if(n.coords[dimension] >= relevantCoord)
 					{
 						rightNodes.add(n);
 					}
@@ -164,29 +156,14 @@ public class KDTree
 				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
 				{
 					KDNode result = new KDNode(nodes.get(1));
-					if (nodes.get(1).coords[(depth+1)%k] > nodes.get(0).coords[(depth+1)%k])
-					{
-						result.left = new KDNode(nodes.get(0));
-					}
-					else
-					{
-						result.right = new KDNode(nodes.get(0));
-					}
-					
+					result.left = new KDNode(nodes.get(0));					
 					return result;
 					
 				}
 				else
 				{
 					KDNode result = new KDNode(nodes.get(0));
-					if (nodes.get(0).coords[(depth+1)%k] > nodes.get(1).coords[(depth+1)%k])
-					{
-						result.left = new KDNode(nodes.get(1));
-					}
-					else
-					{
-						result.right = new KDNode(nodes.get(1));
-					}
+					result.left = new KDNode(nodes.get(1));
 					return result;
 				}
 
