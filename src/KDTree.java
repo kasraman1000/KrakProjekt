@@ -150,12 +150,6 @@ public class KDTree
 
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
-			//System.out.println("Nodes.size(): " + nodes.size());
-			//System.out.println("At depth: " + depth);
-			//for (Node n : nodes) {
-			//System.out.print(n.coords[0] + ", " + n.coords[1] + "\t");
-			//}
-			//System.out.println();
 
 			if (nodes.size() > 2)
 			{
@@ -235,56 +229,4 @@ public class KDTree
 
 	}
 
-	/*
-	private Node medianSlow(ArrayList<Node> nodes, int depth)
-	{
-
-	}
-
-
-    private void quickSort(ArrayList<Node> a, int lo, int hi, int d) { 
-        if (hi <= lo) return;
-        int j = partition(a, lo, hi, d);
-        quickSort(a, lo, j-1, d);
-        quickSort(a, j+1, hi, d);
-    }
-
-    private int partition(ArrayList<Node> a, int lo, int hi, int d) {
-        int i = lo;
-        int j = hi + 1;
-        Node v = a.get(lo);
-        while (true) { 
-
-            // find item on lo to swap
-            while (less(a.get(i++), v, d))
-                if (i == hi) break;
-
-            // find item on hi to swap
-            while (less(v, a.get(j--), d))
-                if (j == lo) break;      // redundant since a[lo] acts as sentinel
-
-            // check if pointers cross
-            if (i >= j) break;
-
-            exch(a, i, j);
-        }
-
-        // put v = a[j] into position
-        exch(a, lo, j);
-
-        // with a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
-        return j;
-    }
-
-    private boolean less(Node v, Node w, int d) {
-        return v.coords[d%k] < w.coords[d%k];
-    }
-
-    private void exch(ArrayList<Node> a, int i, int j) {
-        Node swap = a.get(i);
-        a.get(i) = a.get(j);
-        a[j] = swap;
-    }
-
-	 */
 }
