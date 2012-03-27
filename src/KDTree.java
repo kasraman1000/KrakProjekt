@@ -8,7 +8,10 @@ public class KDTree
 	//Dimensions
 	private int k;
 	private KDNode root;
-
+	//testing
+	private static int[] depthSize = new int[22];
+	//
+	
 	public KDTree(int k)
 	{
 		this.k = k;
@@ -47,19 +50,22 @@ public class KDTree
 	}
 	
 	
-	public void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes)
+	public void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes, int depth)
 	{
 		if(kdn.left != null)
 		{
 			nodes.add(kdn.left.getNode());
 			nodes.add(kdn.right.getNode());
-			fillWithSubTree(kdn.left, nodes);
-			fillWithSubTree(kdn.right, nodes);
+			depthSize[depth]++;
+			depthSize[depth]++;
+			fillWithSubTree(kdn.left, nodes, depth+1);
+			fillWithSubTree(kdn.right, nodes, depth+1);
 		}
 		else if (kdn.right != null)
 		{
 			nodes.add(kdn.right.getNode());
-			fillWithSubTree(kdn.right, nodes);
+			depthSize[depth]++;
+			fillWithSubTree(kdn.right, nodes, depth+1);
 		}
 	}
 	
@@ -79,14 +85,15 @@ public class KDTree
 
 	public void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
 	{
-		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
+		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode()); depthSize[depth]++;}
 		
 			if (kdn.right != null)
 			{
 				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
 				{
 					nodes.add(kdn.right.getNode());
-					fillWithSubTree(kdn.right, nodes);
+					depthSize[depth+1]++;
+					fillWithSubTree(kdn.right, nodes, depth+2);
 				}
 				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
 				{
@@ -104,7 +111,8 @@ public class KDTree
 					if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
 					{
 						nodes.add(kdn.left.getNode());
-						fillWithSubTree(kdn.left, nodes);
+						depthSize[depth+1]++;
+						fillWithSubTree(kdn.left, nodes, depth);
 					}
 					else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
 					{
@@ -122,16 +130,23 @@ public class KDTree
 	public static void main(String[] args)
 	{
 		KDTree tree = new KDTree(2);
+		double[] a = {600000 ,6050000};
+		double[] b = {700000 ,6100000};
+		double[] origo = {442254.35659 ,6049914.43018};
+		double[] top = {892638.21114, 6402050.98297};
+		
 		try {
 			long time1 = System.currentTimeMillis();
 			ArrayList<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 			System.out.println(System.currentTimeMillis()-time1);
 			System.out.println("Building tree...");
 			tree.build(nodes);
+
+			
 			ArrayList<Node> searchResult2 = new ArrayList<Node>();;
 			for(Node n : nodes)
 			{
-				if (n.coords[0] > 600000 && n.coords[0] < 700000 && n.coords[1] > 6050000 && n.coords[1] > 6100000)
+				if (n.coords[0] > a[0] && n.coords[0] < b[0] && n.coords[1] > a[1] && n.coords[1] > b[1])
 					searchResult2.add(n);
 			}
 			System.out.println("Nodes in region: " + searchResult2.size());
@@ -139,39 +154,20 @@ public class KDTree
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		/*
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		double[] coords = {9 ,6};
-		nodes.add(new Node(coords));
-		double[] coords1 = {0 ,6};
-		nodes.add(new Node(coords1));
-		double[] coords2 = {7 ,6};
-		nodes.add(new Node(coords2));
-		double[] coords3 = {8 ,4};
-		nodes.add(new Node(coords3));
-		double[] coords4 = {4 ,9};
-		nodes.add(new Node(coords4));
-		double[] coords5 = {9 ,0};
-		nodes.add(new Node(coords5));
-		double[] coords6 = {10 ,3};
-		nodes.add(new Node(coords6));
-		double[] coords7 = {3 ,6};
-		nodes.add(new Node(coords7));
-		double[] coords8 = {7 ,1};
-		nodes.add(new Node(coords8));
-		*/
-		
-		double[] origo = {442254.35659 ,6049914.43018};
-		double[] top = {892638.21114, 6402050.98297};
-		
-		double[] a = {600000 ,6050000};
-		double[] b = {700000 ,6100000};
+
+
 		
 		ArrayList<Node> searchResult = new ArrayList<Node>();
 		tree.searchRange(tree.root, searchResult, 0, origo, top, a, b);
 		System.out.println("Search result size: " + searchResult.size());
 		System.out.println("-----------------");
+		
+		for(int i = 0; i < depthSize.length; i++)
+		{
+			System.out.println(depthSize[i]);
+		}
+
+
 
 	}
 
@@ -308,8 +304,6 @@ public class KDTree
 					result.right = new KDNode(nodes.get(1));
 					return result;
 				}
-				
-
 			}
 			else
 			{
@@ -317,5 +311,29 @@ public class KDTree
 			}
 		}
 	}
+	
+	
+	
+	/*
+	ArrayList<Node> nodes = new ArrayList<Node>();
+	double[] coords = {9 ,6};
+	nodes.add(new Node(coords));
+	double[] coords1 = {0 ,6};
+	nodes.add(new Node(coords1));
+	double[] coords2 = {7 ,6};
+	nodes.add(new Node(coords2));
+	double[] coords3 = {8 ,4};
+	nodes.add(new Node(coords3));
+	double[] coords4 = {4 ,9};
+	nodes.add(new Node(coords4));
+	double[] coords5 = {9 ,0};
+	nodes.add(new Node(coords5));
+	double[] coords6 = {10 ,3};
+	nodes.add(new Node(coords6));
+	double[] coords7 = {3 ,6};
+	nodes.add(new Node(coords7));
+	double[] coords8 = {7 ,1};
+	nodes.add(new Node(coords8));
+	*/
 
 }
