@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  *
  */
 public class XML{
-	final double SCALE = 500;
+	double scale;
 	double kraxHeight;
 	double kraxWidth;
 	
@@ -81,7 +81,7 @@ public class XML{
 			double rearrangeEnd = System.currentTimeMillis();
 			double xmlFileStart = System.currentTimeMillis();
 //			xml.createString(roads);
-			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\krax.xml");
+			xml.createFile(roads, 500, "C:\\Users\\Yndal\\Desktop\\krax.xml");
 			double xmlFileEnd = System.currentTimeMillis();
 //			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
 //			xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
@@ -218,7 +218,7 @@ public class XML{
 	 * Will find the highest and lowest x-coordinate and y-coordinate
 	 * @param allRoads The roads to find coordinates from
 	 */
-	public void findMinAndMaxValue(Road[] allRoads){
+	private void findMinAndMaxValue(Road[] allRoads){
 		double tempX1;
 		double tempY1;
 		double tempX2;
@@ -241,10 +241,10 @@ public class XML{
 			if(maxY < tempY2) maxY=tempY2;
 		}
 		
-		repositionX = minX/SCALE;
-		repositionY = minY/SCALE;
-		kraxWidth = maxX/SCALE - repositionX;
-		kraxHeight = maxY/SCALE - repositionY;
+		repositionX = minX/scale;
+		repositionY = minY/scale;
+		kraxWidth = maxX/scale - repositionX;
+		kraxHeight = maxY/scale - repositionY;
 //		System.out.println("MinX: " + minX + " (not affected by the scale!)");
 //		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
 //		System.out.println("MinY: " + minY + " (not affected by the scale!)");
@@ -288,7 +288,8 @@ public class XML{
 	 * @param roads All the roads to put into the xml-string
 	 * @return String with the xml containing the svg-element
 	 */
-	public String createString(Road[] roads){
+	public String createString(Road[] roads, double scale){
+		this.scale = scale;
 		findMinAndMaxValue(roads);
 		String root = "root_element";
 		String xmlString = "";
@@ -311,10 +312,10 @@ public class XML{
 			for(Road road : roads){
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", Double.toString((road.x1/SCALE) + repositionX)); // (X/SCALE) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/SCALE) + repositionX)); // (X/SCALE) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY
+				line.setAttribute("x1", Double.toString((road.x1/scale) + repositionX)); // (X/scale) + (repositionX)
+				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
+				line.setAttribute("x2", Double.toString((road.x2/scale) + repositionX)); // (X/scale) + (repositionX)
+				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
 				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
 						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
 						"); strokeWidth:" + roadWidths.get(road.type));
@@ -353,7 +354,7 @@ public class XML{
 	 * @param colorForRoad The color which will be used for the roads
 	 * @param widthForRoad The width which will be used for the roads
 	 */
-	public void createFile(Road[] roads, String filename){
+	public void createFile(Road[] roads, double scale, String filename){
 		findMinAndMaxValue(roads);
 		String root = "root_element";
 		
@@ -375,10 +376,10 @@ public class XML{
 			for(Road road : roads){
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", Double.toString((road.x1/SCALE) - repositionX)); // (X/SCALE) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/SCALE) - repositionX)); // (X/SCALE) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/SCALE)*(-1) + kraxHeight + repositionY)); // (Y/SCALE)*(-1) + kraxHeight + repositionY
+				line.setAttribute("x1", Double.toString((road.x1/scale) - repositionX)); // (X/scale) + (repositionX)
+				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
+				line.setAttribute("x2", Double.toString((road.x2/scale) - repositionX)); // (X/scale) + (repositionX)
+				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
 				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
 						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
 						"); strokeWidth:" + roadWidths.get(road.type));
@@ -506,5 +507,36 @@ public class XML{
 		tempElement.setAttribute("name", roadTypes.get(key).getTagName());
 		roadTypes.get(key).appendChild(tempElement);
 	}
-*/	
+*/
+	
+	/**
+	 * Method currently as a part of the Java GUI test...
+	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
+	 * @param roads
+	 * @return
+	 */
+	public Road[] cleanUpRoads(Road[] roads, int scale){
+		this.scale = scale;
+		Road[] roadsToReturn = new Road[roads.length];
+		findMinAndMaxValue(roads);
+		
+		
+		for(int index=0; index<roads.length; index++){
+			roadsToReturn[index] = new Road((roads[index].x1/scale) - repositionX, // (X/scale) + (repositionX)
+					(roads[index].y1/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
+					(roads[index].x2/scale) - repositionX, // (X/scale) + (repositionX)
+					(roads[index].y2/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY
+					100, //Scale
+					"Testvej"); //Name of the road
+		}
+		return roadsToReturn;
+	}
+	
+	public double getScale(){
+		return scale;
+	}
+	
+	public void setScale(double scale){
+		this.scale = scale;
+	}
 }
