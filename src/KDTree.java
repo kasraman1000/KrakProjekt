@@ -127,33 +127,12 @@ public class KDTree
 			}
 		}
 
-		}
-	public static void main(String[] args)
+	}
+	
+	public void initialize(String nodePath, String roadPath) throws IOException
 	{
-		double[] a = {600000 ,6050000};
-		double[] b = {700000 ,6100000};
-		ArrayList<Node> nodes;
-		
-		try {
-			long time = System.currentTimeMillis();
-			nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
-			System.out.println("Time to load nodes: " + (System.currentTimeMillis()-time)/1000 + " seconds.");
-			System.out.println("Building tree...");
-			time = System.currentTimeMillis();
-			tree.build(nodes);
-			System.out.println("Time to build tree: " + (System.currentTimeMillis()-time)/1000 + " seconds.");
-			
-			Road[] roads = KDTree.getTree().searchRange(a, b);
-			for(int i = 0; i < roads.length; i++)
-			{
-				System.out.println(roads[i]);
-			}
-			System.out.println(roads.length);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
+		tree.build(nodes);
 	}
 
 
