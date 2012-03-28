@@ -44,6 +44,7 @@ public class DataHelper {
 	
 	public DataHelper(){
 		
+		
 		//TODO Fill in next line
 		//KDTree kdTree = KDTree.getTree.......
 		roadsOriginal = cleanUpRoads(allRoads,1);
