@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -9,25 +8,30 @@ import java.util.HashMap;
 
 public class JSConnector {
 	
+	private static ServerSocket ss;
+	private static Socket s;
 	public JSConnector() {
 		createSocket();
 	}
 	private void createSocket() {
 		try {
-			ServerSocket ss = new ServerSocket(80);
-			Socket s = ss.accept();
+			ss = new ServerSocket(80);
+			s = ss.accept();
 			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-//			System.out.println("input: " + input.readLine());
-			readParameters(input);
-			DataOutputStream output = new DataOutputStream(s.getOutputStream());
-			output.writeUTF("<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>");
-			output.flush();
-			output.close();
-			s.close();
-			ss.close();
+			createXMLDocument();
+			//readParameters(input);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	private void createXMLDocument() {
+		int i = 0;
+		System.out.println("createXML " + i);
+		i++;
+		XML xml = new XML();
+		xml.createFile(xml.createRoadsForTesting(),"roads.xml");
+//			output.writeUTF("<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>");
 		
 	}
 	/**
@@ -56,6 +60,16 @@ public class JSConnector {
 	}
 	public static void main(String[] args) {
 		new JSConnector();
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	        public void run() {
+	        	try {
+					s.close();
+					ss.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }, "Shutdown-thread"));
 	}
 
 }

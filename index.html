@@ -11,25 +11,21 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
+}
+function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
-	 xmlhttp.setRequestHeader ("Accept", "text/xml");
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
-			// xmlhttp.overrideMimeType("application/rdf+xml");
-			alert("onreadystatechange"+xmlhttp.responseText);
 	    	roads = xmlhttp.responseXML.documentElement;
-		  	alert(roads);
 		  	svgFrame = document.getElementById("svgframe");
 			initialView();
 			
 	    }
 	  }
-//	  uri = "roads.xml";
-//	  uri = "roads.xml?x=1&y=1&width=800&height=400";
-//	  uri = "localhost/roads.xml?x=1&y=1&width=800&height=400";
-	  uri = "http://localhost/dfdffd";
+	  uri = "roads.xml";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
+	
 }
 function clickUp(){
 	moveViewBox(0, -25);
@@ -80,6 +76,15 @@ function getPosition(){
 		
 	}
 
+function clickTest(){
+	 var xmlhttp=new XMLHttpRequest();
+	  uri = "http://localhost";
+	  xmlhttp.open("GET",uri,true);
+	  xmlhttp.send(null);
+	  window.setTimeout(getXML,1000);
+	
+}
+
 </script>
 </head>
 <body onLoad="init()">
@@ -89,6 +94,7 @@ function getPosition(){
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonRight" type="button" onClick="clickRight()">Right</button></br>
 <button id="buttonLeft" type="button" onClick="clickLeft()">Left</button></br>
+<button id="buttonLeft" type="button" onClick="clickTest()">Test</button></br>
 
 </div>
 
