@@ -7,7 +7,7 @@ public class TestClass {
 	
 	
 	public static void main(String[] args) {
-		KDTree kdtree = new KDTree(2);
+		KDTree kdtree = KDTree.getTree();
 		
 		try {
 			System.out.println("Loading in nodes from txts...");
@@ -24,7 +24,7 @@ public class TestClass {
 			double[] upperRange = {700000,6100000};
 			
 			System.out.println("Searching for roads... ");
-			Road[] roads = kdtree.search(lowerRange, upperRange);
+			Road[] roads = kdtree.searchRange(lowerRange, upperRange);
 			
 			System.out.println("Length of road: " + roads.length);
 			

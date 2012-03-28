@@ -141,7 +141,7 @@ public class XML{
 	 * @return String with the xml containing the svg-element
 	 */
 	public String createString(Road[] roads){
-		DataHelper dataHelper = DataHelper.getInstance();
+	//	DataHelper dataHelper = DataHelper.getInstance();
 		String root = "root_element";
 		String xmlString = "";
 		
@@ -157,8 +157,8 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", dataHelper.getMaxXCurrent() +"");
-			svgElement.setAttribute("height", dataHelper.getMaxYCurrent() +"");
+			svgElement.setAttribute("width", Controller.getMaxXCurrent() +"");
+			svgElement.setAttribute("height", Controller.getMaxYCurrent() +"");
 			
 			Color tempColor;
 			for(Road road : roads){
@@ -168,10 +168,10 @@ public class XML{
 				line.setAttribute("y1", road.y1 + ""); 
 				line.setAttribute("x2", road.x2 + ""); 
 				line.setAttribute("y2", road.y2 + ""); 
-				line.setAttribute("style", "stroke:RGB(" +	dataHelper.getRoadColor(road.type).getRed() + "," + 
-															dataHelper.getRoadColor(road.type).getGreen() + "," + 
-															dataHelper.getRoadColor(road.type).getBlue() + "); " + 
-											"strokeWidth:" + dataHelper.getRoadWidth(road.type));
+				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
+															Controller.getRoadColor(road.type).getGreen() + "," + 
+															Controller.getRoadColor(road.type).getBlue() + "); " + 
+											"strokeWidth:" + Controller.getRoadWidth(road.type));
 				svgElement.appendChild(line);
 			}
 			rootElement.appendChild(svgElement);
@@ -208,7 +208,6 @@ public class XML{
 	 * @param widthForRoad The width which will be used for the roads
 	 */
 	public void createFile(Road[] roads, String filename){
-		DataHelper dataHelper = DataHelper.getInstance();
 		String root = "root_element";
 		
 		try{
@@ -223,8 +222,8 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", dataHelper.getMaxXCurrent() +"");
-			svgElement.setAttribute("height", dataHelper.getMaxYCurrent() +"");
+			svgElement.setAttribute("width", Controller.getMaxXCurrent() +"");
+			svgElement.setAttribute("height", Controller.getMaxYCurrent() +"");
 			
 			for(Road road : roads){
 				Element line = document.createElement("line");
@@ -233,10 +232,10 @@ public class XML{
 				line.setAttribute("y1", road.y1 + ""); 
 				line.setAttribute("x2", road.x2 + ""); 
 				line.setAttribute("y2", road.y2 + ""); 
-				line.setAttribute("style", "stroke:RGB(" +	dataHelper.getRoadColor(road.type).getRed() + "," + 
-															dataHelper.getRoadColor(road.type).getGreen() + "," + 
-															dataHelper.getRoadColor(road.type).getBlue() + "); " + 
-						"strokeWidth:" + dataHelper.getRoadWidth(road.type));
+				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
+															Controller.getRoadColor(road.type).getGreen() + "," + 
+															Controller.getRoadColor(road.type).getBlue() + "); " + 
+						"strokeWidth:" + Controller.getRoadWidth(road.type));
 				svgElement.appendChild(line);
 			}
 			rootElement.appendChild(svgElement);

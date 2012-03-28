@@ -19,7 +19,6 @@ import org.junit.Test;
  *
  */
 public class View {
-	DataHelper dataHelper;
 	JFrame frame;
 	Canvas canvas;
 	JViewport viewport;
@@ -30,7 +29,6 @@ public class View {
 	public View(){
 		canvas = new Canvas();
 		viewport = new JViewport();
-		dataHelper = DataHelper.getInstance();
 		viewportMove = 50;
 	}
 	
@@ -198,7 +196,7 @@ public class View {
 	public void drawRoads(Road[] roads){
 		this.roads = roads;
 		//TODO Set coordinates of the viewport
-		canvas.setSize(new Dimension((int) dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent()));
+		canvas.setSize(new Dimension((int) Controller.getMaxXCurrent(), (int) Controller.getMaxYCurrent()));
 		canvas.updateUI();//
 	}
 	
@@ -246,14 +244,13 @@ public class View {
 //		}
 		
 		public void paintComponent(Graphics g){
-			DataHelper dataHelper = DataHelper.getInstance();
 			Graphics2D g2 = (Graphics2D) g;
 			super.paintComponent(g2);
 			
 			if(roads != null){
 				for(Road road : roads){
-					g2.setColor(dataHelper.getRoadColor(road.type));
-					g2.setStroke(new BasicStroke(dataHelper.getRoadWidth(road.type)));
+					g2.setColor(Controller.getRoadColor(road.type));
+					g2.setStroke(new BasicStroke(Controller.getRoadWidth(road.type)));
 					g2.drawLine((int) road.x1, (int) road.y1, (int) road.x2, (int) road.y2);
 				}
 			}
