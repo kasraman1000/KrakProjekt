@@ -8,8 +8,8 @@ public class KDTree
 	//Dimensions
 	private int k;
 	private KDNode root;
-	double[] origo = {442254.35659 ,6049914.43018};
-	double[] top = {892658.21706, 6402050.98297};
+	double[] origo;
+	double[] top;
 	private static KDTree tree = new KDTree(2);
 	
 	private KDTree(int k)
@@ -133,7 +133,32 @@ public class KDTree
 	{	
 		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
 		tree.build(nodes);
+		origo = findSmallest(nodes);
+		top = findLargest(nodes);
 	}
+	
+	public double[] findLargest(ArrayList<Node> nodes)
+	{
+		double[] x = {0, 0};
+		for(Node n : nodes)
+		{
+			if(n.coords[0] > x[0]) x[0] = n.coords[0];
+			if(n.coords[1] > x[1]) x[1] = n.coords[1];
+		}
+		return x;
+	}
+	
+	public double[] findSmallest(ArrayList<Node> nodes)
+	{
+		double[] x = {0, 0};
+		for(Node n : nodes)
+		{
+			if(n.coords[0] < x[0]) x[0] = n.coords[0];
+			if(n.coords[1] < x[1]) x[1] = n.coords[1];
+		}
+		return x;
+	}
+
 
 
 	//Nested class
