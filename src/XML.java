@@ -526,8 +526,8 @@ public class XML{
 					(roads[index].y1/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
 					(roads[index].x2/scale) - repositionX, // (X/scale) + (repositionX)
 					(roads[index].y2/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY
-					100, //Scale
-					"Testvej"); //Name of the road
+					roads[index].type, //Type
+					roads[index].name); //Name of the road
 		}
 		return roadsToReturn;
 	}
