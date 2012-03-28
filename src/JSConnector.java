@@ -30,7 +30,7 @@ public class JSConnector {
 		System.out.println("createXML " + i);
 		i++;
 		XML xml = new XML();
-		xml.createFile(xml.createRoadsForTesting(),"roads.xml");
+		xml.createFile(xml.createRoadsForTesting(),"./roads.xml");
 //			output.writeUTF("<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>");
 		
 	}
