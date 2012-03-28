@@ -59,8 +59,7 @@ class KrakLoader {
 	
 	public static void main(String[] args) {
 		try {
-			Collection<Node> nodes =KrakLoader.load("C:\\Users\\DE\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
-					"C:\\Users\\DE\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 			
 			for (Node n : nodes) {
 				for (Road r : n.getRoads()) {
