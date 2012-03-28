@@ -16,9 +16,10 @@ function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
 	 //xmlhttp.setRequestHeader ("Accept", "text/xml");
 	  xmlhttp.onreadystatechange = function() {
+		  alert(xmlhttp.readyState + " -- " + xmlhttp.status)
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 			// xmlhttp.overrideMimeType("application/rdf+xml");
-			alert("onreadystatechange"+xmlhttp.responseText);
+			alert("onreadystatechange "+xmlhttp.responseText + "  ...");
 	    	roads = xmlhttp.responseXML.documentElement;
 		  	alert(roads);
 		  	svgFrame = document.getElementById("svgframe");
@@ -29,7 +30,7 @@ function getXML(){
 //	  uri = "roads.xml";
 //	  uri = "roads.xml?x=1&y=1&width=800&height=400";
 //	  uri = "localhost/roads.xml?x=1&y=1&width=800&height=400";
-	  uri = "http://localhost/dfdffd";
+	  uri = "http://localhost/?x=2";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	

@@ -1,7 +1,13 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -17,15 +23,30 @@ public class JSConnector {
 			ServerSocket ss = new ServerSocket(80);
 			Socket s = ss.accept();
 			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-//			readParameters(input);
-			DataOutputStream output = new DataOutputStream(s.getOutputStream());
-			output.writeUTF("<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>");
+			readParameters(input);
+			OutputStream output = new BufferedOutputStream(s.getOutputStream());
+		//	String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
+//			output.writeUTF(xmlString);
 //			output.flush();
+			send(output);
 			output.close();
 			s.close();
 			ss.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+	}
+	
+	private void send(OutputStream output) throws IOException{
+		System.out.println("sendmethod");
+		String test = "test";
+		File f = new File("./roads.xml");
+		InputStream file = new FileInputStream(f);
+
+		
+		while(file.available()> 0){
+			output.write(buffer,0,file.read(buffer));
 		}
 		
 	}
@@ -51,7 +72,7 @@ public class JSConnector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("readparameters");
 	}
 	public static void main(String[] args) {
 		new JSConnector();
