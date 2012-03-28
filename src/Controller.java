@@ -13,7 +13,7 @@ import java.util.Iterator;
  *
  */
 public class Controller {
-	DataHelper dataHelper;
+	private DataHelper dataHelper;
 	
 	
 	//TODO Must be changed when JS is up running!!!
@@ -27,23 +27,25 @@ public class Controller {
 		view.createFrame();
 		System.out.println("Launch not done yet");
 		try {
-			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
+			KDTree kdTree = KDTree.getTree();
+			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
 					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+			Road[] allRoads = kdTree.searchRange(kdTree.origo, kdTree.top);
 			
-			for (Node n : nodes) {
-				for (Road r : n.getRoads()) {
-					tempRoadHash.add(r);
-				}
-			}
+//			for (Node n : nodes) {
+//				for (Road r : n.getRoads()) {
+//					tempRoadHash.add(r);
+//				}
+//			}
 
-			Road[] roadsTemp = new Road[tempRoadHash.size()];
-			Iterator<Road> tempRoadIt = tempRoadHash.iterator();
-			for(int index=0; index<tempRoadHash.size(); index++){
-				roadsTemp[index] = tempRoadIt.next();
-			}
+//			Road[] roadsTemp = new Road[tempRoadHash.size()];
+//			Iterator<Road> tempRoadIt = tempRoadHash.iterator();
+//			for(int index=0; index<tempRoadHash.size(); index++){
+//				roadsTemp[index] = tempRoadIt.next();
+//			}
 
 			
-			roadsOriginal = dataHelper.cleanUpRoads(roadsTemp, 1);
+			roadsOriginal = dataHelper.cleanUpRoads(allRoads, 1);
 //			dataHelper = new DataHelper(roadsOriginal);
 			view.drawRoads(roadsOriginal);
 			

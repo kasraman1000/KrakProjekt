@@ -15,8 +15,7 @@ import java.util.HashMap;
 public class DataHelper {
 	static DataHelper instance;
 	
-	private final Road[] roadsOriginal;
-	
+	private Road[] roadsOriginal;
 	private Road[] roadsCurrent;
 	
 	//Is to find the height and width of the data set
@@ -32,6 +31,34 @@ public class DataHelper {
 	private double minYCurrent;
 	
 	private double repositionXOriginal;
+	/**
+	 * @return the roadsCurrent
+	 */
+	public Road[] getRoadsCurrent() {
+		return roadsCurrent;
+	}
+
+	/**
+	 * @param roadsCurrent the roadsCurrent to set
+	 */
+	public void setRoadsCurrent(Road[] roadsCurrent) {
+		this.roadsCurrent = roadsCurrent;
+	}
+
+	/**
+	 * @return the roadsOriginal
+	 */
+	public Road[] getRoadsOriginal() {
+		return roadsOriginal;
+	}
+
+	/**
+	 * @param roadsOriginal the roadsOriginal to set
+	 */
+	public void setRoadsOriginal(Road[] roadsOriginal) {
+		this.roadsOriginal = roadsOriginal;
+	}
+
 	private double repositionYOriginal;
 	private double repositionXCurrent;
 	private double repositionYCurrent;
