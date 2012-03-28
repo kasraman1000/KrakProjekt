@@ -19,7 +19,7 @@ import org.junit.Test;
  *
  */
 public class View {
-	DataHelper dataHelper = new DataHelper();
+	DataHelper dataHelper;
 	JFrame frame;
 	Canvas canvas;
 	JViewport viewport;
@@ -30,6 +30,7 @@ public class View {
 	public View(){
 		canvas = new Canvas();
 		viewport = new JViewport();
+		dataHelper = DataHelper.getInstance();
 		viewportMove = 50;
 	}
 	
@@ -155,7 +156,7 @@ public class View {
 				y = (visibleView.y + visibleView.height) / 2;
 				
 				Point centerOfView = new Point(x, y);
-				Controller.newZoomLevel(centerOfView);
+				Controller.newZoomLevel(centerOfView, true);
 				
 				System.out.println("Zoomed in");
 				
@@ -175,7 +176,7 @@ public class View {
 				y = (visibleView.y + visibleView.height) / 2;
 				
 				Point centerOfView = new Point(x, y);
-				Controller.newZoomLevel(centerOfView);
+				Controller.newZoomLevel(centerOfView, false);
 				
 				System.out.println("Zoomed out");
 			}
@@ -196,7 +197,8 @@ public class View {
 	
 	public void drawRoads(Road[] roads){
 		this.roads = roads;
-		canvas.setSize(new Dimension((int)dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent()));
+		//TODO Set coordinates of the viewport
+		canvas.setSize(new Dimension((int) dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent()));
 		canvas.updateUI();//
 	}
 	
@@ -244,6 +246,7 @@ public class View {
 //		}
 		
 		public void paintComponent(Graphics g){
+			DataHelper dataHelper = DataHelper.getInstance();
 			Graphics2D g2 = (Graphics2D) g;
 			super.paintComponent(g2);
 			

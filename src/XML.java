@@ -21,36 +21,29 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * This class is for the creation of the .xml file. At the moment it will generate a sewer
- * amount of lines to represent all roads in DK and Malmö. 
- * It figures out the position of the lines from the edges: Gets the two nodes connected
- * to the edge. Each node will contain a value for the x-coordinate and y-coordinate.
- * The class will then set to the line to be: x1=node1.xPos, x2=node2.xPos, y1=node1.yPos, y2=node2.yPos
- * 
- *   Because the coordinates are not starting from (0,0) the class has a build-in feature to find
- *   the max and min values for X and Y - then print this in the console
- * 
+ * This class is for the creation of the xml file or string.
+ * It will generate the output from all of the roads, which is given as parameters.
  * 
  * @author Group KRAX
  *
  */
 public class XML{
-	double scale;
-	double kraxHeight;
-	double kraxWidth;
+//	double scale;
+//	double kraxHeight;
+//	double kraxWidth;
 	
-	//Is to find the height and width of the data set
-	double maxX = 0; //Is 892638.21114
-	double minX = 900000; //Is 442254.35659
-	double maxY = 0; //Is 6402050.98297
-	double minY = 6500000; //Is 6049914.43018
+//	//Is to find the height and width of the data set
+//	double maxX = 0; //Is 892638.21114
+//	double minX = 900000; //Is 442254.35659
+//	double maxY = 0; //Is 6402050.98297
+//	double minY = 6500000; //Is 6049914.43018
 	
-	//To reposition the output so it is moved to the right spot
-	double repositionX;
-	double repositionY;
+//	//To reposition the output so it is moved to the right spot
+//	double repositionX;
+//	double repositionY;
 	
-	HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+//	HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
+//	HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 
 	/**
 	 * The main method - only used for testing this specific class
@@ -81,7 +74,7 @@ public class XML{
 			double rearrangeEnd = System.currentTimeMillis();
 			double xmlFileStart = System.currentTimeMillis();
 //			xml.createString(roads);
-			xml.createFile(roads, 500, "C:\\Users\\Yndal\\Desktop\\krax.xml");
+			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\krax.xml");
 			double xmlFileEnd = System.currentTimeMillis();
 //			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
 //			xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
@@ -104,152 +97,11 @@ public class XML{
 	
 	/**
 	 * The Constructor
-	 * Makes sure all the road colors and widths are loaded when instantiating this class
 	 */
 	public XML(){
-		loadAllRoadColors();
-		loadAllRoadWidths();
-	}
-	
-	/**
-	 * Will load all the predefined road colors to a HashMap - only called in the constructor
-	 */
-	private void loadAllRoadColors(){
-		Color largeRoads = Color.red;
-		Color mediumRoads = Color.yellow;
-		Color smallRoads = Color.black;
-		Color tinyRoads = Color.pink;
-		Color tunnels = Color.orange;
-		Color seaWays  = Color.blue;
-		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
-		
-		Color unknownRoads = Color.cyan;
-		
-		roadColors.put(0, unknownRoads); //"Unknown0"
-		roadColors.put(95, unknownRoads); //"Unknown95"
-		roadColors.put(1, largeRoads); //"Motorvej"
-		roadColors.put(2, mediumRoads); //"Motortrafikvej"
-		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
-		roadColors.put(4, mediumRoads); //"SekundearOver6m"
-		roadColors.put(5, smallRoads); //"Vej3til6m"
-		roadColors.put(6, smallRoads); //"AndenVej"
-		roadColors.put(8, walkingPaths); //"Sti"
-		roadColors.put(10, tinyRoads); //"Markvej"
-		roadColors.put(11, walkingPaths); //"Gaagader //"
-		roadColors.put(21, largeRoads); //"Proj.motorvej"
-		roadColors.put(22, mediumRoads); //"Proj.motortrafikvej"
-		roadColors.put(23, mediumRoads); //"Proj.primearvej"
-		roadColors.put(24, mediumRoads); //"Proj.sekundearvej"
-		roadColors.put(25, smallRoads); //"Proj.vej3til6m"
-		roadColors.put(26, smallRoads); //"Proj.vejUnder3m"
-		roadColors.put(28, walkingPaths); //"Proj.sti"
-		roadColors.put(31, largeRoads); //"Motorvejsafkoersel"
-		roadColors.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
-		roadColors.put(33, mediumRoads); //"Primearvejsafkoersel"
-		roadColors.put(34, mediumRoads); //"Sekundearvejsafkoersel"
-		roadColors.put(35, smallRoads); //"AndenVejafkoersel"
-		roadColors.put(41, tunnels); //"Motorvejstunnel"
-		roadColors.put(42, tunnels); //"Motortrafikvejstunnel"
-		roadColors.put(43, tunnels); //"Primaerstunnel"
-		roadColors.put(44, tunnels); //"Sekundaervejstunnel"
-		roadColors.put(45, tunnels); //"AndenVejtunnel"
-		roadColors.put(46, tunnels); //"MindreVejtunnel"
-		roadColors.put(48, tunnels); //"Stitunnel"
-		roadColors.put(80, seaWays); //"Faergeforbindelser"
-		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 	
 	
-	/**
-	 * Will load all the predefined road widths to a HashMap - only called in the constructor
-	 */
-	private void loadAllRoadWidths(){
-		int largeRoads = 5;
-		int mediumRoads = 4;
-		int smallRoads = 3;
-		int tinyRoads = 2;
-		int tunnels = 4;
-		int seaWays  = 5; 
-		int walkingPaths = 2;
-//		int bicyclePaths = 2;
-		
-		int unknownRoads = 4;
-				
-		roadWidths.put(0, unknownRoads); //"Unknown0"
-		roadWidths.put(95, unknownRoads); //"Unknown95"
-		roadWidths.put(1, largeRoads); //"Motorvej"
-		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
-		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
-		roadWidths.put(4, mediumRoads); //"SekundearOver6m"
-		roadWidths.put(5, smallRoads); //"Vej3til6m"
-		roadWidths.put(6, smallRoads); //"AndenVej"
-		roadWidths.put(8, walkingPaths); //"Sti"
-		roadWidths.put(10, tinyRoads); //"Markvej"
-		roadWidths.put(11, walkingPaths); //"Gaagader //"
-		roadWidths.put(21, largeRoads); //"Proj.motorvej"
-		roadWidths.put(22, mediumRoads); //"Proj.motortrafikvej"
-		roadWidths.put(23, mediumRoads); //"Proj.primearvej"
-		roadWidths.put(24, mediumRoads); //"Proj.sekundearvej"
-		roadWidths.put(25, smallRoads); //"Proj.vej3til6m"
-		roadWidths.put(26, smallRoads); //"Proj.vejUnder3m"
-		roadWidths.put(28, walkingPaths); //"Proj.sti"
-		roadWidths.put(31, largeRoads); //"Motorvejsafkoersel"
-		roadWidths.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
-		roadWidths.put(33, mediumRoads); //"Primearvejsafkoersel"
-		roadWidths.put(34, mediumRoads); //"Sekundearvejsafkoersel"
-		roadWidths.put(35, smallRoads); //"AndenVejafkoersel"
-		roadWidths.put(41, tunnels); //"Motorvejstunnel"
-		roadWidths.put(42, tunnels); //"Motortrafikvejstunnel"
-		roadWidths.put(43, tunnels); //"Primaerstunnel"
-		roadWidths.put(44, tunnels); //"Sekundaervejstunnel"
-		roadWidths.put(45, tunnels); //"AndenVejtunnel"
-		roadWidths.put(46, tunnels); //"MindreVejtunnel"
-		roadWidths.put(48, tunnels); //"Stitunnel"
-		roadWidths.put(80, seaWays); //"Faergeforbindelser"
-		
-		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
-	}
-	
-	
-	
-	/**
-	 * This is called every time the class will make a string or file
-	 * Will find the highest and lowest x-coordinate and y-coordinate
-	 * @param allRoads The roads to find coordinates from
-	 */
-	private void findMinAndMaxValue(Road[] allRoads){
-		double tempX1;
-		double tempY1;
-		double tempX2;
-		double tempY2;
-		
-		for(Road road : allRoads){
-			tempX1 = road.x1;
-			tempY1 = road.y1;
-			tempX2 = road.x2;
-			tempY2 = road.y2;
-			
-			if(minX > tempX1) minX=tempX1;
-			if(maxX < tempX1) maxX=tempX1;
-			if(minY > tempY1) minY=tempY1;
-			if(maxY < tempY1) maxY=tempY1;
-			
-			if(minX > tempX2) minX=tempX2;
-			if(maxX < tempX2) maxX=tempX2;
-			if(minY > tempY2) minY=tempY2;
-			if(maxY < tempY2) maxY=tempY2;
-		}
-		
-		repositionX = minX/scale;
-		repositionY = minY/scale;
-		kraxWidth = maxX/scale - repositionX;
-		kraxHeight = maxY/scale - repositionY;
-//		System.out.println("MinX: " + minX + " (not affected by the scale!)");
-//		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
-//		System.out.println("MinY: " + minY + " (not affected by the scale!)");
-//		System.out.println("MaxY: " + maxY + " (not affected by the scale!)");
-	}
 	
 	/**
 	 * This method is only for testing
@@ -288,9 +140,8 @@ public class XML{
 	 * @param roads All the roads to put into the xml-string
 	 * @return String with the xml containing the svg-element
 	 */
-	public String createString(Road[] roads, double scale){
-		this.scale = scale;
-		findMinAndMaxValue(roads);
+	public String createString(Road[] roads){
+		DataHelper dataHelper = DataHelper.getInstance();
 		String root = "root_element";
 		String xmlString = "";
 		
@@ -306,19 +157,21 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", kraxWidth +"");
-			svgElement.setAttribute("height", kraxHeight +"");
+			svgElement.setAttribute("width", dataHelper.getMaxXCurrent() +"");
+			svgElement.setAttribute("height", dataHelper.getMaxYCurrent() +"");
 			
+			Color tempColor;
 			for(Road road : roads){
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", Double.toString((road.x1/scale) + repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/scale) + repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
-				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
-						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
-						"); strokeWidth:" + roadWidths.get(road.type));
+				line.setAttribute("x1", road.x1 + ""); 
+				line.setAttribute("y1", road.y1 + ""); 
+				line.setAttribute("x2", road.x2 + ""); 
+				line.setAttribute("y2", road.y2 + ""); 
+				line.setAttribute("style", "stroke:RGB(" +	dataHelper.getRoadColor(road.type).getRed() + "," + 
+															dataHelper.getRoadColor(road.type).getGreen() + "," + 
+															dataHelper.getRoadColor(road.type).getBlue() + "); " + 
+											"strokeWidth:" + dataHelper.getRoadWidth(road.type));
 				svgElement.appendChild(line);
 			}
 			rootElement.appendChild(svgElement);
@@ -354,8 +207,8 @@ public class XML{
 	 * @param colorForRoad The color which will be used for the roads
 	 * @param widthForRoad The width which will be used for the roads
 	 */
-	public void createFile(Road[] roads, double scale, String filename){
-		findMinAndMaxValue(roads);
+	public void createFile(Road[] roads, String filename){
+		DataHelper dataHelper = DataHelper.getInstance();
 		String root = "root_element";
 		
 		try{
@@ -370,19 +223,20 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", kraxWidth +"");
-			svgElement.setAttribute("height", kraxHeight +"");
+			svgElement.setAttribute("width", dataHelper.getMaxXCurrent() +"");
+			svgElement.setAttribute("height", dataHelper.getMaxYCurrent() +"");
 			
 			for(Road road : roads){
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", Double.toString((road.x1/scale) - repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/scale) - repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
-				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
-						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
-						"); strokeWidth:" + roadWidths.get(road.type));
+				line.setAttribute("x1", road.x1 + ""); 
+				line.setAttribute("y1", road.y1 + ""); 
+				line.setAttribute("x2", road.x2 + ""); 
+				line.setAttribute("y2", road.y2 + ""); 
+				line.setAttribute("style", "stroke:RGB(" +	dataHelper.getRoadColor(road.type).getRed() + "," + 
+															dataHelper.getRoadColor(road.type).getGreen() + "," + 
+															dataHelper.getRoadColor(road.type).getBlue() + "); " + 
+						"strokeWidth:" + dataHelper.getRoadWidth(road.type));
 				svgElement.appendChild(line);
 			}
 			rootElement.appendChild(svgElement);
@@ -491,52 +345,5 @@ public class XML{
 			
 		return roadTypes;
 	}
-*/	
-	/**
-	 * Used to put every type of road into a group called "svg" (to make it drawable)
-	 * but with the attributes: typ and name, describing the type of road and the
-	 * danish name
-	 * 
-	 * @param key The key to the element in the HashMap of element (key == typ of road)
-	 * @param roadTypes The HashMap containing all the elements
-	 * @param document The document for creating the xml structure
-	 */
-/*	private void createRoadTypesHelper(int key, HashMap<Integer, Element> roadTypes, Document document){
-		Element tempElement = document.createElement("svg");
-		tempElement.setAttribute("typ", key + "");
-		tempElement.setAttribute("name", roadTypes.get(key).getTagName());
-		roadTypes.get(key).appendChild(tempElement);
-	}
 */
-	
-	/**
-	 * Method currently as a part of the Java GUI test...
-	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
-	 * @param roads
-	 * @return
-	 */
-	public Road[] cleanUpRoads(Road[] roads, int scale){
-		this.scale = scale;
-		Road[] roadsToReturn = new Road[roads.length];
-		findMinAndMaxValue(roads);
-		
-		
-		for(int index=0; index<roads.length; index++){
-			roadsToReturn[index] = new Road((roads[index].x1/scale) - repositionX, // (X/scale) + (repositionX)
-					(roads[index].y1/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-					(roads[index].x2/scale) - repositionX, // (X/scale) + (repositionX)
-					(roads[index].y2/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY
-					roads[index].type, //Type
-					roads[index].name); //Name of the road
-		}
-		return roadsToReturn;
-	}
-	
-	public double getScale(){
-		return scale;
-	}
-	
-	public void setScale(double scale){
-		this.scale = scale;
-	}
 }

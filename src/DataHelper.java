@@ -13,33 +13,49 @@ import java.util.HashMap;
  *
  */
 public class DataHelper {
-	double maxXOriginal;
-	double minXOriginal;
-	double maxYOriginal;
-	double minYOriginal;
+	static DataHelper instance;
 	
-	double maxXCurrent;
-	double minXCurrent;
-	double maxYCurrent;
-	double minYCurrent;
+	private final Road[] roadsOriginal;
 	
-	double repositionXOriginal;
-	double repositionYOriginal;
-	double repositionXCurrent;
-	double repositionYCurrent;
+	private Road[] roadsCurrent;
 	
+	//Is to find the height and width of the data set
+	//And then saved for later use
+	private double maxXOriginal = 0; //Is 892638.21114
+	private double minXOriginal = 900000; //Is 442254.35659
+	private double maxYOriginal = 0; //Is 6402050.98297
+	private double minYOriginal = 6500000; //Is 6049914.43018
 	
-	double scaleCurrent;
+	private double maxXCurrent;
+	private double minXCurrent;
+	private double maxYCurrent;
+	private double minYCurrent;
+	
+	private double repositionXOriginal;
+	private double repositionYOriginal;
+	private double repositionXCurrent;
+	private double repositionYCurrent;
+	
+	private double scaleCurrent;
 
-	HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
+	private HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	
 	
 	public DataHelper(){
+		
+		//TODO Fill in next line
+		//KDTree kdTree = KDTree.getTree.......
+		roadsOriginal = cleanUpRoads(allRoads,1);
 		loadRoadColors();
 		loadRoadWidths();
 	}
 	
-	
+	public static DataHelper getInstance(){
+		if(instance == null) instance = new DataHelper();
+		return instance;
+		
+	}
 	
 	/**
 	 * Will load all the predefined road colors to a HashMap - only called in the constructor
@@ -159,8 +175,8 @@ public class DataHelper {
 					(roads[index].y1/scale)*(-1) + maxYCurrent + repositionYCurrent, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
 					(roads[index].x2/scale) - repositionXCurrent, // (X/scale) + (repositionXCurrent)
 					(roads[index].y2/scale)*(-1) + maxYCurrent + repositionYCurrent, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
-					100, //Scale
-					"Testvej"); //Name of the road
+					roads[index].type, //Type
+					roads[index].name); //Name of the road
 		}
 		return roadsToReturn;
 	}
@@ -201,6 +217,7 @@ public class DataHelper {
 //		System.out.println("MinY: " + minYCurrent + " (not affected by the scale!)");
 //		System.out.println("MaxY: " + maxYCurrent + " (not affected by the scale!)");
 	}
+
 
 
 
