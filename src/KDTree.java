@@ -52,7 +52,7 @@ public class KDTree
 	
 	public void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes, int depth)
 	{
-		if(kdn.left != null)
+		if(kdn.right != null)
 		{
 			nodes.add(kdn.left.getNode());
 			nodes.add(kdn.right.getNode());
@@ -61,18 +61,18 @@ public class KDTree
 			fillWithSubTree(kdn.left, nodes, depth+1);
 			fillWithSubTree(kdn.right, nodes, depth+1);
 		}
-		else if (kdn.right != null)
+		else if (kdn.left != null)
 		{
-			nodes.add(kdn.right.getNode());
+			nodes.add(kdn.left.getNode());
 			depthSize[depth]++;
-			fillWithSubTree(kdn.right, nodes, depth+1);
+			fillWithSubTree(kdn.left, nodes, depth+1);
 		}
 	}
 	
 	public double[] changePoint(KDNode kdn, int depth, double[] r)
 	{
 		if(depth%k==0)
-		{
+		{ 
 			double[] result = {kdn.getNode().coords[0], r[1]};
 			return result;
 		}
@@ -87,6 +87,36 @@ public class KDTree
 	{
 		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode()); depthSize[depth]++;}
 		
+		if(kdn.left != null)
+		{
+			if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
+			{
+				nodes.add(kdn.left.getNode());
+				depthSize[depth+1]++;
+				fillWithSubTree(kdn.left, nodes, depth);
+			}
+			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
+			{
+				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
+			}
+			//test
+			else
+			{
+				if(nodeContained(kdn.left, r1, r2))
+				{
+					System.out.println("Node missed at depth: " + depth);
+				}
+				if(kdn.left.right != null ) 
+				{
+					if (nodeContained(kdn.left.right, r1, r2)) System.out.println("Node missed at depth: " + depth+1);
+				}
+				if(kdn.left.left != null ) 
+				{
+					if (nodeContained(kdn.left.left, r1, r2)) System.out.println("Node missed at depth: " + depth+1);
+				}
+
+			}
+			//
 			if (kdn.right != null)
 			{
 				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
@@ -100,32 +130,26 @@ public class KDTree
 					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
 				}
 				//test
-				else if(nodeContained(kdn.right, r1, r2))
+				else
 				{
-					System.out.println("Node missed at depth: " + depth);
-				}
-				//
-				
-				if(kdn.left != null)
-				{
-					if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
-					{
-						nodes.add(kdn.left.getNode());
-						depthSize[depth+1]++;
-						fillWithSubTree(kdn.left, nodes, depth);
-					}
-					else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
-					{
-						searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
-					}
-					//test
-					else if(nodeContained(kdn.left, r1, r2))
+					if(nodeContained(kdn.right, r1, r2))
 					{
 						System.out.println("Node missed at depth: " + depth);
 					}
-					//
+					if(kdn.right.right != null ) 
+					{
+						if (nodeContained(kdn.right.right, r1, r2)) System.out.println("Node missed at depth: " + depth+1);
+					}
+					if(kdn.right.left != null ) 
+					{
+						if (nodeContained(kdn.right.left, r1, r2)) System.out.println("Node missed at depth: " + depth+1);
+					}
+
 				}
+				//
 			}
+		}
+
 		}
 	public static void main(String[] args)
 	{
@@ -139,11 +163,10 @@ public class KDTree
 			long time1 = System.currentTimeMillis();
 			ArrayList<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 			System.out.println(System.currentTimeMillis()-time1);
+			ArrayList<Node> searchResult2 = new ArrayList<Node>();
 			System.out.println("Building tree...");
 			tree.build(nodes);
 
-			
-			ArrayList<Node> searchResult2 = new ArrayList<Node>();;
 			for(Node n : nodes)
 			{
 				if (n.coords[0] > a[0] && n.coords[0] < b[0] && n.coords[1] > a[1] && n.coords[1] > b[1])
@@ -266,7 +289,7 @@ public class KDTree
 				//Testing
 				long time = System.currentTimeMillis();
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-				if(depth < 5) System.out.println(time-System.currentTimeMillis() + "  at depth: " + depth);
+				if(depth < 5) System.out.println(System.currentTimeMillis()-time + "  at depth: " + depth);
 				//
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
@@ -293,15 +316,15 @@ public class KDTree
 			{
 				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
 				{
-					KDNode result = new KDNode(nodes.get(1));
-					result.right = new KDNode(nodes.get(0));					
+					KDNode result = new KDNode(nodes.get(0));
+					result.left = new KDNode(nodes.get(1));					
 					return result;
 
 				}
 				else
 				{
-					KDNode result = new KDNode(nodes.get(0));
-					result.right = new KDNode(nodes.get(1));
+					KDNode result = new KDNode(nodes.get(1));
+					result.left = new KDNode(nodes.get(0));
 					return result;
 				}
 			}
@@ -311,9 +334,6 @@ public class KDTree
 			}
 		}
 	}
-	
-	
-	
 	/*
 	ArrayList<Node> nodes = new ArrayList<Node>();
 	double[] coords = {9 ,6};
