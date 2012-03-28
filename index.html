@@ -11,9 +11,11 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
+getXML();
 }
 function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
+	 alert(xmlhttp.readyState);
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 	    	roads = xmlhttp.responseXML.documentElement;
@@ -77,12 +79,14 @@ function getPosition(){
 	}
 
 function clickTest(){
+	getXML();
+	/*
 	 var xmlhttp=new XMLHttpRequest();
 	  uri = "http://localhost";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
 	  window.setTimeout(getXML,1000);
-	
+	*/
 }
 
 </script>

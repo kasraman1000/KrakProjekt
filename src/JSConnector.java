@@ -16,9 +16,12 @@ public class JSConnector {
 	private void createSocket() {
 		try {
 			ss = new ServerSocket(80);
+			System.out.println("...");
 			s = ss.accept();
 			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			createXMLDocument();
+			s.close();
+			ss.close();
 			//readParameters(input);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -29,8 +32,8 @@ public class JSConnector {
 		int i = 0;
 		System.out.println("createXML " + i);
 		i++;
-		XML xml = new XML();
-		xml.createFile(xml.createRoadsForTesting(),"./roads.xml");
+	//	XML xml = new XML();
+//		xml.createFile(xml.createRoadsForTesting(),"./roads.xml");
 //			output.writeUTF("<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>");
 		
 	}
@@ -60,16 +63,6 @@ public class JSConnector {
 	}
 	public static void main(String[] args) {
 		new JSConnector();
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	        public void run() {
-	        	try {
-					s.close();
-					ss.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
-	    }, "Shutdown-thread"));
 	}
 
 }
