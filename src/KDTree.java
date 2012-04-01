@@ -12,6 +12,34 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	
+	public static void main(String[] args)
+	{
+		try{
+			System.out.println("Building...");
+			long time = System.currentTimeMillis();
+		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
+		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
+		
+		double[] a = {600000, 6050000};
+		double[] b = {700000, 6100000};
+		double[] c = {600000, 6050000};
+		double[] d = {800000, 6300000};
+		time = System.currentTimeMillis();
+		Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
+		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
+		Road[] roadi = KDTree.getTree().searchRange(a, b);
+		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
+		Road[] roadu = KDTree.getTree().searchRange(c, d);
+		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+		
+		}catch(IOException e)
+		{
+			System.out.println("error");
+		}
+	}
+	
 	private KDTree(int k)
 	{
 		this.k = k;
@@ -25,13 +53,17 @@ public class KDTree
 	public void build(ArrayList<Node> nodes)
 	{
 		new KDNode(nodes, 0);
+		
 	}
 	
 	public Road[] searchRange(double[] p1, double[] p2)
 	{
 		HashSet<Road> roads = new HashSet<Road>();
 		ArrayList<Node> nodes= new ArrayList<Node>();
+		long time = System.currentTimeMillis();
 		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
+		System.out.println("Millies to search: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
 		for(Node n : nodes)
 		{
 			for(Road r : n.getRoads())
@@ -39,7 +71,11 @@ public class KDTree
 				roads.add(r);
 			}
 		}
-		return roads.toArray(new Road[0]);
+		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
+		Road[] result = roads.toArray(new Road[0]);
+		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
+		return result;
 	}
 	
 	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
@@ -146,6 +182,7 @@ public class KDTree
 			if(n.coords[1] > x[1]) x[1] = n.coords[1];
 		}
 		return x;
+		
 	}
 	
 	public double[] findSmallest(ArrayList<Node> nodes)
