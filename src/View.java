@@ -91,7 +91,12 @@ public class View {
 				System.out.println("Going South");
 				Point viewablePartOfCanvas = viewport.getViewPosition();
 				viewablePartOfCanvas.y += viewportMove;
-//				if (viewablePartOfCanvas.y > ?) viewablePartOfCanvas.y = ?;
+				System.out.println("viewablePartOfCanvas.y: " + viewablePartOfCanvas.y);
+				if (viewablePartOfCanvas.y+viewport.getHeight() > Controller.getMaxYCurrent()) viewablePartOfCanvas.y = (int) Controller.getMaxYCurrent();
+				System.out.println("canvas.getHeight(): " + canvas.getHeight());
+				System.out.println("Controller.getMaxYCurrent(): " + Controller.getMaxYCurrent());
+				System.out.println();
+				System.out.println();
 				viewport.setViewPosition(viewablePartOfCanvas);
 			}
 		});
@@ -103,7 +108,7 @@ public class View {
 				System.out.println("Going East");
 				Point viewablePartOfCanvas = viewport.getViewPosition();
 				viewablePartOfCanvas.x += viewportMove;
-//				if (viewablePartOfCanvas.x > ?) viewablePartOfCanvas.x = ?;
+				if (viewablePartOfCanvas.x+viewport.getWidth() > Controller.getMaxXCurrent()) viewablePartOfCanvas.x = (int) Controller.getMaxXCurrent();
 				viewport.setViewPosition(viewablePartOfCanvas);
 				viewport.toViewCoordinates(viewablePartOfCanvas);
 			}
@@ -209,11 +214,6 @@ public class View {
 	
 	
 	public class Canvas extends JPanel{
-		private int mouseX;
-		private int mouseY;
-		//private int OFFSET = 1;
-		
-		
 		public Canvas(){
 			setBackground(Color.white);
 			setBorder(BorderFactory.createLineBorder(Color.black));
@@ -275,7 +275,7 @@ public class View {
 		//TODO May throw a nullPointerException if DataHelper have not calculated the max values of x and y
 		@Override
 		public Dimension getPreferredSize(){
-			return new Dimension(8000, 6000);
+			return new Dimension((int) Controller.getMaxXCurrent()+5, (int) Controller.getMaxYCurrent()+5);
 			//return new Dimension((int) dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent());
 		}
 	}	
