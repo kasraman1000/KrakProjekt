@@ -22,9 +22,10 @@ public class View {
 	JFrame frame;
 	Canvas canvas;
 	JViewport viewport;
+	
+	//Road set to be in the canvas (ONLY containing roads to show!)
 	Road[] roads;
 	final int viewportMove;
-	
 	
 	public View(){
 		canvas = new Canvas();
@@ -44,6 +45,12 @@ public class View {
 		JScrollPane scrollPaneCanvas = new JScrollPane(canvas, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 //		JScrollPane scrollPaneCanvas = new JScrollPane(canvas, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		viewport = scrollPaneCanvas.getViewport();
+		
+		//The upper left corners position of the viewport
+		viewport.setViewPosition(new Point(canvas.getWidth()/3, canvas.getHeight()/3));
+		
+		//Only 1 part of the 3x3 parts in the buffer is showed
+		viewport.setViewSize(new Dimension(canvas.getWidth()/3, canvas.getHeight()/3));
 		
 		
 		//Not sure how much help the two next lines does
@@ -217,31 +224,8 @@ public class View {
 		public Canvas(){
 			setBackground(Color.white);
 			setBorder(BorderFactory.createLineBorder(Color.black));
-			
-//			addMouseListener(new MouseAdapter(){
-//				public void mousePressed(MouseEvent e){
-//					//currentShape.drawPressed(g, c, x, y)
-//					moveSquare(e.getX(), e.getY());
-//					
-//				}
-//			});
-//			
-//			addMouseMotionListener(new MouseAdapter(){
-//				public void mouseDragged(MouseEvent e){
-//					moveSquare(e.getX(), e.getY());
-//				}
-//			});
 		}
-//		
-//		private void moveSquare(int x, int y){
-//			if ((x != mouseX) || (y != mouseY)){
-//				repaint(mouseX, mouseY, squareH+OFFSET, squareW+OFFSET);
-//				mouseX = x;
-//				mouseY = y;
-//				repaint(mouseX, mouseY, shapeH, shapeW);
-//				
-//			}
-//		}
+		
 		
 		public void paintComponent(Graphics g){
 			Graphics2D g2 = (Graphics2D) g;
@@ -275,7 +259,7 @@ public class View {
 		//TODO May throw a nullPointerException if DataHelper have not calculated the max values of x and y
 		@Override
 		public Dimension getPreferredSize(){
-			return new Dimension((int) Controller.getMaxXCurrent()+5, (int) Controller.getMaxYCurrent()+5);
+			return new Dimension((int) Controller.getMaxXCurrent()*3, (int) Controller.getMaxYCurrent()*3);
 			//return new Dimension((int) dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent());
 		}
 	}	
