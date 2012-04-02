@@ -1,7 +1,9 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -38,12 +40,12 @@ public class Controller {
 			KDTree kdTree = KDTree.getTree();
 			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
 					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
-			Road[] allRoads = kdTree.searchRange(kdTree.origo, kdTree.top);
-			dataHelper = new DataHelper(allRoads);
+			//Road[] allRoads = kdTree.searchRange(kdTree.origo, kdTree.top);
+			dataHelper = new DataHelper(kdTree);
 
 			
-			roadsOriginal = dataHelper.cleanUpRoads(allRoads, 1);
-			roadsCurrent = dataHelper.cleanUpRoads(allRoads, scaleStart);
+//			roadsOriginal = dataHelper.cleanUpRoads(allRoads, 1);
+//			roadsCurrent = dataHelper.cleanUpRoads(allRoads, scaleStart);
 			
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -70,6 +72,9 @@ public class Controller {
 		System.out.println("Zoom level changed");
 	}
 	
+	public Road[] getRoadsToView(Point currentViewPoint, Dimension currentViewableArea, int scale){
+		return null;
+	}
 	
 	public void createXmlFile(Road[] roads, String fileName){
 //TODO	if(roads.length == 0) throw new SomeKindOfException;
@@ -165,14 +170,7 @@ public class Controller {
 	public static int getRoadWidth(int roadType){
 		return dataHelper.roadWidths.get(roadType);
 	}
-	
-	public static double getMaxXCurrent(){
-		return dataHelper.maxXCurrent;
-	}
-	
-	public static double getMaxYCurrent(){
-		return dataHelper.maxYCurrent;
-	}
+
 	
 	public static double getMaxXOriginal(){
 		return KDTree.getTree().top[0];
@@ -192,39 +190,61 @@ public class Controller {
 	 */
 	
 	private class DataHelper {
-		//TODO Clean up all of these fields!!
+		//TODO Clean up all of these fields!! A lot of them are not needed!!!
 		private Road[] roadsOriginal;
-		private Road[] roadsCurrent;
+		private KDTree kdTree;
 		
 		//Is to find the height and width of the data set
 		//And then saved for later use
-		private double maxXOriginal = 0; //Is 892638.21114
-		private double minXOriginal = 900000; //Is 442254.35659
-		private double maxYOriginal = 0; //Is 6402050.98297
-		private double minYOriginal = 6500000; //Is 6049914.43018
-		
-		private double maxXCurrent;
-		private double minXCurrent;
-		private double maxYCurrent;
-		private double minYCurrent;
-		
-		private double repositionXOriginal;
-		private double repositionYOriginal;
-		private double repositionXCurrent;
-		private double repositionYCurrent;
-		
-		private double scaleCurrent;
+		private double maxX = 0; //Is 892638.21114
+		private double minX = 900000; //Is 442254.35659
+		private double maxY = 0; //Is 6402050.98297
+		private double minY = 6500000; //Is 6049914.43018
+
+		private double repositionX;
+		private double repositionY;
 
 		private HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 		private HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	
 		
-		private DataHelper(Road[] allRoadsUnscaled){
-			roadsOriginal = cleanUpRoads(allRoadsUnscaled,1);
+		private DataHelper(KDTree kdTree){
+			this.kdTree = kdTree;
+	//		roadsOriginal = cleanUpRoads(allRoadsUnscaled,1);
 			loadRoadColors();
 			loadRoadWidths();
 		}
 		
+		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){
+			HashSet<Integer> roadTypesSet;
+			HashSet<Road> roadsToReturn;
+					
+			for(int roadType : roadTypes){
+				roadTypesSet.add(roadType);
+			}
+			
+			Point x1y1 = point;
+			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
+			
+			Road[] tempRoads = kdTree.searchRange(x1y1, x2y2);
+			
+			for(Road road : tempRoads){
+				if(roadTypesSet.contains(road.type)){
+					Road tempRoad = new Road(
+							//Is repositioned to fit the canvas in the view
+							(road.x1-point.x)/scale,
+							(road.y1-point.y)/scale,
+							(road.x2-point.x)/scale,
+							(road.y2-point.y)/scale,
+							road.type,
+							road.name
+							);
+					roadsToReturn.add(tempRoad);
+				}
+			}
+
+			return roadsToReturn.toArray(new Road[0]);
+		}
 		
 		/**
 		 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
@@ -232,16 +252,15 @@ public class Controller {
 		 * @param roads
 		 * @return
 		 */
-		public Road[] cleanUpRoads(Road[] roads, int scale){
-			scaleCurrent = scale;
+		public Road[] cleanUpRoads(Road[] roads){
 			findMinAndMaxValue(roads);
 			Road[] roadsToReturn = new Road[roads.length];
 		
 			for(int index=0; index<roads.length; index++){
-				roadsToReturn[index] = new Road((roads[index].x1/scale) - repositionXCurrent, // (X/scale) + (repositionXCurrent)
-						(roads[index].y1/scale)*(-1) + maxYCurrent + repositionYCurrent, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
-						(roads[index].x2/scale) - repositionXCurrent, // (X/scale) + (repositionXCurrent)
-						(roads[index].y2/scale)*(-1) + maxYCurrent + repositionYCurrent, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
+				roadsToReturn[index] = new Road(roads[index].x1 - repositionX, // (X/scale) + (repositionXCurrent)
+						roads[index].y1*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
+						roads[index].x2 - repositionX, // (X/scale) + (repositionXCurrent)
+						roads[index].y2*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
 						roads[index].type, //Type
 						roads[index].name); //Name of the road
 			}
@@ -255,24 +274,17 @@ public class Controller {
 //			System.out.println("ReposY: " + repositionYCurrent);
 
 			for(Road road : allRoads){
-				if(minXOriginal > road.x1) minXOriginal=road.x1;
-				if(maxXOriginal < road.x1) maxXOriginal=road.x1;
-				if(minYOriginal > road.y1) minYOriginal=road.y1;
-				if(maxYOriginal < road.y1) maxYOriginal=road.y1;
+				if(minX > road.x1) minX=road.x1;
+				if(maxX < road.x1) maxX=road.x1;
+				if(minY > road.y1) minY=road.y1;
+				if(maxY < road.y1) maxY=road.y1;
 				
-				if(minXOriginal > road.x2) minXOriginal=road.x2;
-				if(maxXOriginal < road.x2) maxXOriginal=road.x2;
-				if(minYOriginal > road.y2) minYOriginal=road.y2;
-				if(maxYOriginal < road.y2) maxYOriginal=road.y2;
+				if(minX > road.x2) minX=road.x2;
+				if(maxX < road.x2) maxX=road.x2;
+				if(minY > road.y2) minY=road.y2;
+				if(maxY < road.y2) maxY=road.y2;
 			}
-			
-			repositionXCurrent = minXOriginal/scaleCurrent;
-			repositionYCurrent = minYOriginal/scaleCurrent;
-			
-
-			maxXCurrent = maxXOriginal/scaleCurrent - repositionXCurrent;
-			maxYCurrent = maxYOriginal/scaleCurrent - repositionYCurrent;
-			
+						
 //			System.out.println("MinX: " + minXCurrent);
 //			System.out.println("MaxX: " + maxXCurrent);
 //			System.out.println("MinY: " + minYCurrent);

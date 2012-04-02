@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import org.junit.Test;
 
 /**
  * BackUp class for Java GUI
@@ -19,18 +18,22 @@ import org.junit.Test;
  *
  */
 public class View {
-	JFrame frame;
-	Canvas canvas;
-	JViewport viewport;
+	private JFrame frame;
+	private Canvas canvas;
+	private JViewport viewport;
+	private Point pointAtOriginalMap;
+	private int scale;
 	
 	//Road set to be in the canvas (ONLY containing roads to show!)
-	Road[] roads;
-	final int viewportMove;
+	private Road[] roads;
+	private final int viewportMove;
 	
 	public View(){
 		canvas = new Canvas();
 		viewport = new JViewport();
 		viewportMove = 50;
+		pointAtOriginalMap = new Point(0,0);
+		scale = 500;
 	}
 	
 	public void createFrame(){
@@ -99,9 +102,9 @@ public class View {
 				Point viewablePartOfCanvas = viewport.getViewPosition();
 				viewablePartOfCanvas.y += viewportMove;
 				System.out.println("viewablePartOfCanvas.y: " + viewablePartOfCanvas.y);
-				if (viewablePartOfCanvas.y+viewport.getHeight() > Controller.getMaxYCurrent()) viewablePartOfCanvas.y = (int) Controller.getMaxYCurrent();
+//				if (viewablePartOfCanvas.y+viewport.getHeight() > Controller.getMaxYCurrent()) viewablePartOfCanvas.y = (int) Controller.getMaxYCurrent();
 				System.out.println("canvas.getHeight(): " + canvas.getHeight());
-				System.out.println("Controller.getMaxYCurrent(): " + Controller.getMaxYCurrent());
+//				System.out.println("Controller.getMaxYCurrent(): " + Controller.getMaxYCurrent());
 				System.out.println();
 				System.out.println();
 				viewport.setViewPosition(viewablePartOfCanvas);
@@ -115,7 +118,7 @@ public class View {
 				System.out.println("Going East");
 				Point viewablePartOfCanvas = viewport.getViewPosition();
 				viewablePartOfCanvas.x += viewportMove;
-				if (viewablePartOfCanvas.x+viewport.getWidth() > Controller.getMaxXCurrent()) viewablePartOfCanvas.x = (int) Controller.getMaxXCurrent();
+//				if (viewablePartOfCanvas.x+viewport.getWidth() > Controller.getMaxXCurrent()) viewablePartOfCanvas.x = (int) Controller.getMaxXCurrent();
 				viewport.setViewPosition(viewablePartOfCanvas);
 				viewport.toViewCoordinates(viewablePartOfCanvas);
 			}
@@ -208,11 +211,13 @@ public class View {
 	public void drawRoads(Road[] roads){
 		this.roads = roads;
 		//TODO Set coordinates of the viewport
-		canvas.setSize(new Dimension((int) Controller.getMaxXCurrent(), (int) Controller.getMaxYCurrent()));
+//		canvas.setSize(new Dimension((int) Controller.getMaxXCurrent(), (int) Controller.getMaxYCurrent()));
 		canvas.updateUI();//
 	}
 	
-	
+	public Dimension getViewportDimension(){
+		return viewport.getViewSize();
+	}
 	
 	
 	
@@ -235,7 +240,7 @@ public class View {
 				for(Road road : roads){
 					g2.setColor(Controller.getRoadColor(road.type));
 					g2.setStroke(new BasicStroke(Controller.getRoadWidth(road.type)));
-					g2.drawLine((int) road.x1, (int) road.y1, (int) road.x2, (int) road.y2);
+					g2.drawLine((int) road.x1/scale, (int) road.y1/scale, (int) road.x2/scale, (int) road.y2/scale);
 				}
 			}
 //			g2.drawLine(150, 150, 150, 150);
@@ -259,8 +264,7 @@ public class View {
 		//TODO May throw a nullPointerException if DataHelper have not calculated the max values of x and y
 		@Override
 		public Dimension getPreferredSize(){
-			return new Dimension((int) Controller.getMaxXCurrent()*3, (int) Controller.getMaxYCurrent()*3);
-			//return new Dimension((int) dataHelper.getMaxXCurrent(), (int) dataHelper.getMaxYCurrent());
+			return new Dimension((int) viewport.getWidth()*3, (int) viewport.getHeight()*3);
 		}
 	}	
 

@@ -144,8 +144,8 @@ public class XML{
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", Controller.getMaxXCurrent() +"");
-			svgElement.setAttribute("height", Controller.getMaxYCurrent() +"");
+//			svgElement.setAttribute("width", Controller.getMaxXScaled() +"");
+//			svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
 			
 			for(Road road : roads){
 				System.out.println("Inside road loop in createFileUnderTesting():");
@@ -309,8 +309,8 @@ public class XML{
 		Element svgElement = document.createElement("svg");
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svgElement.setAttribute("version", "1.1");
-		svgElement.setAttribute("width", Controller.getMaxXCurrent() +"");
-		svgElement.setAttribute("height", Controller.getMaxYCurrent() +"");
+//		svgElement.setAttribute("width", Controller.getMaxXScaled() +"");
+//		svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
 		
 		for(Road road : roads){
 			Element line = document.createElement("line");
