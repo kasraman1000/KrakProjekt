@@ -25,11 +25,6 @@ public class Controller {
 	private static KDTree kdTree;
 	
 	
-	public Controller(){
-		
-	}
-	
-	
 	//TODO Must be changed when JS is up running!!!
 	
 	public void launchKrax(){
@@ -188,7 +183,9 @@ public class Controller {
 	
 	
 	
-	
+	private String getErrorString(int errorCode){
+		
+	}
 	
 	
 	/**
