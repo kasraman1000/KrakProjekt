@@ -103,7 +103,14 @@ public class Controller {
 	
 	public String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
-		return xml.createString(roads);
+		String tempString = "";
+		try {
+			tempString = xml.createString(roads);
+		} catch (ParserConfigurationException | TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tempString;
 	}
 	
 	public Road[] getRoadsFromFile(String fileName, int[] roadTypesToExtract){
@@ -177,7 +184,7 @@ public class Controller {
 	
 	
 	private String getErrorString(int errorCode){
-		
+		return null;
 	}
 	
 	
@@ -219,11 +226,11 @@ public class Controller {
 				roadTypesSet.add(roadType);
 			}
 			
-
-			Point x1y1 = point;
-			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
+			Region region = new Region(point.x, point.y, point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
+//			Point x1y1 = point;
+//			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
 			
-			Road[] tempRoads = kdTree.searchRange(x1y1, x2y2);
+			Road[] tempRoads = kdTree.searchRange(region);
 			
 			for(Road road : tempRoads){
 				if(roadTypesSet.contains(road.getType())){

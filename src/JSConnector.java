@@ -47,10 +47,11 @@ public class JSConnector {
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
-			Double x1 = Double.parseDouble(parameters.get("x1"));
-			Double y1 = Double.parseDouble(parameters.get("y1"));
-			Double x2 = Double.parseDouble(parameters.get("x2"));
-			Double y2 = Double.parseDouble(parameters.get("y2"));
+			System.out.println("js - handleRequest(): " + parameters.get("x1"));
+			Double x1 = Double.valueOf(parameters.get("x1"));
+			Double y1 = Double.valueOf(parameters.get("y1"));
+			Double x2 = Double.valueOf(parameters.get("x2"));
+			Double y2 = Double.valueOf(parameters.get("y2"));
 			String response = controller.getXmlString(new Region(x1,y1,x2,y2));
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
@@ -87,6 +88,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
+		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 		if(!hasParameters(line))return result;
 		//discards everything before the questionmark
