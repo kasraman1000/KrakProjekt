@@ -217,39 +217,9 @@ public class Controller {
 			loadRoadColors();
 			loadRoadWidths();
 		}
-		
-		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){
-			HashSet<Integer> roadTypesSet = new HashSet<>();
-			HashSet<Road> roadsToReturn = new HashSet<>();;
-					
-			for(int roadType : roadTypes){
-				roadTypesSet.add(roadType);
-			}
-			
-			Region region = new Region(point.x, point.y, point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
-//			Point x1y1 = point;
-//			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
-			
-			Road[] tempRoads = kdTree.searchRange(region);
-			
-			for(Road road : tempRoads){
-				if(roadTypesSet.contains(road.getType())){
-					Road tempRoad = new Road(
-							//Is repositioned to fit the canvas in the view
-							(road.getX1()-point.x)/scale,
-							(road.getY1()-point.y)/scale,
-							(road.getX2()-point.x)/scale,
-							(road.getY2()-point.y)/scale,
-							road.getType(),
-							road.getName()
-							);
-					roadsToReturn.add(tempRoad);
-				}
-			}
 
-			return roadsToReturn.toArray(new Road[0]);
-		}
 		
+
 		/**
 		 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
 		 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
