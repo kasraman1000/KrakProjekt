@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +14,12 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
+	
 	/*
 	public static void main(String[] args)
 	{
 		
-		/*
+		
 		double[][] testCoords = new double[1000][2];
 		double[] kdnNode = {1, 0};
 		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
@@ -39,14 +41,13 @@ public class KDTree
 			Node test = kdn.medianTest(nodes, 0, 0);
 			System.out.println(test.coords[0]);
 		}
-		*/
-		/*
+		
+		
 		try{
 			System.out.println("Building...");
 			long time = System.currentTimeMillis();
 		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
-		System.out.println(KDTree.getTree().top[0]-KDTree.getTree().origo[0]);
 		double[] a = {600000, 6050000};
 		double[] b = {700000, 6100000};
 		double[] c = {600000, 6050000};
@@ -55,15 +56,15 @@ public class KDTree
 		for(int i = 0; i < 6; i++)
 		{
 			time = System.currentTimeMillis();
-			Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
+			Road[] roads = KDTree.getTree().searchRange(new Region(tree.origo[0], tree.origo[1] , tree.top[0], tree.top[1]));
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
 			System.out.println("Number of roads found: " + roads.length);
 			time = System.currentTimeMillis();
-			Road[] roadi = KDTree.getTree().searchRange(a, b);
+			Road[] roadi = KDTree.getTree().searchRange(new Region(a[0], a[1], b[0], b[1]));
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
 			System.out.println("Number of roads found: " + roadi.length);
 			time = System.currentTimeMillis();
-			Road[] roadu = KDTree.getTree().searchRange(c, d);
+			Road[] roadu = KDTree.getTree().searchRange(new Region(c[0], c[1], d[0], d[1]));
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
 			System.out.println("Number of roads found: " + roadu.length);
 			System.out.println("-------------------------------------------------");
@@ -74,8 +75,8 @@ public class KDTree
 			System.out.println("error");
 		}
 			
-	}*/
-
+	}
+*/
 	
 	private KDTree(int k)
 	{
@@ -107,7 +108,11 @@ public class KDTree
 	
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
-		
+		if(road.getPriority() > zoomLevel)
+			return false;
+		else
+			return true;
+		/*
 		if(zoomLevel < 4)
 		{
 			if(road.getType() == 11 || road.getType() == 8 || road.getType() == 48 || road.getType() == 28)
@@ -124,13 +129,15 @@ public class KDTree
 				return false;
 		}
 		return true;
+		*/
 	}
 	
 	public Road[] searchRange(Region region)
 	{
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-		int zoom = 4;
+		int zoom = zoomLevel(p1, p2);
+
 //		int zoom = zoomLevel(p1, p2);
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
@@ -152,6 +159,17 @@ public class KDTree
 		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
 		System.out.println("Size: " + result.length);
 		return result;
+	}
+	
+	
+	public Road[] searchRange(double[] p1, double[] p2)
+	{
+		return searchRange(new Region(p1[0], p1[1], p2[0], p2[1]));
+	}
+	
+	public Road[] searchRange(Point p1, Point p2)
+	{
+		return searchRange(new Region(p1.x, p1.y, p2.x, p2.y));
 	}
 	
 	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
@@ -313,6 +331,13 @@ public class KDTree
 			return node;
 		}
 		
+		/**
+		 * Returns the median node of a small collection. The nodes in the collection is chosen randomly from the nodes ArrayList. 
+		 * @param nodes Collection to retrieve median from.
+		 * @param nth	Not in use.
+		 * @param depth	Recursion level of the function calling this function.
+		 * @return	median node of a small sample collection.
+		 */
 		public Node median(ArrayList<Node> nodes, int nth, int depth)
 		{
 			int size = (int) (10*(Math.log10(nodes.size())+1));
@@ -325,7 +350,7 @@ public class KDTree
 			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
 			return randomNodes[size/2];
 		}
-
+		
 		private Node medianTest(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
@@ -354,7 +379,12 @@ public class KDTree
 			else return pivot;
 
 		}
-
+		/**
+		 * 
+		 * @param nodes The nodes that the KDTree/subtree is build from
+		 * @param depth	Recursion depth of the function call.
+		 * @return	The KDNode that contains the median node for the nodes collection.
+		 */
 		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
 

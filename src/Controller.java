@@ -35,8 +35,8 @@ public class Controller {
 	public Controller(){
 		kdTree = KDTree.getTree();
 		try {
-			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
-						"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+			kdTree.initialize("kdv_node_unload.txt",
+						"kdv_unload.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -217,39 +217,9 @@ public class Controller {
 			loadRoadColors();
 			loadRoadWidths();
 		}
-		
-		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){
-			HashSet<Integer> roadTypesSet;
-			HashSet<Road> roadsToReturn;
-					
-			for(int roadType : roadTypes){
-				roadTypesSet.add(roadType);
-			}
-			
-			Region region = new Region(point.x, point.y, point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
-//			Point x1y1 = point;
-//			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
-			
-			Road[] tempRoads = kdTree.searchRange(region);
-			
-			for(Road road : tempRoads){
-				if(roadTypesSet.contains(road.getType())){
-					Road tempRoad = new Road(
-							//Is repositioned to fit the canvas in the view
-							(road.getX1()-point.x)/scale,
-							(road.getY1()-point.y)/scale,
-							(road.getX2()-point.x)/scale,
-							(road.getY2()-point.y)/scale,
-							road.getType(),
-							road.getName()
-							);
-					roadsToReturn.add(tempRoad);
-				}
-			}
 
-			return roadsToReturn.toArray(new Road[0]);
-		}
 		
+
 		/**
 		 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
 		 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
@@ -353,13 +323,13 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 3;
-			int mediumRoads = 2;
-			int smallRoads = 2;
-			int tinyRoads = 1;
-			int tunnels = 2;
-			int seaWays  = 3; 
-			int walkingPaths = 1;
+			int largeRoads = 30;
+			int mediumRoads = 20;
+			int smallRoads = 20;
+			int tinyRoads = 10;
+			int tunnels = 20;
+			int seaWays  = 30; 
+			int walkingPaths = 10;
 //			int bicyclePaths = 1;
 			
 			int unknownRoads = 1;
