@@ -14,8 +14,8 @@ public class JSConnector {
 	/**
 	 * Constructor that makes the class ready for a request
 	 */
-	public JSConnector(Controller c) {
-		controller = c;
+	public JSConnector() {
+		//controller = c;
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
 			ServerSocket ss = new ServerSocket(80);
@@ -98,6 +98,7 @@ public class JSConnector {
 		String[] lines = line.split("&");
 		for(String pair : lines){
 			String[] pairArray = pair.split("=");
+			System.out.println(pairArray[0], pairArray[1]);
 			result.put(pairArray[0], pairArray[1]);
 		}
 		return result;
