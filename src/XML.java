@@ -83,6 +83,9 @@ public class XML{
       	transformer.transform(source, result);
 	    String xmlString = stringWriter.toString();
 		
+	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml");
+	    
+	    
 	    return xmlString;
 	}
 	
@@ -304,7 +307,6 @@ public class XML{
 		
 		Element rootElement = document.createElement(root);
 		document.appendChild(rootElement);
-	
 		//The outer svg element 
 		Element svgElement = document.createElement("svg");
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
@@ -322,12 +324,12 @@ public class XML{
 			line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.getType()).getRed() + "," + 
 														Controller.getRoadColor(road.getType()).getGreen() + "," + 
 														Controller.getRoadColor(road.getType()).getBlue() + "); " + 
-										"strokeWidth:" + Controller.getRoadWidth(road.getType()));
-			line.setAttribute("roadType", road.getType() + "");
-			line.setAttribute("roadName", road.getName() + "");
-			svgElement.appendChild(line);
+										"stroke-width:" + Controller.getRoadWidth(road.getType()));
+//			line.setAttribute("roadType", road.getType() + "");
+//			line.setAttribute("roadName", road.getName() + "");
+			rootElement.appendChild(line);
 		}
-		rootElement.appendChild(svgElement);
+//		rootElement.appendChild(svgElement);
 			
 	    return document;
 	}

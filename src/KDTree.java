@@ -131,7 +131,8 @@ public class KDTree
 	{
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-		int zoom = zoomLevel(p1, p2);
+		int zoom = 4;
+//		int zoom = zoomLevel(p1, p2);
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
 		long time = System.currentTimeMillis();
@@ -150,6 +151,7 @@ public class KDTree
 		time = System.currentTimeMillis();
 		Road[] result = roads.toArray(new Road[0]);
 		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
+		System.out.println("Size: " + result.length);
 		return result;
 	}
 	

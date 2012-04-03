@@ -16,30 +16,33 @@ function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
+	    	alert(xmlhttp.responseXML);
 	    	roads = xmlhttp.responseXML.documentElement;
 		  	svgFrame = document.getElementById("svgframe");
 			initialView();
 	    }
 	  }
-	  uri = "http://localhost/?x1=0&y1=0&x2=10000&y2=10000";
+
+//	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
+	  uri = "http://localhost/?x1=450000&y1=6050000&x2=650000&y2=6750000";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
 }
 function clickUp(){
-	moveViewBox(0, -25);
+	moveViewBox(0, -2500);
 }
 function clickDown(){
-	moveViewBox(0, 25);
+	moveViewBox(0, 2500);
 }
 
 function clickRight(){
-	moveViewBox(25, 0);
+	moveViewBox(2500, 0);
 	 
 }
 
 function clickLeft(){
-	moveViewBox(-25, 0);
+	moveViewBox(-2500, 0);
 }
 
 function moveViewBox(x,y){
@@ -48,6 +51,7 @@ function moveViewBox(x,y){
 	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
 }
 function initialView(){
+	alert(roads);
 	for(var g = 0; g < roads.childNodes.length; g++){
 		var xmlNode = roads.childNodes[g];
 		
@@ -62,10 +66,10 @@ function initialView(){
 		}
 		svgFrame.appendChild(svgObject); 	
 	}	
-	xView = 300;
-	yView = 150;
-	wView = 350;
-	hView = 250;
+	xView = 450000;
+	yView = 6050000;
+	wView = 50000;
+	hView = 200000;
 	svgFrame.setAttribute("viewBox", xView +" " + yView + " " + wView + " " + hView);
 	}
 	
