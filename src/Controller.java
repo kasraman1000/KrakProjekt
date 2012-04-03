@@ -219,8 +219,8 @@ public class Controller {
 		}
 		
 		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){
-			HashSet<Integer> roadTypesSet;
-			HashSet<Road> roadsToReturn;
+			HashSet<Integer> roadTypesSet = new HashSet<>();
+			HashSet<Road> roadsToReturn = new HashSet<>();;
 					
 			for(int roadType : roadTypes){
 				roadTypesSet.add(roadType);
