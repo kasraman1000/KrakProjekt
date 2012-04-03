@@ -107,8 +107,8 @@ public class KDTree
 		
 		switch(zoomLevel)
 		{
-		case 1: return road.type
-		case 2:
+		case 1: return road.type == 1 || road.type == 2 || road.type == 3 || road.type == 41 || road.type == 42 || road.type == 43 || road.type == 21 || road.type == 22 || road.type == 23;
+		case 2: return road.type == 1 || road.type == 2 || road.type == 3 || road.type == 41 || road.type == 42 || road.type == 43 || road.type == 21 || road.type == 22 || road.type == 23;
 		case 3:
 		case 4:
 		}
