@@ -6,12 +6,12 @@ import java.awt.Color;
  */
 public class Road {
 	
-	public final double x1;
-	public final double y1;
-	public final double x2;
-	public final double y2;
-	public final int type;
-	public final String name;
+	private final double x1;
+	private final double y1;
+	private final double x2;
+	private final double y2;
+	private final int type;
+	private final String name;
 	
 	
 	public Road(double x1, double y1, double x2, double y2, int type, String name){
@@ -30,4 +30,53 @@ public class Road {
 				+ ", type=" + type + ", name=" + name + "]";
 	}
 
+
+	/**
+	 * @return the x1
+	 */
+	public double getX1() {
+		return x1;
+	}
+
+
+	/**
+	 * @return the y1
+	 */
+	public double getY1() {
+		return y1;
+	}
+
+
+	/**
+	 * @return the x2
+	 */
+	public double getX2() {
+		return x2;
+	}
+
+
+	/**
+	 * @return the y2
+	 */
+	public double getY2() {
+		return y2;
+	}
+
+
+	/**
+	 * @return the type
+	 */
+	public int getType() {
+		return type;
+	}
+
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	
 }
