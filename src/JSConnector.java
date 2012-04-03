@@ -70,7 +70,8 @@ public class JSConnector {
 //			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
 			String httpResponse = httpHeader + response;
-			output.writeUTF(httpResponse);
+	//		output.writeUTF(httpResponse);
+			output.write(httpResponse.getBytes());
 			output.flush();
 			output.close();
 			s.close();
@@ -90,14 +91,16 @@ public class JSConnector {
 	private HashMap<String, String> readParameters(String line) {
 		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
-		if(!hasParameters(line))return result;
+//		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark
 		line = line.split("\\?")[1];
 		//discards everything after the space
 		line = line.split(" ")[0];
 		String[] lines = line.split("&");
+		System.out.println("JSConnector.readParameters()");
 		for(String pair : lines){
 			String[] pairArray = pair.split("=");
+			System.out.println(pairArray[0] + ": " + pairArray[1]);
 			result.put(pairArray[0], pairArray[1]);
 		}
 		return result;
@@ -106,8 +109,5 @@ public class JSConnector {
 	private boolean hasParameters(String line) {
 		//search the string and tells if it contains a questionmark
 		return line.indexOf("\\?")!=-1;
-	}
-
-	public static void main(String[] args) {
 	}
 }
