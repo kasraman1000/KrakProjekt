@@ -34,10 +34,7 @@ public class JSConnector {
 	private void listenForBrowserRequest(ServerSocket ss) {
 		try {
 			Socket s = ss.accept();
-			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			HashMap<String,String> parameters = readParameters(input.readLine());
-			String response = controller.getXML(new Region(parameters.get("x1"),parameters.get("y1"),parameters.get("x2"),parameters.get("y2")));
-			sendResponseToBrowser(s,response);
+			handleRequest(s);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,6 +42,22 @@ public class JSConnector {
 
 	}
 	
+	private void handleRequest(Socket s) {
+		BufferedReader input;
+		try {
+			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			HashMap<String,String> parameters = readParameters(input.readLine());
+			Double x1 = Double.parseDouble(parameters.get("x1"));
+			Double y1 = Double.parseDouble(parameters.get("y1"));
+			Double x2 = Double.parseDouble(parameters.get("x2"));
+			Double y2 = Double.parseDouble(parameters.get("y2"));
+			String response = controller.getXmlString(new Region(x1,y1,x2,y2));
+			sendResponseToBrowser(s,response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 
 	 * @param s the socket that contains the outputstream
