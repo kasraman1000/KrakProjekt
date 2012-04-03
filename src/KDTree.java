@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 public class KDTree
 {
@@ -11,9 +12,35 @@ public class KDTree
 	double[] origo;
 	double[] top;
 	private static KDTree tree = new KDTree(2);
+	private static Random r = new Random();
 	
 	public static void main(String[] args)
 	{
+		/*
+		
+		double[][] testCoords = new double[1000][2];
+		double[] kdnNode = {1, 0};
+		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		for(int i = 0; i < 1000; i++)
+		{
+			double[] d1 = {i, 0};
+			testCoords[i] = d1;
+		}
+		for(int i = 0; i < 1000; i++)
+		{
+			nodes.add(new Node(testCoords[i]));
+		}
+
+
+
+		for(int i = 0; i < 10; i ++)
+		{
+			Node test = kdn.medianTest(nodes, 0, 0);
+			System.out.println(test.coords[0]);
+		}
+		*/
+		
 		try{
 			System.out.println("Building...");
 			long time = System.currentTimeMillis();
@@ -24,20 +51,26 @@ public class KDTree
 		double[] b = {700000, 6100000};
 		double[] c = {600000, 6050000};
 		double[] d = {800000, 6300000};
-		time = System.currentTimeMillis();
-		Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
-		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
-		time = System.currentTimeMillis();
-		Road[] roadi = KDTree.getTree().searchRange(a, b);
-		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
-		time = System.currentTimeMillis();
-		Road[] roadu = KDTree.getTree().searchRange(c, d);
-		System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+
+		for(int i = 0; i < 6; i++)
+		{
+			time = System.currentTimeMillis();
+			Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			time = System.currentTimeMillis();
+			Road[] roadi = KDTree.getTree().searchRange(a, b);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			time = System.currentTimeMillis();
+			Road[] roadu = KDTree.getTree().searchRange(c, d);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("-------------------------------------------------");
+		}
 		
 		}catch(IOException e)
 		{
 			System.out.println("error");
 		}
+		
 	}
 	
 	private KDTree(int k)
@@ -56,9 +89,14 @@ public class KDTree
 		
 	}
 	
+	private int zoomLevel(double[] p1, double[] p2)
+	{
+		return 0;
+	}
+	
 	public Road[] searchRange(double[] p1, double[] p2)
 	{
-		HashSet<Road> roads = new HashSet<Road>();
+		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
 		long time = System.currentTimeMillis();
 		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
@@ -235,6 +273,50 @@ public class KDTree
 		public Node getNode()
 		{
 			return node;
+		}
+		
+		public Node medianTest(ArrayList<Node> nodes, int nth, int depth)
+		{
+			int size = 100;
+			Node[] randomNodes = new Node[size];
+			for(int i = 0; i < size; i++)
+			{
+				 randomNodes[i] = nodes.get(Math.abs(r.nextInt())%nodes.size());
+			}
+			Arrays.sort(randomNodes);
+			int above = 0;
+			int below = 0;
+			boolean found = false;
+			int i = 0;
+			while(!found && i < size-1)
+			{
+				above = 0;
+				below = 0;
+				for(int j = 0; j < size; j++)
+				{
+					if(i != j)
+					{
+						if(randomNodes[i].coords[depth%k] < randomNodes[j].coords[depth%k])
+						{
+							above++;
+						}
+						else if(randomNodes[i].coords[depth%k] > randomNodes[j].coords[depth%k])
+						{
+							below++;
+						}
+						else
+						{
+							
+						}
+					}
+				}
+				if(below == size/2)
+				{
+					found = true;
+				}
+				i++;
+			}
+			return randomNodes[i];
 		}
 
 		private Node median(ArrayList<Node> nodes, int nth, int depth) {
