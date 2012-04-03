@@ -148,13 +148,13 @@ public class XML{
 //			svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
 			
 			for(Road road : roads){
-				System.out.println("Inside road loop in createFileUnderTesting():");
-				System.out.println("roads.length: " + roads.length);
-				System.out.println("x1: " + road.x1);
-				System.out.println("y1: " + road.y1);
-				System.out.println("x2: " + road.x2);
-				System.out.println("y2: " + road.y2);
-				
+//				System.out.println("Inside road loop in createFileUnderTesting():");
+//				System.out.println("roads.length: " + roads.length);
+//				System.out.println("x1: " + road.x1);
+//				System.out.println("y1: " + road.y1);
+//				System.out.println("x2: " + road.x2);
+//				System.out.println("y2: " + road.y2);
+//				
 				
 				Element line = document.createElement("line");
 

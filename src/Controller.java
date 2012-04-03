@@ -21,7 +21,8 @@ import org.xml.sax.SAXException;
  */
 public class Controller {
 	private static DataHelper dataHelper;
-	private XML xml;
+	private static XML xml;
+	private static KDTree kdTree;
 	
 	
 	public Controller(){
@@ -110,6 +111,11 @@ public class Controller {
 		}
 //TODO	if (returnString == null) doSomethingClever
 		return returnString;
+	}
+	
+	public String getXmlString(Region region){
+		Road[] roads = kdTree.searchRange(region);
+		return xml.createString(roads);
 	}
 	
 	public Road[] getRoadsFromFile(String fileName, int[] roadTypesToExtract){
@@ -223,6 +229,7 @@ public class Controller {
 				roadTypesSet.add(roadType);
 			}
 			
+
 			Point x1y1 = point;
 			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
 			
