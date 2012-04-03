@@ -323,13 +323,13 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 3;
-			int mediumRoads = 2;
-			int smallRoads = 2;
-			int tinyRoads = 1;
-			int tunnels = 2;
-			int seaWays  = 3; 
-			int walkingPaths = 1;
+			int largeRoads = 30;
+			int mediumRoads = 20;
+			int smallRoads = 20;
+			int tinyRoads = 10;
+			int tunnels = 20;
+			int seaWays  = 30; 
+			int walkingPaths = 10;
 //			int bicyclePaths = 1;
 			
 			int unknownRoads = 1;
