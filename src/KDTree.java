@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 public class KDTree
 {
@@ -11,6 +12,70 @@ public class KDTree
 	double[] origo;
 	double[] top;
 	private static KDTree tree = new KDTree(2);
+	private static Random r = new Random();
+	/*
+	public static void main(String[] args)
+	{
+		
+		/*
+		double[][] testCoords = new double[1000][2];
+		double[] kdnNode = {1, 0};
+		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		for(int i = 0; i < 1000; i++)
+		{
+			double[] d1 = {i, 0};
+			testCoords[i] = d1;
+		}
+		for(int i = 0; i < 1000; i++)
+		{
+			nodes.add(new Node(testCoords[i]));
+		}
+
+
+
+		for(int i = 0; i < 10; i ++)
+		{
+			Node test = kdn.medianTest(nodes, 0, 0);
+			System.out.println(test.coords[0]);
+		}
+		*/
+		/*
+		try{
+			System.out.println("Building...");
+			long time = System.currentTimeMillis();
+		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
+		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
+		System.out.println(KDTree.getTree().top[0]-KDTree.getTree().origo[0]);
+		double[] a = {600000, 6050000};
+		double[] b = {700000, 6100000};
+		double[] c = {600000, 6050000};
+		double[] d = {800000, 6300000};
+
+		for(int i = 0; i < 6; i++)
+		{
+			time = System.currentTimeMillis();
+			Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roads.length);
+			time = System.currentTimeMillis();
+			Road[] roadi = KDTree.getTree().searchRange(a, b);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roadi.length);
+			time = System.currentTimeMillis();
+			Road[] roadu = KDTree.getTree().searchRange(c, d);
+			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roadu.length);
+			System.out.println("-------------------------------------------------");
+		}
+		
+		}catch(IOException e)
+		{
+			System.out.println("error");
+		}
+			
+	}*/
+
 	
 	private KDTree(int k)
 	{
@@ -25,21 +90,64 @@ public class KDTree
 	public void build(ArrayList<Node> nodes)
 	{
 		new KDNode(nodes, 0);
+		
+	}
+	
+	private int zoomLevel(double[] p1, double[] p2)
+	{
+		if(p2[0]-p1[0] < 1000)
+			return 4;
+		if(p2[0]-p1[0] < 10000)
+			return 3;
+		if(p2[0]-p1[0] < 100000)
+			return 2;
+
+			return 1;
+	}
+	
+	private boolean filterRoad(int zoomLevel, Road road)
+	{
+		
+		if(zoomLevel < 4)
+		{
+			if(road.getType() == 11 || road.getType() == 8 || road.getType() == 48 || road.getType() == 28)
+				return false;
+		}
+		if( zoomLevel < 3)
+		{
+			if(road.getType() == 6 || road.getType() == 10 || road.getType() == 99 || road.getType() == 0 || road.getType() == 95 || road.getType() == 26 || road.getType() == 34 || road.getType() == 35 || road.getType() == 46)
+				return false;
+		}
+		if( zoomLevel < 2)
+		{
+			if(road.getType() == 4 || road.getType() == 5 || road.getType() == 80 || road.getType() == 31 || road.getType() == 32 || road.getType() == 33 || road.getType() == 24 || road.getType() == 25 || road.getType() == 44 || road.getType() == 45)
+				return false;
+		}
+		return true;
 	}
 	
 	public Road[] searchRange(double[] p1, double[] p2)
 	{
-		HashSet<Road> roads = new HashSet<Road>();
+		int zoom = zoomLevel(p1, p2);
+		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
+		long time = System.currentTimeMillis();
 		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
+		System.out.println("Millies to search: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
 		for(Node n : nodes)
 		{
 			for(Road r : n.getRoads())
 			{
+				if(filterRoad(zoom, r))
 				roads.add(r);
 			}
 		}
-		return roads.toArray(new Road[0]);
+		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
+		time = System.currentTimeMillis();
+		Road[] result = roads.toArray(new Road[0]);
+		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
+		return result;
 	}
 	
 	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
@@ -146,6 +254,7 @@ public class KDTree
 			if(n.coords[1] > x[1]) x[1] = n.coords[1];
 		}
 		return x;
+		
 	}
 	
 	public double[] findSmallest(ArrayList<Node> nodes)
@@ -199,8 +308,21 @@ public class KDTree
 		{
 			return node;
 		}
+		
+		public Node median(ArrayList<Node> nodes, int nth, int depth)
+		{
+			int size = (int) (10*(Math.log10(nodes.size())+1));
+			Node[] randomNodes = new Node[size];
+			for(int i = 0; i < size; i++)
+			{
+				 randomNodes[i] = nodes.get(Math.abs(r.nextInt())%nodes.size());
+			}
+			NodeComparator nc = new NodeComparator(depth, k);
+			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
+			return randomNodes[size/2];
+		}
 
-		private Node median(ArrayList<Node> nodes, int nth, int depth) {
+		private Node medianTest(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
@@ -254,7 +376,7 @@ public class KDTree
 					}
 				}
 				if (!leftNodes.isEmpty()) result.left = expand(leftNodes, depth+1);
-				result.right = expand(rightNodes, depth+1);
+				if (!rightNodes.isEmpty()) result.right = expand(rightNodes, depth+1);
 				return result;
 			}
 			else if (nodes.size() == 2)
