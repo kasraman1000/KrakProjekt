@@ -16,8 +16,8 @@ public class KDTree
 	
 	public static void main(String[] args)
 	{
-		/*
 		
+		/*
 		double[][] testCoords = new double[1000][2];
 		double[] kdnNode = {1, 0};
 		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
@@ -46,7 +46,7 @@ public class KDTree
 			long time = System.currentTimeMillis();
 		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
-		
+		System.out.println(KDTree.getTree().top[0]-KDTree.getTree().origo[0]);
 		double[] a = {600000, 6050000};
 		double[] b = {700000, 6100000};
 		double[] c = {600000, 6050000};
@@ -71,6 +71,7 @@ public class KDTree
 			System.out.println("error");
 		}
 		
+		
 	}
 	
 	private KDTree(int k)
@@ -91,11 +92,31 @@ public class KDTree
 	
 	private int zoomLevel(double[] p1, double[] p2)
 	{
-		return 0;
+		if(p2[0]-p1[0] < 1000)
+			return 4;
+		if(p2[0]-p1[0] < 10000)
+			return 3;
+		if(p2[0]-p1[0] < 100000)
+			return 2;
+
+			return 1;
+	}
+	
+	private boolean filterRoad(int zoomLevel)
+	{
+		
+		switch(zoomLevel)
+		{
+		case 1: return 
+		case 2:
+		case 3:
+		case 4:
+		}
 	}
 	
 	public Road[] searchRange(double[] p1, double[] p2)
 	{
+		int zoom = zoomLevel(p1, p2);
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
 		long time = System.currentTimeMillis();
@@ -275,51 +296,20 @@ public class KDTree
 			return node;
 		}
 		
-		public Node medianTest(ArrayList<Node> nodes, int nth, int depth)
+		public Node median(ArrayList<Node> nodes, int nth, int depth)
 		{
-			int size = 100;
+			int size = (int) (10*(Math.log10(nodes.size())+1));
 			Node[] randomNodes = new Node[size];
 			for(int i = 0; i < size; i++)
 			{
 				 randomNodes[i] = nodes.get(Math.abs(r.nextInt())%nodes.size());
 			}
-			Arrays.sort(randomNodes);
-			int above = 0;
-			int below = 0;
-			boolean found = false;
-			int i = 0;
-			while(!found && i < size-1)
-			{
-				above = 0;
-				below = 0;
-				for(int j = 0; j < size; j++)
-				{
-					if(i != j)
-					{
-						if(randomNodes[i].coords[depth%k] < randomNodes[j].coords[depth%k])
-						{
-							above++;
-						}
-						else if(randomNodes[i].coords[depth%k] > randomNodes[j].coords[depth%k])
-						{
-							below++;
-						}
-						else
-						{
-							
-						}
-					}
-				}
-				if(below == size/2)
-				{
-					found = true;
-				}
-				i++;
-			}
-			return randomNodes[i];
+			NodeComparator nc = new NodeComparator(depth, k);
+			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
+			return randomNodes[size/2];
 		}
 
-		private Node median(ArrayList<Node> nodes, int nth, int depth) {
+		private Node medianTest(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
@@ -373,7 +363,7 @@ public class KDTree
 					}
 				}
 				if (!leftNodes.isEmpty()) result.left = expand(leftNodes, depth+1);
-				result.right = expand(rightNodes, depth+1);
+				if (!rightNodes.isEmpty()) result.right = expand(rightNodes, depth+1);
 				return result;
 			}
 			else if (nodes.size() == 2)
