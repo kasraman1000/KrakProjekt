@@ -238,9 +238,9 @@ public class View {
 			
 			if(roads != null){
 				for(Road road : roads){
-					g2.setColor(Controller.getRoadColor(road.type));
-					g2.setStroke(new BasicStroke(Controller.getRoadWidth(road.type)));
-					g2.drawLine((int) road.x1/scale, (int) road.y1/scale, (int) road.x2/scale, (int) road.y2/scale);
+					g2.setColor(Controller.getRoadColor(road.getType()));
+					g2.setStroke(new BasicStroke(Controller.getRoadWidth(road.getType())));
+					g2.drawLine((int) road.getX1()/scale, (int) road.getY1()/scale, (int) road.getX2()/scale, (int) road.getY2()/scale);
 				}
 			}
 //			g2.drawLine(150, 150, 150, 150);

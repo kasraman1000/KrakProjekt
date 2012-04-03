@@ -236,15 +236,15 @@ public class Controller {
 			Road[] tempRoads = kdTree.searchRange(x1y1, x2y2);
 			
 			for(Road road : tempRoads){
-				if(roadTypesSet.contains(road.type)){
+				if(roadTypesSet.contains(road.getType())){
 					Road tempRoad = new Road(
 							//Is repositioned to fit the canvas in the view
-							(road.x1-point.x)/scale,
-							(road.y1-point.y)/scale,
-							(road.x2-point.x)/scale,
-							(road.y2-point.y)/scale,
-							road.type,
-							road.name
+							(road.getX1()-point.x)/scale,
+							(road.getY1()-point.y)/scale,
+							(road.getX2()-point.x)/scale,
+							(road.getY2()-point.y)/scale,
+							road.getType(),
+							road.getName()
 							);
 					roadsToReturn.add(tempRoad);
 				}
@@ -264,12 +264,12 @@ public class Controller {
 			Road[] roadsToReturn = new Road[roads.length];
 		
 			for(int index=0; index<roads.length; index++){
-				roadsToReturn[index] = new Road(roads[index].x1 - repositionX, // (X/scale) + (repositionXCurrent)
-						roads[index].y1*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
-						roads[index].x2 - repositionX, // (X/scale) + (repositionXCurrent)
-						roads[index].y2*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
-						roads[index].type, //Type
-						roads[index].name); //Name of the road
+				roadsToReturn[index] = new Road(roads[index].getX1() - repositionX, // (X/scale) + (repositionXCurrent)
+						roads[index].getY1()*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
+						roads[index].getX2() - repositionX, // (X/scale) + (repositionXCurrent)
+						roads[index].getY2()*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
+						roads[index].getType(), //Type
+						roads[index].getName()); //Name of the road
 			}
 			return roadsToReturn;
 		}
@@ -281,15 +281,15 @@ public class Controller {
 //			System.out.println("ReposY: " + repositionYCurrent);
 
 			for(Road road : allRoads){
-				if(minX > road.x1) minX=road.x1;
-				if(maxX < road.x1) maxX=road.x1;
-				if(minY > road.y1) minY=road.y1;
-				if(maxY < road.y1) maxY=road.y1;
+				if(minX > road.getX1()) minX=road.getX1();
+				if(maxX < road.getX1()) maxX=road.getX1();
+				if(minY > road.getY1()) minY=road.getY1();
+				if(maxY < road.getY1()) maxY=road.getY1();
 				
-				if(minX > road.x2) minX=road.x2;
-				if(maxX < road.x2) maxX=road.x2;
-				if(minY > road.y2) minY=road.y2;
-				if(maxY < road.y2) maxY=road.y2;
+				if(minX > road.getX2()) minX=road.getY1();
+				if(maxX < road.getX2()) maxX=road.getX2();
+				if(minY > road.getY2()) minY=road.getY2();
+				if(maxY < road.getY2()) maxY=road.getY2();
 			}
 						
 //			System.out.println("MinX: " + minXCurrent);

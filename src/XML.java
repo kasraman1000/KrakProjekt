@@ -158,21 +158,21 @@ public class XML{
 				
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", road.x1 + ""); 
-				line.setAttribute("y1", road.y1 + ""); 
-				line.setAttribute("x2", road.x2 + ""); 
-				line.setAttribute("y2", road.y2 + ""); 
-				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
-															Controller.getRoadColor(road.type).getGreen() + "," + 
-															Controller.getRoadColor(road.type).getBlue() + "); " + 
-						"strokeWidth:" + Controller.getRoadWidth(road.type));
-				line.setAttribute("roadType", road.type + "");
-				line.setAttribute("roadName", road.name + "");
+				line.setAttribute("x1", road.getX1() + ""); 
+				line.setAttribute("y1", road.getY1() + ""); 
+				line.setAttribute("x2", road.getX2() + ""); 
+				line.setAttribute("y2", road.getY2() + ""); 
+				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.getType()).getRed() + "," + 
+															Controller.getRoadColor(road.getType()).getGreen() + "," + 
+															Controller.getRoadColor(road.getType()).getBlue() + "); " + 
+						"strokeWidth:" + Controller.getRoadWidth(road.getType()));
+				line.setAttribute("roadType", road.getType() + "");
+				line.setAttribute("roadName", road.getName() + "");
 				
 				//The next lines will add the road to the right group and increase the counter in the groups' attribute
-				int roadCount = Integer.valueOf(roadTypes.get(road.type).getAttribute("amount")) + 1;
-				roadTypes.get(road.type).appendChild(line);
-				roadTypes.get(road.type).setAttribute("amount", roadCount +"");
+				int roadCount = Integer.valueOf(roadTypes.get(road.getType()).getAttribute("amount")) + 1;
+				roadTypes.get(road.getType()).appendChild(line);
+				roadTypes.get(road.getType()).setAttribute("amount", roadCount +"");
 				
 			}
 			
@@ -315,16 +315,16 @@ public class XML{
 		for(Road road : roads){
 			Element line = document.createElement("line");
 
-			line.setAttribute("x1", road.x1 + ""); 
-			line.setAttribute("y1", road.y1 + ""); 
-			line.setAttribute("x2", road.x2 + ""); 
-			line.setAttribute("y2", road.y2 + ""); 
-			line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
-														Controller.getRoadColor(road.type).getGreen() + "," + 
-														Controller.getRoadColor(road.type).getBlue() + "); " + 
-										"strokeWidth:" + Controller.getRoadWidth(road.type));
-			line.setAttribute("roadType", road.type + "");
-			line.setAttribute("roadName", road.name + "");
+			line.setAttribute("x1", road.getX1() + ""); 
+			line.setAttribute("y1", road.getY1() + ""); 
+			line.setAttribute("x2", road.getX2() + ""); 
+			line.setAttribute("y2", road.getY2() + ""); 
+			line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.getType()).getRed() + "," + 
+														Controller.getRoadColor(road.getType()).getGreen() + "," + 
+														Controller.getRoadColor(road.getType()).getBlue() + "); " + 
+										"strokeWidth:" + Controller.getRoadWidth(road.getType()));
+			line.setAttribute("roadType", road.getType() + "");
+			line.setAttribute("roadName", road.getName() + "");
 			svgElement.appendChild(line);
 		}
 		rootElement.appendChild(svgElement);
