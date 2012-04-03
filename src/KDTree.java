@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -7,99 +8,157 @@ public class KDTree
 	//Dimensions
 	private int k;
 	private KDNode root;
-
-	public KDTree(int k)
+	double[] origo;
+	double[] top;
+	private static KDTree tree = new KDTree(2);
+	
+	private KDTree(int k)
 	{
 		this.k = k;
+	}
+	
+	public static KDTree getTree()
+	{
+		return tree;
 	}
 
 	public void build(ArrayList<Node> nodes)
 	{
-		root = new KDNode(nodes, 0);
+		new KDNode(nodes, 0);
 	}
-
-	public Road[] search(double[] lowerRange, double[] upperRange) {
-
-		HashSet<Node> nodes = new HashSet<Node>();
-
-		root.searchRange(nodes, 0, lowerRange, upperRange);
-
+	
+	public Road[] searchRange(double[] p1, double[] p2)
+	{
 		HashSet<Road> roads = new HashSet<Road>();
-
-		// Add Road objects from nodes to a result HashSet containing Roads
-		for (Node n : nodes) {
-			for (Road r : n.getRoads()) {
+		ArrayList<Node> nodes= new ArrayList<Node>();
+		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
+		for(Node n : nodes)
+		{
+			for(Road r : n.getRoads())
+			{
 				roads.add(r);
 			}
 		}
-
-		// Convert to array and return
 		return roads.toArray(new Road[0]);
 	}
-
-	public static void main(String[] args)
+	
+	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
-		KDTree tree = new KDTree(2);
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		double[] coords = {9 ,6};
-		nodes.add(new Node(coords));
-		double[] coords1 = {0 ,6};
-		nodes.add(new Node(coords1));
-		double[] coords2 = {7 ,6};
-		nodes.add(new Node(coords2));
-		double[] coords3 = {8 ,4};
-		nodes.add(new Node(coords3));
-		double[] coords4 = {4 ,9};
-		nodes.add(new Node(coords4));
-		double[] coords5 = {9 ,0};
-		nodes.add(new Node(coords5));
-		double[] coords6 = {10 ,3};
-		nodes.add(new Node(coords6));
-		double[] coords7 = {3 ,6};
-		nodes.add(new Node(coords7));
-		double[] coords8 = {7 ,1};
-		nodes.add(new Node(coords8));
+		for(int i = 0; i < k; i++)
+		{
+			if(r1[i] >= h2[i] || r2[i] <= h1[i]) return false;
+		}
+		return true;
+	}
+	
+	public boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
+	{
+		for(int i = 0; i < k; i++)
+		{
+			if(h1[i] < r1[i] || h2[i] > r2[i]) return false;
+		}
+		return true;
+	}
+	
+	public boolean nodeContained(KDNode kdn, double[] r1, double[] r2)
+	{
+		for(int i=0; i < k; i++)
+		{
+			if(kdn.getNode().coords[i] < r1[i] || kdn.getNode().coords[i] > r2[i]) return false;
+		}
+		return true;
+	}
+	
+	
+	public void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes, int depth)
+	{
+		if(kdn.right != null)
+		{
+			nodes.add(kdn.right.getNode());
+			fillWithSubTree(kdn.right, nodes, depth+1);
+		}
+		if (kdn.left != null)
+		{
+			nodes.add(kdn.left.getNode());
+			fillWithSubTree(kdn.left, nodes, depth+1);
+		}
+	}
 
+	public double[] changePoint(KDNode kdn, int depth, double[] r)
+	{
+		if(depth%k==0)
+		{ 
+			double[] result = {kdn.getNode().coords[0], r[1]};
+			return result;
+		}
+		else
+		{
+			double[] result = {r[0] ,kdn.getNode().coords[1]};
+			return result;
+		}
+	}
+
+	private void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
+	{
+		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
 		
-		tree.build(nodes);
-		
-		double[] lower = {4, 3};
-		double[] upper = {7, 6};
-		
-		Road[] result = tree.search(lower, upper);
-		
-		System.out.println(result[0]);
-		
-		
-		/*
-		
-		System.out.println(tree.root.toString());
-
-		System.out.println("-----------");
-
-		System.out.println(tree.root.getLeftChild());
-		System.out.println(tree.root.getRightChild());
-
-		System.out.println("-----------");
-
-		System.out.println(tree.root.getLeftChild().getLeftChild());
-		System.out.println(tree.root.getLeftChild().getRightChild());
-
-		System.out.println(tree.root.getRightChild().getLeftChild());
-		System.out.println(tree.root.getRightChild().getRightChild());
-
-		System.out.println("-----------");
-
-		System.out.println(tree.root.getLeftChild().getRightChild().getRightChild());
-
-		System.out.println(tree.root.getRightChild().getLeftChild().getLeftChild());
-		System.out.println(tree.root.getRightChild().getLeftChild().getRightChild().getRightChild());
-		System.out.println(tree.root.getRightChild().getRightChild());
-		*/
-
-
+		if(kdn.left != null)
+		{
+			if (fullyContained(cr1, changePoint(kdn, depth, cr2), r1, r2))
+			{
+				nodes.add(kdn.left.getNode());
+				fillWithSubTree(kdn.left, nodes, depth);
+			}
+			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
+			{
+				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
+			}
+			if (kdn.right != null)
+			{
+				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
+				{
+					nodes.add(kdn.right.getNode());
+					fillWithSubTree(kdn.right, nodes, depth+2);
+				}
+				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
+				{
+					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
+				}
+			}
+		}
 
 	}
+	
+	public void initialize(String nodePath, String roadPath) throws IOException
+	{	
+		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
+		tree.build(nodes);
+		origo = findSmallest(nodes);
+		top = findLargest(nodes);
+	}
+	
+	public double[] findLargest(ArrayList<Node> nodes)
+	{
+		double[] x = {0, 0};
+		for(Node n : nodes)
+		{
+			if(n.coords[0] > x[0]) x[0] = n.coords[0];
+			if(n.coords[1] > x[1]) x[1] = n.coords[1];
+		}
+		return x;
+	}
+	
+	public double[] findSmallest(ArrayList<Node> nodes)
+	{
+		double[] x = {0, 0};
+		for(Node n : nodes)
+		{
+			if(n.coords[0] < x[0]) x[0] = n.coords[0];
+			if(n.coords[1] < x[1]) x[1] = n.coords[1];
+		}
+		return x;
+	}
+
 
 
 	//Nested class
@@ -141,12 +200,21 @@ public class KDTree
 			return node;
 		}
 
-
 		private Node median(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
-			Node pivot = nodes.get(0);
+			Node pivot;
+			if(depth < 4 && nodes.size() > 150)
+			{
+				pivot = nodes.get(100);
+			}
+			else
+			{
+				pivot = nodes.get(0);
+			}
+			
+			
 			for (Node n : nodes) {
 				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
 				else if (n.coords[dimension] > pivot.coords[dimension]) above.add(n);
@@ -168,7 +236,6 @@ public class KDTree
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
-
 				KDNode result = new KDNode(medianNode);
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
@@ -194,52 +261,22 @@ public class KDTree
 			{
 				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
 				{
-					KDNode result = new KDNode(nodes.get(1));
-					result.right = new KDNode(nodes.get(0));					
+					KDNode result = new KDNode(nodes.get(0));
+					result.left = new KDNode(nodes.get(1));					
 					return result;
 
 				}
 				else
 				{
-					KDNode result = new KDNode(nodes.get(0));
-					result.right = new KDNode(nodes.get(1));
+					KDNode result = new KDNode(nodes.get(1));
+					result.left = new KDNode(nodes.get(0));
 					return result;
 				}
-
 			}
 			else
 			{
 				return new KDNode(nodes.get(0));
 			}
 		}
-
-		/**
-		 * checks to see if node and children nodes are in range, 
-		 * and adds them to collection if they are...
-		 * This is naïve implementation, could use tons of optimization!
-		 */
-		public void searchRange(Collection<Node> result, int depth, double[] lower, double[] upper) {
-
-			// Figure what dimension to sort after at this depth
-			int dimension = depth%k;
-
-			// If this node is in range, return it.
-			if (node.coords[0] >= lower[0] &&
-					node.coords[0] <= upper[0] &&
-					node.coords[1] >= lower[1] &&
-					node.coords[1] <= upper[0]) result.add(node);
-
-
-			// If there are children nodes, check them as well, if they're towards the search range
-			if (right != null)
-				if (node.coords[dimension] <= lower[dimension]) 
-					right.searchRange(result, depth+1, lower, upper);
-			
-			if (left != null)
-				if (node.coords[dimension] >= upper[dimension]) 
-					left.searchRange(result, depth+1, lower, upper);
-		}
-
 	}
-
 }

@@ -1,10 +1,7 @@
-import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,238 +16,18 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
- * This class is for the creation of the .xml file. At the moment it will generate a sewer
- * amount of lines to represent all roads in DK and Malmö. 
- * It figures out the position of the lines from the edges: Gets the two nodes connected
- * to the edge. Each node will contain a value for the x-coordinate and y-coordinate.
- * The class will then set to the line to be: x1=node1.xPos, x2=node2.xPos, y1=node1.yPos, y2=node2.yPos
- * 
- *   Because the coordinates are not starting from (0,0) the class has a build-in feature to find
- *   the max and min values for X and Y - then print this in the console
- * 
+ * This class is for the whole XML methods: 
+ * 	It can create a string or file from a Road[]
+ * 	It can create a Road[] from a file or string
  * 
  * @author Group KRAX
  *
  */
 public class XML{
-	double scale;
-	double kraxHeight;
-	double kraxWidth;
-	
-	//Is to find the height and width of the data set
-	double maxX = 0; //Is 892638.21114
-	double minX = 900000; //Is 442254.35659
-	double maxY = 0; //Is 6402050.98297
-	double minY = 6500000; //Is 6049914.43018
-	
-	//To reposition the output so it is moved to the right spot
-	double repositionX;
-	double repositionY;
-	
-	HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
-
-	/**
-	 * The main method - only used for testing this specific class
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		XML xml = new XML();
-		long startTime = System.currentTimeMillis();
-//		xml.findMinAndMaxValue(xml.createRoadsForTesting());
-		HashSet<Road> tempRoadHash = new HashSet<Road>();
-		Road[] roads;
-		try {
-			double krakLoadStart = System.currentTimeMillis();
-			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt", 
-					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
-			double krakLoadEnd = System.currentTimeMillis();
-			double rearrangeStart = System.currentTimeMillis();
-			for (Node n : nodes) {
-				for (Road r : n.getRoads()) {
-					tempRoadHash.add(r);
-				}
-			}
-			roads = new Road[tempRoadHash.size()];
-			Iterator<Road> tempRoadIt = tempRoadHash.iterator();
-			for(int index=0; index<tempRoadHash.size(); index++){
-				roads[index] = tempRoadIt.next();
-			}
-			double rearrangeEnd = System.currentTimeMillis();
-			double xmlFileStart = System.currentTimeMillis();
-//			xml.createString(roads);
-			xml.createFile(roads, 500, "C:\\Users\\Yndal\\Desktop\\krax.xml");
-			double xmlFileEnd = System.currentTimeMillis();
-//			String returnedString = xml.createString(xml.createRoadsForTesting(10000));
-//			xmlCreator.createXML(krakEdgeGraph, Color.red, 5, "krax.xml");
-			double endTime = System.currentTimeMillis();
-			
-			
-			
-			System.out.println("Time taken in seconds");
-			System.out.println("KrakLoader.load(): " + (krakLoadEnd - krakLoadStart)/1000);
-			System.out.println("Rearrange: " + (rearrangeEnd - rearrangeStart)/1000);
-			System.out.println("Create file: " + (xmlFileEnd - xmlFileStart)/1000);
-			System.out.println("\nTotal: " + (endTime - startTime)/1000);
-			
-		} catch (Exception e){
-			System.out.println("Exception thrown: " + e.getMessage());
-		}
-		
-		
-	}
-	
-	/**
-	 * The Constructor
-	 * Makes sure all the road colors and widths are loaded when instantiating this class
-	 */
-	public XML(){
-		loadAllRoadColors();
-		loadAllRoadWidths();
-	}
-	
-	/**
-	 * Will load all the predefined road colors to a HashMap - only called in the constructor
-	 */
-	private void loadAllRoadColors(){
-		Color largeRoads = Color.red;
-		Color mediumRoads = Color.yellow;
-		Color smallRoads = Color.black;
-		Color tinyRoads = Color.pink;
-		Color tunnels = Color.orange;
-		Color seaWays  = Color.blue;
-		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
-		
-		Color unknownRoads = Color.cyan;
-		
-		roadColors.put(0, unknownRoads); //"Unknown0"
-		roadColors.put(95, unknownRoads); //"Unknown95"
-		roadColors.put(1, largeRoads); //"Motorvej"
-		roadColors.put(2, mediumRoads); //"Motortrafikvej"
-		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
-		roadColors.put(4, mediumRoads); //"SekundearOver6m"
-		roadColors.put(5, smallRoads); //"Vej3til6m"
-		roadColors.put(6, smallRoads); //"AndenVej"
-		roadColors.put(8, walkingPaths); //"Sti"
-		roadColors.put(10, tinyRoads); //"Markvej"
-		roadColors.put(11, walkingPaths); //"Gaagader //"
-		roadColors.put(21, largeRoads); //"Proj.motorvej"
-		roadColors.put(22, mediumRoads); //"Proj.motortrafikvej"
-		roadColors.put(23, mediumRoads); //"Proj.primearvej"
-		roadColors.put(24, mediumRoads); //"Proj.sekundearvej"
-		roadColors.put(25, smallRoads); //"Proj.vej3til6m"
-		roadColors.put(26, smallRoads); //"Proj.vejUnder3m"
-		roadColors.put(28, walkingPaths); //"Proj.sti"
-		roadColors.put(31, largeRoads); //"Motorvejsafkoersel"
-		roadColors.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
-		roadColors.put(33, mediumRoads); //"Primearvejsafkoersel"
-		roadColors.put(34, mediumRoads); //"Sekundearvejsafkoersel"
-		roadColors.put(35, smallRoads); //"AndenVejafkoersel"
-		roadColors.put(41, tunnels); //"Motorvejstunnel"
-		roadColors.put(42, tunnels); //"Motortrafikvejstunnel"
-		roadColors.put(43, tunnels); //"Primaerstunnel"
-		roadColors.put(44, tunnels); //"Sekundaervejstunnel"
-		roadColors.put(45, tunnels); //"AndenVejtunnel"
-		roadColors.put(46, tunnels); //"MindreVejtunnel"
-		roadColors.put(48, tunnels); //"Stitunnel"
-		roadColors.put(80, seaWays); //"Faergeforbindelser"
-		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
-	}
-	
-	
-	/**
-	 * Will load all the predefined road widths to a HashMap - only called in the constructor
-	 */
-	private void loadAllRoadWidths(){
-		int largeRoads = 5;
-		int mediumRoads = 4;
-		int smallRoads = 3;
-		int tinyRoads = 2;
-		int tunnels = 4;
-		int seaWays  = 5; 
-		int walkingPaths = 2;
-//		int bicyclePaths = 2;
-		
-		int unknownRoads = 4;
-				
-		roadWidths.put(0, unknownRoads); //"Unknown0"
-		roadWidths.put(95, unknownRoads); //"Unknown95"
-		roadWidths.put(1, largeRoads); //"Motorvej"
-		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
-		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
-		roadWidths.put(4, mediumRoads); //"SekundearOver6m"
-		roadWidths.put(5, smallRoads); //"Vej3til6m"
-		roadWidths.put(6, smallRoads); //"AndenVej"
-		roadWidths.put(8, walkingPaths); //"Sti"
-		roadWidths.put(10, tinyRoads); //"Markvej"
-		roadWidths.put(11, walkingPaths); //"Gaagader //"
-		roadWidths.put(21, largeRoads); //"Proj.motorvej"
-		roadWidths.put(22, mediumRoads); //"Proj.motortrafikvej"
-		roadWidths.put(23, mediumRoads); //"Proj.primearvej"
-		roadWidths.put(24, mediumRoads); //"Proj.sekundearvej"
-		roadWidths.put(25, smallRoads); //"Proj.vej3til6m"
-		roadWidths.put(26, smallRoads); //"Proj.vejUnder3m"
-		roadWidths.put(28, walkingPaths); //"Proj.sti"
-		roadWidths.put(31, largeRoads); //"Motorvejsafkoersel"
-		roadWidths.put(32, mediumRoads); //"Motortrafikvejsafkoersel"
-		roadWidths.put(33, mediumRoads); //"Primearvejsafkoersel"
-		roadWidths.put(34, mediumRoads); //"Sekundearvejsafkoersel"
-		roadWidths.put(35, smallRoads); //"AndenVejafkoersel"
-		roadWidths.put(41, tunnels); //"Motorvejstunnel"
-		roadWidths.put(42, tunnels); //"Motortrafikvejstunnel"
-		roadWidths.put(43, tunnels); //"Primaerstunnel"
-		roadWidths.put(44, tunnels); //"Sekundaervejstunnel"
-		roadWidths.put(45, tunnels); //"AndenVejtunnel"
-		roadWidths.put(46, tunnels); //"MindreVejtunnel"
-		roadWidths.put(48, tunnels); //"Stitunnel"
-		roadWidths.put(80, seaWays); //"Faergeforbindelser"
-		
-		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
-	}
-	
-	
-	
-	/**
-	 * This is called every time the class will make a string or file
-	 * Will find the highest and lowest x-coordinate and y-coordinate
-	 * @param allRoads The roads to find coordinates from
-	 */
-	private void findMinAndMaxValue(Road[] allRoads){
-		double tempX1;
-		double tempY1;
-		double tempX2;
-		double tempY2;
-		
-		for(Road road : allRoads){
-			tempX1 = road.x1;
-			tempY1 = road.y1;
-			tempX2 = road.x2;
-			tempY2 = road.y2;
-			
-			if(minX > tempX1) minX=tempX1;
-			if(maxX < tempX1) maxX=tempX1;
-			if(minY > tempY1) minY=tempY1;
-			if(maxY < tempY1) maxY=tempY1;
-			
-			if(minX > tempX2) minX=tempX2;
-			if(maxX < tempX2) maxX=tempX2;
-			if(minY > tempY2) minY=tempY2;
-			if(maxY < tempY2) maxY=tempY2;
-		}
-		
-		repositionX = minX/scale;
-		repositionY = minY/scale;
-		kraxWidth = maxX/scale - repositionX;
-		kraxHeight = maxY/scale - repositionY;
-//		System.out.println("MinX: " + minX + " (not affected by the scale!)");
-//		System.out.println("MaxX: " + maxX + " (not affected by the scale!)");
-//		System.out.println("MinY: " + minY + " (not affected by the scale!)");
-//		System.out.println("MaxY: " + maxY + " (not affected by the scale!)");
-	}
-	
 	/**
 	 * This method is only for testing
 	 * @return Road[] An array of roads
@@ -283,108 +60,127 @@ public class XML{
 	}
 	
 	/**
-	 *	Will create a xml-string with a svg-element containing lines
+	 * Will create a xml-string with a svg-element containing lines
 	 * 
 	 * @param roads All the roads to put into the xml-string
 	 * @return String with the xml containing the svg-element
+	 * @throws ParserConfigurationException
+	 * @throws TransformerConfigurationException
+	 * @throws TransformerException
 	 */
-	public String createString(Road[] roads, double scale){
-		this.scale = scale;
-		findMinAndMaxValue(roads);
-		String root = "root_element";
-		String xmlString = "";
+	public String createString(Road[] roads) throws ParserConfigurationException, 
+													TransformerConfigurationException,
+													TransformerException{
+		Document document = convertRoadArrayToDocument(roads);
 		
-		try{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document document = docBuilder.newDocument();
-			
-			Element rootElement = document.createElement(root);
-			document.appendChild(rootElement);
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    Transformer transformer = transformerFactory.newTransformer();
+	    DOMSource source = new DOMSource(document);
+	    
+	    //TODO May want to add a larger buffer by telling the constructor (fx. StringWriter(10000)) 
+	    StringWriter stringWriter = new StringWriter();
+	    StreamResult result = new StreamResult(stringWriter);
+      	transformer.transform(source, result);
+	    String xmlString = stringWriter.toString();
 		
-			//The outer svg element 
-			Element svgElement = document.createElement("svg");
-			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", kraxWidth +"");
-			svgElement.setAttribute("height", kraxHeight +"");
-			
-			for(Road road : roads){
-				Element line = document.createElement("line");
-
-				line.setAttribute("x1", Double.toString((road.x1/scale) + repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/scale) + repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
-				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
-						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
-						"); strokeWidth:" + roadWidths.get(road.type));
-				svgElement.appendChild(line);
-			}
-			rootElement.appendChild(svgElement);
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    Transformer transformer = transformerFactory.newTransformer();
-		    DOMSource source = new DOMSource(document);
-		    
-		    //TODO May want to add a larger buffer by telling the constructor 
-		    StringWriter stringWriter = new StringWriter();
-		    StreamResult result = new StreamResult(stringWriter);
-	      	transformer.transform(source, result);
-		    
-		    xmlString = stringWriter.toString();
-		    
-		    //TODO Create better error handling
-		} catch (ParserConfigurationException e){
-			System.out.println("ParserConfigurationException: " + e.getMessage());
-		} catch (TransformerConfigurationException e){
-			System.out.println("TransformerConfigurationException: " + e.getMessage());
-		} catch (TransformerException e){
-			System.out.println("TransformerException: " + e.getMessage());
-		}
-		return xmlString;
+	    return xmlString;
 	}
 	
 	
-	/*
-	*//**
-	 * Will compare the two nodes connected to an edge object and create a .xml file with the coordinates from the two Node objects.
+	/**
+	 * Will create a xml-string with a svg-element containing lines from the Road[] given
 	 * 
-	 * @param krakEdgeGraph Will need to use the notes and edges created during the load() method in KrakEdgeGraph
-	 * @param colorForRoad The color which will be used for the roads
-	 * @param widthForRoad The width which will be used for the roads
+	 * @param roads All the roads to put into the xml-file
+	 * @param filename Name of the file going to be created. Remember to write // if saving in a certain folder
+	 * @throws ParserConfigurationException
+	 * @throws TransformerConfigurationException
+	 * @throws TransformerException
 	 */
-	public void createFile(Road[] roads, double scale, String filename){
-		findMinAndMaxValue(roads);
-		String root = "root_element";
+	public void createFile(Road[] roads, String filename) throws ParserConfigurationException, 
+														TransformerConfigurationException,
+														TransformerException{
 		
-		try{
+		Document document = convertRoadArrayToDocument(roads);
+		
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    Transformer transformer = transformerFactory.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	    DOMSource source = new DOMSource(document);
+	    
+	    StreamResult result = new StreamResult(new File(filename));
+	    
+      	transformer.transform(source, result);
+	}		
+	
+	
+	/**
+	 * Will create a XML-file with groups of the road types
+	 * 
+	 * @param roads All the roads to put into the xml-file
+	 * @param filename Name of the file going to be created. Remember to write // if saving in a certain folder
+	 * @throws ParserConfigurationException
+	 * @throws TransformerConfigurationException
+	 * @throws TransformerException
+	 */
+	//TODO This method can be seperated just like the two other create-methods - if we are going with the group structure
+	public void createFileWithGroups(Road[] roads, String filename) throws ParserConfigurationException, 
+																			TransformerConfigurationException, 
+																			TransformerException{
+			String root = "root_element";
+			HashMap<Integer, Element> roadTypes;
+			
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
 			
+			//First the root
 			Element rootElement = document.createElement(root);
 			document.appendChild(rootElement);
 		
+			//Create all the different groups (determined by the road type)
+			roadTypes = createRoadTypes(document);
+			
 			//The outer svg element 
 			Element svgElement = document.createElement("svg");
 			svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svgElement.setAttribute("version", "1.1");
-			svgElement.setAttribute("width", kraxWidth +"");
-			svgElement.setAttribute("height", kraxHeight +"");
+//			svgElement.setAttribute("width", Controller.getMaxXScaled() +"");
+//			svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
 			
 			for(Road road : roads){
+				System.out.println("Inside road loop in createFileUnderTesting():");
+				System.out.println("roads.length: " + roads.length);
+				System.out.println("x1: " + road.x1);
+				System.out.println("y1: " + road.y1);
+				System.out.println("x2: " + road.x2);
+				System.out.println("y2: " + road.y2);
+				
+				
 				Element line = document.createElement("line");
 
-				line.setAttribute("x1", Double.toString((road.x1/scale) - repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y1", Double.toString((road.y1/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-				line.setAttribute("x2", Double.toString((road.x2/scale) - repositionX)); // (X/scale) + (repositionX)
-				line.setAttribute("y2", Double.toString((road.y2/scale)*(-1) + kraxHeight + repositionY)); // (Y/scale)*(-1) + kraxHeight + repositionY
-				line.setAttribute("style", "stroke:RGB(" + roadColors.get(road.type).getRed() + "," + 
-						roadColors.get(road.type).getGreen() + "," + roadColors.get(road.type).getBlue() +
-						"); strokeWidth:" + roadWidths.get(road.type));
-				svgElement.appendChild(line);
+				line.setAttribute("x1", road.x1 + ""); 
+				line.setAttribute("y1", road.y1 + ""); 
+				line.setAttribute("x2", road.x2 + ""); 
+				line.setAttribute("y2", road.y2 + ""); 
+				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
+															Controller.getRoadColor(road.type).getGreen() + "," + 
+															Controller.getRoadColor(road.type).getBlue() + "); " + 
+						"strokeWidth:" + Controller.getRoadWidth(road.type));
+				line.setAttribute("roadType", road.type + "");
+				line.setAttribute("roadName", road.name + "");
+				
+				//The next lines will add the road to the right group and increase the counter in the groups' attribute
+				int roadCount = Integer.valueOf(roadTypes.get(road.type).getAttribute("amount")) + 1;
+				roadTypes.get(road.type).appendChild(line);
+				roadTypes.get(road.type).setAttribute("amount", roadCount +"");
+				
 			}
+			
+			//Load all the groups into the svg-element
+			for(Element element : roadTypes.values()){
+				svgElement.appendChild(element);
+			}
+			
 			rootElement.appendChild(svgElement);
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -394,149 +190,290 @@ public class XML{
 		    
 		    StreamResult result = new StreamResult(new File(filename));
 		    
-	      	transformer.transform(source, result);
-		    
-		    //TODO Create better error handling
-		} catch (ParserConfigurationException e){
-			System.out.println("ParserConfigurationException: " + e.getMessage());
-		} catch (TransformerConfigurationException e){
-			System.out.println("TransformerConfigurationException: " + e.getMessage());
-		} catch (TransformerException e){
-			System.out.println("TransformerException: " + e.getMessage());
-		}
-	}		
+	      	transformer.transform(source, result);    
+		}		
+	
 	
 	/**
-	 * Used by the createXML method.
-	 * Will put all the road types (being groups in the root element) into the root element
-	 * @param roadTypes All the different types of roads 
-	 * @param rootElement The root element
+	 * Generates a file with the chosen name and path (as a part of the filename) from the string with the XML informations
+	 * 
+	 * @param fileName Name of the file (may include a path by using // for folder seperation)
+	 * @param roadTypesToExtract An array of int's with the road types wanted from the file
+	 * @return Road[] An array of the roads in the wanted road types, chosen in the parameter called RoadTypesToExtract
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
 	 */
-/*	private void loadRoadTypesIntoRootElement(HashMap<Integer, Element> roadTypes, Element rootElement){
-		for(Element element : roadTypes.values()){
-			rootElement.appendChild(element);
-		}
+	public Road[] getRoadsFromFile(String fileName, int[] roadTypesToExtract) throws IOException, ParserConfigurationException, SAXException{
+		File file = new File(fileName);
+		Road[] foundRoads = null;
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	
+		Document document = docBuilder.parse(file);
+		
+		//Will make the structure of the XML document 
+		document.getDocumentElement().normalize();
+		
+		foundRoads = convertDocumentToRoadArray(document, roadTypesToExtract);
+			
+		return foundRoads;
 	}
-*/	
+	
+	
+	/**
+	 * Generates an array of roads from a XML-string
+	 * 
+	 * @param xmlString The string containing the XML informations
+	 * @param roadTypesToExtract An array of int's with the road types wanted from the string
+	 * @return Road[] An array of the roads in the wanted road types, chosen in the parameter called RoadTypesToExtract
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 */
+	public Road[] getRoadsFromString(String xmlString, int[] roadTypesToExtract) throws IOException, ParserConfigurationException, SAXException{
+		Road[] foundRoads = null;
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	
+		Document document = docBuilder.parse(xmlString);
+		
+ 
+		document.getDocumentElement().normalize();
+		
+		foundRoads = convertDocumentToRoadArray(document, roadTypesToExtract);
+
+		return foundRoads;
+	}
+
+	
+	private Road[] convertDocumentToRoadArray(Document document, int[] roadTypesToExtract){
+		//Must go through the xml to see how large the returning Road[] has to be
+		int totalNumberOfRoads = 0;
+		for(int roadType : roadTypesToExtract){
+			NodeList nodeList = document.getElementsByTagName("type" + roadType);
+			
+			//The next loop will probably only run once for each nametag
+			for(int index = 0; index < nodeList.getLength(); index++){
+				Element roadGroup = (Element) nodeList.item(index);
+				totalNumberOfRoads += Integer.valueOf(roadGroup.getAttribute("amount"));
+			}
+		}
+		
+		Road[] foundRoads = new Road[totalNumberOfRoads];
+		
+		//This loop is the actual extraction of the data
+		//First a loop for all the groups
+		int roadIndex = 0;
+		for(int roadType : roadTypesToExtract){
+			NodeList nodeList = document.getElementsByTagName("type" + roadType);
+			
+			//This loop will probably only run once for each nametag
+			for(int index = 0; index < nodeList.getLength(); index++){
+				Element roadGroup = (Element) nodeList.item(index);
+		
+				//Then for all the nodes
+				NodeList nodes = roadGroup.getElementsByTagName("line");
+				for(int nodeNumber = 0; nodeNumber < nodes.getLength(); nodeNumber++){
+					Element roadElement = (Element) nodes.item(nodeNumber);
+					
+					double x1 = Double.valueOf(roadElement.getAttribute("x1"));
+					double y1 = Double.valueOf(roadElement.getAttribute("y1"));
+					double x2 = Double.valueOf(roadElement.getAttribute("x2"));
+					double y2 = Double.valueOf(roadElement.getAttribute("y2"));
+					String roadName = roadElement.getAttribute("roadName");
+					int type = Integer.valueOf(roadElement.getAttribute("roadType"));
+					
+					foundRoads[roadIndex] = new Road(x1, y1, x2, y2, type, roadName);
+					roadIndex++;
+				}
+			}
+		}
+		return foundRoads;
+	}
+	
+	
+	private Document convertRoadArrayToDocument(Road[] roads) throws ParserConfigurationException, TransformerConfigurationException{
+		String root = "root_element";
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document document = docBuilder.newDocument();
+		
+		Element rootElement = document.createElement(root);
+		document.appendChild(rootElement);
+	
+		//The outer svg element 
+		Element svgElement = document.createElement("svg");
+		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+		svgElement.setAttribute("version", "1.1");
+//		svgElement.setAttribute("width", Controller.getMaxXScaled() +"");
+//		svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
+		
+		for(Road road : roads){
+			Element line = document.createElement("line");
+
+			line.setAttribute("x1", road.x1 + ""); 
+			line.setAttribute("y1", road.y1 + ""); 
+			line.setAttribute("x2", road.x2 + ""); 
+			line.setAttribute("y2", road.y2 + ""); 
+			line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.type).getRed() + "," + 
+														Controller.getRoadColor(road.type).getGreen() + "," + 
+														Controller.getRoadColor(road.type).getBlue() + "); " + 
+										"strokeWidth:" + Controller.getRoadWidth(road.type));
+			line.setAttribute("roadType", road.type + "");
+			line.setAttribute("roadName", road.name + "");
+			svgElement.appendChild(line);
+		}
+		rootElement.appendChild(svgElement);
+			
+	    return document;
+	}
+	
 	/**
 	* Method for the creation of all the different road types according to the krak-file
 	*/
-/*	private HashMap<Integer, Element> createRoadTypes(Document document){
+	private HashMap<Integer, Element> createRoadTypes(Document document){
 			HashMap<Integer, Element> roadTypes = new HashMap<Integer, Element>();
-			
-			roadTypes.put(0, document.createElement("Unknown0"));
-			createRoadTypesHelper(0, roadTypes, document);
-			roadTypes.put(95, document.createElement("Unknown95"));
-			createRoadTypesHelper(95, roadTypes, document);
-			roadTypes.put(1, document.createElement("Motorvej"));
-			createRoadTypesHelper(1, roadTypes, document);
-			roadTypes.put(2, document.createElement("Motortrafikvej"));
-			createRoadTypesHelper(2, roadTypes, document);
-			roadTypes.put(3, document.createElement("PrimearruteOver6m"));
-			createRoadTypesHelper(3, roadTypes, document);
-			roadTypes.put(4, document.createElement("SekundearOver6m"));
-			createRoadTypesHelper(4, roadTypes, document);
-			roadTypes.put(5, document.createElement("Vej3til6m"));
-			createRoadTypesHelper(5, roadTypes, document);
-			roadTypes.put(6, document.createElement("AndenVej"));
-			createRoadTypesHelper(6, roadTypes, document);
-			roadTypes.put(8, document.createElement("Sti"));
-			createRoadTypesHelper(8, roadTypes, document);
-			roadTypes.put(10, document.createElement("Markvej"));
-			createRoadTypesHelper(10, roadTypes, document);
-			roadTypes.put(11, document.createElement("Gaagader"));
-			createRoadTypesHelper(11, roadTypes, document);
-			roadTypes.put(21, document.createElement("Proj.motorvej"));
-			createRoadTypesHelper(21, roadTypes, document);
-			roadTypes.put(22, document.createElement("Proj.motortrafikvej"));
-			createRoadTypesHelper(22, roadTypes, document);
-			roadTypes.put(23, document.createElement("Proj.primearvej"));
-			createRoadTypesHelper(23, roadTypes, document);
-			roadTypes.put(24, document.createElement("Proj.sekundearvej"));
-			createRoadTypesHelper(24, roadTypes, document);
-			roadTypes.put(25, document.createElement("Proj.vej3til6m"));
-			createRoadTypesHelper(25, roadTypes, document);
-			roadTypes.put(26, document.createElement("Proj.velUnder3m"));
-			createRoadTypesHelper(26, roadTypes, document);
-			roadTypes.put(28, document.createElement("Proj.sti"));
-			createRoadTypesHelper(28, roadTypes, document);
-			roadTypes.put(31, document.createElement("Motorvejsafkoersel"));
-			createRoadTypesHelper(31, roadTypes, document);
-			roadTypes.put(32, document.createElement("Motortrafikvejsafkoersel"));
-			createRoadTypesHelper(32, roadTypes, document);
-			roadTypes.put(33, document.createElement("Primearvejsafkoersel"));
-			createRoadTypesHelper(33, roadTypes, document);
-			roadTypes.put(34, document.createElement("Sekundearvejsafkoersel"));
-			createRoadTypesHelper(34, roadTypes, document);
-			roadTypes.put(35, document.createElement("AndenVejafkoersel"));
-			createRoadTypesHelper(35, roadTypes, document);
-			roadTypes.put(41, document.createElement("Motorvejstunnel"));
-			createRoadTypesHelper(41, roadTypes, document);
-			roadTypes.put(42, document.createElement("Motortrafikvejstunnel"));
-			createRoadTypesHelper(42, roadTypes, document);
-			roadTypes.put(43, document.createElement("Primaerstunnel"));
-			createRoadTypesHelper(43, roadTypes, document);
-			roadTypes.put(44, document.createElement("Sekundaervejstunnel"));
-			createRoadTypesHelper(44, roadTypes, document);
-			roadTypes.put(45, document.createElement("AndenVejtunnel"));
-			createRoadTypesHelper(45, roadTypes, document);
-			roadTypes.put(46, document.createElement("MindreVejtunnel"));
-			createRoadTypesHelper(46, roadTypes, document);
-			roadTypes.put(48, document.createElement("Stitunnel"));
-			createRoadTypesHelper(48, roadTypes, document);
-			roadTypes.put(80, document.createElement("Faergeforbindelser"));
-			createRoadTypesHelper(80, roadTypes, document);
-			roadTypes.put(99, document.createElement("StednavneEksaktBeliggendeUkendt"));
-			createRoadTypesHelper(99, roadTypes, document);
-			
-		return roadTypes;
-	}
-*/	
-	/**
-	 * Used to put every type of road into a group called "svg" (to make it drawable)
-	 * but with the attributes: typ and name, describing the type of road and the
-	 * danish name
-	 * 
-	 * @param key The key to the element in the HashMap of element (key == typ of road)
-	 * @param roadTypes The HashMap containing all the elements
-	 * @param document The document for creating the xml structure
-	 */
-/*	private void createRoadTypesHelper(int key, HashMap<Integer, Element> roadTypes, Document document){
-		Element tempElement = document.createElement("svg");
-		tempElement.setAttribute("typ", key + "");
-		tempElement.setAttribute("name", roadTypes.get(key).getTagName());
-		roadTypes.get(key).appendChild(tempElement);
-	}
-*/
 	
-	/**
-	 * Method currently as a part of the Java GUI test...
-	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
-	 * @param roads
-	 * @return
-	 */
-	public Road[] cleanUpRoads(Road[] roads, int scale){
-		this.scale = scale;
-		Road[] roadsToReturn = new Road[roads.length];
-		findMinAndMaxValue(roads);
+			Element element = document.createElement("type0");
+			element.setAttribute("description", "Unknown0");
+			roadTypes.put(0, element);
 		
+			element = document.createElement("type95");
+			element.setAttribute("description", "Unknown95");
+			roadTypes.put(95, element);
 		
-		for(int index=0; index<roads.length; index++){
-			roadsToReturn[index] = new Road((roads[index].x1/scale) - repositionX, // (X/scale) + (repositionX)
-					(roads[index].y1/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY this will calculate the correct Y (have to be "turned around") in the correct scale
-					(roads[index].x2/scale) - repositionX, // (X/scale) + (repositionX)
-					(roads[index].y2/scale)*(-1) + kraxHeight + repositionY, // (Y/scale)*(-1) + kraxHeight + repositionY
-					100, //Scale
-					"Testvej"); //Name of the road
-		}
-		return roadsToReturn;
-	}
+			
+			element = document.createElement("type1");
+			element.setAttribute("description", "Motorvej");
+			roadTypes.put(1, element);
+		
+			element = document.createElement("type2");
+			element.setAttribute("description", "Motortrafikvej");
+			roadTypes.put(2, element);
+		
+			element = document.createElement("type3");
+			element.setAttribute("description", "PrimearruteOver6m");
+			roadTypes.put(3, element);
+			
+			element = document.createElement("type4");
+			element.setAttribute("description", "SekundearOver6m");
+			roadTypes.put(4, element);
+			
+			element = document.createElement("type5");
+			element.setAttribute("description", "Vej3til6m");
+			roadTypes.put(5, element);
+			
+			element = document.createElement("type6");
+			element.setAttribute("description", "AndenVej");
+			roadTypes.put(6, element);
+			
+			element = document.createElement("type8");
+			element.setAttribute("description", "Sti");
+			roadTypes.put(8, element);
+			
+			element = document.createElement("type10");
+			element.setAttribute("description", "Markvej");
+			roadTypes.put(10, element);
+			
+			element = document.createElement("type11");
+			element.setAttribute("description", "Gaagader");
+			roadTypes.put(11, element);
+			
+			element = document.createElement("type21");
+			element.setAttribute("description", "Proj.motorvej");
+			roadTypes.put(21, element);
+			
+			element = document.createElement("type22");
+			element.setAttribute("description", "Proj.motortrafikvej");
+			roadTypes.put(22, element);
+			
+			element = document.createElement("type23");
+			element.setAttribute("description", "Proj.primearvej");
+			roadTypes.put(23, element);
+			
+			element = document.createElement("type24");
+			element.setAttribute("description", "Proj.sekundearvej");
+			roadTypes.put(24, element);
+			
+			element = document.createElement("type25");
+			element.setAttribute("description", "Proj.vej3til6m");
+			roadTypes.put(25, element);
+			
+			element = document.createElement("type26");
+			element.setAttribute("description", "Proj.velUnder3m");
+			roadTypes.put(26, element);
+			
+			element = document.createElement("type28");
+			element.setAttribute("description", "Proj.sti");
+			roadTypes.put(28, element);
+			
+			element = document.createElement("type31");
+			element.setAttribute("description", "Motorvejsafkoersel");
+			roadTypes.put(31, element);
+			
+			element = document.createElement("type32");
+			element.setAttribute("description", "Motortrafikvejsafkoersel");
+			roadTypes.put(32, element);
+			
+			element = document.createElement("type33");
+			element.setAttribute("description", "Primearvejsafkoersel");
+			roadTypes.put(33, element);
+			
+			element = document.createElement("type34");
+			element.setAttribute("description", "Sekundearvejsafkoersel");
+			roadTypes.put(34, element);
+			
+			element = document.createElement("type35");
+			element.setAttribute("description", "AndenVejafkoersel");
+			roadTypes.put(35, element);
+			
+			element = document.createElement("type41");
+			element.setAttribute("description", "Motorvejstunnel");
+			roadTypes.put(41, element);
+			
+			element = document.createElement("type42");
+			element.setAttribute("description", "Motortrafikvejstunnel");
+			roadTypes.put(42, element);
+			
+			element = document.createElement("type43");
+			element.setAttribute("description", "Primaerstunnel");
+			roadTypes.put(43, element);
+			
+			element = document.createElement("type44");
+			element.setAttribute("description", "Sekundaervejstunnel");
+			roadTypes.put(44, element);
+			
+			element = document.createElement("type45");
+			element.setAttribute("description", "AndenVejtunnel");
+			roadTypes.put(45, element);
+			
+			element = document.createElement("type46");
+			element.setAttribute("description", "MindreVejtunnel");
+			roadTypes.put(46, element);
+			
+			element = document.createElement("type48");
+			element.setAttribute("description", "Stitunnel");
+			roadTypes.put(48, element);
+			
+			element = document.createElement("type80");
+			element.setAttribute("description", "Faergeforbindelser");
+			roadTypes.put(80, element);
+			
+			element = document.createElement("type99");
+			element.setAttribute("description", "StednavneEksaktBeliggendeUkendt");
+			roadTypes.put(99, element);
+			
+			
+			//To keep count of road in each group
+			for(Element e : roadTypes.values()){
+				e.setAttribute("amount", "0");
+			}
 	
-	public double getScale(){
-		return scale;
+			return roadTypes;
 	}
-	
-	public void setScale(double scale){
-		this.scale = scale;
-	}
+
 }
