@@ -17,7 +17,7 @@ public class JSConnector {
 	public JSConnector(Controller c) {
 		controller = c;
 		try {
-			//the parameter in ServerSocket is 80 because that is the default port for localhost
+			//the parameter in ServerSocket is 80 because it is the default port for localhost
 			ServerSocket ss = new ServerSocket(80);
 			listenForBrowserRequest(ss);
 		} catch (IOException e) {
