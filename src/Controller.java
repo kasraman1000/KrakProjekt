@@ -23,47 +23,35 @@ public class Controller {
 	private static DataHelper dataHelper;
 	private static XML xml;
 	private static KDTree kdTree;
+	private static JSConnector jsConnector;
+	
+	
+	public static void main(String[] args) {
+		Controller controller = new Controller();
+		controller.launchKrax();
+	}
 	
 	
 	public Controller(){
-		
+		kdTree = KDTree.getTree();
+		try {
+			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
+						"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		dataHelper = new DataHelper(kdTree);
+		xml = new XML();
+		jsConnector = new JSConnector(this);
 	}
+	
 	
 	
 	//TODO Must be changed when JS is up running!!!
 	
 	public void launchKrax(){
-		Road[] roadsOriginal;
-		Road[] roadsCurrent = null;
-		int scaleStart = 500;
-		System.out.println("Launching...");
-		try {
-			KDTree kdTree = KDTree.getTree();
-			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
-					"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
-			//Road[] allRoads = kdTree.searchRange(kdTree.origo, kdTree.top);
-			dataHelper = new DataHelper(kdTree);
 
-			
-//			roadsOriginal = dataHelper.cleanUpRoads(allRoads, 1);
-//			roadsCurrent = dataHelper.cleanUpRoads(allRoads, scaleStart);
-			
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		View view = new View();
-		view.createFrame();
-		view.drawRoads(roadsCurrent);
-		
-		
-		
-		System.out.println("Launch loaded... Enjoy!");
-		//Load all data
-		//Find original min and max in DataHelper (partly to storage the information)
-		//Define starting scale
-		//Create instance of JSConnector
 	}
 	
 	
@@ -115,7 +103,14 @@ public class Controller {
 	
 	public String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
-		return xml.createString(roads);
+		String tempString = "";
+		try {
+			tempString = xml.createString(roads);
+		} catch (ParserConfigurationException | TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tempString;
 	}
 	
 	public Road[] getRoadsFromFile(String fileName, int[] roadTypesToExtract){
@@ -188,7 +183,9 @@ public class Controller {
 	
 	
 	
-	
+	private String getErrorString(int errorCode){
+		return null;
+	}
 	
 	
 	/**
@@ -229,11 +226,11 @@ public class Controller {
 				roadTypesSet.add(roadType);
 			}
 			
-
-			Point x1y1 = point;
-			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
+			Region region = new Region(point.x, point.y, point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
+//			Point x1y1 = point;
+//			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
 			
-			Road[] tempRoads = kdTree.searchRange(x1y1, x2y2);
+			Road[] tempRoads = kdTree.searchRange(region);
 			
 			for(Road road : tempRoads){
 				if(roadTypesSet.contains(road.getType())){
