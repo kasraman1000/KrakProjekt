@@ -106,7 +106,7 @@ public class Controller {
 		String tempString = "";
 		try {
 			tempString = xml.createString(roads);
-		} catch (ParserConfigurationException | TransformerException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
