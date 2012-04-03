@@ -16,16 +16,32 @@ public class JSConnector {
 	private void createSocket() {
 		try {
 			ss = new ServerSocket(80);
+		catch(Exception e){
+			System.out.println(e);
+		}
+		
+		while(true){
+			try{
+				Socket con = ss.accept();
+				InputStream in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				OutputStream out = new BufferedOutStream(con.getInputStream());
+				String requestFromClient = in.readLine();
+				process(requestFromClient);
+			}
+		}
 			System.out.println("...");
 			s = ss.accept();
-			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			createXMLDocument();
+			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));	
 			s.close();
 			ss.close();
-			//readParameters(input);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	private void process(String request){
+		System.out.println(request);
 		
 	}
 	private void createXMLDocument() {
@@ -46,7 +62,7 @@ public class JSConnector {
 	private void readParameters(BufferedReader input) {
 		HashMap<String,String> urlParameters = new HashMap<String,String>();
 		try {
-			String line = input.readLine();
+			String line = input.readLine();	
 			//discards everything before the questionmark
 			line = line.split("\\?")[1];
 			//discards everything after the space
@@ -55,6 +71,8 @@ public class JSConnector {
 			for(String pair : lines){
 				String[] pairArray = pair.split("=");
 				urlParameters.put(pairArray[0], pairArray[1]);
+				System.out.println(pairArray[0] + " - " + pairArray[1]);
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 <html>
 <head>
+
 	<style type="text/css" media="screen">
 	    body { background:#eee; margin:10; overflow:hidden; }
 	    svg {
@@ -8,6 +9,7 @@
 	    }
 	</style>
 <script type="text/javascript">
+
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
@@ -24,7 +26,8 @@ function getXML(){
 			
 	    }
 	  }
-	  uri = "roads.xml";
+	 uri = "roads.xml";
+//	uri = "http://localhost?x=5&y=10";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
 	
@@ -79,14 +82,12 @@ function getPosition(){
 	}
 
 function clickTest(){
-	getXML();
-	/*
 	 var xmlhttp=new XMLHttpRequest();
-	  uri = "http://localhost";
+	  uri = "http://localhost?x=5&y=10";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send(null);
-	  window.setTimeout(getXML,1000);
-	*/
+	//  window.setTimeout(getXML,1000);
+	
 }
 
 </script>
