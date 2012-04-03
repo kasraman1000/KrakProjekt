@@ -221,36 +221,17 @@ public class Controller {
 			loadRoadWidths();
 		}
 		
-		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){
-			HashSet<Integer> roadTypesSet;
-			HashSet<Road> roadsToReturn;
-					
-			for(int roadType : roadTypes){
-				roadTypesSet.add(roadType);
-			}
-			
-
+		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){		
 			Point x1y1 = point;
 			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
 			
-			Road[] tempRoads = kdTree.searchRange(x1y1, x2y2);
+			Road[] roads = kdTree.searchRange(x1y1, x2y2);
 			
-			for(Road road : tempRoads){
-				if(roadTypesSet.contains(road.getType())){
-					Road tempRoad = new Road(
-							//Is repositioned to fit the canvas in the view
-							(road.getX1()-point.x)/scale,
-							(road.getY1()-point.y)/scale,
-							(road.getX2()-point.x)/scale,
-							(road.getY2()-point.y)/scale,
-							road.getType(),
-							road.getName()
-							);
-					roadsToReturn.add(tempRoad);
+			for(Road road : roads){
+				road.adjustCoords(scale, point);
 				}
-			}
 
-			return roadsToReturn.toArray(new Road[0]);
+			return roads;
 		}
 		
 		/**
