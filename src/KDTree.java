@@ -102,12 +102,12 @@ public class KDTree
 			return 1;
 	}
 	
-	private boolean filterRoad(int zoomLevel)
+	private boolean filterRoad(int zoomLevel, Road road)
 	{
 		
 		switch(zoomLevel)
 		{
-		case 1: return 
+		case 1: return road.type
 		case 2:
 		case 3:
 		case 4:
