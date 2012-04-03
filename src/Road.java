@@ -25,6 +25,7 @@ public class Road {
 		this.type = new Integer(type);
 		this.name = name;
 		hashCode = this.x1.hashCode()*(this.y2.hashCode()*31)+this.type.hashCode();
+		setPriority();
 	}
 	
 	public void setPriority()
