@@ -13,7 +13,7 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
-	
+	/*
 	public static void main(String[] args)
 	{
 		
@@ -40,7 +40,7 @@ public class KDTree
 			System.out.println(test.coords[0]);
 		}
 		*/
-		
+		/*
 		try{
 			System.out.println("Building...");
 			long time = System.currentTimeMillis();
@@ -57,12 +57,15 @@ public class KDTree
 			time = System.currentTimeMillis();
 			Road[] roads = KDTree.getTree().searchRange(tree.origo, tree.top);
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roads.length);
 			time = System.currentTimeMillis();
 			Road[] roadi = KDTree.getTree().searchRange(a, b);
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roadi.length);
 			time = System.currentTimeMillis();
 			Road[] roadu = KDTree.getTree().searchRange(c, d);
 			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
+			System.out.println("Number of roads found: " + roadu.length);
 			System.out.println("-------------------------------------------------");
 		}
 		
@@ -70,9 +73,9 @@ public class KDTree
 		{
 			System.out.println("error");
 		}
-		
-		
-	}
+			
+	}*/
+
 	
 	private KDTree(int k)
 	{
@@ -105,13 +108,22 @@ public class KDTree
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
 		
-		switch(zoomLevel)
+		if(zoomLevel < 4)
 		{
-		case 1: return road.type == 1 || road.type == 2 || road.type == 3 || road.type == 41 || road.type == 42 || road.type == 43 || road.type == 21 || road.type == 22 || road.type == 23;
-		case 2: return road.type == 1 || road.type == 2 || road.type == 3 || road.type == 41 || road.type == 42 || road.type == 43 || road.type == 21 || road.type == 22 || road.type == 23;
-		case 3:
-		case 4:
+			if(road.type == 11 || road.type == 8 || road.type == 48 || road.type == 28)
+				return false;
 		}
+		if( zoomLevel < 3)
+		{
+			if(road.type == 6 || road.type == 10 || road.type == 99 || road.type == 0 || road.type == 95 || road.type == 26 || road.type == 34 || road.type == 35 || road.type == 46)
+				return false;
+		}
+		if( zoomLevel < 2)
+		{
+			if(road.type == 4 || road.type == 5 || road.type == 80 || road.type == 31 || road.type == 32 || road.type == 33 || road.type == 24 || road.type == 25 || road.type == 44 || road.type == 45)
+				return false;
+		}
+		return true;
 	}
 	
 	public Road[] searchRange(double[] p1, double[] p2)
@@ -127,6 +139,7 @@ public class KDTree
 		{
 			for(Road r : n.getRoads())
 			{
+				if(filterRoad(zoom, r))
 				roads.add(r);
 			}
 		}
