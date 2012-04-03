@@ -9,10 +9,13 @@ import java.util.HashMap;
 
 public class JSConnector {
 
+	private Controller controller;
+
 	/**
 	 * Constructor that makes the class ready for a request
 	 */
-	public JSConnector() {
+	public JSConnector(Controller c) {
+		controller = c;
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
 			ServerSocket ss = new ServerSocket(80);
@@ -32,8 +35,9 @@ public class JSConnector {
 		try {
 			Socket s = ss.accept();
 			BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			readParameters(input.readLine());
-			sendResponseToBrowser(s);
+			HashMap<String,String> parameters = readParameters(input.readLine());
+			String response = controller.getXML(new Region(parameters.get("x1"),parameters.get("y1"),parameters.get("x2"),parameters.get("y2")));
+			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,13 +48,14 @@ public class JSConnector {
 	/**
 	 * 
 	 * @param s the socket that contains the outputstream
+	 * @param response 
 	 */
-	private void sendResponseToBrowser(Socket s) {
+	private void sendResponseToBrowser(Socket s, String response) {
 		try {
 			DataOutputStream output = new DataOutputStream(s.getOutputStream());
-			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
+//			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
-			String httpResponse = httpHeader + xmlString;
+			String httpResponse = httpHeader + response;
 			output.writeUTF(httpResponse);
 			output.flush();
 			output.close();
@@ -89,6 +94,5 @@ public class JSConnector {
 	}
 
 	public static void main(String[] args) {
-		JSConnector jsc = new JSConnector();
 	}
 }
