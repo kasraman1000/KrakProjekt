@@ -35,8 +35,8 @@ public class Controller {
 	public Controller(){
 		kdTree = KDTree.getTree();
 		try {
-			kdTree.initialize("C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_node_unload.txt",
-						"C:\\Users\\Yndal\\Desktop\\Dropbox\\1. årsprojekt - gruppe 1\\krak-data\\kdv_unload.txt");
+			kdTree.initialize("kdv_node_unload.txt",
+						"kdv_unload.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
