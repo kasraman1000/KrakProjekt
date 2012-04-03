@@ -108,7 +108,11 @@ public class KDTree
 	
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
-		
+		if(road.getPriority() > zoomLevel)
+			return false;
+		else
+			return true;
+		/*
 		if(zoomLevel < 4)
 		{
 			if(road.getType() == 11 || road.getType() == 8 || road.getType() == 48 || road.getType() == 28)
@@ -125,6 +129,7 @@ public class KDTree
 				return false;
 		}
 		return true;
+		*/
 	}
 	
 	public Road[] searchRange(Region region)
