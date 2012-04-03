@@ -217,21 +217,9 @@ public class Controller {
 			loadRoadColors();
 			loadRoadWidths();
 		}
+
 		
-		public Road[] getRoadsInArea(Point point, Dimension dimensionOfArea, int scale, int[] roadTypes){		
-			Point x1y1 = point;
-			Point x2y2 = new Point(point.x + dimensionOfArea.width, point.y + dimensionOfArea.height);
 
-			Road[] roads = kdTree.searchRange(x1y1, x2y2);
-
-			
-			for(Road road : roads){
-				road.adjustCoords(scale, point);
-				}
-
-			return roads;
-		}
-		
 		/**
 		 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
 		 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
@@ -335,13 +323,13 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 3;
-			int mediumRoads = 2;
-			int smallRoads = 2;
-			int tinyRoads = 1;
-			int tunnels = 2;
-			int seaWays  = 3; 
-			int walkingPaths = 1;
+			int largeRoads = 30;
+			int mediumRoads = 20;
+			int smallRoads = 20;
+			int tinyRoads = 10;
+			int tunnels = 20;
+			int seaWays  = 30; 
+			int walkingPaths = 10;
 //			int bicyclePaths = 1;
 			
 			int unknownRoads = 1;
