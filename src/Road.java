@@ -9,8 +9,8 @@ public class Road {
 	
 
 	private Double x1;
-	private double y1;
-	private double x2;
+	private Double y1;
+	private Double x2;
 	private Double y2;
 	private Integer type;
 	private String name;
@@ -75,7 +75,7 @@ public class Road {
 	 * @return the y1
 	 */
 	public double getY1() {
-		return y1;
+		return y1.doubleValue();
 	}
 
 
@@ -83,7 +83,7 @@ public class Road {
 	 * @return the x2
 	 */
 	public double getX2() {
-		return x2;
+		return x2.doubleValue();
 	}
 
 
