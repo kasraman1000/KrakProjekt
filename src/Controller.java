@@ -35,8 +35,8 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			kdTree.initialize("kdv_node_unload.txt",
-						"kdv_unload.txt");
+			kdTree.initialize("../kdv_node_unload.txt",
+						"../kdv_unload.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -255,8 +255,10 @@ public class Controller {
 			int smallRoads = 200;
 			int tinyRoads = 100;
 			int tunnels = 200;
+
 			int seaWays  = 300; 
 			int walkingPaths = 100;
+
 //			int bicyclePaths = 1;
 			
 			int unknownRoads = 100;
