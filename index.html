@@ -29,8 +29,10 @@ function getXML(){
 			initialView();
 	    }
 	  }
+
 //	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
 	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
+
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
@@ -101,6 +103,7 @@ function initialView(){
 		}
 		svgFrame.appendChild(svgObject); 	
 	}	
+
 	alert("LOADED ALL ROADS");
 	svgFrame.setAttribute("viewBox", xView +" " + yView + " " + wView + " " + hView);
 	}

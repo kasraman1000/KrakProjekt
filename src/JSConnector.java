@@ -47,7 +47,7 @@ public class JSConnector {
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
-			System.out.println("js - handleRequest(): " + parameters.get("x1"));
+//			System.out.println("js - handleRequest(): " + parameters.get("x1"));
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
@@ -89,7 +89,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
-		System.out.println("JSconnector.ReadParameters - line: " + line);
+//		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark
@@ -97,11 +97,11 @@ public class JSConnector {
 		//discards everything after the space
 		line = line.split(" ")[0];
 		String[] lines = line.split("&");
-		System.out.println("JSConnector.readParameters()");
+//		System.out.println("JSConnector.readParameters()");
 		for(String pair : lines){
 			String[] pairArray = pair.split("=");
 
-			System.out.println(pairArray[0] + ": " + pairArray[1]);
+//			System.out.println(pairArray[0] + ": " + pairArray[1]);
 			result.put(pairArray[0], pairArray[1]);
 		}
 		return result;
