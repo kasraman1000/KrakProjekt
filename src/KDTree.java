@@ -136,14 +136,14 @@ public class KDTree
 	{
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-		int zoom = zoomLevel(p1, p2);
-
+		int zoom = 2;
 //		int zoom = zoomLevel(p1, p2);
+
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
 		long time = System.currentTimeMillis();
 		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
-		System.out.println("Millies to search: " + (System.currentTimeMillis()-time));
+//		System.out.println("Millies to search: " + (System.currentTimeMillis()-time));
 		time = System.currentTimeMillis();
 		for(Node n : nodes)
 		{
@@ -153,10 +153,10 @@ public class KDTree
 				roads.add(r);
 			}
 		}
-		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
+//		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
 		time = System.currentTimeMillis();
 		Road[] result = roads.toArray(new Road[0]);
-		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
+//		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
 		System.out.println("Size: " + result.length);
 		return result;
 	}

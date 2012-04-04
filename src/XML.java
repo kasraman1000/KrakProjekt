@@ -53,7 +53,7 @@ public class XML{
 		Road[] roads = new Road[numberOfRoads];
 		
 		for(int index=0; index<numberOfRoads; index++){
-			roads[index] = new Road(0+1, 0+1, 100+1, 100+1, 1, "Road number: 0" + index);
+			roads[index] = new Road(0+index, 0+index, 100+index, 100+index, 1, "Road number: " + index);
 		}
 		
 		return roads;
@@ -77,11 +77,13 @@ public class XML{
 	    Transformer transformer = transformerFactory.newTransformer();
 	    DOMSource source = new DOMSource(document);
 	    
-	    //TODO May want to add a larger buffer by telling the constructor (fx. StringWriter(10000)) 
+	    //TODO May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
 	    StringWriter stringWriter = new StringWriter();
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
 	    String xmlString = stringWriter.toString();
+	    
+	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
 	    
 	    return xmlString;
 	}

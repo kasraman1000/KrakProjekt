@@ -28,11 +28,11 @@ public class Controller {
 	
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		controller.launchKrax();
 	}
 	
 	
 	public Controller(){
+		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
 			kdTree.initialize("kdv_node_unload.txt",
@@ -43,66 +43,15 @@ public class Controller {
 		}
 		dataHelper = new DataHelper(kdTree);
 		xml = new XML();
+		System.out.println("System up running...");
 		jsConnector = new JSConnector(this);
 	}
 	
 	
 	
-	//TODO Must be changed when JS is up running!!!
-	
-	public void launchKrax(){
-
-	}
-	
-	
-	
-	public static void newZoomLevel(Point centerOfCurrentView, boolean zoomIn){
-//		DataHelper.cleanupRoads(roadsOriginal, isZoomedIn);
-		System.out.println("Zoom level changed");
-	}
-	
-	public Road[] getRoadsToView(Point currentViewPoint, Dimension currentViewableArea, int scale){
-		return null;
-	}
-	
-	public void createXmlFile(Road[] roads, String fileName){
-//TODO	if(roads.length == 0) throw new SomeKindOfException;
-//TODO	Maybe do a check of the fileName??		
-		try {
-			xml.createFile(roads, fileName);
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public String createXmlString(Road[] roads){
-//		if(roads.length == 0) throw new SomeKindOfException;
-		String returnString = null;
-		try {
-			returnString = xml.createString(roads);
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-//TODO	if (returnString == null) doSomethingClever
-		return returnString;
-	}
-	
 	public String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
+//		roads = dataHelper.cleanUpRoads(roads);
 		String tempString = "";
 		try {
 			tempString = xml.createString(roads);
@@ -113,55 +62,40 @@ public class Controller {
 		return tempString;
 	}
 	
-	public Road[] getRoadsFromFile(String fileName, int[] roadTypesToExtract){
-		if(roadTypesToExtract.length == 0){
-			final int HIGHEST_ROAD_TYPE = 99;
-			roadTypesToExtract = new int[HIGHEST_ROAD_TYPE+1];
-			for(int roadTypeIndex=0; roadTypeIndex<=HIGHEST_ROAD_TYPE; roadTypeIndex++){
-				roadTypesToExtract[roadTypeIndex] = roadTypeIndex;
-			}
-		}
-		return getRoadsFromFile(fileName, roadTypesToExtract);
-	}
 	
-	
-	public Road[] getRoadsFromString(String xmlString, int[] roadTypesToExtract){
-		//Pre check
-//TODO	if(xmlString.length() == 0) throw SomeKindOfException
-		//If roadTypes are left empty - all roads will be returned (from type 0-99)
-		if(roadTypesToExtract.length == 0){
-			final int HIGHEST_ROAD_TYPE = 99;
-			roadTypesToExtract = new int[HIGHEST_ROAD_TYPE+1];
-			for(int roadTypeIndex=0; roadTypeIndex<=HIGHEST_ROAD_TYPE; roadTypeIndex++){
-				roadTypesToExtract[roadTypeIndex] = roadTypeIndex;
-			}
-		}
-				
-		
-		Road[] foundRoads = new Road[0];
-		try {
-			foundRoads = xml.getRoadsFromString(xmlString, roadTypesToExtract);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//TODO	if(foundRoads.length == 0){
-//			doSomethingClever
-//		} else {
-		return foundRoads;
-		
-	}
-	
-	
-	
-	
+//	public Road[] getRoadsFromString(String xmlString, int[] roadTypesToExtract){
+//		//Pre check
+////TODO	if(xmlString.length() == 0) throw SomeKindOfException
+//		//If roadTypes are left empty - all roads will be returned (from type 0-99)
+//		if(roadTypesToExtract.length == 0){
+//			final int HIGHEST_ROAD_TYPE = 99;
+//			roadTypesToExtract = new int[HIGHEST_ROAD_TYPE+1];
+//			for(int roadTypeIndex=0; roadTypeIndex<=HIGHEST_ROAD_TYPE; roadTypeIndex++){
+//				roadTypesToExtract[roadTypeIndex] = roadTypeIndex;
+//			}
+//		}
+//				
+//		
+//		Road[] foundRoads = new Road[0];
+//		try {
+//			foundRoads = xml.getRoadsFromString(xmlString, roadTypesToExtract);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ParserConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+////TODO	if(foundRoads.length == 0){
+////			doSomethingClever
+////		} else {
+//		return foundRoads;
+//		
+//	}
 	
 	
 	public static Color getRoadColor(int roadType){
@@ -193,8 +127,6 @@ public class Controller {
 	 */
 	
 	private class DataHelper {
-		//TODO Clean up all of these fields!! A lot of them are not needed!!!
-		private Road[] roadsOriginal;
 		private KDTree kdTree;
 		
 		//Is to find the height and width of the data set
@@ -253,16 +185,16 @@ public class Controller {
 				if(minY > road.getY1()) minY=road.getY1();
 				if(maxY < road.getY1()) maxY=road.getY1();
 				
-				if(minX > road.getX2()) minX=road.getY1();
+				if(minX > road.getX2()) minX=road.getX2();
 				if(maxX < road.getX2()) maxX=road.getX2();
 				if(minY > road.getY2()) minY=road.getY2();
 				if(maxY < road.getY2()) maxY=road.getY2();
 			}
 						
-//			System.out.println("MinX: " + minXCurrent);
-//			System.out.println("MaxX: " + maxXCurrent);
-//			System.out.println("MinY: " + minYCurrent);
-//			System.out.println("MaxY: " + maxYCurrent);
+			System.out.println("MinX: " + minX);
+			System.out.println("MaxX: " + maxX);
+			System.out.println("MinY: " + minY);
+			System.out.println("MaxY: " + maxY);
 //			System.out.println("ReposX: " + repositionXCurrent);
 //			System.out.println("ReposY: " + repositionYCurrent);
 		}
@@ -323,16 +255,16 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 30;
-			int mediumRoads = 20;
-			int smallRoads = 20;
-			int tinyRoads = 10;
-			int tunnels = 20;
-			int seaWays  = 30; 
-			int walkingPaths = 10;
+			int largeRoads = 300;
+			int mediumRoads = 200;
+			int smallRoads = 200;
+			int tinyRoads = 100;
+			int tunnels = 200;
+			int seaWays  = 300; 
+			int walkingPaths = 100;
 //			int bicyclePaths = 1;
 			
-			int unknownRoads = 1;
+			int unknownRoads = 100;
 					
 			roadWidths.put(0, unknownRoads); //"Unknown0"
 			roadWidths.put(95, unknownRoads); //"Unknown95"
