@@ -70,11 +70,19 @@ function moveViewBox(x,y){
 	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
 }
 function zoomIn(){
-	xView = 500000;
+	xView = 450000;
 	yView = 550000;
-	wView = 450000/2;
-	hView = 450000/2;
-	
+	wView = 440000;
+	hView = 440000;
+	getXML();
+}
+
+function zoomOut(){
+	xView = 450000;
+	yView = 6050000;
+	wView = 450000;
+	hView = 450000;
+	getXML();
 }
 	
 function initialView(){
