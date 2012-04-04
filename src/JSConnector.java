@@ -89,7 +89,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
-//		System.out.println("JSconnector.ReadParameters - line: " + line);
+		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark

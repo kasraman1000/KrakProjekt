@@ -136,9 +136,9 @@ public class KDTree
 	{
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-		int zoom = zoomLevel(p1, p2);
-		//int zoom = 1;
-
+		//int zoom = zoomLevel(p1, p2);
+		int zoom = 1;
+		System.out.println("zoom level " + zoom);
 
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();

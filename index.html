@@ -11,32 +11,43 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
-	xView = 450000;
-	yView = 6050000;
-	wView = 450000;
-	hView = 450000;
+	xView1 = 450000;
+	yView1 = 6050000;
+	xView2 = 900000;
+	yView2 = 6400000;
 }
 function getXML(){
-	getPosition();
+	//getPosition();
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
-	    	alert(xmlhttp.responseText);
+	    	//alert(xmlhttp.responseText);
 	    	roads = xmlhttp.responseXML.documentElement;
-	    	alert(roads);
+	    	//alert(roads);
 		  	svgFrame = document.getElementById("svgframe");
-			//parse();
 			initialView();
 	    }
 	  }
 
 //	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
 	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
-
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
 }
+
+function setWandH(){
+	wView = xView2 - xView1;
+	hView = yView2 - yView1;	
+}
+/*
+function getPosition(){
+	xView1 = xView;
+	yView1 = yView;
+	xView2 = xView + wView;
+	yView2 = yView + hView;		
+	}
+	*/
 function clickUp(){
 	//getPosition();
 	//var y = (yView2 - yView1)/2; 
@@ -72,10 +83,10 @@ function moveViewBox(x,y){
 	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
 }
 function zoomIn(){
-	xView = 450000;
-	yView = 550000;
-	wView = 440000;
-	hView = 440000;
+	xView1 = xView1 * 1;
+	yView1 = yView1 * 1;
+	xView2 = xView2 * 1;
+	yView2 = yView2 * 1;
 	getXML();
 }
 
@@ -103,31 +114,11 @@ function initialView(){
 		}
 		svgFrame.appendChild(svgObject); 	
 	}	
-
 	alert("LOADED ALL ROADS");
-	svgFrame.setAttribute("viewBox", xView +" " + yView + " " + wView + " " + hView);
-	}
-	
-function parse(){
-	//var XML = roads;
-    var parser = new DOMParser();
-   // xmlDoc	   =parser.parseFromString(text,"text/xml");
-    var XmlDoc = parser.parseFromString(roads, "text/xml");
-    var elemXML = XmlDoc.documentElement;
-    var elemSVG = document.adoptNode(elemXML);
-    var my = document.getElementById("root_element");
-    svgFrame.appendChild(elemSVG);
+	setWandH();
+	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
-function getPosition(){
-	xView1 = xView;
-	yView1 = yView;
-	xView2 = xView + wView;
-	yView2 = yView + hView;		
-	}
-function clickTest(){
-	getXML();
-}
 
 </script>
 </head>
