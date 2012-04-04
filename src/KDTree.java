@@ -140,6 +140,7 @@ public class KDTree
 		int zoom = 1;
 		System.out.println("zoom level " + zoom);
 
+
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
 		long time = System.currentTimeMillis();

@@ -82,9 +82,7 @@ public class XML{
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
 	    String xmlString = stringWriter.toString();
-	    
-	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
-	    
+	    	    
 	    return xmlString;
 	}
 	

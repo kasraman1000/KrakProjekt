@@ -50,16 +50,17 @@ public class Controller {
 	
 	
 	public String getXmlString(Region region){
-		Road[] roads = kdTree.searchRange(region);
-//		roads = dataHelper.cleanUpRoads(roads);
-		String tempString = "";
+//		Road[] roads = kdTree.searchRange(region);
+		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
+		String s = "";
 		try {
-			tempString = xml.createString(roads);
+			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
+			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return tempString;
+		return s;
 	}
 	
 	
@@ -136,9 +137,6 @@ public class Controller {
 		private double maxY = 0; //Is 6402050.98297
 		private double minY = 6500000; //Is 6049914.43018
 
-		private double repositionX;
-		private double repositionY;
-
 		private HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 		private HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	
@@ -159,26 +157,25 @@ public class Controller {
 		 * @return
 		 */
 		public Road[] cleanUpRoads(Road[] roads){
+			System.out.println("\nBefore:");
 			findMinAndMaxValue(roads);
 			Road[] roadsToReturn = new Road[roads.length];
 		
 			for(int index=0; index<roads.length; index++){
-				roadsToReturn[index] = new Road(roads[index].getX1() - repositionX, // (X/scale) + (repositionXCurrent)
-						roads[index].getY1()*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent this will calculate the correct Y (have to be "turned around") in the correct scale
-						roads[index].getX2() - repositionX, // (X/scale) + (repositionXCurrent)
-						roads[index].getY2()*(-1) + maxY + repositionY, // (Y/scale)*(-1) + maxYCurrent + repositionYCurrent
-						roads[index].getType(), //Type
-						roads[index].getName()); //Name of the road
+				roadsToReturn[index] = new Road(roads[index].getX1() - minX,
+						roads[index].getY1()*(-1) + maxY, 
+						roads[index].getX2() - minX,
+						roads[index].getY2()*(-1) + maxY,
+						roads[index].getType(), 
+						roads[index].getName());
 			}
+			System.out.println("\nAfter:");
+			findMinAndMaxValue(roadsToReturn);
 			return roadsToReturn;
 		}
 		
 		
 		private void findMinAndMaxValue(Road[] allRoads){
-			
-//			System.out.println("ReposX: " + repositionXCurrent);
-//			System.out.println("ReposY: " + repositionYCurrent);
-
 			for(Road road : allRoads){
 				if(minX > road.getX1()) minX=road.getX1();
 				if(maxX < road.getX1()) maxX=road.getX1();
@@ -190,13 +187,11 @@ public class Controller {
 				if(minY > road.getY2()) minY=road.getY2();
 				if(maxY < road.getY2()) maxY=road.getY2();
 			}
-						
+			
 			System.out.println("MinX: " + minX);
 			System.out.println("MaxX: " + maxX);
 			System.out.println("MinY: " + minY);
 			System.out.println("MaxY: " + maxY);
-//			System.out.println("ReposX: " + repositionXCurrent);
-//			System.out.println("ReposY: " + repositionYCurrent);
 		}
 
 
