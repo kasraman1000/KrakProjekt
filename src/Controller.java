@@ -35,8 +35,8 @@ public class Controller {
 	public Controller(){
 		kdTree = KDTree.getTree();
 		try {
-			kdTree.initialize("kdv_node_unload.txt",
-						"kdv_unload.txt");
+			kdTree.initialize("../kdv_node_unload.txt",
+						"../kdv_unload.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -335,11 +335,11 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 3;
-			int mediumRoads = 2;
-			int smallRoads = 2;
-			int tinyRoads = 1;
-			int tunnels = 2;
+			int largeRoads = 300;
+			int mediumRoads = 200;
+			int smallRoads = 200;
+			int tinyRoads = 100;
+			int tunnels = 200;
 			int seaWays  = 3; 
 			int walkingPaths = 1;
 //			int bicyclePaths = 1;

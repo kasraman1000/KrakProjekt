@@ -11,38 +11,57 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
+	xView = 450000;
+	yView = 6050000;
+	wView = 450000;
+	hView = 450000;
 }
 function getXML(){
+	getPosition();
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
-	    	alert(xmlhttp.responseXML);
+	    	alert(xmlhttp.responseText);
 	    	roads = xmlhttp.responseXML.documentElement;
+	    	alert(roads);
 		  	svgFrame = document.getElementById("svgframe");
+			//parse();
 			initialView();
 	    }
 	  }
-
 //	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
-	  uri = "http://localhost/?x1=450000&y1=6050000&x2=650000&y2=6750000";
+	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
 }
 function clickUp(){
-	moveViewBox(0, -2500);
+	//getPosition();
+	//var y = (yView2 - yView1)/2; 
+	var y = 10000;
+	moveViewBox(0, -y);
+	
 }
 function clickDown(){
-	moveViewBox(0, 2500);
+	//getPosition();
+	//var y = (yView2 - yView1)/2; 
+	var y = 10000;
+	moveViewBox(0, y);
 }
 
 function clickRight(){
-	moveViewBox(2500, 0);
+	//getPosition();
+	//var x = (xView2 - xView1)/2; 
+	var x = 10000;
+	moveViewBox(x, 0);
 	 
 }
 
 function clickLeft(){
-	moveViewBox(-2500, 0);
+	//getPosition();
+	//var x = (xView2 - xView1)/2;
+	var x = 10000; 
+	moveViewBox(-x, 0);
 }
 
 function moveViewBox(x,y){
@@ -50,6 +69,14 @@ function moveViewBox(x,y){
 	yView += y;
 	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
 }
+function zoomIn(){
+	xView = 500000;
+	yView = 550000;
+	wView = 450000/2;
+	hView = 450000/2;
+	
+}
+	
 function initialView(){
 	alert(roads);
 	for(var g = 0; g < roads.childNodes.length; g++){
@@ -66,17 +93,26 @@ function initialView(){
 		}
 		svgFrame.appendChild(svgObject); 	
 	}	
-	xView = 450000;
-	yView = 6050000;
-	wView = 50000;
-	hView = 200000;
+	alert("LOADED ALL ROADS");
 	svgFrame.setAttribute("viewBox", xView +" " + yView + " " + wView + " " + hView);
 	}
 	
+function parse(){
+	//var XML = roads;
+    var parser = new DOMParser();
+   // xmlDoc	   =parser.parseFromString(text,"text/xml");
+    var XmlDoc = parser.parseFromString(roads, "text/xml");
+    var elemXML = XmlDoc.documentElement;
+    var elemSVG = document.adoptNode(elemXML);
+    var my = document.getElementById("root_element");
+    svgFrame.appendChild(elemSVG);
+	}
+
 function getPosition(){
-	xViewCenter = xView + wView;
-	yViewCenter = yView + hView;
-		
+	xView1 = xView;
+	yView1 = yView;
+	xView2 = xView + wView;
+	yView2 = yView + hView;		
 	}
 function clickTest(){
 	getXML();
@@ -85,15 +121,19 @@ function clickTest(){
 </script>
 </head>
 <body onLoad="init()">
+<div id="svg" style="float: right; width: 90%">
 <svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
-<div id = "buttons" style="float: right; width: 10%;">
-<button id="buttonUp" type="button" onClick="clickUp()">Up</button></br>
-<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
-<button id="buttonRight" type="button" onClick="clickRight()">Right</button></br>
-<button id="buttonLeft" type="button" onClick="clickLeft()">Left</button></br>
-<button id="buttonLeft" type="button" onClick="clickTest()">Test</button></br>
-
 </div>
+<div id ="buttons" style="float: left; width: 10%;">
+<button id="buttonUp" style="align: center;" type="button" onClick="clickUp()">Up</button></br>
+	<div id="rightAndLeft">
+		<button id="buttonRight" style="float: right;" type="button" onClick="clickRight()">Right</button></br>
+		<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
+	</div>
+<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
+<button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
+<button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
+<button id="buttonStart" type="button" onClick="getXML()">START</button></br>
 
 
 </body>
