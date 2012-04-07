@@ -83,18 +83,20 @@ function moveViewBox(x,y){
 	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
 }
 function zoomIn(){
-	xView1 = xView1 * 1;
-	yView1 = yView1 * 1;
-	xView2 = xView2 * 1;
-	yView2 = yView2 * 1;
+	xView1 *= 1.05;
+	yView1 *= 1.05;
+	xView2 *= 0.95;
+	yView2 *= 0.95;
+	alert(xView1 + "  " + yView1);
 	getXML();
 }
 
 function zoomOut(){
-	xView = 450000;
-	yView = 6050000;
-	wView = 450000;
-	hView = 450000;
+	xView1 *= 0.95;
+	yView1 *= 0.95;
+	xView2 *= 1.05;
+	yView2 *= 1.05;
+	alert(xView1 + "  " + yView1);
 	getXML();
 }
 	
@@ -129,7 +131,7 @@ function initialView(){
 <svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
-<button id="buttonUp" style="align: center;" type="button" onClick="clickUp()">Up</button></br>
+<button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
 	<div id="rightAndLeft">
 		<button id="buttonRight" style="float: right;" type="button" onClick="clickRight()">Right</button></br>
 		<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>

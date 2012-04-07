@@ -50,11 +50,11 @@ public class Controller {
 	
 	
 	public String getXmlString(Region region){
-//		Road[] roads = kdTree.searchRange(region);
-		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
+		Road[] roads = kdTree.searchRange(region);
+//		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
 		String s = "";
 		try {
-			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
+		//	xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
