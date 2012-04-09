@@ -11,8 +11,8 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
-	xView1 = 0.0;
-	yView1 = 0.0;
+	xView1 = 0;
+	yView1 = 0;
 	xView2 = 900000;
 	yView2 = 6400000;
 	getXML();
@@ -52,13 +52,18 @@ function initialView(){
 	}	
 	*/
 	svgFrame.appendChild(roads.firstChild); 	
-	setWandH();
+	//setWandH();
+	xView1 = 0;
+	yView1 = 0;
+	wView = 350000;
+	hView = 400000;
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
 function setWandH(){
 	wView = xView2 - xView1;
-	hView = yView2 - yView1;	
+	hView = yView2 - yView1;
+	alert("wView : " + wView + " hView : " + hView); 	
 }
 
 /*
@@ -73,22 +78,26 @@ function getPosition(){
 function clickUp(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, -y);
+	setWandH();
 	
 }
 function clickDown(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, y);
+	setWandH();
 }
 
 function clickRight(){
 	var x = (xView2 - xView1)/3; 
 	moveViewBox(x, 0);
+	setWandH();
 	 
 }
 
 function clickLeft(){
 	var x = (xView2 - xView1)/3; 
 	moveViewBox(-x, 0);
+	setWandH();
 }
 
 function moveViewBox(x,y){
@@ -126,7 +135,7 @@ function zoomOut(){
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 0 0"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 250 350"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
