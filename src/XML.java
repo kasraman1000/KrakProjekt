@@ -296,7 +296,7 @@ public class XML{
 	
 	
 	private Document convertRoadArrayToDocument(Road[] roads) throws ParserConfigurationException, TransformerConfigurationException{
-		String root = "root_element";
+//		String root = "root_element";
 		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -315,6 +315,7 @@ public class XML{
 		svgElement.appendChild(gElement);
 		
 		for(Road road : roads){
+			if(road.getX2() > 500000) System.out.println("FUCCCK!");
 			Element line = document.createElement("line");
 
 			line.setAttribute("x1", road.getX1() + ""); 

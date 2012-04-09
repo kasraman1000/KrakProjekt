@@ -51,24 +51,6 @@ public class Road {
 		}
 	}
 	
-	public void adjustCoords()
-	{
-		/*
-		x1 = new Double((x1.doubleValue()-point.x)/scale);
-		y1 = (y1-point.y)/scale;
-		x2 = (y1-point.x)/scale;	
-		y2 = new Double((y2.doubleValue()-point.y)/scale);
-		*/
-		double xMax = Controller.getMaxXOriginal();
-		double yMax = Controller.getMaxYOriginal();
-		
-		x1 = xMax - x1;
-		x2 = xMax - x2;
-		y1 = yMax - y1;
-		y2 = yMax - y2;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Road [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2

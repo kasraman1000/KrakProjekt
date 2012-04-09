@@ -18,8 +18,6 @@ public class KDTree
 	/*
 	public static void main(String[] args)
 	{
-		
-		
 		double[][] testCoords = new double[1000][2];
 		double[] kdnNode = {1, 0};
 		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
@@ -48,12 +46,12 @@ public class KDTree
 			long time = System.currentTimeMillis();
 		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
 		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
-		double[] a = {600000, 6050000};
-		double[] b = {700000, 6100000};
-		double[] c = {600000, 6050000};
-		double[] d = {800000, 6300000};
+		double[] a = {0, 0};
+		double[] b = {500000, 500000};
+		double[] c = {50000, 210000};
+		double[] d = {59000, 220000};
 
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			time = System.currentTimeMillis();
 			Road[] roads = KDTree.getTree().searchRange(new Region(tree.origo[0], tree.origo[1] , tree.top[0], tree.top[1]));
@@ -73,10 +71,12 @@ public class KDTree
 		}catch(IOException e)
 		{
 			System.out.println("error");
+			e.printStackTrace();
 		}
 			
 	}
-*/
+	*/
+
 	
 	private KDTree(int k)
 	{
@@ -140,7 +140,7 @@ public class KDTree
 		int zoom = zoomLevel(p1, p2);
 		//int zoom = 4;
 		System.out.println("zoom level " + zoom);
-
+		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
