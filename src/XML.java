@@ -302,14 +302,17 @@ public class XML{
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		Document document = docBuilder.newDocument();
 		
-		Element rootElement = document.createElement(root);
-		document.appendChild(rootElement);
+//		Element rootElement = document.createElement(root);
+//		document.appendChild(rootElement);
 		//The outer svg element 
 		Element svgElement = document.createElement("svg");
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svgElement.setAttribute("version", "1.1");
+		document.appendChild(svgElement);
 //		svgElement.setAttribute("width", Controller.getMaxXScaled() +"");
 //		svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
+		Element gElement = document.createElement("g");
+		svgElement.appendChild(gElement);
 		
 		for(Road road : roads){
 			Element line = document.createElement("line");
@@ -324,7 +327,7 @@ public class XML{
 										"stroke-width:" + Controller.getRoadWidth(road.getType()));
 //			line.setAttribute("roadType", road.getType() + "");
 //			line.setAttribute("roadName", road.getName() + "");
-			rootElement.appendChild(line);
+			gElement.appendChild(line);
 		}
 //		rootElement.appendChild(svgElement);
 			

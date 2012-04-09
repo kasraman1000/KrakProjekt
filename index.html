@@ -22,9 +22,7 @@ function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
-	    	//alert(xmlhttp.responseText);
 	    	roads = xmlhttp.responseXML.documentElement;
-	    	//alert(roads);
 		  	svgFrame = document.getElementById("svgframe");
 			initialView();
 	    }
@@ -105,6 +103,7 @@ function zoomOut(){
 }
 	
 function initialView(){
+	/*
 	for(var g = 0; g < roads.childNodes.length; g++){
 		var xmlNode = roads.childNodes[g];
 
@@ -119,12 +118,10 @@ function initialView(){
 		}
 		
 		svgFrame.appendChild(svgObject); 	
-	}	
-
-	alert("LOADED ALL ROADS");
+	}*/	
+	svgFrame.appendChild(roads.firstChild); 	
 	setWandH();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
-
 	}
 
 
