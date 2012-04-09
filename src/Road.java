@@ -8,10 +8,10 @@ import java.awt.Point;
 public class Road {
 	
 
-	private Double x1;
-	private Double y1;
-	private Double x2;
-	private Double y2;
+	private Double x1; //Road start
+	private Double y1; //Road start
+	private Double x2; //Road end
+	private Double y2; //Road end
 	private Integer type;
 	private String name;
 	private int hashCode;
@@ -20,15 +20,16 @@ public class Road {
 	private static double[] origo;
 	
 	public Road(double x1, double y1, double x2, double y2, int type, String name){
-		this.x1 = new Double(x1);
+		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
-		this.y2 = new Double(y2);
+		this.y2 = y2;
 		this.type = new Integer(type);
 		this.name = name;
 		hashCode = this.x1.hashCode()*(this.y2.hashCode()*31)+this.type.hashCode();
 		setPriority();
 	}
+	
 	
 	public void setPriority()
 	{
@@ -152,6 +153,4 @@ public class Road {
 	{
 		return hashCode;
 	}
-
-	
 }
