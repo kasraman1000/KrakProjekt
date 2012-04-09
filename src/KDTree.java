@@ -94,6 +94,12 @@ public class KDTree
 		
 	}
 	
+	/**
+	 * Returns the zoom level, which determines the filtering of the roads
+	 * @param p1 A point in the rectangle that bounds the viewport
+	 * @param p2 Another point in the rectangle that bounds the viewport
+	 * @return The lowest priority that should be displayed
+	 */
 	private int zoomLevel(double[] p1, double[] p2)
 	{
 		if(p2[0]-p1[0] < 1000)
@@ -106,48 +112,39 @@ public class KDTree
 			return 4;
 	}
 	
+	/**
+	 * Returns true or false dependent on whether the road should be displayed or not according to the priority
+	 * @param zoomLevel The priority that the road should be equals or greater than to be displayed
+	 * @param road	The road which should be filtered
+	 * @return whether the road has high enough priority to be displayed
+	 */
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
 		if(road.getPriority() < zoomLevel)
 			return false;
 		else
 			return true;
-		/*
-		if(zoomLevel < 4)
-		{
-			if(road.getType() == 11 || road.getType() == 8 || road.getType() == 48 || road.getType() == 28)
-				return false;
-		}
-		if( zoomLevel < 3)
-		{
-			if(road.getType() == 6 || road.getType() == 10 || road.getType() == 99 || road.getType() == 0 || road.getType() == 95 || road.getType() == 26 || road.getType() == 34 || road.getType() == 35 || road.getType() == 46)
-				return false;
-		}
-		if( zoomLevel < 2)
-		{
-			if(road.getType() == 4 || road.getType() == 5 || road.getType() == 80 || road.getType() == 31 || road.getType() == 32 || road.getType() == 33 || road.getType() == 24 || road.getType() == 25 || road.getType() == 44 || road.getType() == 45)
-				return false;
-		}
-		return true;
-		*/
 	}
-	
+	/**
+	 * Returns all roads in a rectangle bound by a region filtered by priority.
+	 * @param region The region which binds the viewport
+	 * @return All roads within the rectangle, which are relevant to display
+	 */
 	public Road[] searchRange(Region region)
 	{
+		//If coordinates are of wrong input, correct them
 		region.adjust();
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
+		//Choosing filter dependent on the width of the viewport
 		int zoom = zoomLevel(p1, p2);
-		//int zoom = 4;
 		System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
-
+		//Creating a HashSet to make sure that no road are contained twice.
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();
-		long time = System.currentTimeMillis();
 		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
-//		System.out.println("Millies to search: " + (System.currentTimeMillis()-time));
-		time = System.currentTimeMillis();
+		//Checking for priority and making sure that no road is added twice
 		for(Node n : nodes)
 		{
 			for(Road r : n.getRoads())
@@ -156,26 +153,42 @@ public class KDTree
 				roads.add(r);
 			}
 		}
-//		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
-		time = System.currentTimeMillis();
 		Road[] result = roads.toArray(new Road[0]);
-//		System.out.println("Millies to convert: " + (System.currentTimeMillis()-time));
 		System.out.println("Size: " + result.length);
 		return result;
 	}
 	
-	
+	/**
+	 * Returns all roads in a rectangle bound by two points filtered by priority.
+	 * @param p1 x and y coordinates for one of the points
+	 * @param p2 x and y coordinates for the other point
+	 * @return All roads within the rectangle, which are relevant to display
+	 */
 	public Road[] searchRange(double[] p1, double[] p2)
 	{
 		return searchRange(new Region(p1[0], p1[1], p2[0], p2[1]));
 	}
 	
+	/**
+	 * Returns all roads in a rectangle bound by two points filtered by priority.
+	 * @param p1 x and y coordinates for one of the points
+	 * @param p2 x and y coordinates for the other point
+	 * @return All roads within the rectangle, which are relevant to display
+	 */
 	public Road[] searchRange(Point p1, Point p2)
 	{
 		return searchRange(new Region(p1.x, p1.y, p2.x, p2.y));
 	}
 	
-	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
+	/**
+	 * Returns true if the two regions overlap or false if they do not.
+	 * @param h1 x and y coordinates for one of the points of the first region
+	 * @param h2 x and y coordinates for the other point of the first region
+	 * @param r1 x and y coordinates for one of the points of the second region
+	 * @param r2 x and y coordinates for the other point of the second region
+	 * @return true if the regions intersect, false if not
+	 */
+	private boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
@@ -184,7 +197,15 @@ public class KDTree
 		return true;
 	}
 	
-	public boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
+	/**
+	 * Returns true if the first region is fully contained in the second.
+	 * @param h1 x and y coordinates for one of the points of the first region
+	 * @param h2 x and y coordinates for the other point of the first region
+	 * @param r1 x and y coordinates for one of the points of the second region
+	 * @param r2 x and y coordinates for the other point of the second region
+	 * @return true if the first region is fully contained in the second, false if not.
+	 */
+	private boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
@@ -193,7 +214,14 @@ public class KDTree
 		return true;
 	}
 	
-	public boolean nodeContained(KDNode kdn, double[] r1, double[] r2)
+	/**
+	 * Returns true if the node is contained in the region.
+	 * @param kdn The KDNode to check whether it is contained
+	 * @param r1 x and y coordinates for one of the points of the region
+	 * @param r2 x and y coordinates for the other point of the region
+	 * @return true if the KDNode is contained in the region, false if not.
+	 */
+	private boolean nodeContained(KDNode kdn, double[] r1, double[] r2)
 	{
 		for(int i=0; i < k; i++)
 		{
@@ -202,8 +230,13 @@ public class KDTree
 		return true;
 	}
 	
-	
-	public void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes, int depth)
+	/**
+	 * Fills the nodes with the sub tree of the node.
+	 * @param kdn The KDNode, which's subtree we want to add to nodes
+	 * @param nodes The collection that should be filled with nodes
+	 * @param depth The recursion depth
+	 */
+	private void fillWithSubTree(KDNode kdn, ArrayList<Node> nodes, int depth)
 	{
 		if(kdn.right != null)
 		{
@@ -217,7 +250,7 @@ public class KDTree
 		}
 	}
 
-	public double[] changePoint(KDNode kdn, int depth, double[] r)
+	private double[] changePoint(KDNode kdn, int depth, double[] r)
 	{
 		if(depth%k==0)
 		{ 
@@ -269,31 +302,6 @@ public class KDTree
 		origo = Road.getOrigo();
 		top = Road.getTop();
 	}
-	/*
-	public double[] findLargest(ArrayList<Node> nodes)
-	{
-		double[] x = {0, 0};
-		for(Node n : nodes)
-		{
-			if(n.coords[0] > x[0]) x[0] = n.coords[0];
-			if(n.coords[1] > x[1]) x[1] = n.coords[1];
-		}
-		return x;
-		
-	}
-	
-	public double[] findSmallest(ArrayList<Node> nodes)
-	{
-		double[] x = {0, 0};
-		for(Node n : nodes)
-		{
-			if(n.coords[0] < x[0]) x[0] = n.coords[0];
-			if(n.coords[1] < x[1]) x[1] = n.coords[1];
-		}
-		return x;
-	}
-*/
-
 
 	//Nested class
 	private class KDNode
