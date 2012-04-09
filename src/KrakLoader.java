@@ -60,7 +60,7 @@ class KrakLoader {
 	
 		// first line is irrelevant
 		reader2.readLine();
-
+		
 		for(Node node : map.values()){
 			node.coords[0] -= smallestX; 
 			node.coords[1] = node.coords[1]*(-1) + biggestY;

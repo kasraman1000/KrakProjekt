@@ -45,7 +45,7 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		dataHelper = new DataHelper(kdTree);
+		dataHelper = new DataHelper();
 		xml = new XML();
 		System.out.println("System up running...");
 		jsConnector = new JSConnector(this);
@@ -54,7 +54,7 @@ public class Controller {
 	
 
 	
-	public String getXmlString(Region region){
+	public static String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
 		try {

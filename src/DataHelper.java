@@ -10,9 +10,6 @@ import java.util.HashMap;
  *
  */
 public class DataHelper {
-
-	private KDTree kdTree;
-	
 	//Is to find the height and width of the data set
 	//And then saved for later use
 	private double maxX = 0; //Is 892638.21114
@@ -24,8 +21,7 @@ public class DataHelper {
 	private static HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 
 	
-	public DataHelper(KDTree kdTree){
-		this.kdTree = kdTree;
+	public DataHelper(){
 //		roadsOriginal = cleanUpRoads(allRoadsUnscaled,1);
 		loadRoadColors();
 		loadRoadWidths();
@@ -88,7 +84,7 @@ public class DataHelper {
 	 */
 	private void loadRoadColors(){
 		Color largeRoads = Color.red;
-		Color mediumRoads = Color.yellow;
+		Color mediumRoads = Color.black; //Color mediumRoads = Color.yellow;
 		Color smallRoads = Color.black;
 		Color tinyRoads = Color.pink;
 		Color tunnels = Color.orange;
