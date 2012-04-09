@@ -35,8 +35,12 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			kdTree.initialize("kdv_node_unload.txt",
-						"kdv_unload.txt");
+/*
+			kdTree.initialize("..\\kdv_node_unload.txt",
+					"..\\kdv_unload.txt");
+		*/			
+			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
+			System.out.println("PATH READ");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,11 +54,11 @@ public class Controller {
 	
 	
 	public String getXmlString(Region region){
-//		Road[] roads = kdTree.searchRange(region);
-		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
+		Road[] roads = kdTree.searchRange(region);
+//		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
 		String s = "";
 		try {
-			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
+		//	xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -250,14 +254,14 @@ public class Controller {
 		 * Will load all the predefined road widths to a HashMap - only called in the constructor
 		 */
 		private void loadRoadWidths(){
-			int largeRoads = 300;
-			int mediumRoads = 200;
+			int largeRoads = 600;
+			int mediumRoads = 300;
 			int smallRoads = 200;
 			int tinyRoads = 100;
 			int tunnels = 200;
 
-			int seaWays  = 300; 
-			int walkingPaths = 100;
+			int seaWays  = 400; 
+			int walkingPaths = 500;
 
 //			int bicyclePaths = 1;
 			

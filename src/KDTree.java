@@ -108,7 +108,7 @@ public class KDTree
 	
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
-		if(road.getPriority() > zoomLevel)
+		if(road.getPriority() < zoomLevel)
 			return false;
 		else
 			return true;
@@ -134,10 +134,12 @@ public class KDTree
 	
 	public Road[] searchRange(Region region)
 	{
+		region.adjust();
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-		int zoom = 3;
-//		int zoom = zoomLevel(p1, p2);
+		//int zoom = zoomLevel(p1, p2);
+		int zoom = 4;
+		System.out.println("zoom level " + zoom);
 
 
 		HashSet<Road> roads = new HashSet<Road>(1000);
@@ -152,6 +154,7 @@ public class KDTree
 			{
 				if(filterRoad(zoom, r))
 				roads.add(r);
+				r.adjustCoords();
 			}
 		}
 //		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
