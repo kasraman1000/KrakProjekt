@@ -11,8 +11,8 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
-	xView1 = 450000;
-	yView1 = 6050000;
+	xView1 = 0.0;
+	yView1 = 0.0;
 	xView2 = 900000;
 	yView2 = 6400000;
 	getXML();
@@ -23,85 +23,16 @@ function getXML(){
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 	    	roads = xmlhttp.responseXML.documentElement;
-		  	svgFrame = document.getElementById("svgframe");
+		  	svgFrame = document.getElementById("svgframe");		  	
 			initialView();
 	    }
 	  }
 
-//	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
 	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
-	
 }
 
-function setWandH(){
-	wView = xView2 - xView1;
-	hView = yView2 - yView1;	
-}
-
-/*
-function getPosition(){
-	xView1 = xView;
-	yView1 = yView;
-	xView2 = xView + wView;
-	yView2 = yView + hView;		
-	}
-*/
-	
-function clickUp(){
-	//getPosition();
-	var y = (yView2 - yView1)/2; 
-	//var y = 10000;
-	moveViewBox(0, -y);
-	
-}
-function clickDown(){
-	//getPosition();
-	var y = (yView2 - yView1)/2; 
-	//var y = 10000;
-	moveViewBox(0, y);
-}
-
-function clickRight(){
-	//getPosition();
-	var x = (xView2 - xView1)/2; 
-	//var x = 10000;
-	moveViewBox(x, 0);
-	 
-}
-
-function clickLeft(){
-	//getPosition();
-	var x = (xView2 - xView1)/2;
-	//var x = 10000; 
-	moveViewBox(-x, 0);
-}
-
-function moveViewBox(x,y){
-	xView1 += x;
-	yView1 += y;
-	setWandH();
-	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
-}
-function zoomIn(){
-	xView1 *= 1.05;
-	yView1 *= 1.05;
-	xView2 *= 0.95;
-	yView2 *= 0.95;
-	alert(xView1 + "  " + yView1);
-	getXML();
-}
-
-function zoomOut(){
-	xView1 *= 0.95;
-	yView1 *= 0.95;
-	xView2 *= 1.05;
-	yView2 *= 1.05;
-	alert(xView1 + "  " + yView1);
-	getXML();
-}
-	
 function initialView(){
 	/*
 	for(var g = 0; g < roads.childNodes.length; g++){
@@ -125,12 +56,73 @@ function initialView(){
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
+function setWandH(){
+	wView = xView2 - xView1;
+	hView = yView2 - yView1;	
+}
+
+/*
+function getPosition(){
+	xView1 = xView;
+	yView1 = yView;
+	xView2 = xView + wView;
+	yView2 = yView + hView;		
+	}
+*/
+	
+function clickUp(){
+	var y = (yView2 - yView1)/3; 
+	moveViewBox(0, -y);
+	
+}
+function clickDown(){
+	var y = (yView2 - yView1)/3; 
+	moveViewBox(0, y);
+}
+
+function clickRight(){
+	var x = (xView2 - xView1)/3; 
+	moveViewBox(x, 0);
+	 
+}
+
+function clickLeft(){
+	var x = (xView2 - xView1)/3; 
+	moveViewBox(-x, 0);
+}
+
+function moveViewBox(x,y){
+	xView1 += x;
+	yView1 += y;
+	setWandH();
+	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
+}
+function zoomIn(){
+	setWandH();
+	xView1 += wView * 1.05 - wView;
+	yView1 += hView * 1.05 - hView;
+	xView2 -= wView - wView * 0.95;
+	yView2 -= hView - hView * 0.95;
+	alert(xView1 + "  " + yView1);
+	getXML();
+}
+
+function zoomOut(){
+	setWandH();
+	xView1 -= wView * 1.05 - wView;
+	yView1 -= hView * 1.05 - hView;
+	xView2 += wView - wView * 0.95;
+	yView2 += hView - hView * 0.95;
+	alert(xView1 + "  " + yView1);
+	getXML();
+}
+	
 
 </script>
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 0 0"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
@@ -142,7 +134,6 @@ function initialView(){
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
 <button id="buttonStart" type="button" onClick="getXML()">START</button></br>
-
 
 </body>
 </html>

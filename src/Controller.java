@@ -54,7 +54,7 @@ public class Controller {
 	
 	
 	public String getXmlString(Region region){
-		Road[] roads = kdTree.searchRange(region);
+		//Road[] roads = kdTree.searchRange(region);
 		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
 		String s = "";
 		try {
