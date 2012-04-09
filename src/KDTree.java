@@ -154,6 +154,7 @@ public class KDTree
 			{
 				if(filterRoad(zoom, r))
 				roads.add(r);
+				r.adjustCoords();
 			}
 		}
 //		System.out.println("Millies to add roads: " + (System.currentTimeMillis()-time));
