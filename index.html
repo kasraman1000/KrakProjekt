@@ -99,20 +99,24 @@ function moveViewBox(x,y){
 }
 function zoomIn(){
 	setWandH();
-	xView1 += wView * 1.05 - wView;
-	yView1 += hView * 1.05 - hView;
-	xView2 -= wView - wView * 0.95;
-	yView2 -= hView - hView * 0.95;
+	xView1 += wView * 0.05;
+	yView1 += hView * 0.05;
+	xView2 -= wView * 0.05;
+	yView2 -= hView * 0.05;
 	alert(xView1 + "  " + yView1);
 	getXML();
 }
 
 function zoomOut(){
 	setWandH();
-	xView1 -= wView * 1.05 - wView;
-	yView1 -= hView * 1.05 - hView;
-	xView2 += wView - wView * 0.95;
-	yView2 += hView - hView * 0.95;
+	xView1 -= wView * 0.05
+	if(xView1 < 0)
+		xView1 = 0;
+	yView1 -= hView * 0.05;
+	if(yView1 < 0)
+		yView1 = 0;
+	xView2 += wView * 0.05;
+	yView2 += hView * 0.05;
 	alert(xView1 + "  " + yView1);
 	getXML();
 }
