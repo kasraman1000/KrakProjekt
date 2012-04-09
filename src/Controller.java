@@ -53,8 +53,9 @@ public class Controller {
 	
 	
 	
+<<<<<<< HEAD
 	public String getXmlString(Region region){
-		Road[] roads = kdTree.searchRange(region);
+		Road[] roads = dataHelper.cleanUpRoads(kdTree.searchRange(region));
 		String s = "";
 		try {
 			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
