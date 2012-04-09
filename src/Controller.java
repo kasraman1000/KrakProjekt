@@ -35,8 +35,12 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
+/*
 			kdTree.initialize("..\\kdv_node_unload.txt",
 					"..\\kdv_unload.txt");
+		*/			
+			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
+			System.out.println("PATH READ");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
