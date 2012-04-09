@@ -16,6 +16,8 @@ public class Road {
 	private String name;
 	private int hashCode;
 	private int priority;
+	private static double[] top;
+	private static double[] origo;
 	
 	public Road(double x1, double y1, double x2, double y2, int type, String name){
 		this.x1 = new Double(x1);
@@ -117,6 +119,26 @@ public class Road {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	public static double[] getTop()
+	{
+		return top;
+	}
+	
+	public static void setTop(double[] top)
+	{
+		Road.top = top;
+	}
+	
+	public static double[] getOrigo()
+	{
+		return origo;
+	}
+	
+	public static void setOrigo(double[] origo)
+	{
+		Road.origo = origo;
 	}
 	
 	public int getPriority()

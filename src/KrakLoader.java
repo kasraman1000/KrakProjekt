@@ -17,14 +17,41 @@ class KrakLoader {
 		String curLine;
 		// first line is irrelevant
 		reader.readLine();
-
+		//variables for finding extremes
+		double biggestX = 0;
+		double biggestY = 0;
+		double smallestX = 10000000;
+		double smallestY = 10000000;
+		
+		
 		//Adding all nodes to result HashMap with their ID as keys
 		while((curLine = reader.readLine()) != null){
 			String[] lineArray = curLine.split(",");
 			double[] coords = {Double.valueOf(lineArray[3]), Double.valueOf(lineArray[4])};
+			if(Double.valueOf(lineArray[3]) > biggestX)
+			{
+				biggestX = Double.valueOf(lineArray[3]);
+			}
+			if(Double.valueOf(lineArray[4]) > biggestY)
+			{
+				biggestY = Double.valueOf(lineArray[4]);
+			}
+			if(Double.valueOf(lineArray[3]) < smallestX)
+			{
+				smallestX = Double.valueOf(lineArray[3]);
+			}
+			if(Double.valueOf(lineArray[4]) < smallestY)
+			{
+				smallestY = Double.valueOf(lineArray[4]);
+			}
+			
 			Node node = new Node(coords);
 			map.put(Integer.valueOf(lineArray[2]), node);
 		}
+		double[] top = {biggestX, biggestY};
+		double[] origo = {smallestX, smallestY};
+		Road.setTop(top);
+		Road.setOrigo(origo);
 
 		//reads the edgeList 
 		File file2 = new File(edgePath);
@@ -41,10 +68,10 @@ class KrakLoader {
 
 
 			Road road = new Road(
-					node1.getCoord(0),
-					node1.getCoord(1),
-					node2.getCoord(0),
-					node2.getCoord(1),
+					node1.coords[0],
+					node1.coords [1],
+					node2.coords [0],
+					node2.coords [1],
 					Integer.valueOf(lineArray2[5]),
 					lineArray2[6]);
 

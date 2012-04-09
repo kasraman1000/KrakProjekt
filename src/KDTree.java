@@ -266,10 +266,10 @@ public class KDTree
 	{	
 		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
 		tree.build(nodes);
-		origo = findSmallest(nodes);
-		top = findLargest(nodes);
+		origo = Road.getOrigo();
+		top = Road.getTop();
 	}
-	
+	/*
 	public double[] findLargest(ArrayList<Node> nodes)
 	{
 		double[] x = {0, 0};
@@ -292,7 +292,7 @@ public class KDTree
 		}
 		return x;
 	}
-
+*/
 
 
 	//Nested class
