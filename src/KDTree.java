@@ -97,13 +97,13 @@ public class KDTree
 	private int zoomLevel(double[] p1, double[] p2)
 	{
 		if(p2[0]-p1[0] < 1000)
-			return 4;
-		if(p2[0]-p1[0] < 10000)
-			return 3;
-		if(p2[0]-p1[0] < 100000)
-			return 2;
-
 			return 1;
+		if(p2[0]-p1[0] < 10000)
+			return 2;
+		if(p2[0]-p1[0] < 100000)
+			return 3;
+
+			return 4;
 	}
 	
 	private boolean filterRoad(int zoomLevel, Road road)
@@ -266,10 +266,10 @@ public class KDTree
 	{	
 		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
 		tree.build(nodes);
-		origo = findSmallest(nodes);
-		top = findLargest(nodes);
+		origo = Road.getOrigo();
+		top = Road.getTop();
 	}
-	
+	/*
 	public double[] findLargest(ArrayList<Node> nodes)
 	{
 		double[] x = {0, 0};
@@ -292,7 +292,7 @@ public class KDTree
 		}
 		return x;
 	}
-
+*/
 
 
 	//Nested class
