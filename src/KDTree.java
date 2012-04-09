@@ -108,7 +108,7 @@ public class KDTree
 	
 	private boolean filterRoad(int zoomLevel, Road road)
 	{
-		if(road.getPriority() > zoomLevel)
+		if(road.getPriority() < zoomLevel)
 			return false;
 		else
 			return true;
