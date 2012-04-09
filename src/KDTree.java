@@ -140,7 +140,7 @@ public class KDTree
 		int zoom = zoomLevel(p1, p2);
 		//int zoom = 4;
 		System.out.println("zoom level " + zoom);
-
+		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 
 		HashSet<Road> roads = new HashSet<Road>(1000);
 		ArrayList<Node> nodes= new ArrayList<Node>();

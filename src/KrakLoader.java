@@ -89,7 +89,6 @@ class KrakLoader {
 					node2.coords [1],
 					Integer.valueOf(lineArray2[5]),
 					lineArray2[6]);
-			
 			node1.addRoad(road);
 			node2.addRoad(road);
 		}
