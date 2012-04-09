@@ -16,8 +16,8 @@ public class Road {
 	private String name;
 	private int hashCode;
 	private int priority;
-	private static double xMax;
-	private static double yMax;
+	private static double[] top;
+	private static double[] origo;
 	
 	public Road(double x1, double y1, double x2, double y2, int type, String name){
 		this.x1 = x1;
@@ -122,6 +122,26 @@ public class Road {
 		return name;
 	}
 	
+	public static double[] getTop()
+	{
+		return top;
+	}
+	
+	public static void setTop(double[] top)
+	{
+		Road.top = top;
+	}
+	
+	public static double[] getOrigo()
+	{
+		return origo;
+	}
+	
+	public static void setOrigo(double[] origo)
+	{
+		Road.origo = origo;
+	}
+	
 	public int getPriority()
 	{
 		return priority;
@@ -132,33 +152,5 @@ public class Road {
 	public int hashCode()
 	{
 		return hashCode;
-	}
-
-	/**
-	 * @return the xMax
-	 */
-	public static double getxMax() {
-		return xMax;
-	}
-
-	/**
-	 * @param xMax the xMax to set
-	 */
-	public static void setxMax(double xMax) {
-		Road.xMax = xMax;
-	}
-
-	/**
-	 * @return the yMax
-	 */
-	public static double getyMax() {
-		return yMax;
-	}
-
-	/**
-	 * @param yMax the yMax to set
-	 */
-	public static void setyMax(double yMax) {
-		Road.yMax = yMax;
 	}
 }
