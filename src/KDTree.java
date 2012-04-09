@@ -97,13 +97,13 @@ public class KDTree
 	private int zoomLevel(double[] p1, double[] p2)
 	{
 		if(p2[0]-p1[0] < 1000)
-			return 4;
-		if(p2[0]-p1[0] < 10000)
-			return 3;
-		if(p2[0]-p1[0] < 100000)
-			return 2;
-
 			return 1;
+		if(p2[0]-p1[0] < 10000)
+			return 2;
+		if(p2[0]-p1[0] < 100000)
+			return 3;
+
+			return 4;
 	}
 	
 	private boolean filterRoad(int zoomLevel, Road road)
