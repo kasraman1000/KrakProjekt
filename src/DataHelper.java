@@ -33,26 +33,26 @@ public class DataHelper {
 
 	
 
-	/**
-	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
-	 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
-	 * @param roads
-	 * @return
-	 */
-	public Road[] cleanAndReposition(Road[] roads){
-		Road[] roadsToReturn = new Road[roads.length];
-		for(int index=0; index<roads.length; index++){
-			roadsToReturn[index] = new Road(roads[index].getX1() - minX,
-					roads[index].getY1()*(-1) + maxY, 
-					roads[index].getX2() - minX,
-					roads[index].getY2()*(-1) + maxY,
-					roads[index].getType(), 
-					roads[index].getName());
-		}
-		System.out.println("\nAfter:");
-		findMinAndMaxValue(roadsToReturn);
-		return roadsToReturn;
-	}
+//	/**
+//	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
+//	 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
+//	 * @param roads
+//	 * @return
+//	 */
+//	public Road[] cleanAndReposition(Road[] roads){
+//		Road[] roadsToReturn = new Road[roads.length];
+//		for(int index=0; index<roads.length; index++){
+//			roadsToReturn[index] = new Road(roads[index].getX1() - minX,
+//					roads[index].getY1()*(-1) + maxY, 
+//					roads[index].getX2() - minX,
+//					roads[index].getY2()*(-1) + maxY,
+//					roads[index].getType(), 
+//					roads[index].getName());
+//		}
+//		System.out.println("\nAfter:");
+//		findMinAndMaxValue(roadsToReturn);
+//		return roadsToReturn;
+//	}
 	
 	
 	private void findMinAndMaxValue(Road[] allRoads){

@@ -57,9 +57,15 @@ class KrakLoader {
 		File file2 = new File(edgePath);
 		BufferedReader reader2 = new BufferedReader(new FileReader(file2));
 		String curLine2;
+	
 		// first line is irrelevant
 		reader2.readLine();
 
+		for(Node node : map.values()){
+			node.coords[0] -= smallestX; 
+			node.coords[1] = node.coords[1]*(-1) + biggestY;
+		}
+		
 		//Creating roads and adding references from nodes to roads. Coordinates from nodes is added to roads.
 		while((curLine2 = reader2.readLine()) != null){
 			String[] lineArray2 = curLine2.split(",");
@@ -68,19 +74,20 @@ class KrakLoader {
 
 
 			Road road = new Road(
-					node1.coords[0] - smallestX,
-					node1.coords [1]*(-1) + biggestY,
-					node2.coords [0] - smallestX,
-					node2.coords [1]*(-1) + biggestY,
+					node1.coords[0],
+					node1.coords [1],
+					node2.coords [0],
+					node2.coords [1],
 					Integer.valueOf(lineArray2[5]),
 					lineArray2[6]);
-
+			
 			node1.addRoad(road);
 			node2.addRoad(road);
 		}
 
 		ArrayList<Node> result = new ArrayList<Node>(1000000);
 		result.addAll(map.values());
+		
 		return result;
 	}
 	
