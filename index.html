@@ -114,7 +114,7 @@ function initialView(){
 		var svgObject = document.createElementNS(xmlns, xmlNode.tagName);
 
 		for(var a =0; a < xmlNode.attributes.length; a++){
-			alert(xmlNode.attributes[a].name + "  " + xmlNode.attributes[a].value);
+			//alert(xmlNode.attributes[a].name + "  " + xmlNode.attributes[a].value);
 			svgObject.setAttributeNS(null, xmlNode.attributes[a].name, xmlNode.attributes[a].value); 
 		}
 		
