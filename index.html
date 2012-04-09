@@ -11,7 +11,6 @@
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
 function init(){
-
 	xView1 = 0.0;
 	yView1 = 0.0;
 	xView2 = 350000;
@@ -51,31 +50,23 @@ function getPosition(){
 */
 	
 function clickUp(){
-	//getPosition();
-	var y = (yView2 - yView1)/2; 
-	//var y = 10000;
+	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, -y);
 	
 }
 function clickDown(){
-	//getPosition();
-	var y = (yView2 - yView1)/2; 
-	//var y = 10000;
+	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, y);
 }
 
 function clickRight(){
-	//getPosition();
-	var x = (xView2 - xView1)/2; 
-	//var x = 10000;
+	var x = (xView2 - xView1)/3; 
 	moveViewBox(x, 0);
 	 
 }
 
 function clickLeft(){
-	//getPosition();
-	var x = (xView2 - xView1)/2;
-	//var x = 10000; 
+	var x = (xView2 - xView1)/3; 
 	moveViewBox(-x, 0);
 }
 
@@ -86,23 +77,6 @@ function moveViewBox(x,y){
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 
-function zoomIn(){
-	xView1 *= 1.05;
-	yView1 *= 1.05;
-	xView2 *= 0.95;
-	yView2 *= 0.95;
-	alert(xView1 + "  " + yView1);
-	getXML();
-}
-
-function zoomOut(){
-	xView1 *= 0.95;
-	yView1 *= 0.95;
-	xView2 *= 1.05;
-	yView2 *= 1.05;
-	alert(xView1 + "  " + yView1);
-	getXML();
-}
 	
 function initialView(){
 	/*
@@ -123,11 +97,11 @@ function initialView(){
 	}	
 	*/
 	svgFrame.appendChild(roads.firstChild); 	
-	//setWandH();
-	xView1 = 0;
-	yView1 = 0;
-	wView = 350000;
-	hView = 400000;
+	setWandH();
+	//xView1 = 0;
+	//yView1 = 0;
+	//wView = 350000;
+	//hView = 400000;
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
@@ -135,7 +109,7 @@ function initialView(){
 function setWandH(){
 	wView = xView2 - xView1;
 	hView = yView2 - yView1;
-	alert("wView : " + wView + " hView : " + hView); 	
+	//alert("wView : " + wView + " hView : " + hView); 	
 }
 
 /*
@@ -180,25 +154,25 @@ function moveViewBox(x,y){
 }
 function zoomIn(){
 	setWandH();
-	xView1 += wView * 0.05;
-	yView1 += hView * 0.05;
-	xView2 -= wView * 0.05;
-	yView2 -= hView * 0.05;
-	alert(xView1 + "  " + yView1);
+	xView1 += wView * 0.20;
+	yView1 += hView * 0.20;
+	xView2 -= wView * 0.20;
+	yView2 -= hView * 0.20;
+	//alert(xView1 + "  " + yView1);
 	getXML();
 }
 
 function zoomOut(){
 	setWandH();
-	xView1 -= wView * 0.05
+	xView1 -= wView * 0.20
 	if(xView1 < 0)
 		xView1 = 0;
-	yView1 -= hView * 0.05;
+	yView1 -= hView * 0.20;
 	if(yView1 < 0)
 		yView1 = 0;
-	xView2 += wView * 0.05;
-	yView2 += hView * 0.05;
-	alert(xView1 + "  " + yView1);
+	xView2 += wView * 0.20;
+	yView2 += hView * 0.20;
+	//alert(xView1 + "  " + yView1);
 	getXML();
 }
 
@@ -207,11 +181,7 @@ function zoomOut(){
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<<<<<<< HEAD
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 250 350"></svg>
-=======
 <svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
->>>>>>> branch 'master' of https://abrj@github.com/kasraman1000/KrakProjekt.git
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
