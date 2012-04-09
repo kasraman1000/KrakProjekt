@@ -162,10 +162,10 @@ public class XML{
 				line.setAttribute("y1", road.getY1() + ""); 
 				line.setAttribute("x2", road.getX2() + ""); 
 				line.setAttribute("y2", road.getY2() + ""); 
-				line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.getType()).getRed() + "," + 
-															Controller.getRoadColor(road.getType()).getGreen() + "," + 
-															Controller.getRoadColor(road.getType()).getBlue() + "); " + 
-						"strokeWidth:" + Controller.getRoadWidth(road.getType()));
+				line.setAttribute("style", "stroke:RGB(" +	DataHelper.getRoadColor(road.getType()).getRed() + "," + 
+															DataHelper.getRoadColor(road.getType()).getGreen() + "," + 
+															DataHelper.getRoadColor(road.getType()).getBlue() + "); " + 
+						"strokeWidth:" + DataHelper.getRoadWidth(road.getType()));
 				line.setAttribute("roadType", road.getType() + "");
 				line.setAttribute("roadName", road.getName() + "");
 				
@@ -321,10 +321,10 @@ public class XML{
 			line.setAttribute("y1", road.getY1() + ""); 
 			line.setAttribute("x2", road.getX2() + ""); 
 			line.setAttribute("y2", road.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" +	Controller.getRoadColor(road.getType()).getRed() + "," + 
-														Controller.getRoadColor(road.getType()).getGreen() + "," + 
-														Controller.getRoadColor(road.getType()).getBlue() + "); " + 
-										"stroke-width:" + Controller.getRoadWidth(road.getType()));
+			line.setAttribute("style", "stroke:RGB(" +	DataHelper.getRoadColor(road.getType()).getRed() + "," + 
+														DataHelper.getRoadColor(road.getType()).getGreen() + "," + 
+														DataHelper.getRoadColor(road.getType()).getBlue() + "); " + 
+										"stroke-width:" + DataHelper.getRoadWidth(road.getType()));
 //			line.setAttribute("roadType", road.getType() + "");
 //			line.setAttribute("roadName", road.getName() + "");
 			gElement.appendChild(line);
