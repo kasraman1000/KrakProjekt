@@ -64,7 +64,16 @@ class KrakLoader {
 		for(Node node : map.values()){
 			node.coords[0] -= smallestX; 
 			node.coords[1] = node.coords[1]*(-1) + biggestY;
+			if(node.coords[1] > 1000000)
+			{
+				System.out.println("OMGWTFBBQ");
+			}
 		}
+		
+		double[] newTop = {biggestX-smallestX, biggestY-smallestY};
+		double[] newOrigo = {0, 0};
+		Road.setTop(newTop);
+		Road.setOrigo(newOrigo);
 		
 		//Creating roads and adding references from nodes to roads. Coordinates from nodes is added to roads.
 		while((curLine2 = reader2.readLine()) != null){
@@ -80,7 +89,6 @@ class KrakLoader {
 					node2.coords [1],
 					Integer.valueOf(lineArray2[5]),
 					lineArray2[6]);
-			
 			node1.addRoad(road);
 			node2.addRoad(road);
 		}

@@ -52,12 +52,13 @@ public class Controller {
 	}
 	
 	
+
 	
 	public static String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
 		try {
-			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
+			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
