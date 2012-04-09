@@ -68,10 +68,10 @@ class KrakLoader {
 
 
 			Road road = new Road(
-					node1.coords[0],
-					node1.coords [1],
-					node2.coords [0],
-					node2.coords [1],
+					node1.coords[0] - smallestX,
+					node1.coords [1]*(-1) + biggestY,
+					node2.coords [0] - smallestX,
+					node2.coords [1]*(-1) + biggestY,
 					Integer.valueOf(lineArray2[5]),
 					lineArray2[6]);
 
@@ -86,7 +86,7 @@ class KrakLoader {
 	
 	public static void main(String[] args) {
 		try {
-			Collection<Node> nodes = KrakLoader.load("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
+			Collection<Node> nodes = KrakLoader.load("kdv_node_unload.txt", "kdv_unload.txt");
 			
 			for (Node n : nodes) {
 				for (Road r : n.getRoads()) {

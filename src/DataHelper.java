@@ -41,11 +41,6 @@ public class DataHelper {
 	 */
 	public Road[] cleanAndReposition(Road[] roads){
 		Road[] roadsToReturn = new Road[roads.length];
-	
-//		for(Road road : roads){
-//			road
-//			
-//		}
 		for(int index=0; index<roads.length; index++){
 			roadsToReturn[index] = new Road(roads[index].getX1() - minX,
 					roads[index].getY1()*(-1) + maxY, 
