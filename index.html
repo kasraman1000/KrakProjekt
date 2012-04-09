@@ -73,7 +73,7 @@ function clickLeft(){
 function moveViewBox(x,y){
 	xView1 += x;
 	yView1 += y;
-	setWandH();
+	//setWandH();
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 
@@ -124,33 +124,31 @@ function getPosition(){
 function clickUp(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, -y);
-	setWandH();
 	
 }
 function clickDown(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, y);
-	setWandH();
 }
 
 function clickRight(){
 	var x = (xView2 - xView1)/3; 
 	moveViewBox(x, 0);
-	setWandH();
 	 
 }
 
 function clickLeft(){
 	var x = (xView2 - xView1)/3; 
 	moveViewBox(-x, 0);
-	setWandH();
 }
 
 function moveViewBox(x,y){
+	//removeSVG();
 	xView1 += x;
 	yView1 += y;
-	setWandH();
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
+	//setWandH();
+	//initialView();
 }
 function zoomIn(){
 	setWandH();
@@ -163,6 +161,7 @@ function zoomIn(){
 }
 
 function zoomOut(){
+	//removeSVG();
 	setWandH();
 	xView1 -= wView * 0.20
 	if(xView1 < 0)
@@ -176,6 +175,10 @@ function zoomOut(){
 	getXML();
 }
 
+function removeSVG(){
+	svgFrame.removeChild(svgFrame.firstChild);
+	//svgFrame.destroy();
+}
 
 </script>
 </head>
@@ -192,7 +195,7 @@ function zoomOut(){
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-<button id="buttonStart" type="button" onClick="getXML()">START</button></br>
+<button id="buttonStart" type="button" onClick="removeSVG()">START</button></br>
 
 
 </body>
