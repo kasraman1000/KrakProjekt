@@ -134,6 +134,7 @@ public class KDTree
 	
 	public Road[] searchRange(Region region)
 	{
+		region.adjust();
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
 		int zoom = zoomLevel(p1, p2);

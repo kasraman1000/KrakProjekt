@@ -15,6 +15,7 @@ function init(){
 	yView1 = 6050000;
 	xView2 = 900000;
 	yView2 = 6400000;
+	getXML();
 }
 function getXML(){
 	//getPosition();
@@ -38,6 +39,7 @@ function setWandH(){
 	wView = xView2 - xView1;
 	hView = yView2 - yView1;	
 }
+
 /*
 function getPosition(){
 	xView1 = xView;
@@ -45,40 +47,42 @@ function getPosition(){
 	xView2 = xView + wView;
 	yView2 = yView + hView;		
 	}
-	*/
+*/
+	
 function clickUp(){
 	//getPosition();
-	//var y = (yView2 - yView1)/2; 
-	var y = 10000;
+	var y = (yView2 - yView1)/2; 
+	//var y = 10000;
 	moveViewBox(0, -y);
 	
 }
 function clickDown(){
 	//getPosition();
-	//var y = (yView2 - yView1)/2; 
-	var y = 10000;
+	var y = (yView2 - yView1)/2; 
+	//var y = 10000;
 	moveViewBox(0, y);
 }
 
 function clickRight(){
 	//getPosition();
-	//var x = (xView2 - xView1)/2; 
-	var x = 10000;
+	var x = (xView2 - xView1)/2; 
+	//var x = 10000;
 	moveViewBox(x, 0);
 	 
 }
 
 function clickLeft(){
 	//getPosition();
-	//var x = (xView2 - xView1)/2;
-	var x = 10000; 
+	var x = (xView2 - xView1)/2;
+	//var x = 10000; 
 	moveViewBox(-x, 0);
 }
 
 function moveViewBox(x,y){
-	xView += x;
-	yView += y;
-	svgFrame.setAttribute("viewBox", xView+" " + yView+" " + wView+" " +hView);
+	xView1 += x;
+	yView1 += y;
+	setWandH();
+	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 function zoomIn(){
 	xView1 *= 1.05;
@@ -100,19 +104,19 @@ function zoomOut(){
 	
 function initialView(){
 	/*
-	alert(roads);
 	for(var g = 0; g < roads.childNodes.length; g++){
 		var xmlNode = roads.childNodes[g];
-		
+
 		if(xmlNode.nodeName == "#text")
 			continue;
 		
 		var svgObject = document.createElementNS(xmlns, xmlNode.tagName);
 
-
 		for(var a =0; a < xmlNode.attributes.length; a++){
+			alert(xmlNode.attributes[a].name + "  " + xmlNode.attributes[a].value);
 			svgObject.setAttributeNS(null, xmlNode.attributes[a].name, xmlNode.attributes[a].value); 
 		}
+		
 		svgFrame.appendChild(svgObject); 	
 	}*/	
 	svgFrame.appendChild(roads.firstChild); 	
