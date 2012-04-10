@@ -39,8 +39,8 @@ function showSvg(){
 	svgFrame.appendChild(roads.firstChild); 	
 	setWandH();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
-	panningDistanceVert = (yView2 - yView1)*0.2;
-	panningDistanceHor = (xView2 - xView1)*0.2;
+	panningDistanceVert = (yView2 - yView1)*0.1;
+	panningDistanceHor = (xView2 - xView1)*0.1;
 	}
 
 
@@ -76,13 +76,13 @@ function clickDown(){
 }
 
 function clickRight(){
-	if(xView1 < x1SurData)
+	if(xView1 > x1SurData)
 		getXML();
 	moveViewBox(panningDistanceHor, 0);
 }
 
 function clickLeft(){
-	if(xView2 > x2SurData)
+	if(xView2 < x2SurData)
 		getXML();
 	moveViewBox(-panningDistanceHor, 0);
 }

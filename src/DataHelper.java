@@ -75,7 +75,7 @@ public class DataHelper {
 		return roadColors.get(roadType);
 	}
 	
-	public static double getRoadWidth(int roadType){
+	public static double getRoadWidth(Integer roadType){
 		
 		return roadWidths.get(roadType).doubleValue()*scale;
 	}
