@@ -39,8 +39,8 @@ function showSvg(){
 	svgFrame.appendChild(roads.firstChild); 	
 	setWandH();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
-	panningDistanceVert = (yView2 - yView1)*0.2;
-	panningDistanceHor = (xView2 - xView1)*0.2;
+	panningDistanceVert = (yView2 - yView1)*0.1;
+	panningDistanceHor = (xView2 - xView1)*0.1;
 	}
 
 
@@ -51,10 +51,6 @@ function setWandH(){
 
 
 function updateSurroundingData(){
-	//x1SurData = xView1 * 0.90; 
-	//y1SurData = yView1 * 0.90;
-	//x2SurData = xView2 * 1.10;
-	//y2SurData = yView2 * 1.10;
 	x1SurData = xView1 - (xView2-xView1)*0.1;
 	x2SurData = xView2 + (xView2-xView1)*0.1;
 	y1SurData = yView1 - (yView2-yView1)*0.1;
