@@ -95,7 +95,7 @@ public class DataHelper {
 	 */
 	private void loadRoadColors(){
 		Color largeRoads = Color.red;
-		Color mediumRoads = Color.black; //Color mediumRoads = Color.yellow;
+		Color mediumRoads = new Color(0.9607f, 0.7215f, 0.0f); //Color mediumRoads = Color.yellow;
 		Color smallRoads = Color.black;
 		Color tinyRoads = Color.pink;
 		Color tunnels = Color.orange;
