@@ -58,7 +58,7 @@ public class Controller {
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
 		try {
-			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
+//			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
