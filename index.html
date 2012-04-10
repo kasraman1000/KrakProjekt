@@ -70,14 +70,20 @@ function clickUp(){
 }
 
 function clickDown(){	
+	if(yView2 > y2SurData)
+		getXML();
 	moveViewBox(0, panningDistanceVert);
 }
 
 function clickRight(){
+	if(xView1 < x1SurData)
+		getXML();
 	moveViewBox(panningDistanceHor, 0);
 }
 
 function clickLeft(){
+	if(xView2 > x2SurData)
+		getXML();
 	moveViewBox(-panningDistanceHor, 0);
 }
 

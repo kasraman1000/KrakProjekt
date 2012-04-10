@@ -141,7 +141,7 @@ public class DataHelper {
 		int tunnels = 100;
 
 		int seaWays  = 100; 
-		int walkingPaths = 10;
+		int walkingPaths = 1;
 
 //		int bicyclePaths = 1;
 		
