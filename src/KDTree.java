@@ -14,6 +14,7 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
+	private int lastZoomLevel = 5;
 	
 	/*
 	public static void main(String[] args)
@@ -76,7 +77,10 @@ public class KDTree
 			
 	}
 	*/
-
+	public int getLastZoomLevel()
+	{
+		return lastZoomLevel;
+	}
 	
 	private KDTree(int k)
 	{
@@ -138,6 +142,7 @@ public class KDTree
 		double[] p2 = region.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
 		int zoom = zoomLevel(p1, p2);
+		lastZoomLevel = zoom;
 		System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 		//Creating a HashSet to make sure that no road are contained twice.
