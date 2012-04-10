@@ -27,7 +27,8 @@ function getXML(){
 			initialView();
 	    }
 	  }
-
+	  setWandH();
+	  getPosition();
 //	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
 	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
 	  xmlhttp.open("GET",uri,true);
@@ -35,49 +36,6 @@ function getXML(){
 	
 }
 
-function setWandH(){
-	wView = xView2 - xView1;
-	hView = yView2 - yView1;	
-}
-
-/*
-function getPosition(){
-	xView1 = xView;
-	yView1 = yView;
-	xView2 = xView + wView;
-	yView2 = yView + hView;		
-	}
-*/
-	
-function clickUp(){
-	var y = (yView2 - yView1)/3; 
-	moveViewBox(0, -y);
-	
-}
-function clickDown(){
-	var y = (yView2 - yView1)/3; 
-	moveViewBox(0, y);
-}
-
-function clickRight(){
-	var x = (xView2 - xView1)/3; 
-	moveViewBox(x, 0);
-	 
-}
-
-function clickLeft(){
-	var x = (xView2 - xView1)/3; 
-	moveViewBox(-x, 0);
-}
-
-function moveViewBox(x,y){
-	xView1 += x;
-	yView1 += y;
-	//setWandH();
-	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
-}
-
-	
 function initialView(){
 	/*
 	for(var g = 0; g < roads.childNodes.length; g++){
@@ -98,34 +56,30 @@ function initialView(){
 	*/
 	svgFrame.appendChild(roads.firstChild); 	
 	setWandH();
-	//xView1 = 0;
-	//yView1 = 0;
-	//wView = 350000;
-	//hView = 400000;
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
 
 function setWandH(){
 	wView = xView2 - xView1;
-	hView = yView2 - yView1;
-	//alert("wView : " + wView + " hView : " + hView); 	
+	hView = yView2 - yView1;	
 }
 
-/*
+
 function getPosition(){
-	xView1 = xView;
-	yView1 = yView;
-	xView2 = xView + wView;
-	yView2 = yView + hView;		
+	xView1 = xView1;
+	yView1 = yView1;
+	xView2 = xView1 + wView;
+	yView2 = yView1 + hView;		
 	}
-*/
+
 	
 function clickUp(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, -y);
 	
 }
+
 function clickDown(){
 	var y = (yView2 - yView1)/3; 
 	moveViewBox(0, y);
@@ -143,13 +97,11 @@ function clickLeft(){
 }
 
 function moveViewBox(x,y){
-	//removeSVG();
 	xView1 += x;
 	yView1 += y;
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
-	//setWandH();
-	//initialView();
 }
+
 function zoomIn(){
 	setWandH();
 	xView1 += wView * 0.20;
@@ -161,7 +113,7 @@ function zoomIn(){
 }
 
 function zoomOut(){
-	//removeSVG();
+	removeSVG();
 	setWandH();
 	xView1 -= wView * 0.20
 	if(xView1 < 0)
@@ -176,15 +128,16 @@ function zoomOut(){
 }
 
 function removeSVG(){
-	svgFrame.removeChild(svgFrame.firstChild);
-	//svgFrame.destroy();
+	//alert(svgFrame.lastChild);
+	svgFrame.removeChild(svgFrame.lastChild);
+	//svgFrame.lastChild.destroy();
 }
 
 </script>
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
