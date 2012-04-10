@@ -80,9 +80,8 @@ public class DataHelper {
 		return roadWidths.get(roadType).doubleValue()*scale;
 	}
 	
-	public static void setScaleFactor()
+	public static void setScaleFactor(int zoom)
 	{
-		int zoom = KDTree.getTree().getLastZoomLevel();
 		if (zoom == 1) {scale = 0.05;}
 		else if (zoom == 2) {scale = 0.1;}
 		else if (zoom == 3) {scale = 0.2;}

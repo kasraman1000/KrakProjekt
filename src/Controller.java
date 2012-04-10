@@ -57,7 +57,7 @@ public class Controller {
 	public static String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
-		DataHelper.setScaleFactor();
+		DataHelper.setScaleFactor(kdTree.getLastZoomLevel());
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
