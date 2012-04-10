@@ -97,15 +97,20 @@ function moveViewBox(x,y){
 }
 
 function zoomIn(){
+	if(xView2-xView1 < 1000)
+		return;
 	xView1 += wView * 0.20;
 	yView1 += hView * 0.20;
 	xView2 -= wView * 0.20;
 	yView2 -= hView * 0.20;
-	//alert(xView1 + "  " + yView1);
 	getXML();
 }
 
 function zoomOut(){
+	if(xView2 - xView1 > 340000){
+		init();
+		return;
+	}
 	setWandH();
 	xView1 -= wView * 0.20
 	if(xView1 < 0)
@@ -128,7 +133,7 @@ function zoomOut(){
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
 	<div id="rightAndLeft">
-		<button id="buttonRight" style="float: right;" type="button" onClick="clickRight()">Right</button></br>
+		<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
 		<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
 	</div>
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
