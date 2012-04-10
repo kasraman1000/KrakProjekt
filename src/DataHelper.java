@@ -16,9 +16,10 @@ public class DataHelper {
 	private double minX = 900000; //Is 442254.35659
 	private double maxY = 0; //Is 6402050.98297
 	private double minY = 6500000; //Is 6049914.43018
+	private static double scale = 1;
 
 	private static HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	private static HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, Double> roadWidths = new HashMap<Integer, Double>();
 
 	
 	public DataHelper(){
@@ -74,8 +75,18 @@ public class DataHelper {
 		return roadColors.get(roadType);
 	}
 	
-	public static int getRoadWidth(int roadType){
-		return roadWidths.get(roadType);
+	public static double getRoadWidth(Integer roadType){
+		
+		return roadWidths.get(roadType).doubleValue()*scale;
+	}
+	
+	public static void setScaleFactor(int zoom)
+	{
+		if (zoom == 1) {scale = 0.05;}
+		else if (zoom == 2) {scale = 0.1;}
+		else if (zoom == 3) {scale = 0.2;}
+		else if (zoom == 4) {scale = 0.5;}
+		else if (zoom == 5) {scale = 1;}
 	}
 
 
@@ -84,7 +95,7 @@ public class DataHelper {
 	 */
 	private void loadRoadColors(){
 		Color largeRoads = Color.red;
-		Color mediumRoads = Color.black; //Color mediumRoads = Color.yellow;
+		Color mediumRoads = new Color(0.9607f, 0.7215f, 0.0f); //Color mediumRoads = Color.yellow;
 		Color smallRoads = Color.black;
 		Color tinyRoads = Color.pink;
 		Color tunnels = Color.orange;
@@ -134,18 +145,18 @@ public class DataHelper {
 	 * Will load all the predefined road widths to a HashMap - only called in the constructor
 	 */
 	private void loadRoadWidths(){
-		int largeRoads = 100;
-		int mediumRoads = 10;
-		int smallRoads = 10;
-		int tinyRoads = 10;
-		int tunnels = 100;
+		Double largeRoads = new Double(800);
+		Double mediumRoads = new Double(250);
+		Double smallRoads = new Double(130);
+		Double tinyRoads = new Double(130);
+		Double tunnels = new Double(130);
 
-		int seaWays  = 100; 
-		int walkingPaths = 1;
+		Double seaWays  = new Double(130); 
+		Double walkingPaths = new Double(130);
 
 //		int bicyclePaths = 1;
 		
-		int unknownRoads = 100;
+		Double unknownRoads = new Double(100);
 				
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
