@@ -134,14 +134,14 @@ public class DataHelper {
 	 * Will load all the predefined road widths to a HashMap - only called in the constructor
 	 */
 	private void loadRoadWidths(){
-		int largeRoads = 600;
-		int mediumRoads = 300;
-		int smallRoads = 200;
-		int tinyRoads = 100;
-		int tunnels = 200;
+		int largeRoads = 100;
+		int mediumRoads = 10;
+		int smallRoads = 10;
+		int tinyRoads = 10;
+		int tunnels = 100;
 
-		int seaWays  = 400; 
-		int walkingPaths = 500;
+		int seaWays  = 100; 
+		int walkingPaths = 10;
 
 //		int bicyclePaths = 1;
 		
