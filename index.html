@@ -18,53 +18,33 @@ function init(){
 	getXML();
 }
 function getXML(){
-	//getPosition();
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 	    	roads = xmlhttp.responseXML.documentElement;
 		  	svgFrame = document.getElementById("svgframe");
-			initialView();
+			showSvg();
 	    }
 	  }
-	  setWandH();
-	  getPosition();
-	  getSuroundingData();
-//	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
+	  updateSurroundingData();
 	  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
 }
 
-function initialView(){
-	/*
-	for(var g = 0; g < roads.childNodes.length; g++){
-		var xmlNode = roads.childNodes[g];
-
-		if(xmlNode.nodeName == "#text")
-			continue;
-		
-		var svgObject = document.createElementNS(xmlns, xmlNode.tagName);
-
-		for(var a =0; a < xmlNode.attributes.length; a++){
-			//alert(xmlNode.attributes[a].name + "  " + xmlNode.attributes[a].value);
-			svgObject.setAttributeNS(null, xmlNode.attributes[a].name, xmlNode.attributes[a].value); 
-		}
-		
-		svgFrame.appendChild(svgObject); 	
-	}	
-	*/
+function showSvg(){
 	if(svgFrame.hasChildNodes())
 		svgFrame.removeChild(svgFrame.firstChild);
 	svgFrame.appendChild(roads.firstChild); 	
+	setWandH();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	}
 
 
 function setWandH(){
 	wView = xView2 - xView1;
-	hView = yView2 - yView1;	
+	hView = yView2 - yView1;
 }
 
 
@@ -75,7 +55,7 @@ function getPosition(){
 	yView2 = yView1 + hView;		
 }
 
-function getSuroundingData(){
+function updateSurroundingData(){
 	x1SurData = xView1 * 0.90;
 	y1SurData = yView1 * 0.90;
 	x2SurData = xView2 * 1.10;
@@ -101,7 +81,6 @@ function clickRight(){
 	getPosition();
 	var x = (xView2 - xView1)/3; 
 	moveViewBox(x, 0);
-	 
 }
 
 function clickLeft(){
@@ -117,7 +96,6 @@ function moveViewBox(x,y){
 }
 
 function zoomIn(){
-	setWandH();
 	xView1 += wView * 0.20;
 	yView1 += hView * 0.20;
 	xView2 -= wView * 0.20;
@@ -127,7 +105,6 @@ function zoomIn(){
 }
 
 function zoomOut(){
-	//removeSVG();
 	setWandH();
 	xView1 -= wView * 0.20
 	if(xView1 < 0)
@@ -139,12 +116,6 @@ function zoomOut(){
 	yView2 += hView * 0.20;
 	//alert(xView1 + "  " + yView1);
 	getXML();
-}
-
-function removeSVG(){
-	//alert(svgFrame.lastChild);
-	svgFrame.removeChild(svgFrame.lastChild);
-	//svgFrame.lastChild.destroy();
 }
 
 </script>
@@ -162,7 +133,6 @@ function removeSVG(){
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-<button id="buttonStart" type="button" onClick="removeSVG()">START</button></br>
 
 
 </body>
