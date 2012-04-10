@@ -39,6 +39,8 @@ function showSvg(){
 	svgFrame.appendChild(roads.firstChild); 	
 	setWandH();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
+	panningDistanceVert = (yView2 - yView1)*0.2;
+	panningDistanceHor = (xView2 - xView1)*0.2;
 	}
 
 
@@ -48,50 +50,49 @@ function setWandH(){
 }
 
 
-function getPosition(){
-	xView1 = xView1;
-	yView1 = yView1;
-	xView2 = xView1 + wView;
-	yView2 = yView1 + hView;		
-}
-
 function updateSurroundingData(){
-	x1SurData = xView1 * 0.90;
-	y1SurData = yView1 * 0.90;
-	x2SurData = xView2 * 1.10;
-	y2SurData = yView2 * 1.10;
+	//x1SurData = xView1 * 0.90; 
+	//y1SurData = yView1 * 0.90;
+	//x2SurData = xView2 * 1.10;
+	//y2SurData = yView2 * 1.10;
+	x1SurData = xView1 - (xView2-xView1)*0.1;
+	x2SurData = xView2 + (xView2-xView1)*0.1;
+	y1SurData = yView1 - (yView2-yView1)*0.1;
+	y2SurData = yView2 + (yView2-yView1)*0.1;
+
 }
 	
 function clickUp(){
-	getPosition();
 	if(yView1 < y1SurData)
 		getXML();
-	var y = (yView2 - yView1)/3; 
-	moveViewBox(0, -y);
+	moveViewBox(0, -panningDistanceVert);
 	
 }
 
 function clickDown(){	
-	getPosition();
-	var y = (yView2 - yView1)/3; 
-	moveViewBox(0, y);
+	if(yView2 > y2SurData)
+		getXML();
+	moveViewBox(0, panningDistanceVert);
 }
 
 function clickRight(){
-	getPosition();
-	var x = (xView2 - xView1)/3; 
-	moveViewBox(x, 0);
+	if(xView1 < x1SurData)
+		getXML();
+	moveViewBox(panningDistanceHor, 0);
 }
 
 function clickLeft(){
-	getPosition();
-	var x = (xView2 - xView1)/3; 
-	moveViewBox(-x, 0);
+	if(xView2 > x2SurData)
+		getXML();
+	moveViewBox(-panningDistanceHor, 0);
 }
 
 function moveViewBox(x,y){
 	xView1 += x;
 	yView1 += y;
+	xView2 += x;
+	yView2 += y;
+	//setWandH();
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 

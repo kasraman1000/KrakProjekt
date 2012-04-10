@@ -106,14 +106,16 @@ public class KDTree
 	 */
 	private int zoomLevel(double[] p1, double[] p2)
 	{
-		if(p2[0]-p1[0] < 1000)
+		if(p2[0]-p1[0] < 20000)
 			return 1;
-		if(p2[0]-p1[0] < 10000)
+		if(p2[0]-p1[0] < 40000)
 			return 2;
-		if(p2[0]-p1[0] < 100000)
+		if(p2[0]-p1[0] < 80000)
 			return 3;
-
+		if(p2[0]-p1[0] < 200000)
 			return 4;
+
+			return 5;
 	}
 	
 	/**
