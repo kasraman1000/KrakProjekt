@@ -16,67 +16,6 @@ public class KDTree
 	private static Random r = new Random();
 	private int lastZoomLevel = 5;
 	
-	/*
-	public static void main(String[] args)
-	{
-		double[][] testCoords = new double[1000][2];
-		double[] kdnNode = {1, 0};
-		KDNode kdn = KDTree.getTree().new KDNode(new Node(kdnNode));
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		for(int i = 0; i < 1000; i++)
-		{
-			double[] d1 = {i, 0};
-			testCoords[i] = d1;
-		}
-		for(int i = 0; i < 1000; i++)
-		{
-			nodes.add(new Node(testCoords[i]));
-		}
-
-
-
-		for(int i = 0; i < 10; i ++)
-		{
-			Node test = kdn.medianTest(nodes, 0, 0);
-			System.out.println(test.coords[0]);
-		}
-		
-		
-		try{
-			System.out.println("Building...");
-			long time = System.currentTimeMillis();
-		KDTree.getTree().initialize("C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_node_unload.txt", "C:\\Users\\Mark\\Documents\\UR\\Førsteårs Projekt\\krak-data\\kdv_unload.txt");
-		System.out.println("Millis to build: " + (System.currentTimeMillis()-time));
-		double[] a = {0, 0};
-		double[] b = {500000, 500000};
-		double[] c = {50000, 210000};
-		double[] d = {59000, 220000};
-
-		for(int i = 0; i < 1; i++)
-		{
-			time = System.currentTimeMillis();
-			Road[] roads = KDTree.getTree().searchRange(new Region(tree.origo[0], tree.origo[1] , tree.top[0], tree.top[1]));
-			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
-			System.out.println("Number of roads found: " + roads.length);
-			time = System.currentTimeMillis();
-			Road[] roadi = KDTree.getTree().searchRange(new Region(a[0], a[1], b[0], b[1]));
-			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
-			System.out.println("Number of roads found: " + roadi.length);
-			time = System.currentTimeMillis();
-			Road[] roadu = KDTree.getTree().searchRange(new Region(c[0], c[1], d[0], d[1]));
-			System.out.println("Millies to search and add roads: " + (System.currentTimeMillis()-time));
-			System.out.println("Number of roads found: " + roadu.length);
-			System.out.println("-------------------------------------------------");
-		}
-		
-		}catch(IOException e)
-		{
-			System.out.println("error");
-			e.printStackTrace();
-		}
-			
-	}
-	*/
 	public int getLastZoomLevel()
 	{
 		return lastZoomLevel;
