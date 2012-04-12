@@ -10,16 +10,14 @@ import java.util.HashMap;
  *
  */
 public class DataHelper {
-	//Is to find the height and width of the data set
-	//And then saved for later use
+	//At the moment not used in this class, but kept to have the min and max valued stored for now
 	private double maxX = 0; //Is 892638.21114
 	private double minX = 900000; //Is 442254.35659
 	private double maxY = 0; //Is 6402050.98297
 	private double minY = 6500000; //Is 6049914.43018
-	private static double scale = 1;
 
 	private static HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	private static HashMap<Integer, Double> roadWidths = new HashMap<Integer, Double>();
+	private static HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 
 	
 	public DataHelper(){
@@ -29,64 +27,13 @@ public class DataHelper {
 	}
 
 	
-
-//	/**
-//	 * Will use the original coordinates and set new ones in order to get DK in the upper left corner
-//	 * May only be used on roads directly from the KDTree (or else DK will be turned upside down)
-//	 * @param roads
-//	 * @return
-//	 */
-//	public Road[] cleanAndReposition(Road[] roads){
-//		Road[] roadsToReturn = new Road[roads.length];
-//		for(int index=0; index<roads.length; index++){
-//			roadsToReturn[index] = new Road(roads[index].getX1() - minX,
-//					roads[index].getY1()*(-1) + maxY, 
-//					roads[index].getX2() - minX,
-//					roads[index].getY2()*(-1) + maxY,
-//					roads[index].getType(), 
-//					roads[index].getName());
-//		}
-//		System.out.println("\nAfter:");
-//		findMinAndMaxValue(roadsToReturn);
-//		return roadsToReturn;
-//	}
-	
-	
-	private void findMinAndMaxValue(Road[] allRoads){
-		for(Road road : allRoads){
-			if(minX > road.getX1()) minX=road.getX1();
-			if(maxX < road.getX1()) maxX=road.getX1();
-			if(minY > road.getY1()) minY=road.getY1();
-			if(maxY < road.getY1()) maxY=road.getY1();
-			
-			if(minX > road.getX2()) minX=road.getX2();
-			if(maxX < road.getX2()) maxX=road.getX2();
-			if(minY > road.getY2()) minY=road.getY2();
-			if(maxY < road.getY2()) maxY=road.getY2();
-		}
-		
-		System.out.println("MinX: " + minX);
-		System.out.println("MaxX: " + maxX);
-		System.out.println("MinY: " + minY);
-		System.out.println("MaxY: " + maxY);
-	}
 	
 	public static Color getRoadColor(int roadType){
 		return roadColors.get(roadType);
 	}
 	
-	public static double getRoadWidth(Integer roadType){
-		
-		return roadWidths.get(roadType).doubleValue()*scale;
-	}
-	
-	public static void setScaleFactor(int zoom)
-	{
-		if (zoom == 1) {scale = 0.05;}
-		else if (zoom == 2) {scale = 0.1;}
-		else if (zoom == 3) {scale = 0.2;}
-		else if (zoom == 4) {scale = 0.5;}
-		else if (zoom == 5) {scale = 1;}
+	public static int getRoadWidth(int roadType){
+		return roadWidths.get(roadType);
 	}
 
 
@@ -95,13 +42,13 @@ public class DataHelper {
 	 */
 	private void loadRoadColors(){
 		Color largeRoads = Color.red;
-		Color mediumRoads = new Color(0.9607f, 0.7215f, 0.0f); //Color mediumRoads = Color.yellow;
+		Color mediumRoads = Color.black; //Color mediumRoads = Color.yellow;
 		Color smallRoads = Color.black;
 		Color tinyRoads = Color.pink;
 		Color tunnels = Color.orange;
+		
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
 		
 		Color unknownRoads = Color.cyan;
 		
@@ -145,18 +92,16 @@ public class DataHelper {
 	 * Will load all the predefined road widths to a HashMap - only called in the constructor
 	 */
 	private void loadRoadWidths(){
-		Double largeRoads = new Double(800);
-		Double mediumRoads = new Double(250);
-		Double smallRoads = new Double(130);
-		Double tinyRoads = new Double(130);
-		Double tunnels = new Double(130);
+		int largeRoads = 600;
+		int mediumRoads = 300;
+		int smallRoads = 200;
+		int tinyRoads = 100;
+		int tunnels = 200;
 
-		Double seaWays  = new Double(130); 
-		Double walkingPaths = new Double(130);
+		int seaWays  = 400; 
+		int walkingPaths = 500;
 
-//		int bicyclePaths = 1;
-		
-		Double unknownRoads = new Double(100);
+		int unknownRoads = 100;
 				
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"

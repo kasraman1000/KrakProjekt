@@ -15,126 +15,135 @@ function init(){
 	yView1 = 0.0;
 	xView2 = 350000;
 	yView2 = 450000;
+
 	getXML();
 }
 function getXML(){
+	//getPosition();
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
 	    	roads = xmlhttp.responseXML.documentElement;
 		  	svgFrame = document.getElementById("svgframe");
-			showSvg();
+			initialView();
 	    }
 	  }
-	  updateSurroundingData();
-	  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+"";
+
+//	  uri = "C:\\Users\\Yndal\\Desktop\\xmlSetup.xml";
+	  uri = "http://localhost/?x1="+xView1+"&y1="+yView1+"&x2="+xView2+"&y2="+yView2+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
 }
 
-function showSvg(){
-	if(svgFrame.hasChildNodes())
-		svgFrame.removeChild(svgFrame.firstChild);
-	svgFrame.appendChild(roads.firstChild); 	
-	setWandH();
-	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
-	panningDistanceVert = (yView2 - yView1)*0.1;
-	panningDistanceHor = (xView2 - xView1)*0.1;
-	}
-
-
 function setWandH(){
 	wView = xView2 - xView1;
-	hView = yView2 - yView1;
+	hView = yView2 - yView1;	
 }
 
-
-function updateSurroundingData(){
-	x1SurData = xView1 - (xView2-xView1)*0.1;
-	x2SurData = xView2 + (xView2-xView1)*0.1;
-	y1SurData = yView1 - (yView2-yView1)*0.1;
-	y2SurData = yView2 + (yView2-yView1)*0.1;
-
-}
+/*
+function getPosition(){
+	xView1 = xView;
+	yView1 = yView;
+	xView2 = xView + wView;
+	yView2 = yView + hView;		
+	}
+*/
 	
 function clickUp(){
-	if(yView1 < y1SurData)
-		getXML();
-	moveViewBox(0, -panningDistanceVert);
+	//getPosition();
+	var y = (yView2 - yView1)/2; 
+	//var y = 10000;
+	moveViewBox(0, -y);
 	
 }
-
-function clickDown(){	
-	if(yView2 > y2SurData)
-		getXML();
-	moveViewBox(0, panningDistanceVert);
+function clickDown(){
+	//getPosition();
+	var y = (yView2 - yView1)/2; 
+	//var y = 10000;
+	moveViewBox(0, y);
 }
 
 function clickRight(){
-	if(xView1 > x1SurData)
-		getXML();
-	moveViewBox(panningDistanceHor, 0);
+	//getPosition();
+	var x = (xView2 - xView1)/2; 
+	//var x = 10000;
+	moveViewBox(x, 0);
+	 
 }
 
 function clickLeft(){
-	if(xView2 < x2SurData)
-		getXML();
-	moveViewBox(-panningDistanceHor, 0);
+	//getPosition();
+	var x = (xView2 - xView1)/2;
+	//var x = 10000; 
+	moveViewBox(-x, 0);
 }
 
 function moveViewBox(x,y){
 	xView1 += x;
 	yView1 += y;
-	xView2 += x;
-	yView2 += y;
-	//setWandH();
+	setWandH();
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 
 function zoomIn(){
-	if(xView2-xView1 < 1000)
-		return;
-	xView1 += wView * 0.20;
-	yView1 += hView * 0.20;
-	xView2 -= wView * 0.20;
-	yView2 -= hView * 0.20;
+	xView1 *= 1.05;
+	yView1 *= 1.05;
+	xView2 *= 0.95;
+	yView2 *= 0.95;
+	alert(xView1 + "  " + yView1);
 	getXML();
 }
 
 function zoomOut(){
-	if(xView2 - xView1 > 340000){
-		init();
-		return;
-	}
-	setWandH();
-	xView1 -= wView * 0.20
-	if(xView1 < 0)
-		xView1 = 0;
-	yView1 -= hView * 0.20;
-	if(yView1 < 0)
-		yView1 = 0;
-	xView2 += wView * 0.20;
-	yView2 += hView * 0.20;
-	//alert(xView1 + "  " + yView1);
+	xView1 *= 0.95;
+	yView1 *= 0.95;
+	xView2 *= 1.05;
+	yView2 *= 1.05;
+	alert(xView1 + "  " + yView1);
 	getXML();
 }
+	
+function initialView(){
+	/*
+	for(var g = 0; g < roads.childNodes.length; g++){
+		var xmlNode = roads.childNodes[g];
+
+		if(xmlNode.nodeName == "#text")
+			continue;
+		
+		var svgObject = document.createElementNS(xmlns, xmlNode.tagName);
+
+		for(var a =0; a < xmlNode.attributes.length; a++){
+			//alert(xmlNode.attributes[a].name + "  " + xmlNode.attributes[a].value);
+			svgObject.setAttributeNS(null, xmlNode.attributes[a].name, xmlNode.attributes[a].value); 
+		}
+		
+		svgFrame.appendChild(svgObject); 	
+	}	
+	*/
+	svgFrame.appendChild(roads.firstChild); 	
+	setWandH();
+	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
+	}
+
 
 </script>
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350 250"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
 	<div id="rightAndLeft">
-		<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
+		<button id="buttonRight" style="float: right;" type="button" onClick="clickRight()">Right</button></br>
 		<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
 	</div>
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
+<button id="buttonStart" type="button" onClick="getXML()">START</button></br>
 
 
 </body>

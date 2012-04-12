@@ -5,7 +5,7 @@ import java.awt.Point;
  * @author Yndal
  *
  */
-public class Road {
+public class Road implements java.io.Serializable{
 	
 
 	private Double x1; //Road start
@@ -37,21 +37,17 @@ public class Road {
 		{
 			priority = 1;
 		}
-		else if(type == 6 || type == 10  || type == 99 || type == 0 || type == 95 || type == 26 || type == 34 || type == 35 || type == 46)
+		else if(type == 6 || type == 10 || type == 99 || type == 0 || type == 95 || type == 26 || type == 34 || type == 35 || type == 46)
 		{
 			priority = 2;
 		}
-		else if(type == 5)
+		else if(type == 4 || type == 5 || type == 80 || type == 31 || type == 32 || type == 33 || type == 24 || type == 25 || type == 44 || type == 45)
 		{
 			priority = 3;
 		}
-		else if(type == 4   || type == 31 || type == 80 || type == 32 || type == 33 || type == 24 || type == 25 || type == 44 || type == 45)
-		{
-			priority = 4;
-		}
 		else
 		{
-			priority = 5;
+			priority = 4;
 		}
 	}
 	
