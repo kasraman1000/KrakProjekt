@@ -33,8 +33,10 @@ public class Controller {
 	
 	public static void main(String[] args) {
 		Controller controller = new Controller();
+		
+		controller.startUpFromKrakData("kdv_node_unload.txt",	"kdv_unload.txt");
 //		controller.buildFileFromKrakData("kdv_node_unload.txt",	"kdv_unload.txt", "C:\\Users\\Yndal\\Desktop\\OutputOfKDTree.kdt");
-		controller.startUpFromLocalFile("C:\\Users\\Yndal\\Desktop\\OutputOfKDTree.kdt");
+//		controller.startUpFromLocalFile("C:\\Users\\Yndal\\Desktop\\OutputOfKDTree.kdt");
 	}
 	
 	
@@ -43,6 +45,19 @@ public class Controller {
 		dataHelper = new DataHelper();
 		xml = new XML();
 	}
+	
+	public void startUpFromKrakData(String nodePath, String roadPath){
+		System.out.println("Initializing...");
+		try {
+			kdTree.initialize(nodePath, roadPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("System ready...");
+		jsConnector = new JSConnector(this);
+	}
+	
 	
 	public void buildFileFromKrakData(String nodePath, String roadPath, String  saveFileName){
 		System.out.println("Building file... Please wait.");
