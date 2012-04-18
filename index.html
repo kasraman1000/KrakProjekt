@@ -13,8 +13,8 @@ var xmlns = "http://www.w3.org/2000/svg";
 function init(){
 	xView1 = 0.0;
 	yView1 = 0.0;
-	xView2 = 352137;
-	yView2 = 450385;
+	xView2 = 350000;
+	yView2 = 450000;
 	getXML();
 }
 function getXML(){
@@ -30,7 +30,7 @@ function getXML(){
 	  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
-
+	
 }
 
 function showSvg(){
@@ -57,12 +57,12 @@ function updateSurroundingData(){
 	y2SurData = yView2 + (yView2-yView1)*0.1;
 
 }
-
+	
 function clickUp(){
 	if(yView1 < y1SurData)
 		getXML();
 	moveViewBox(0, -panningDistanceVert);
-
+	
 }
 
 function clickDown(){	

@@ -1,12 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -33,88 +28,38 @@ public class Controller {
 	
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		
-		controller.startUpFromKrakData("kdv_node_unload.txt",	"kdv_unload.txt");
-//		controller.buildFileFromKrakData("kdv_node_unload.txt",	"kdv_unload.txt", "C:\\Users\\Yndal\\Desktop\\OutputOfKDTree.kdt");
-//		controller.startUpFromLocalFile("C:\\Users\\Yndal\\Desktop\\OutputOfKDTree.kdt");
 	}
 	
 	
 	public Controller(){
+		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
-		dataHelper = new DataHelper();
-		xml = new XML();
-	}
-	
-	public void startUpFromKrakData(String nodePath, String roadPath){
-		System.out.println("Initializing...");
 		try {
-			kdTree.initialize(nodePath, roadPath);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("System ready...");
-		jsConnector = new JSConnector(this);
-	}
-	
-	
-	public void buildFileFromKrakData(String nodePath, String roadPath, String  saveFileName){
-		System.out.println("Building file... Please wait.");
-		try {
-			System.out.println("Building KDTree...");
-			kdTree.initialize(nodePath, roadPath);
-			/*
+/*
 			kdTree.initialize("..\\kdv_node_unload.txt",
 					"..\\kdv_unload.txt");
 		*/			
-			System.out.println("KDtree build.");
-			System.out.println("Creating file...");
-			FileOutputStream fileOutput = new FileOutputStream(saveFileName);
-			ObjectOutputStream objectOut = new ObjectOutputStream(fileOutput);
-			objectOut.writeObject(kdTree);
-			objectOut.close();
-			fileOutput.close();
-			System.out.println("File created!");
-			
+			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
+			System.out.println("PATH READ");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("File build.");
-	}
-	
-	public void startUpFromLocalFile(String fileName){
-		System.out.println("Starting system from local file");
-		try {
-			FileInputStream fileInput = new FileInputStream(fileName);
-			ObjectInputStream objectIn = new ObjectInputStream(fileInput);
-			kdTree = (KDTree) objectIn.readObject();
-			objectIn.close();
-			fileInput.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("System ready...");
+		dataHelper = new DataHelper();
+		xml = new XML();
+		System.out.println("System up running...");
 		jsConnector = new JSConnector(this);
 	}
+	
 	
 
 	
 	public static String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
+		DataHelper.setScaleFactor(kdTree.getLastZoomLevel());
 		try {
-			xml.createFile(roads, "C:\\Users\\Yndal\\Desktop\\TestingOfXml.xml");
+//			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -122,6 +67,41 @@ public class Controller {
 		}
 		return s;
 	}
+	
+	
+//	public Road[] getRoadsFromString(String xmlString, int[] roadTypesToExtract){
+//		//Pre check
+////TODO	if(xmlString.length() == 0) throw SomeKindOfException
+//		//If roadTypes are left empty - all roads will be returned (from type 0-99)
+//		if(roadTypesToExtract.length == 0){
+//			final int HIGHEST_ROAD_TYPE = 99;
+//			roadTypesToExtract = new int[HIGHEST_ROAD_TYPE+1];
+//			for(int roadTypeIndex=0; roadTypeIndex<=HIGHEST_ROAD_TYPE; roadTypeIndex++){
+//				roadTypesToExtract[roadTypeIndex] = roadTypeIndex;
+//			}
+//		}
+//				
+//		
+//		Road[] foundRoads = new Road[0];
+//		try {
+//			foundRoads = xml.getRoadsFromString(xmlString, roadTypesToExtract);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ParserConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+////TODO	if(foundRoads.length == 0){
+////			doSomethingClever
+////		} else {
+//		return foundRoads;
+//		
+//	}
 	
 	
 	public static double getMaxXOriginal(){
@@ -132,4 +112,9 @@ public class Controller {
 		return KDTree.getTree().top[1];
 	}
 	
+	
+	
+	private String getErrorString(int errorCode){
+		return null;
+	}
 }

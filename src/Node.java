@@ -1,6 +1,6 @@
 import java.util.HashSet;
 
-public class Node implements java.io.Serializable {
+public class Node {
 	
 	public final double[] coords;
 	private HashSet<Road> roads;

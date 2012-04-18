@@ -77,7 +77,7 @@ public class XML{
 	    Transformer transformer = transformerFactory.newTransformer();
 	    DOMSource source = new DOMSource(document);
 	    
-	    //May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
+	    //TODO May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
 	    StringWriter stringWriter = new StringWriter();
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
@@ -122,7 +122,7 @@ public class XML{
 	 * @throws TransformerConfigurationException
 	 * @throws TransformerException
 	 */
-	//TODO This method can be separated just like the two other create-methods - if we are going with the group structure
+	//TODO This method can be seperated just like the two other create-methods - if we are going with the group structure
 	public void createFileWithGroups(Road[] roads, String filename) throws ParserConfigurationException, 
 																			TransformerConfigurationException, 
 																			TransformerException{
@@ -148,6 +148,14 @@ public class XML{
 //			svgElement.setAttribute("height", Controller.getMaxYScaled() +"");
 			
 			for(Road road : roads){
+//				System.out.println("Inside road loop in createFileUnderTesting():");
+//				System.out.println("roads.length: " + roads.length);
+//				System.out.println("x1: " + road.x1);
+//				System.out.println("y1: " + road.y1);
+//				System.out.println("x2: " + road.x2);
+//				System.out.println("y2: " + road.y2);
+//				
+				
 				Element line = document.createElement("line");
 
 				line.setAttribute("x1", road.getX1() + ""); 
@@ -307,6 +315,7 @@ public class XML{
 		svgElement.appendChild(gElement);
 		
 		for(Road road : roads){
+			if(road.getX2() > 500000) System.out.println("FUCCCK!");
 			Element line = document.createElement("line");
 
 			line.setAttribute("x1", road.getX1() + ""); 

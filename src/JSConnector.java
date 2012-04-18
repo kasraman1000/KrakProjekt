@@ -52,7 +52,7 @@ public class JSConnector {
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
 			Double y2 = Double.valueOf(parameters.get("y2"));
-			String response = controller.getXmlString(new Region(x1,y1,x2,y2));
+			String response = Controller.getXmlString(new Region(x1,y1,x2,y2));
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
