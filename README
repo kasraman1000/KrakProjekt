@@ -1,5 +1,12 @@
-This is a readme, text goes in here :)
+Allright folkens, velkommen til 2. del. Jeg vil nu skrive om hvordan i burde bruge git når i skal til at arbejde på alt muligt forskelligt.
 
-Og Jakob er med !
+Den færdige og afleverede commit af projektet er blevet 'tagget'. Det tag hedder'EndOfPart1' og man kan altid, fra hjemmesiden af eller via. et almindelig checkout, gå tilbage til dette tag hvis man skulle få brug for noget tilbage i fortiden.
 
-Fiskesovs! 
+Pga. det tag også doubler som et backup-punkt, er der ingen grund til at vores sourcemappe er så rodet. Jeg har derfor  slettet de fleste af .java-filerne i src-mappen, som vi regnede med ikke at komme til at bruge forløbigt. Hvis i nogensinde skal bruge nogle af de slettede filer, kan de inspiceres på hjemmesiden ved at skifte til det tag oppe i venstre dropdown, eller man kan downloade det ved at trykke på "Tags" oppe i højre hjørne.
+
+Prøv at holde jer væk fra at arbejde i hverken "master" eller "part2". Når I skal til at foretage jer noget arbejde (om det er en mindre eller større tilføjelse/rettelse til programmet), så laver I en ny lokal branch fra remote-"part2" og kalder den noget beskrivende(og kortfattet). Så laver I whatever I nu skal gøre inde i den branch (og commiter løbende). Når I er færdige med jeres 'task', kan I så merge arbejdet tilbage ind i "part2" branchen. Hvis der i mellemtiden er andre der har arbejdet på noget i en anden branch, eller "part2" er blevet opdateret, og du gerne vil have de nye ændringer med ind i din egen branch, kan du merge deres ind i din nuværende arbejdsbranch. Easy as pie!
+
+Der er fordele ved at lave en ny branch for hver ny task man går i gang med, og merge ind når man er færdig. Man holder arbejdet væk fra primær-branchen, så andre folks arbejde ikke bliver forurenet med "work-in-progress"-kode. Der kommer måske en masse forskellige branches efterhånden der kommer til at rode, med det er et dejligt bi-produkt af en ordentlig omgang git. Vær endelig ikke bange for at lave nye branches!
+
+Held og lykke, hvis der er problems, I ved hvor I kan fange mig :D
+- Kasra
