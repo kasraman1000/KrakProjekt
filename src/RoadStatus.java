@@ -10,8 +10,8 @@ import java.util.HashMap;
  *
  */
 public class RoadStatus {
-	private static HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	private static HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
+	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	private static double scale;
 
 	static{
