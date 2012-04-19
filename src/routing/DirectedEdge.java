@@ -33,6 +33,7 @@ public class DirectedEdge {
     private final double y1;
     private final double x2;
     private final double y2;
+    private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
@@ -46,6 +47,7 @@ public class DirectedEdge {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.isLengthWeighted = true;
     }
 
    /**
@@ -63,10 +65,27 @@ public class DirectedEdge {
     }
 
    /**
-     * Return the weight of this edge.
+     * Return the weigth (time or length) of this edge.
      */
-    public double length() { return length; }
+    public double weight() { 
+    	if(isLengthWeighted) return length;
+    	return time;
+    	}
+    
+    /**
+     * Return the time of this edge
+     */
+    public double time(){ return time; }
 
+    public boolean isLengthWeighted(){
+    	return isLengthWeighted;
+    }
+    
+    public void setWeight(boolean isLengthWeighted){
+    	this.isLengthWeighted = isLengthWeighted;
+    }
+    
+    
    /**
      * Return a string representation of this edge.
      */

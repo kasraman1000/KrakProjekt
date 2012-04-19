@@ -23,6 +23,20 @@ public class Routing {
 		EdgeWeightedDigraph graph = ty.loadGraph("kdv_unload.txt", "kdv_node_unload.txt");
 		double end = System.nanoTime();
 		System.out.println("Time taken: " + (end-start)/1000000000 + " seconds");
+		
+		DijkstraSP dij = new DijkstraSP(graph, 0);
+	//	dij. set weigth
+		Iterable<DirectedEdge> path = dij.pathTo(675000);
+		System.out.println("Path to 675000:");
+		double totalWeight = 0;
+		for(DirectedEdge edge : path){
+			System.out.println(edge.from() + " -> " + edge.to() + ": " + edge.weight() + " m");
+			totalWeight += edge.weight();
+		}
+		System.out.println("Total weight: " + totalWeight);
+		System.out.println("should be equal to: " + dij.distTo(675000));
+		
+		
 	}
 	
 	
