@@ -132,6 +132,14 @@ public class Road {
 	{
 		return priority;
 	}
+	
+	public Color getColor(){
+		return RoadStatus.getRoadColor(type);
+	}
+	
+	public double getWidth(){
+		return RoadStatus.getRoadWidth(type);
+	}
 
 	
 	@Override

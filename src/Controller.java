@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
  *
  */
 public class Controller {
-	private DataHelper dataHelper;
 	private static XML xml;
 	private static KDTree kdTree;
 	private static JSConnector jsConnector;
@@ -45,7 +44,6 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		dataHelper = new DataHelper();
 		xml = new XML();
 		System.out.println("System up running...");
 		jsConnector = new JSConnector(this);
@@ -57,7 +55,7 @@ public class Controller {
 	public static String getXmlString(Region region){
 		Road[] roads = kdTree.searchRange(region);
 		String s = "";
-		DataHelper.setScaleFactor(kdTree.getLastZoomLevel());
+		RoadStatus.setZoomlevel(kdTree.getLastZoomLevel());
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
@@ -69,41 +67,6 @@ public class Controller {
 	}
 	
 	
-//	public Road[] getRoadsFromString(String xmlString, int[] roadTypesToExtract){
-//		//Pre check
-////TODO	if(xmlString.length() == 0) throw SomeKindOfException
-//		//If roadTypes are left empty - all roads will be returned (from type 0-99)
-//		if(roadTypesToExtract.length == 0){
-//			final int HIGHEST_ROAD_TYPE = 99;
-//			roadTypesToExtract = new int[HIGHEST_ROAD_TYPE+1];
-//			for(int roadTypeIndex=0; roadTypeIndex<=HIGHEST_ROAD_TYPE; roadTypeIndex++){
-//				roadTypesToExtract[roadTypeIndex] = roadTypeIndex;
-//			}
-//		}
-//				
-//		
-//		Road[] foundRoads = new Road[0];
-//		try {
-//			foundRoads = xml.getRoadsFromString(xmlString, roadTypesToExtract);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParserConfigurationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SAXException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-////TODO	if(foundRoads.length == 0){
-////			doSomethingClever
-////		} else {
-//		return foundRoads;
-//		
-//	}
-	
-	
 	public static double getMaxXOriginal(){
 		return KDTree.getTree().top[0];
 	}
@@ -111,10 +74,5 @@ public class Controller {
 	public static double getMaxYOriginal(){
 		return KDTree.getTree().top[1];
 	}
-	
-	
-	
-	private String getErrorString(int errorCode){
-		return null;
-	}
+
 }

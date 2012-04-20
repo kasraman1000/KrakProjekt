@@ -10,12 +10,12 @@ import java.util.HashMap;
  *
  */
 public class RoadStatus {
-	private static HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
-	private static HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+
+	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
+	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	private static double scale;
-	
-	
-	private RoadStatus(){
+
+	static{
 		loadRoadColors();
 		loadRoadWidths();
 		scale = 1;
@@ -36,9 +36,7 @@ public class RoadStatus {
 		else 					 {scale = 1;}
 	}
 
-	
-	
-	
+
 	/**
 	 * Will load all the predefined road colors to a HashMap - only called in the constructor
 	 */
@@ -51,12 +49,10 @@ public class RoadStatus {
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
 //		Color bicyclePaths = Color.gray;
-		
 		Color unknownRoads = Color.cyan;
-		
+
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
-		
 		roadColors.put(1, largeRoads); //"Motorvej"
 		roadColors.put(2, mediumRoads); //"Motortrafikvej"
 		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -104,12 +100,11 @@ public class RoadStatus {
 		int walkingPaths = 130;
 
 //		int bicyclePaths = 130;
-		
+
 		int unknownRoads = 100;
-				
+
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
-		
 		roadWidths.put(1, largeRoads); //"Motorvej"
 		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
 		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -139,10 +134,9 @@ public class RoadStatus {
 		roadWidths.put(46, tunnels); //"MindreVejtunnel"
 		roadWidths.put(48, tunnels); //"Stitunnel"
 		roadWidths.put(80, seaWays); //"Faergeforbindelser"
-		
 		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
-	
+
 	public static Color getRoadColor(int roadType){
 		return roadColors.get(roadType);
 	}
