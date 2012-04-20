@@ -1,15 +1,4 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -21,8 +10,9 @@ import org.xml.sax.SAXException;
  */
 public class Controller {
 	private static XML xml;
-	private static KDTree kdTree;
+	
 	private static JSConnector jsConnector;
+	private static RoadSelector roadSelector;
 	
 	
 	public static void main(String[] args) {
@@ -32,35 +22,22 @@ public class Controller {
 	
 	public Controller(){
 		System.out.println("System startup - please wait...");
-		kdTree = KDTree.getTree();
-		try {
-/*
-			kdTree.initialize("..\\kdv_node_unload.txt",
-					"..\\kdv_unload.txt");
-		*/			
-			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
-			System.out.println("PATH READ");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		roadSelector = new RoadSelector();
 		xml = new XML();
+		
 		System.out.println("System up running...");
 		jsConnector = new JSConnector(this);
 	}
 	
-	
-
-	
 	public static String getXmlString(Region region){
-		Road[] roads = kdTree.searchRange(region);
+		Road[] roads = roadSelector.search(region);
 		String s = "";
-		RoadStatus.setZoomlevel(kdTree.getLastZoomLevel());
+		
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			System.out.println("Unable to create XML-string!");
 			e.printStackTrace();
 		}
 		return s;
