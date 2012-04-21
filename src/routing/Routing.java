@@ -18,23 +18,31 @@ public class Routing {
 
 
 	public static void main(String[] args) {
+		int source = 0;
+		int target = 675901;
+		
+		
 		double start = System.nanoTime();
 		Routing ty = new Routing();
 		EdgeWeightedDigraph graph = ty.loadGraph("kdv_unload.txt", "kdv_node_unload.txt");
 		double end = System.nanoTime();
-		System.out.println("Time taken: " + (end-start)/1000000000 + " seconds");
+		System.out.println("Time taken to create graph: " + (end-start)/1000000000 + " seconds");
 		
-		DijkstraSP dij = new DijkstraSP(graph, 0);
-	//	dij. set weigth
-		Iterable<DirectedEdge> path = dij.pathTo(675000);
-		System.out.println("Path to 675000:");
+		double dijkstraStart = System.nanoTime();
+		DijkstraSP dij = new DijkstraSP(graph);
+		Iterable<DirectedEdge> path = dij.findRoute(source, target, true);
+		double dijkstraEnd = System.nanoTime();
+		
+		System.out.println("Path from " + source + " to " + target);
 		double totalWeight = 0;
 		for(DirectedEdge edge : path){
-			System.out.println(edge.from() + " -> " + edge.to() + ": " + edge.weight() + " m");
+			System.out.println(edge.from() + " -> " + edge.to() + ": " + edge.weight());
 			totalWeight += edge.weight();
 		}
-		System.out.println("Total weight: " + totalWeight);
-		System.out.println("should be equal to: " + dij.distTo(675000));
+		System.out.println("Total weight: " + totalWeight + "\t\tWeighted by length: " + DirectedEdge.isLengthWeighted());
+		System.out.println("should be equal to: " + dij.distance(source, target));
+		
+		System.out.println("Time taken to find route: " + (dijkstraEnd-dijkstraStart)/1000000000 + " seconds");
 		
 		
 	}
@@ -43,7 +51,6 @@ public class Routing {
 	/**
 	 * This class may most likely be edited to cooperate with the KrakLoader in some way.
 	 */
-	//TODO Do not handle the nodes (with the X's and Y's) yet
 	public EdgeWeightedDigraph loadGraph(String edgeFilePath, String nodeFilePath){
 		In inEdges = new In(new File(edgeFilePath));
 		In inNodes = new In(new File(nodeFilePath));
@@ -82,10 +89,8 @@ public class Routing {
 		int to;
 		double dist;
 		double time;
-		double x1;
-		double y1;
-		double x2;
-		double y2;
+		Point fromPoint = new Point();
+		Point toPoint = new Point();
 		String direction;
 		while(inEdges.hasNextLine()){
 			tempStringArr = inEdges.readLine().split(",");
@@ -107,17 +112,14 @@ public class Routing {
 			//<blank> = no restrictions
 			direction = tempStringArr[27]; 
 			
-			x1 = coordArray.get(from).getX();
-			y1 = coordArray.get(from).getY();
-			x2 = coordArray.get(to).getX();
-			y2 = coordArray.get(to).getY();
+			fromPoint.setLocation(coordArray.get(from).getX(), coordArray.get(from).getY());
+			toPoint.setLocation(coordArray.get(to).getX(), coordArray.get(to).getY());
 			
-			
-			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, dist, time, x1, y1, x2, y2));
-			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, dist, time, x1, y1, x2, y2));
+			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, dist, time, fromPoint, toPoint));
+			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, dist, time, fromPoint, toPoint));
 			else if (!direction.equals("'n'")) {
-				edges.add(new DirectedEdge(from, to, dist, time, x1, y1, x2, y2));
-				edges.add(new DirectedEdge(to, from, dist, time, x1, y1, x2, y2));
+				edges.add(new DirectedEdge(from, to, dist, time, fromPoint, toPoint));
+				edges.add(new DirectedEdge(to, from, dist, time, fromPoint, toPoint));
 			}
 			nodes.add(to);
 			nodes.add(from);

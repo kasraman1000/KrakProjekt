@@ -3,6 +3,8 @@
  */
 package routing;
 
+import java.awt.Point;
+
 
 
 
@@ -29,25 +31,21 @@ public class DirectedEdge {
     private final int to;
     private final double length;
     private final double time;
-    private final double x1;
-    private final double y1;
-    private final double x2;
-    private final double y2;
+    private final Point fromPoint;
+    private final Point toPoint;
     private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
      */
-    public DirectedEdge(int from, int to, double length, double time, double x1, double y1, double x2, double y2) {
+    public DirectedEdge(int from, int to, double length, double time, Point fromPoint, Point toPoint){
         this.from = from;
         this.to = to;
         this.length = length;
         this.time = time;
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.isLengthWeighted = true;
+        this.fromPoint = fromPoint;
+        this.toPoint = toPoint;
+        isLengthWeighted = true;
     }
 
    /**
@@ -65,7 +63,7 @@ public class DirectedEdge {
     }
 
    /**
-     * Return the weigth (time or length) of this edge.
+     * Return the weight (time or length) of this edge.
      */
     public double weight() { 
     	if(isLengthWeighted) return length;
@@ -77,12 +75,20 @@ public class DirectedEdge {
      */
     public double time(){ return time; }
 
-    public boolean isLengthWeighted(){
+    public static boolean isLengthWeighted(){
     	return isLengthWeighted;
     }
     
-    public void setWeight(boolean isLengthWeighted){
-    	this.isLengthWeighted = isLengthWeighted;
+    public static void setWeight(boolean lengthWeighted){
+    	isLengthWeighted = lengthWeighted;
+    }
+    
+    public Point getFromPoint(){
+    	return fromPoint;
+    }
+    
+    public Point getToPoint(){
+    	return toPoint;
     }
     
     

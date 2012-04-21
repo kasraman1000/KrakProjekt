@@ -39,8 +39,26 @@ public class DijkstraSP {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
-
-    public DijkstraSP(EdgeWeightedDigraph G, int s) {
+    private EdgeWeightedDigraph G;
+    
+    public DijkstraSP(EdgeWeightedDigraph G){
+    	this.G = G;
+    }
+    
+    
+    /**
+     * 
+     * @param from Source
+     * @param to Target
+     * @param lengthWeighted True if length is weighted highest - else false to weight time the highest
+     */
+    public Iterable<DirectedEdge> findRoute(int from, int to, boolean lengthWeighted) {
+    	DirectedEdge.setWeight(lengthWeighted);
+    	
+    	return pathTo(from, to);
+    }
+    	
+    private void calculateRoute(int s, int t){
         distTo = new double[G.V()];
         edgeTo = new DirectedEdge[G.V()];
         for (int v = 0; v < G.V(); v++)
@@ -52,8 +70,12 @@ public class DijkstraSP {
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj(v))
-                relax(e);
+            for (DirectedEdge e : G.adj(v)){
+            	relax(e);
+            	if(e.to() == t){
+            		return;//All necessary data found
+            	}
+            }
         }
 
         // check optimality conditions
@@ -72,20 +94,24 @@ public class DijkstraSP {
     }
 
     // length of shortest path from s to v
-    public double distTo(int v) {
-        return distTo[v];
+    public double distance(int from, int to) {
+    	calculateRoute(from, to);
+    	
+        return distTo[to];
     }
 
     // is there a path from s to v?
-    public boolean hasPathTo(int v) {
-        return distTo[v] < Double.POSITIVE_INFINITY;
+    public boolean hasPathTo(int from, int to) {
+    	calculateRoute(from, to);
+    	
+        return distTo[to] < Double.POSITIVE_INFINITY;
     }
 
     // shortest path from s to v as an Iterable, null if no such path
-    public Iterable<DirectedEdge> pathTo(int v) {
-        if (!hasPathTo(v)) return null;
+    private Iterable<DirectedEdge> pathTo(int from, int to) {
+        if (!hasPathTo(from, to)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+        for (DirectedEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
             path.push(e);
         }
         return path;
@@ -145,9 +171,7 @@ public class DijkstraSP {
     }
     
     
-    //TODO
-    //TODO Skal stoppe når den finder target
-    //TODO
+  
 //    public void setWeight(boolean lengthWeighted){
 //    	pq..minKey().
 //    }

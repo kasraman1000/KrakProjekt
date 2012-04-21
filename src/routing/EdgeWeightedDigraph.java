@@ -35,7 +35,8 @@ public class EdgeWeightedDigraph {
     /**
      * Create an empty edge-weighted digraph with V vertices.
      */
-    public EdgeWeightedDigraph(int V) {
+    @SuppressWarnings("unchecked")
+	public EdgeWeightedDigraph(int V) {
         if (V < 0) throw new RuntimeException("Number of vertices must be nonnegative");
         this.V = V;
         this.E = 0;
@@ -151,6 +152,25 @@ public class EdgeWeightedDigraph {
         }
         return s.toString();
     }
+    
+//    /**
+//     * Choose between the edges should be weighted by their length or travel time
+//     * @param isLengthWeighted True (length weighted) or false (time weighted) 
+//     */
+//    public void setWeight(boolean isLengthWeighted){
+////    	(routing.DirectedEdge) DirectedEdge.
+//    	DirectedEdge.setWeight(isLengthWeighted);
+//    }
+//    
+//    /**
+//     * Tells if the edges are weighted by their length or travel time
+//     * @return True if length weighted and false if time weighted
+//     */
+//    public boolean isLengthWeighted(){
+//    	return DirectedEdge.isLengthWeighted();
+//    }
+    
+    
 
 //    /**
 //     * Test client.
