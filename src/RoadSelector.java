@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -9,6 +10,7 @@ import java.util.HashSet;
 
 public class RoadSelector {
 
+	private static final int MAX_ROADS = 20000;
 	private static KDTree kdTree;
 
 	public RoadSelector() {
@@ -43,16 +45,49 @@ public class RoadSelector {
 
 
 		HashSet<Road> searchResult = kdTree.searchRange(region);
-		ArrayList<Road> roads = new ArrayList<Road>();
+		
 
-		for (Road r : searchResult) {
+		//Deprecated method
+		/*ArrayList<Road> roads = new ArrayList<Road>();
+		 * for (Road r : searchResult) {
 			if(filterRoad(zoom, r))
 				roads.add(r);
-		}
+		}*/
+		//Road[] result = roads.toArray(new Road[0]);
 		
-		Road[] result = roads.toArray(new Road[0]);
+		Road[] result = filter(searchResult, MAX_ROADS).toArray(new Road[0]);
 
 		System.out.println("Number of roads: " + result.length);
+		return result;
+	}
+	
+	/**
+	 * Returns an arraylist of a specified maximum of Roads
+	 * Lower priority roads are selected first  
+	 * @param roads Array of roads to select from
+	 * @param max Maximum amount of roads to include	
+	 * @return The resulting roads
+	 */
+	private ArrayList<Road> filter(Collection<Road> roads, int max) {
+		ArrayList<Road> result = new ArrayList<Road>();
+		int nextLevelRoads = 0;
+		int level = 5;
+		
+		do {
+			nextLevelRoads = 0;
+			for (Road r : roads) {
+				if (r.getPriority() == level) 
+					result.add(r);
+				else if (r.getPriority() == level-1) 
+					nextLevelRoads++;
+			}
+			level--;
+			
+			System.out.println("Roads totalat current level: " + result.size());
+			System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
+			
+		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
+		
 		return result;
 	}
 	
@@ -78,6 +113,7 @@ public class RoadSelector {
 	
 	/**
 	 * Returns true or false dependent on whether the road should be displayed or not according to the priority
+	 * (SOON TO BE DEPRECATED)
 	 * @param zoomLevel The priority that the road should be equals or greater than to be displayed
 	 * @param road	The road which should be filtered
 	 * @return whether the road has high enough priority to be displayed
