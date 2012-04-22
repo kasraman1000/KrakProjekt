@@ -57,7 +57,7 @@ public class Controller {
 	public static String getXmlString(Region region){
 		Road[] roads = RoadSelector.searchRange(region);
 		String s = "";
-		DataHelper.setScaleFactor(RoadSelector.getLastZoomLevel());
+		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);

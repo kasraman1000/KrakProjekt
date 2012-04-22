@@ -35,6 +35,11 @@ public class RoadStatus {
 		else if (zoomLevel == 4) {scale = 0.5;}
 		else 					 {scale = 1;}
 	}
+	
+	public static void setScale(double scale)
+	{
+		RoadStatus.scale = scale;
+	}
 
 	
 	
