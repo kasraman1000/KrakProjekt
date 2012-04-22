@@ -31,14 +31,14 @@ public class DirectedEdge {
     private final int to;
     private final double length;
     private final double time;
-    private final Point fromPoint;
-    private final Point toPoint;
+    private final double[] fromPoint;
+    private final double[] toPoint;
     private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
      */
-    public DirectedEdge(int from, int to, double length, double time, Point fromPoint, Point toPoint){
+    public DirectedEdge(int from, int to, double length, double time, double[] fromPoint, double[] toPoint){
         this.from = from;
         this.to = to;
         this.length = length;
@@ -83,11 +83,11 @@ public class DirectedEdge {
     	isLengthWeighted = lengthWeighted;
     }
     
-    public Point getFromPoint(){
+    public double[] getFromPoint(){
     	return fromPoint;
     }
     
-    public Point getToPoint(){
+    public double[] getToPoint(){
     	return toPoint;
     }
     

@@ -72,6 +72,12 @@ public class XML{
 	public String createString(Road[] roads) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
+		
+
+	    System.out.println("Size of XML: " + roads.length + " roads");
+	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlPrint.xml");
+	    
+		
 		Document document = convertRoadArrayToDocument(roads);
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -83,7 +89,7 @@ public class XML{
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
 	    String xmlString = stringWriter.toString();
-	    	    
+	    
 	    return xmlString;
 	}
 	

@@ -13,11 +13,11 @@ public class NodeComparator implements Comparator {
 	{
 		Node n1 = (Node) o1;
 		Node n2 = (Node) o2;
-		if(n1.coords[dimension] > n2.coords[dimension])
+		if(n1.getCoord(dimension) > n2.getCoord(dimension))
 		{
 			return 1;
 		}
-		if(n1.coords[dimension] < n2.coords[dimension])
+		if(n1.getCoord(dimension) < n2.getCoord(dimension))
 		{
 			return -1;
 		}

@@ -31,6 +31,7 @@ public class Controller {
 	
 	
 	public Controller(){
+		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
@@ -45,7 +46,8 @@ public class Controller {
 			e.printStackTrace();
 		}
 		xml = new XML();
-		System.out.println("System up running...");
+		double end = System.nanoTime();
+		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
 		jsConnector = new JSConnector(this);
 	}
 	
