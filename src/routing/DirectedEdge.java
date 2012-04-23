@@ -3,8 +3,6 @@
  */
 package routing;
 
-import java.awt.Point;
-
 
 
 
@@ -29,6 +27,7 @@ import java.awt.Point;
 public class DirectedEdge { 
 	private final int from;
     private final int to;
+    private final String name;
     private final double length;
     private final double time;
     private final double[] fromPoint;
@@ -38,9 +37,10 @@ public class DirectedEdge {
    /**
      * Create a directed edge from v to w with given weight.
      */
-    public DirectedEdge(int from, int to, double length, double time, double[] fromPoint, double[] toPoint){
+    public DirectedEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint){
         this.from = from;
         this.to = to;
+        this.name = name;
         this.length = length;
         this.time = time;
         this.fromPoint = fromPoint;
@@ -60,6 +60,10 @@ public class DirectedEdge {
      */
     public int to() {
         return to;
+    }
+    
+    public String getName(){
+    	return name;
     }
 
    /**

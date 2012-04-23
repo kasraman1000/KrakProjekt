@@ -121,17 +121,17 @@ class KrakLoader {
 			fromPoint = new double[]{coordArray.get(from)[0], coordArray.get(from)[1]};
 			toPoint = new double[]{coordArray.get(to)[0], coordArray.get(to)[1]};
 			
-			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, dist, time, fromPoint, toPoint));
-			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, dist, time, fromPoint, toPoint));
+			//TODO fromPoint/toPoint might be changed
+			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
+			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
 			else if (!direction.equals("'n'")) {
-				edges.add(new DirectedEdge(from, to, dist, time, fromPoint, toPoint));
-				edges.add(new DirectedEdge(to, from, dist, time, fromPoint, toPoint));
+				edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
+				edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
 			}
 			
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
 
 			nodeList.get(from).addRoad(tempRoad);
-			if(nodeList.get(to) == null) System.out.println("to: " + to);
 			nodeList.get(to).addRoad(tempRoad);
 			
 			nodesForGraph.add(to);

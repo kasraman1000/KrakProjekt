@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -10,6 +11,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
+
+import routing.*;
 
 /**
  * 
@@ -35,11 +38,8 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-/*
-			kdTree.initialize("..\\kdv_node_unload.txt",
-					"..\\kdv_unload.txt");
-		*/			
-			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
+			KrakLoader.load("kdv_node_unload.txt","kdv_unload.txt");
+			kdTree.initialize();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,6 +65,16 @@ public class Controller {
 			e.printStackTrace();
 		}
 		return s;
+	}
+	
+	public static ArrayList<Node> getKDTreeData(){
+		//TODO if(KrakLoader.getnodesForKDTREE == null) throw HugeError;
+		return KrakLoader.getNodesForKDTree();
+	}
+	
+	public static EdgeWeightedDigraph getDigraph(){
+		//TODO if(KrakLoader.getGraph == null) throw HugeError;
+		return KrakLoader.getGraph();
 	}
 	
 	

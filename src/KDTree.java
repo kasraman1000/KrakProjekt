@@ -150,10 +150,9 @@ public class KDTree
 
 	}
 	
-	public void initialize(String nodePath, String roadPath) throws IOException
+	public void initialize() throws IOException
 	{	
-		KrakLoader.load(nodePath, roadPath);
-		ArrayList<Node> nodes = KrakLoader.getNodesForKDTree();
+		ArrayList<Node> nodes = Controller.getKDTreeData();
 		tree.build(nodes);
 		origo = Road.getOrigo();
 		top = Road.getTop();

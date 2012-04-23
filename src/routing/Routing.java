@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.awt.*;
 
+
 /**
  * @author Yndal
  *
@@ -23,10 +24,9 @@ public class Routing {
 		
 		
 		double start = System.nanoTime();
-		
-		
 		Routing ty = new Routing();
-		EdgeWeightedDigraph graph = ty.loadGraph("kdv_unload.txt", "kdv_node_unload.txt");
+		KrakLoader.load("kdv_unload.txt", "kdv_node_unload.txt");
+		EdgeWeightedDigraph graph = KrakLoader.getGraph();
 		double end = System.nanoTime();
 		System.out.println("Time taken to create graph: " + (end-start)/1000000000 + " seconds");
 		
