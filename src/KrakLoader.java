@@ -45,19 +45,19 @@ class KrakLoader {
 		HashMap<Integer, Node> nodeList = new HashMap<Integer, Node>();
 		
 		
-		String[] nodeArray;
+		String[] textLineNodeArray;
 		int nodeId;
 		double xCoord;
 		double yCoord;
 		while(inNodes.hasNextLine()){
-			nodeArray = inNodes.readLine().split(",");
+			textLineNodeArray = inNodes.readLine().split(",");
 			
 			/**
 			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
 			 */
-			nodeId = Integer.valueOf(nodeArray[2])-1;
-			xCoord = Double.valueOf(nodeArray[3]);
-			yCoord = Double.valueOf(nodeArray[4]);
+			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
+			xCoord = Double.valueOf(textLineNodeArray[3]);
+			yCoord = Double.valueOf(textLineNodeArray[4]);
 
 			coordArray.put(nodeId, new double[]{xCoord, yCoord});
 			
@@ -70,7 +70,7 @@ class KrakLoader {
 		double newY;
 		for(int index=0; index<coordArray.size(); index++){
 			newX = coordArray.get(index)[0]- xMin;
-			newY = coordArray.get(index)[1]*(-1) + yMax;
+			newY = yMax - coordArray.get(index)[1];
 	
 			coordArray.get(index)[0] = newX;
 			coordArray.get(index)[1] = newY;
@@ -81,11 +81,11 @@ class KrakLoader {
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 		
-		ArrayList<DirectedEdge> edges = new ArrayList<>();
+		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
  
 		EdgeWeightedDigraph graph;
 		Set<Integer> nodesForGraph = new HashSet<Integer>();
-		String[] tempStringArr;
+		String[] textLineRoadArray;
 		int from;
 		int to;
 		int type;
@@ -97,26 +97,26 @@ class KrakLoader {
 		double[] toPoint;
 		String direction;
 		while(inEdges.hasNextLine()){
-			tempStringArr = inEdges.readLine().split(",");
+			textLineRoadArray = inEdges.readLine().split(",");
 			
 			
 			/**
 			 * OBS Læg mærke til at ID'erne bliver minuset med 1!!!!
 			 */
-			from = Integer.valueOf(tempStringArr[0])-1;
-			to = Integer.valueOf(tempStringArr[1])-1;
-			dist = Double.valueOf(tempStringArr[2]);
-			type = Integer.valueOf(tempStringArr[5]);
-			name = tempStringArr[6];
+			from = Integer.valueOf(textLineRoadArray[0])-1;
+			to = Integer.valueOf(textLineRoadArray[1])-1;
+			dist = Double.valueOf(textLineRoadArray[2]);
+			type = Integer.valueOf(textLineRoadArray[5]);
+			name = textLineRoadArray[6];
 			
 			//time in minuttes
-			time = Double.valueOf(tempStringArr[26]);
+			time = Double.valueOf(textLineRoadArray[26]);
 			
 			//tf = to->from
 			//ft = from->to
 			//n = no driving allowed
 			//<blank> = no restrictions
-			direction = tempStringArr[27]; 
+			direction = textLineRoadArray[27]; 
 			
 			fromPoint = new double[]{coordArray.get(from)[0], coordArray.get(from)[1]};
 			toPoint = new double[]{coordArray.get(to)[0], coordArray.get(to)[1]};
