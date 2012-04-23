@@ -41,7 +41,6 @@ public class Controller {
 					"..\\kdv_unload.txt");
 		*/			
 			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
-			System.out.println("PATH READ");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,9 +55,9 @@ public class Controller {
 
 	
 	public static String getXmlString(Region region){
-		Road[] roads = kdTree.searchRange(region);
+		Road[] roads = RoadSelector.searchRange(region);
 		String s = "";
-		DataHelper.setScaleFactor(kdTree.getLastZoomLevel());
+		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);

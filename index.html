@@ -17,6 +17,12 @@ function init(){
 	yView2 = 450000;
 	getXML();
 }
+/*
+	This method creates a new httprequest to the server and sends the uri string. 
+	The uri string contains four koordinates 
+	The response from the server is saved in roads, which is then used in 
+	the method showSVG().
+*/
 function getXML(){
 	 var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
@@ -32,24 +38,35 @@ function getXML(){
 	  xmlhttp.send();
 	
 }
-
+/*
+	Here the XML request is added to the SVG frame and shown in the browser.
+	It also sets how big a part the user is able to move the viewbox, when 
+	either clicking right, left, up or down. 
+*/
 function showSvg(){
 	if(svgFrame.hasChildNodes())
 		svgFrame.removeChild(svgFrame.firstChild);
 	svgFrame.appendChild(roads.firstChild); 	
-	setWandH();
+	setWidthandHeight();
 	svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
 	panningDistanceVert = (yView2 - yView1)*0.1;
 	panningDistanceHor = (xView2 - xView1)*0.1;
 	}
 
-
-function setWandH(){
+/*
+	This method uses the the diffence between the two sets of 
+	koordinates to set the height and width of the viewbox
+*/
+function setWidthandHeight(){
 	wView = xView2 - xView1;
 	hView = yView2 - yView1;
 }
 
-
+/*
+	Since we want to be able to load a bit more data than showed
+	in the viewbox we use the method to determine how big a 
+	procentage that is fethed from the server. 
+*/
 function updateSurroundingData(){
 	x1SurData = xView1 - (xView2-xView1)*0.1;
 	x2SurData = xView2 + (xView2-xView1)*0.1;
@@ -57,7 +74,14 @@ function updateSurroundingData(){
 	y2SurData = yView2 + (yView2-yView1)*0.1;
 
 }
-	
+
+/*
+	The following four methods is used to set new koordinates of the viewbox.
+	Inside each method a if statement is added. This is used to check if the 
+	viewbox is moving 'outside' of the data	that we currently have from the server. 
+	If this is the case, getXML() is called and new data is fetched and added 
+	to the SVG frame. 
+*/	
 function clickUp(){
 	if(yView1 < y1SurData)
 		getXML();
@@ -82,16 +106,28 @@ function clickLeft(){
 		getXML();
 	moveViewBox(-panningDistanceHor, 0);
 }
-
+/*
+	Here are the new koordinates of the viewbox added and
+	set as new attributes. 
+	
+	@param x,y which is the x and y koordinates
+*/
 function moveViewBox(x,y){
 	xView1 += x;
 	yView1 += y;
 	xView2 += x;
 	yView2 += y;
-	//setWandH();
+	//setWidthandHeight();
 	svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
 }
 
+/*
+	The next two functions are used to zoom in and out. 
+	Both functions has an if-statement in the start, which
+	enables a limitation as to how far in and out its possible
+	for the user to zoom. Then we increase or decrease the size of 
+	the four koordinates xView1, yView1, xView2 and yView2. 
+*/
 function zoomIn(){
 	if(xView2-xView1 < 1000)
 		return;
@@ -107,7 +143,7 @@ function zoomOut(){
 		init();
 		return;
 	}
-	setWandH();
+	setWidthandHeight();
 	xView1 -= wView * 0.20
 	if(xView1 < 0)
 		xView1 = 0;
