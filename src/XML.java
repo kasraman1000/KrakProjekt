@@ -74,8 +74,8 @@ public class XML{
 													TransformerException{
 		
 
-	    System.out.println("Size of XML: " + roads.length + " roads");
-	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlPrint.xml");
+//	    System.out.println("Size of XML: " + roads.length + " roads");
+//	    createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlPrint.xml");
 	    
 		
 		Document document = convertRoadArrayToDocument(roads);

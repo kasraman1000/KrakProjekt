@@ -23,6 +23,8 @@ public class Routing {
 		
 		
 		double start = System.nanoTime();
+		
+		
 		Routing ty = new Routing();
 		EdgeWeightedDigraph graph = ty.loadGraph("kdv_unload.txt", "kdv_node_unload.txt");
 		double end = System.nanoTime();
