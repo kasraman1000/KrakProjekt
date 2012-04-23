@@ -179,16 +179,17 @@ function clearRoute(){
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-	<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
 </div>
-<div id="buttons">
+<div id ="buttons" style="float: left; width: 10%;">
 	<button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
-	<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
-	<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
+		<div id="rightAndLeft">
+			<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
+			<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
+		</div>
 	<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 	<button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 	<button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-</div>
 <div id="routeplan" style="margin: 200px 0px">
 	<p> Find Route </p>
 	From
@@ -200,6 +201,8 @@ function clearRoute(){
 	<input name="Submit" type="submit" value="Find Route" onClick="findRoute()"/>
 	<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()"/>
 </div>
+</div>
+
 
 </body>
 </html>
