@@ -74,7 +74,7 @@ public class Controller {
 		return Loader.getNodesForKDTree();
 	}
 	
-	public static EdgeWeightedDigraph getDigraph(){
+	public static routing.EdgeWeightedDigraph getDigraph(){
 		//TODO if(KrakLoader.getGraph == null) throw HugeError;
 		return Loader.getGraph();
 	}
