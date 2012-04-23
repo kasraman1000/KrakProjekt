@@ -137,7 +137,7 @@ public class XML{
 		for(Road road : roads){
 			Element line = document.createElement("line");
 
-			color =road.getColor();
+			color = road.getColor();
 			line.setAttribute("x1", road.getX1() + ""); 
 			line.setAttribute("y1", road.getY1() + ""); 
 			line.setAttribute("x2", road.getX2() + ""); 
