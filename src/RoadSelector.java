@@ -54,17 +54,6 @@ public class RoadSelector {
 	}
 	
 	/**
-	 * Returns all roads in a rectangle bound by two points filtered by priority.
-	 * @param p1 x and y coordinates for one of the points
-	 * @param p2 x and y coordinates for the other point
-	 * @return All roads within the rectangle, which are relevant to display
-	 */
-	public Road[] searchRange(Point p1, Point p2)
-	{
-		return searchRange(new Region(p1.x, p1.y, p2.x, p2.y));
-	}
-	
-	/**
 	 * Returns the zoom level, which determines the filtering of the roads
 	 * @param p1 A point in the rectangle that bounds the viewport
 	 * @param p2 Another point in the rectangle that bounds the viewport
