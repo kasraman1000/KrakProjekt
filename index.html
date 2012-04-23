@@ -155,6 +155,9 @@ function zoomOut(){
 	//alert(xView1 + "  " + yView1);
 	getXML();
 }
+function route(){
+	alert(document.getElementById("fromAddress"));
+}
 
 </script>
 </head>
@@ -171,7 +174,8 @@ function zoomOut(){
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-
+<input id="fromAddress" name="text"  type="text"/>
+<input name="Submit"  type="submit" value="Update" onClick="route()"/>
 
 </body>
 </html>
