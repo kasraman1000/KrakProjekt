@@ -16,7 +16,7 @@ public class RoadSelector {
 	public RoadSelector() {
 		kdTree = KDTree.getTree();
 		try {		
-			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
+			kdTree.initialize("TestNodes1000.txt","TestEdges1000.txt");
 			System.out.println("PATH READ");
 		} catch (IOException e) {
 			System.out.println("Failed to initialize kdTree");
