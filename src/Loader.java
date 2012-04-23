@@ -96,6 +96,7 @@ class Loader {
 		double[] fromPoint;
 		double[] toPoint;
 		String direction;
+		int count = 0; //test
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
 			
@@ -108,6 +109,12 @@ class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
+			//test
+			if (dist > 1000)
+			{
+				count++;
+			}
+			//
 			
 			//time in minuttes
 			time = Double.valueOf(textLineRoadArray[26]);
@@ -140,6 +147,7 @@ class Loader {
 		}
 		
 		nodesForKDTree.addAll(nodeList.values());
+		System.out.println(count);
 		
 		graph = new EdgeWeightedDigraph(nodesForGraph.size());
 	
