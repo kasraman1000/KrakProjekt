@@ -31,6 +31,7 @@ class Loader {
 
 
 	public static void load(String nodePath, String edgePath) throws IOException{
+		//Creates a Scanner for the filenames specified
 		In inEdges = new In(new File(edgePath));
 		In inNodes = new In(new File(nodePath));
 		//Skip first line
@@ -119,6 +120,8 @@ class Loader {
 			}
 			*/
 			count++;
+			
+			
 			//time in minuttes
 			time = Double.valueOf(textLineRoadArray[26]);
 			
@@ -142,7 +145,6 @@ class Loader {
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
 
 			nodeList.get(from).addRoad(tempRoad);
-			if(nodeList.get(to) == null) System.out.println("to: " + to);
 			nodeList.get(to).addRoad(tempRoad);
 			
 			nodesForGraph.add(to);

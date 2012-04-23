@@ -44,7 +44,7 @@ public final class In {
     private Scanner scanner;
 
     // assume Unicode UTF-8 encoding
-    //private String charsetName = "UTF-8";
+//    private String charsetName = "UTF-8";
 
     private String charsetName = "ISO-8859-1";
 

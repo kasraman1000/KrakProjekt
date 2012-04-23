@@ -55,7 +55,12 @@ public class DijkstraSP {
     public Iterable<DirectedEdge> findRoute(int from, int to, boolean lengthWeighted) {
     	DirectedEdge.setWeight(lengthWeighted);
     	
-    	return pathTo(from, to);
+    	   if (!hasPathTo(from, to)) return null;
+           Stack<DirectedEdge> path = new Stack<DirectedEdge>();
+           for (DirectedEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
+               path.push(e);
+           }
+           return path;
     }
     	
     private void calculateRoute(int s, int t){
@@ -105,16 +110,6 @@ public class DijkstraSP {
     	calculateRoute(from, to);
     	
         return distTo[to] < Double.POSITIVE_INFINITY;
-    }
-
-    // shortest path from s to v as an Iterable, null if no such path
-    private Iterable<DirectedEdge> pathTo(int from, int to) {
-        if (!hasPathTo(from, to)) return null;
-        Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
-            path.push(e);
-        }
-        return path;
     }
 
 

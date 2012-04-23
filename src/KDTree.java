@@ -150,9 +150,8 @@ public class KDTree
 
 	}
 	
-	public void initialize() throws IOException
+	public void initialize(ArrayList<Node> nodes) throws IOException
 	{	
-		ArrayList<Node> nodes = Controller.getKDTreeData();
 		tree.build(nodes);
 		origo = Road.getOrigo();
 		top = Road.getTop();
