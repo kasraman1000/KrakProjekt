@@ -38,7 +38,7 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			KrakLoader.load("kdv_node_unload.txt","kdv_unload.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
 			kdTree.initialize();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -69,12 +69,12 @@ public class Controller {
 	
 	public static ArrayList<Node> getKDTreeData(){
 		//TODO if(KrakLoader.getnodesForKDTREE == null) throw HugeError;
-		return KrakLoader.getNodesForKDTree();
+		return Loader.getNodesForKDTree();
 	}
 	
 	public static EdgeWeightedDigraph getDigraph(){
 		//TODO if(KrakLoader.getGraph == null) throw HugeError;
-		return KrakLoader.getGraph();
+		return Loader.getGraph();
 	}
 	
 	
