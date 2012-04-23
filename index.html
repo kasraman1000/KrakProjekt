@@ -156,6 +156,10 @@ function zoomOut(){
 	getXML();
 }
 
+function route(){
+	alert("!!");
+}
+
 </script>
 </head>
 <body onLoad="init()">
@@ -171,7 +175,11 @@ function zoomOut(){
 <button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
 <button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
 <button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-
+<form action="index.html" method="get">
+  First name: <input type="text" name="fname" /><br />
+  Last name: <input type="text" name="lname" /><br />
+  <input type="submit" value="Submit" onclick="route()" />
+</form>
 
 </body>
 </html>
