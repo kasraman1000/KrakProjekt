@@ -179,17 +179,16 @@ function clearRoute(){
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
-</div>
-<div id ="buttons" style="float: left; width: 10%;">
-	<button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
-		<div id="rightAndLeft">
-			<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
-			<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
-		</div>
-	<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
-	<button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
-	<button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
+	<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
+</div> 
+<div id="buttons" style="float: left;width: 10%;">
+	<button id="buttonUp" style="float:left; margin: 0px 47px 10px 47px;" type="button" onClick="clickUp()">Up</button>
+	<button id="buttonLeft" style="float: left; margin: 0px 50px 10px 0px;" type="button" onClick="clickLeft()">Left</button>
+	<button id="buttonRight" style="float: left; margin: 0px;" type="button" onClick="clickRight()">Right</button></br>
+	<button id="buttonDown" style="float: left; margin: 0px 47px 10px 42px;" type="button" onClick="clickDown()">Down</button></br>
+	<button id="buttonZoomIn" style="float: left; margin: 10px 10px 0px 35px;" type="button" onClick="zoomIn()">+</button>
+	<button id="buttonZoomOut" style="float: left; margin: 10px 20px 0px 10px;" type="button" onClick="zoomOut()">-</button>
+>>>>>>> branch 'whiteBorderRemoving' of https://abrj@github.com/kasraman1000/KrakProjekt.git
 <div id="routeplan" style="margin: 200px 0px">
 	<p> Find Route </p>
 	From
@@ -201,8 +200,6 @@ function clearRoute(){
 	<input name="Submit" type="submit" value="Find Route" onClick="findRoute()"/>
 	<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()"/>
 </div>
-</div>
-
 
 </body>
 </html>
