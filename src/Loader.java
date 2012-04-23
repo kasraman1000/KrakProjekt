@@ -13,7 +13,7 @@ import routing.DirectedEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
 
-class KrakLoader {
+class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static EdgeWeightedDigraph graph;
 	private static double xMin;
