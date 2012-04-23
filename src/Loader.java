@@ -68,6 +68,7 @@ class Loader {
 		//make the nodeMap for the KDTree
 		double newX;
 		double newY;
+		System.out.println("Running through nodes...");
 		for(int index=0; index<coordArray.size(); index++){
 			newX = coordArray.get(index)[0]- xMin;
 			newY = yMax - coordArray.get(index)[1];
@@ -97,6 +98,8 @@ class Loader {
 		double[] toPoint;
 		String direction;
 		int count = 0; //test
+		int lastCount = 0;
+		System.out.println("Running through edges...");
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
 			
@@ -109,13 +112,13 @@ class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
-			//test
+			/*
 			if (dist > 1000)
 			{
 				count++;
 			}
-			//
-			
+			*/
+			count++;
 			//time in minuttes
 			time = Double.valueOf(textLineRoadArray[26]);
 			
@@ -144,13 +147,19 @@ class Loader {
 			
 			nodesForGraph.add(to);
 			nodesForGraph.add(from);
+			if(count > lastCount*2)
+			{
+				System.out.println(count);
+				lastCount = count;
+			}
 		}
-		
+		System.out.println("Adding nodes to KDTree nodes...");
 		nodesForKDTree.addAll(nodeList.values());
 		System.out.println(count);
 		
 		graph = new EdgeWeightedDigraph(nodesForGraph.size());
-	
+		
+		System.out.println("Adding edges to Digraph");
 		for(DirectedEdge e : edges){
 			graph.addEdge(e);
 		}
