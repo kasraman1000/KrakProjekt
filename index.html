@@ -68,10 +68,10 @@ function setWidthandHeight(){
 	procentage that is fethed from the server. 
 */
 function updateSurroundingData(){
-	x1SurData = xView1 - (xView2-xView1)*0.1;
-	x2SurData = xView2 + (xView2-xView1)*0.1;
-	y1SurData = yView1 - (yView2-yView1)*0.1;
-	y2SurData = yView2 + (yView2-yView1)*0.1;
+	x1SurData = xView1 - (xView2-xView1)*0.7;
+	x2SurData = xView2 + (xView2-xView1)*0.7;
+	y1SurData = yView1 - (yView2-yView1)*0.7;
+	y2SurData = yView2 + (yView2-yView1)*0.7;
 
 }
 
@@ -96,13 +96,13 @@ function clickDown(){
 }
 
 function clickRight(){
-	if(xView1 > x1SurData)
+	if(xView2 > x2SurData)
 		getXML();
 	moveViewBox(panningDistanceHor, 0);
 }
 
 function clickLeft(){
-	if(xView2 < x2SurData)
+	if(xView1 < x1SurData)
 		getXML();
 	moveViewBox(-panningDistanceHor, 0);
 }
@@ -160,7 +160,7 @@ function zoomOut(){
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000"></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
 </div>
 <div id ="buttons" style="float: left; width: 10%;">
 <button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
