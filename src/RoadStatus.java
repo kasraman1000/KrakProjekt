@@ -26,7 +26,7 @@ public class RoadStatus {
 	 * 
 	 * @param zoomLevel An int from 1-5 where 5 is closest to the object
 	 */
-	public static void setZoomlevel(int zoomLevel)
+	public static void setScale(int zoomLevel)
 	{
 		if      (zoomLevel <= 1) {scale = 0.05;}
 		else if (zoomLevel == 2) {scale = 0.1;}
