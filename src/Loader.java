@@ -44,11 +44,12 @@ class Loader {
 		//For KD-Tree
 		HashMap<Integer, Node> nodeList = new HashMap<Integer, Node>();
 		
-		
+		//String for storing the current line, which is being read
 		String[] textLineNodeArray;
 		int nodeId;
 		double xCoord;
 		double yCoord;
+		//Running through all nodes
 		while(inNodes.hasNextLine()){
 			textLineNodeArray = inNodes.readLine().split(",");
 			
@@ -68,7 +69,6 @@ class Loader {
 		//make the nodeMap for the KDTree
 		double newX;
 		double newY;
-		System.out.println("Running through nodes...");
 		for(int index=0; index<coordArray.size(); index++){
 			newX = coordArray.get(index)[0]- xMin;
 			newY = yMax - coordArray.get(index)[1];
@@ -79,6 +79,7 @@ class Loader {
 			nodeList.put(index, new Node(new double[]{newX, newY}));
 		}
 		
+		coordArray = null;
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 		
@@ -118,8 +119,9 @@ class Loader {
 			//<blank> = no restrictions
 			direction = textLineRoadArray[27]; 
 			
-			fromPoint = new double[]{coordArray.get(from)[0], coordArray.get(from)[1]};
-			toPoint = new double[]{coordArray.get(to)[0], coordArray.get(to)[1]};
+			//Reading coordinates from the beginning of the road to the end of the road
+			fromPoint = new double[]{nodeList.get(from).getCoord(0), nodeList.get(from).getCoord(1)};
+			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 			
 			//TODO fromPoint/toPoint might be changed
 			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
@@ -131,27 +133,18 @@ class Loader {
 			
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
 
+			//Adding references from node to road
 			nodeList.get(from).addRoad(tempRoad);
-			if(nodeList.get(to) == null) System.out.println("to: " + to);
 			nodeList.get(to).addRoad(tempRoad);
 
 		}
-		System.out.println("Adding nodes to KDTree nodes...");
 		nodesForKDTree.addAll(nodeList.values());
 		
-		graph = new EdgeWeightedDigraph(coordArray.size());
+		graph = new EdgeWeightedDigraph(nodeList.size());
 		
-		System.out.println("Adding edges to Digraph");
 		for(DirectedEdge e : edges){
 			graph.addEdge(e);
 		}
-		
-		
-		
-		System.out.println("xMin: " + xMin);
-		System.out.println("yMin: " + yMin);
-		System.out.println("xMax: " + xMax);
-		System.out.println("yMax: " + yMax);
 		
 //		
 //		System.out.println("Graph:");
@@ -264,7 +257,11 @@ class Loader {
 //		return result;
 	}
 	
-	
+
+	/**
+	 * Returns the collection that the KDTree is build from
+	 * @return ArrayList of all nodes
+	 */
 	public static ArrayList<Node> getNodesForKDTree(){
 		//TODO Add a nice Exception to throw
 //		if(nodesForKDTree == null) throw new DataNotLoadedException();
@@ -296,7 +293,12 @@ class Loader {
 //			e.printStackTrace();
 //		}
 //	}
-	
+	/**
+	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value
+	 * If it is, the maximum or minimum is updated.
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
 	private static void findMinAndMaxValues(double x, double y){
 		if(x < xMin) xMin = x;
 		if(x > xMax) xMax = x;
