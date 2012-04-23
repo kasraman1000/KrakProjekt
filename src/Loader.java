@@ -85,7 +85,6 @@ class Loader {
 		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
  
 		EdgeWeightedDigraph graph;
-		Set<Integer> nodesForGraph = new HashSet<Integer>();
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -97,9 +96,6 @@ class Loader {
 		double[] fromPoint;
 		double[] toPoint;
 		String direction;
-		int count = 0; //test
-		int lastCount = 0;
-		System.out.println("Running through edges...");
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
 			
@@ -112,13 +108,7 @@ class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
-			/*
-			if (dist > 1000)
-			{
-				count++;
-			}
-			*/
-			count++;
+			
 			//time in minuttes
 			time = Double.valueOf(textLineRoadArray[26]);
 			
@@ -144,20 +134,12 @@ class Loader {
 			nodeList.get(from).addRoad(tempRoad);
 			if(nodeList.get(to) == null) System.out.println("to: " + to);
 			nodeList.get(to).addRoad(tempRoad);
-			
-			nodesForGraph.add(to);
-			nodesForGraph.add(from);
-			if(count > lastCount*2)
-			{
-				System.out.println(count);
-				lastCount = count;
-			}
+
 		}
 		System.out.println("Adding nodes to KDTree nodes...");
 		nodesForKDTree.addAll(nodeList.values());
-		System.out.println(count);
 		
-		graph = new EdgeWeightedDigraph(nodesForGraph.size());
+		graph = new EdgeWeightedDigraph(coordArray.size());
 		
 		System.out.println("Adding edges to Digraph");
 		for(DirectedEdge e : edges){
