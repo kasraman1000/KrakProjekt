@@ -4,7 +4,7 @@
 	    body { background:#eee; margin:10; overflow:hidden; }
 	    svg {
 	      display:block; border:1px solid #ccc; 
-		  width:88%; background:#fff; float: left;
+		  width:95%; background:#fff; float: right;
 	    }
 	</style>
 <script type="text/javascript">
@@ -15,6 +15,7 @@ function init(){
 	yView1 = 0.0;
 	xView2 = 350000;
 	yView2 = 450000;
+	route = "";
 	getXML();
 }
 /*
@@ -33,7 +34,7 @@ function getXML(){
 	    }
 	  }
 	  updateSurroundingData();
-	  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+"";
+	  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+route+"";
 	  xmlhttp.open("GET",uri,true);
 	  xmlhttp.send();
 	
@@ -155,31 +156,50 @@ function zoomOut(){
 	//alert(xView1 + "  " + yView1);
 	getXML();
 }
-function route(){
-	alert(document.getElementById("fromAddress"));
+
+function findRoute(){
+	fromAddress = document.getElementById("fromAddress").value;
+	toAddress = document.getElementById("toAddress").value;
+	if(fromAddress == "" || toAddress == ""){
+		alert("Missing inputs");
+	}
+	else{
+		isDistance = document.getElementById("distance").checked;
+		route = "&from="+fromAddress+"&to="+toAddress+"&isDistance="+isDistance+"";
+		getXML();
+	}
 }
 
-function route(){
-	alert("!!");
+function clearRoute(){
+	route = "";
+	getXML();
 }
 
 </script>
 </head>
 <body onLoad="init()">
 <div id="svg" style="float: right; width: 90%">
-<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
+	<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
 </div>
-<div id ="buttons" style="float: left; width: 10%;">
-<button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
-	<div id="rightAndLeft">
-		<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
-		<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
-	</div>
-<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
-<button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
-<button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
-<input id="fromAddress" name="text"  type="text"/>
-<input name="Submit"  type="submit" value="Update" onClick="route()"/>
+<div id="buttons">
+	<button id="buttonUp" style="align:left;" type="button" onClick="clickUp()">Up</button></br>
+	<button id="buttonRight" style="float: left;" type="button" onClick="clickRight()">Right</button></br>
+	<button id="buttonLeft" style="float: left;" type="button" onClick="clickLeft()">Left</button></br>
+	<button id="buttonDown" type="button" onClick="clickDown()">Down</button></br>
+	<button id="buttonZoomIn" type="button" onClick="zoomIn()">+</button></br>
+	<button id="buttonZoomOut" type="button" onClick="zoomOut()">-</button></br>
+</div>
+<div id="routeplan" style="margin: 200px 0px">
+	<p> Find Route </p>
+	From
+	<input id="fromAddress" name="text" type="text"/>
+	To
+	<input id="toAddress" name="text" type="text"/>
+	<input id="time" name="text" type="radio" checked/>Time<br/>
+	<input id="distance" name="text" type="radio"/>Distance<br/>
+	<input name="Submit" type="submit" value="Find Route" onClick="findRoute()"/>
+	<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()"/>
+</div>
 
 </body>
 </html>

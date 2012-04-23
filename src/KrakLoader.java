@@ -101,8 +101,7 @@ class KrakLoader {
 	
 	public static void main(String[] args) {
 		try {
-			Collection<Node> nodes = KrakLoader.load("TestNodes1000.txt", "TestEdges1000.txt");
-			System.out.println("!!");
+			Collection<Node> nodes = KrakLoader.load("kdv_node_unload.txt", "kdv_unload.txt");
 			
 			for (Node n : nodes) {
 				for (Road r : n.getRoads()) {
