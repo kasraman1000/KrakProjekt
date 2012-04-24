@@ -34,7 +34,9 @@ public class Controller {
 //		HashMap<Integer, HashMap<String,>>
 	}
 	
-	
+	/**
+	 * Will start up the Krak Server
+	 */
 	public Controller(){
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
@@ -55,7 +57,12 @@ public class Controller {
 	 
 
 	
-	
+	/**
+	 * Will fetch all the roads in the Region specified 
+	 * 
+	 * @param region The area to get the roads from
+	 * @return XML String containing all the roads in the Region
+	 */
 	public static String getXmlString(Region region){
 		Road[] roads = RoadSelector.searchRange(region);
 		String s = "";
@@ -70,15 +77,13 @@ public class Controller {
 		return s;
 	}
 	
-	
-	public static double getMaxXOriginal(){
-		return KDTree.getTree().top[0];
-	}
-	
-	public static double getMaxYOriginal(){
-		return KDTree.getTree().top[1];
-	}
-	
+	/**
+	 * Not yet done...
+	 * 
+	 * @param start
+	 * @param target
+	 * @param isLengthWeighted
+	 */
 	public void getRoute(int start, int target, boolean isLengthWeighted){
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		dij.findRoute(start, target, isLengthWeighted);

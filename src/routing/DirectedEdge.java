@@ -62,12 +62,20 @@ public class DirectedEdge {
         return to;
     }
     
+    /**
+     * Return the name of this edge (part of a road)
+     * 
+     * @return String containing the name of this edge
+     */
     public String getName(){
     	return name;
     }
 
    /**
      * Return the weight (time or length) of this edge.
+     * May be set using the setWeight()
+     * 
+     * @return a double of either the length or weight of this edge
      */
     public double weight() { 
     	if(isLengthWeighted) return length;
@@ -79,22 +87,41 @@ public class DirectedEdge {
      */
     public double time(){ return time; }
 
+    /**
+     * Tells whether the length or traveltime of the edges are used as weight
+     * 
+     * @return true if the edges (all of them) if the length of the edges are weighted 
+     */
     public static boolean isLengthWeighted(){
     	return isLengthWeighted;
     }
     
+    /**
+     * Sets the edges to use their length or travel time to be used as weight
+     * 
+     * @param lengthWeighted
+     */
     public static void setWeight(boolean lengthWeighted){
     	isLengthWeighted = lengthWeighted;
     }
     
+    /**
+     * Get the coordinates of the point the edge starts.
+     * 
+     * @return x-coord is [0], y-coord is [1]
+     */
     public double[] getFromPoint(){
     	return fromPoint;
     }
     
+    /**
+     * Get the coordinates of the point the edge ends.
+     * 
+     * @return x-coord is [0], y-coord is [1]
+     */
     public double[] getToPoint(){
     	return toPoint;
     }
-    
     
    /**
      * Return a string representation of this edge.

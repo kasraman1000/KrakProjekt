@@ -15,7 +15,9 @@ public class RoadStatus {
 	private static Color routeColor;
 	private static double scale;
 	
-
+	/**
+	 * To load the colors and widths of the roads the first time this class is called.
+	 */
 	static{
 		loadRoadColors();
 		loadRoadWidths();
@@ -41,7 +43,7 @@ public class RoadStatus {
 
 
 	/**
-	 * Will load all the predefined road colors to a HashMap - only called in the constructor
+	 * Will load all the predefined road colors to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadColors(){
 		Color largeRoads = Color.red;
@@ -93,7 +95,7 @@ public class RoadStatus {
 
 
 	/**
-	 * Will load all the predefined road widths to a HashMap - only called in the constructor
+	 * Will load all the predefined road widths to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadWidths(){
 		int largeRoads = 800;
@@ -142,6 +144,11 @@ public class RoadStatus {
 		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 
+	/**
+	 * Supply the client with the correct color of the roadtype specified
+	 * @param roadType Type of the road for which the color is wanted
+	 * @return A Color for the road
+	 */
 	public static Color getRoadColor(int roadType){
 		return roadColors.get(roadType);
 	}
@@ -158,9 +165,12 @@ public class RoadStatus {
 
 
 
-
+	/**
+	 * Get the color used to mark the route on the map
+	 * 
+	 * @return A Color to mark the route
+	 */
 	public static Color getRouteColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return routeColor;
 	}
 }

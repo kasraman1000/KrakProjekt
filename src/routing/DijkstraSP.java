@@ -63,6 +63,12 @@ public class DijkstraSP {
            return path;
     }
     	
+    /**
+     * Fint the route from s to t
+     * 
+     * @param s Id for the Node to start
+     * @param t Id for the Node to end
+     */
     private void calculateRoute(int s, int t){
         distTo = new double[G.V()];
         edgeTo = new DirectedEdge[G.V()];

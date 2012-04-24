@@ -22,7 +22,7 @@ public class Routing {
 		int source = 0;
 		int target = 675901;
 		
-		
+		//How to start up the graph and Dijkstra
 		double start = System.nanoTime();
 		Routing ty = new Routing();
 		Loader.load("kdv_unload.txt", "kdv_node_unload.txt");
