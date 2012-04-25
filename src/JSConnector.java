@@ -57,9 +57,9 @@ public class JSConnector {
 			String response = "";
 			//if "from" is null then the client is not asking for routeplanning but only mapdata
 			if(from == null){
-				//TODO method that asks for mapdata and routeplanning
-			}else{
 				response = Controller.getXmlString(new Region(x1,y1,x2,y2));
+			}else{
+				//TODO method that asks for mapdata and routeplanning
 			}
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
@@ -97,7 +97,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
-		System.out.println("JSconnector.ReadParameters - line: " + line);
+//		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark
