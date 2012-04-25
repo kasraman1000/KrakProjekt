@@ -60,15 +60,16 @@ public class Controller {
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region){
-		Road[] roads = RoadSelector.searchRange(region);
-		String s = "";
-		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
-		try {
-			s = xml.createString(roads);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String s = getRoadAndRoute("", "", true);
+//		Road[] roads = RoadSelector.searchRange(region);
+//		String s = "";
+//		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+//		try {
+//			s = xml.createString(roads);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return s;
 	}
 	
@@ -83,8 +84,14 @@ public class Controller {
 		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		Stack<KrakEdge> routeEdges = dij.findRoute(0, 675000, isLengthWeighted);
+		
+		//Temp!!
+		int firstHouseNumber = 2;
+		int lastHouseNumber = 2;
+		
+		
 	
-		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges);
+		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
 		
 		String xmlString = "";
 		
