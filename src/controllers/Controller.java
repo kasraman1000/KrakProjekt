@@ -82,7 +82,7 @@ public class Controller {
 	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
 		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
-		Stack<DirectedEdgeKrak> routeEdges = dij.findRoute(0, 675000, isLengthWeighted);
+		Stack<KrakEdge> routeEdges = dij.findRoute(0, 675000, isLengthWeighted);
 	
 		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges);
 		

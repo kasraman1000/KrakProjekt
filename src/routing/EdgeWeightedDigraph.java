@@ -30,7 +30,7 @@ package routing;
 public class EdgeWeightedDigraph {
     private final int V; //Nodes
     private int E; //Edges
-    private Bag<DirectedEdgeKrak>[] adj;
+    private Bag<KrakEdge>[] adj;
     
     /**
      * Create an empty edge-weighted digraph with V vertices.
@@ -40,9 +40,9 @@ public class EdgeWeightedDigraph {
         if (V < 0) throw new RuntimeException("Number of vertices must be nonnegative");
         this.V = V;
         this.E = 0;
-        adj = (Bag<DirectedEdgeKrak>[]) new Bag[V];
+        adj = (Bag<KrakEdge>[]) new Bag[V];
         for (int v = 0; v < V; v++)
-            adj[v] = new Bag<DirectedEdgeKrak>();
+            adj[v] = new Bag<KrakEdge>();
     }
 
 //   /**
@@ -68,11 +68,11 @@ public class EdgeWeightedDigraph {
         this.E = G.E();
         for (int v = 0; v < G.V(); v++) {
             // reverse so that adjacency list is in same order as original
-            Stack<DirectedEdgeKrak> reverse = new Stack<DirectedEdgeKrak>();
-            for (DirectedEdgeKrak e : G.adj[v]) {
+            Stack<KrakEdge> reverse = new Stack<KrakEdge>();
+            for (KrakEdge e : G.adj[v]) {
                 reverse.push(e);
             }
-            for (DirectedEdgeKrak e : reverse) {
+            for (KrakEdge e : reverse) {
                 adj[v].add(e);
             }
         }
@@ -96,7 +96,7 @@ public class EdgeWeightedDigraph {
    /**
      * Add the edge e to this digraph.
      */
-    public void addEdge(DirectedEdgeKrak e) {
+    public void addEdge(KrakEdge e) {
         int v = e.from();
         adj[v].add(e);
         E++;
@@ -108,7 +108,7 @@ public class EdgeWeightedDigraph {
      * To iterate over the edges leaving vertex v, use foreach notation:
      * <tt>for (DirectedEdge e : graph.adj(v))</tt>.
      */
-    public Iterable<DirectedEdgeKrak> adj(int v) {
+    public Iterable<KrakEdge> adj(int v) {
         return adj[v];
     }
 
@@ -117,10 +117,10 @@ public class EdgeWeightedDigraph {
      * To iterate over the edges, use foreach notation:
      * <tt>for (DirectedEdge e : graph.edges())</tt>.
      */
-    public Iterable<DirectedEdgeKrak> edges() {
-        Bag<DirectedEdgeKrak> list = new Bag<DirectedEdgeKrak>();
+    public Iterable<KrakEdge> edges() {
+        Bag<KrakEdge> list = new Bag<KrakEdge>();
         for (int v = 0; v < V; v++) {
-            for (DirectedEdgeKrak e : adj(v)) {
+            for (KrakEdge e : adj(v)) {
                 list.add(e);
             }
         }
@@ -143,7 +143,7 @@ public class EdgeWeightedDigraph {
         s.append(V + " " + E + NEWLINE);
         for (int v = 0; v < V; v++) {
             s.append(v + ": ");
-            for (DirectedEdgeKrak e : adj[v]) {
+            for (KrakEdge e : adj[v]) {
                 s.append(e + "  ");
             }
             s.append(NEWLINE);

@@ -32,16 +32,16 @@ public class Routing {
 		
 		double dijkstraStart = System.nanoTime();
 		DijkstraSP dij = new DijkstraSP(graph);
-		Iterable<DirectedEdgeKrak> path = dij.findRoute(source, target, true);
+		Iterable<KrakEdge> path = dij.findRoute(source, target, true);
 		double dijkstraEnd = System.nanoTime();
 		
 		System.out.println("Path from " + source + " to " + target);
 		double totalWeight = 0;
-		for(DirectedEdgeKrak edge : path){
+		for(KrakEdge edge : path){
 			System.out.println(edge.from() + " -> " + edge.to() + ": " + edge.weight());
 			totalWeight += edge.weight();
 		}
-		System.out.println("Total weight: " + totalWeight + "\t\tWeighted by length: " + DirectedEdgeKrak.isLengthWeighted());
+		System.out.println("Total weight: " + totalWeight + "\t\tWeighted by length: " + KrakEdge.isLengthWeighted());
 		System.out.println("should be equal to: " + dij.distance(source, target));
 		
 		System.out.println("Time taken to find route: " + (dijkstraEnd-dijkstraStart)/1000000000 + " seconds");

@@ -24,7 +24,7 @@ package routing;
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
 
-public class DirectedEdgeKrak { 
+public class KrakEdge { 
 	private final int from;
     private final int to;
     private final String name;
@@ -32,12 +32,24 @@ public class DirectedEdgeKrak {
     private final double time;
     private final double[] fromPoint;
     private final double[] toPoint;
+    private final int vPost;
+    private final int hPost;
+    private final int vFromHusnummer;
+    private final int vToHusnummer;
+    private final int hFromHusnummer;
+    private final int hToHusnummer;
     private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
+ * @param hToHusnummer 
+ * @param hFromHusnummer 
+ * @param vToHusnummer 
+ * @param vFromHusnummer 
+ * @param hPost 
+ * @param vPost 
      */
-    public DirectedEdgeKrak(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint){
+    public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, int vPost, int hPost, int vFromHusnummer, int vToHusnummer, int hFromHusnummer, int hToHusnummer){
         this.from = from;
         this.to = to;
         this.name = name;
@@ -45,6 +57,13 @@ public class DirectedEdgeKrak {
         this.time = time;
         this.fromPoint = fromPoint;
         this.toPoint = toPoint;
+        this.vPost = vPost;
+        this.hPost = hPost;
+        this.vFromHusnummer = vFromHusnummer;
+        this.vToHusnummer = vToHusnummer;
+        this.hFromHusnummer = hFromHusnummer;
+        this.hToHusnummer = hToHusnummer;
+        
         isLengthWeighted = true;
     }
 
@@ -124,6 +143,48 @@ public class DirectedEdgeKrak {
     }
     
    /**
+	 * @return the vPost
+	 */
+	public int getvPost() {
+		return vPost;
+	}
+
+	/**
+	 * @return the hPost
+	 */
+	public int gethPost() {
+		return hPost;
+	}
+
+	/**
+	 * @return the vFromHusnummer
+	 */
+	public int getvFromHusnummer() {
+		return vFromHusnummer;
+	}
+
+	/**
+	 * @return the vToHusnummer
+	 */
+	public int getvToHusnummer() {
+		return vToHusnummer;
+	}
+
+	/**
+	 * @return the hFromHusnummer
+	 */
+	public int gethFromHusnummer() {
+		return hFromHusnummer;
+	}
+
+	/**
+	 * @return the hToHusnummer
+	 */
+	public int gethToHusnummer() {
+		return hToHusnummer;
+	}
+
+/**
      * Return a string representation of this edge.
      */
     public String toString() {

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-import routing.DirectedEdgeKrak;
+import routing.KrakEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
 
@@ -86,12 +86,18 @@ public class Loader {
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 		
-		ArrayList<DirectedEdgeKrak> edges = new ArrayList<DirectedEdgeKrak>();
+		ArrayList<KrakEdge> edges = new ArrayList<KrakEdge>();
  
 		String[] textLineRoadArray;
 		int from;
 		int to;
 		int type;
+		int vPost;
+		int hPost;
+		int hFromHusnummer;
+		int hToHusnummer;
+		int vFromHusnummer;
+		int vToHusnummer;
 		double dist;
 		double time;
 		String name;
@@ -111,6 +117,12 @@ public class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
+			vPost = Integer.valueOf(textLineRoadArray[17]);
+			hPost = Integer.valueOf(textLineRoadArray[18]);
+			vFromHusnummer = Integer.valueOf(textLineRoadArray[7]);
+			vToHusnummer = Integer.valueOf(textLineRoadArray[8]);
+			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
+			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
 			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
@@ -126,11 +138,11 @@ public class Loader {
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 			
 			//TODO fromPoint/toPoint might be changed
-			if      (direction.equals("'tf'")) edges.add(new DirectedEdgeKrak(from, to, name, dist, time, fromPoint, toPoint));
-			else if (direction.equals("'ft'")) edges.add(new DirectedEdgeKrak(to, from, name, dist, time, fromPoint, toPoint));
+			if      (direction.equals("'tf'")) edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+			else if (direction.equals("'ft'")) edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (!direction.equals("'n'")) {
-				edges.add(new DirectedEdgeKrak(from, to, name, dist, time, fromPoint, toPoint));
-				edges.add(new DirectedEdgeKrak(to, from, name, dist, time, fromPoint, toPoint));
+				edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+				edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			}
 			
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
@@ -144,7 +156,7 @@ public class Loader {
 		
 		graph = new EdgeWeightedDigraph(nodeList.size());
 		
-		for(DirectedEdgeKrak e : edges){
+		for(KrakEdge e : edges){
 			graph.addEdge(e);
 		}
 		
