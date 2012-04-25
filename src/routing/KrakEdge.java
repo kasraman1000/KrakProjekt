@@ -24,7 +24,7 @@ package routing;
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
 
-public class DirectedEdge { 
+public class KrakEdge { 
 	private final int from;
     private final int to;
     private final String name;
@@ -32,12 +32,24 @@ public class DirectedEdge {
     private final double time;
     private final double[] fromPoint;
     private final double[] toPoint;
+    private final int vPost;
+    private final int hPost;
+    private final int vFromHusnummer;
+    private final int vToHusnummer;
+    private final int hFromHusnummer;
+    private final int hToHusnummer;
     private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
+ * @param hToHusnummer 
+ * @param hFromHusnummer 
+ * @param vToHusnummer 
+ * @param vFromHusnummer 
+ * @param hPost 
+ * @param vPost 
      */
-    public DirectedEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint){
+    public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, int vPost, int hPost, int vFromHusnummer, int vToHusnummer, int hFromHusnummer, int hToHusnummer){
         this.from = from;
         this.to = to;
         this.name = name;
@@ -45,6 +57,13 @@ public class DirectedEdge {
         this.time = time;
         this.fromPoint = fromPoint;
         this.toPoint = toPoint;
+        this.vPost = vPost;
+        this.hPost = hPost;
+        this.vFromHusnummer = vFromHusnummer;
+        this.vToHusnummer = vToHusnummer;
+        this.hFromHusnummer = hFromHusnummer;
+        this.hToHusnummer = hToHusnummer;
+        
         isLengthWeighted = true;
     }
 
@@ -62,12 +81,20 @@ public class DirectedEdge {
         return to;
     }
     
+    /**
+     * Return the name of this edge (part of a road)
+     * 
+     * @return String containing the name of this edge
+     */
     public String getName(){
     	return name;
     }
 
    /**
      * Return the weight (time or length) of this edge.
+     * May be set using the setWeight()
+     * 
+     * @return a double of either the length or weight of this edge
      */
     public double weight() { 
     	if(isLengthWeighted) return length;
@@ -79,24 +106,85 @@ public class DirectedEdge {
      */
     public double time(){ return time; }
 
+    /**
+     * Tells whether the length or traveltime of the edges are used as weight
+     * 
+     * @return true if the edges (all of them) if the length of the edges are weighted 
+     */
     public static boolean isLengthWeighted(){
     	return isLengthWeighted;
     }
     
+    /**
+     * Sets the edges to use their length or travel time to be used as weight
+     * 
+     * @param lengthWeighted
+     */
     public static void setWeight(boolean lengthWeighted){
     	isLengthWeighted = lengthWeighted;
     }
     
+    /**
+     * Get the coordinates of the point the edge starts.
+     * 
+     * @return x-coord is [0], y-coord is [1]
+     */
     public double[] getFromPoint(){
     	return fromPoint;
     }
     
+    /**
+     * Get the coordinates of the point the edge ends.
+     * 
+     * @return x-coord is [0], y-coord is [1]
+     */
     public double[] getToPoint(){
     	return toPoint;
     }
     
-    
    /**
+	 * @return the vPost
+	 */
+	public int getvPost() {
+		return vPost;
+	}
+
+	/**
+	 * @return the hPost
+	 */
+	public int gethPost() {
+		return hPost;
+	}
+
+	/**
+	 * @return the vFromHusnummer
+	 */
+	public int getvFromHusnummer() {
+		return vFromHusnummer;
+	}
+
+	/**
+	 * @return the vToHusnummer
+	 */
+	public int getvToHusnummer() {
+		return vToHusnummer;
+	}
+
+	/**
+	 * @return the hFromHusnummer
+	 */
+	public int gethFromHusnummer() {
+		return hFromHusnummer;
+	}
+
+	/**
+	 * @return the hToHusnummer
+	 */
+	public int gethToHusnummer() {
+		return hToHusnummer;
+	}
+
+/**
      * Return a string representation of this edge.
      */
     public String toString() {

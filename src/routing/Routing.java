@@ -22,7 +22,7 @@ public class Routing {
 		int source = 0;
 		int target = 675901;
 		
-		
+		//How to start up the graph and Dijkstra
 		double start = System.nanoTime();
 		Routing ty = new Routing();
 		Loader.load("kdv_unload.txt", "kdv_node_unload.txt");
@@ -32,16 +32,16 @@ public class Routing {
 		
 		double dijkstraStart = System.nanoTime();
 		DijkstraSP dij = new DijkstraSP(graph);
-		Iterable<DirectedEdge> path = dij.findRoute(source, target, true);
+		Iterable<KrakEdge> path = dij.findRoute(source, target, true);
 		double dijkstraEnd = System.nanoTime();
 		
 		System.out.println("Path from " + source + " to " + target);
 		double totalWeight = 0;
-		for(DirectedEdge edge : path){
+		for(KrakEdge edge : path){
 			System.out.println(edge.from() + " -> " + edge.to() + ": " + edge.weight());
 			totalWeight += edge.weight();
 		}
-		System.out.println("Total weight: " + totalWeight + "\t\tWeighted by length: " + DirectedEdge.isLengthWeighted());
+		System.out.println("Total weight: " + totalWeight + "\t\tWeighted by length: " + KrakEdge.isLengthWeighted());
 		System.out.println("should be equal to: " + dij.distance(source, target));
 		
 		System.out.println("Time taken to find route: " + (dijkstraEnd-dijkstraStart)/1000000000 + " seconds");
