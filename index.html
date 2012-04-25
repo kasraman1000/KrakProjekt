@@ -19,6 +19,8 @@
 			 var xmlhttp=new XMLHttpRequest();
 			  xmlhttp.onreadystatechange = function() {
 			    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
+			    	errorString = xmlhttp.responseText.slice(0,200);
+			    	handleError();
 			    	roads = xmlhttp.responseXML.documentElement;
 				  	svgFrame = document.getElementById("svgframe");
 					showSvg();
@@ -29,6 +31,22 @@
 			  xmlhttp.open("GET",uri,true);
 			  xmlhttp.send();
 			
+		}
+		/*This function checks whether or not the server is sending a error as response. If the
+		server is sending an error the method will show a propriate message to the user.
+		The format should follow this pattern: "Error [number]" eg. Error 4
+		*/
+		function handleError(){
+			if(errorString.split(" ")[0]=="Error"){
+				errorCode = errorString.split(" ")[1];
+				switch(errorCode){
+				case "4":
+					alert("Error 4");
+					break;
+				default:
+					alert("An error has accured");
+				}
+			}
 		}
 		/*
 			Here the XML request is added to the SVG frame and shown in the browser.
