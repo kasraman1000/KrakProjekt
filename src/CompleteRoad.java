@@ -5,23 +5,22 @@ import routing.DirectedEdge;
 public class CompleteRoad implements Comparable<CompleteRoad> 
 {
 	private String roadName;
-	private int postCode;
+	private int zipCode;
 	private Bag<DirectedEdge> edges;
+	
+	public CompleteRoad(String roadName, int zipCode)
+	{
+		this.roadName = roadName;
+		this.zipCode = zipCode;
+		edges = new Bag<DirectedEdge>();
+	}
 	
 	public String getRoadName() {
 		return roadName;
 	}
 
-	public void setRoadName(String roadName) {
-		this.roadName = roadName;
-	}
-
-	public int getPostCode() {
-		return postCode;
-	}
-
-	public void setPostCode(int postCode) {
-		this.postCode = postCode;
+	public int getZipCode() {
+		return zipCode;
 	}
 
 	public Bag<DirectedEdge> getEdges() {
