@@ -1,3 +1,4 @@
+package models;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,11 +10,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+
 import routing.DirectedEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
 
-class Loader {
+public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static EdgeWeightedDigraph graph;
 	private static double xMin;

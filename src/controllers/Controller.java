@@ -1,17 +1,10 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
+package controllers;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.xml.sax.SAXException;
-
+import models.*;
+import views.*;
 import routing.*;
 
 /**
@@ -84,14 +77,14 @@ public class Controller {
 	 * @param target
 	 * @param isLengthWeighted
 	 */
-	public void getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
-		//Parse address
-		//Return node-id's as "int start" and "int target"
+	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
+		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
-		dij.findRoute(start, target, isLengthWeighted);
+		Iterator<DirectedEdge> routeEdges = dij.findRoute(start, target, isLengthWeighted);
+	
+		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges);
 		
-		
-		
+		return xml.createString(routeAndRoads);
 	}
 
 }

@@ -1,3 +1,4 @@
+package models;
 import java.awt.Color;
 import java.io.File;
 import java.io.StringWriter;
@@ -12,6 +13,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -146,36 +148,36 @@ public class XML{
 //			line.setAttribute("roadName", road.getName() + "");
 			gElement.appendChild(line);
 		}
-			
+				
 	    return document;
 	}
 
 	
-	//TODO This method has not yet been tested
-	/**
-	 * Will add the roads to the Document, but will give the roads a "route-color" to make sure, 
-	 * that they will stand out from the rest of the roads.
-	 *  
-	 * @param document A Document already containing an Element with the nametag "g"
-	 * @param route The roads to be marked as the route
-	 */
-	private void addRoute(Document document, Road[] route) {
-		Color color = RoadStatus.getRouteColor();
-		Element gElement = document.getElementById("g");
-		for(Road road : route){
-			Element line = document.createElement("line");
-
-			line.setAttribute("x1", road.getX1() + ""); 
-			line.setAttribute("y1", road.getY1() + ""); 
-			line.setAttribute("x2", road.getX2() + ""); 
-			line.setAttribute("y2", road.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
-//			line.setAttribute("roadType", road.getType() + "");
-//			line.setAttribute("roadName", road.getName() + "");
-			gElement.appendChild(line);
-		}
-
-		
-	}
+//	//TODO This method has not yet been tested
+//	/**
+//	 * Will add the roads to the Document, but will give the roads a "route-color" to make sure, 
+//	 * that they will stand out from the rest of the roads.
+//	 *  
+//	 * @param document A Document already containing an Element with the nametag "g"
+//	 * @param route The roads to be marked as the route
+//	 */
+//	private void addRoute(Document document, Road[] route) {
+//		Color color = RoadStatus.getRouteColor();
+//		Element gElement = document.getElementById("g");
+//		for(Road road : route){
+//			Element line = document.createElement("line");
+//
+//			line.setAttribute("x1", road.getX1() + ""); 
+//			line.setAttribute("y1", road.getY1() + ""); 
+//			line.setAttribute("x2", road.getX2() + ""); 
+//			line.setAttribute("y2", road.getY2() + ""); 
+//			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+//										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
+////			line.setAttribute("roadType", road.getType() + "");
+////			line.setAttribute("roadName", road.getName() + "");
+//			gElement.appendChild(line);
+//		}
+//
+//		
+//	}
 }

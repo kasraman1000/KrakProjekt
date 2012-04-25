@@ -1,3 +1,4 @@
+package models;
 import java.awt.Color;
 import java.util.HashMap;
 
@@ -12,7 +13,6 @@ import java.util.HashMap;
 public class RoadStatus {
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
-	private static Color routeColor;
 	private static double scale;
 	
 	/**
@@ -53,10 +53,9 @@ public class RoadStatus {
 		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
+		Color routes = Color.yellow;
 		
 		Color unknownRoads = Color.cyan;
-		
-		routeColor = Color.yellow;
 		
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
@@ -89,6 +88,7 @@ public class RoadStatus {
 		roadColors.put(45, tunnels); //"AndenVejtunnel"
 		roadColors.put(46, tunnels); //"MindreVejtunnel"
 		roadColors.put(48, tunnels); //"Stitunnel"
+		roadColors.put(50, routes); //Our own type for the searched route
 		roadColors.put(80, seaWays); //"Faergeforbindelser"
 		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
@@ -105,8 +105,9 @@ public class RoadStatus {
 		int tunnels = 130;
 		int seaWays  = 130; 
 		int walkingPaths = 130;
+		int routes = 100;
 
-		int unknownRoads = 100;
+		int unknownRoads = 130;
 
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
@@ -139,8 +140,8 @@ public class RoadStatus {
 		roadWidths.put(45, tunnels); //"AndenVejtunnel"
 		roadWidths.put(46, tunnels); //"MindreVejtunnel"
 		roadWidths.put(48, tunnels); //"Stitunnel"
+		roadWidths.put(50, routes); //Our own type for the searched route
 		roadWidths.put(80, seaWays); //"Faergeforbindelser"
-
 		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 
@@ -161,16 +162,5 @@ public class RoadStatus {
 	 */
 	public static double getRoadWidth(int roadType){
 		return roadWidths.get(roadType)*scale;
-	}
-
-
-
-	/**
-	 * Get the color used to mark the route on the map
-	 * 
-	 * @return A Color to mark the route
-	 */
-	public static Color getRouteColor() {
-		return routeColor;
 	}
 }
