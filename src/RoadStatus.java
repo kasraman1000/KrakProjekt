@@ -12,7 +12,9 @@ import java.util.HashMap;
 public class RoadStatus {
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private static Color routeColor;
 	private static double scale;
+	
 
 	static{
 		loadRoadColors();
@@ -49,10 +51,11 @@ public class RoadStatus {
 		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
-
+		
 		Color unknownRoads = Color.cyan;
-
+		
+		routeColor = Color.yellow;
+		
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
 
@@ -98,11 +101,8 @@ public class RoadStatus {
 		int smallRoads = 130;
 		int tinyRoads = 130;
 		int tunnels = 130;
-
 		int seaWays  = 130; 
 		int walkingPaths = 130;
-
-//		int bicyclePaths = 130;
 
 		int unknownRoads = 100;
 
@@ -154,5 +154,13 @@ public class RoadStatus {
 	 */
 	public static double getRoadWidth(int roadType){
 		return roadWidths.get(roadType)*scale;
+	}
+
+
+
+
+	public static Color getRouteColor() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

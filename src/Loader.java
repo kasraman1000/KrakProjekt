@@ -26,6 +26,7 @@ class Loader {
 
 
 	public static void load(String nodePath, String edgePath) throws IOException{
+		//Creates a Scanner for the filenames specified
 		In inEdges = new In(new File(edgePath));
 		In inNodes = new In(new File(nodePath));
 		//Skip first line
@@ -104,8 +105,8 @@ class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
-
 			//time in minuttes
+
 			time = Double.valueOf(textLineRoadArray[26]);
 			
 			//tf = to->from

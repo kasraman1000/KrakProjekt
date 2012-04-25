@@ -41,7 +41,8 @@ public class Controller {
 		kdTree = KDTree.getTree();
 		try {
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
-			kdTree.initialize();
+//			Loader.load("TestNodes.txt", "TestEdges.txt");
+			kdTree.initialize(Loader.getNodesForKDTree());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,16 +70,6 @@ public class Controller {
 		return s;
 	}
 	
-	public static ArrayList<Node> getKDTreeData(){
-		//TODO if(KrakLoader.getnodesForKDTREE == null) throw HugeError;
-		return Loader.getNodesForKDTree();
-	}
-	
-	public static routing.EdgeWeightedDigraph getDigraph(){
-		//TODO if(KrakLoader.getGraph == null) throw HugeError;
-		return Loader.getGraph();
-	}
-	
 	
 	public static double getMaxXOriginal(){
 		return KDTree.getTree().top[0];
@@ -86,6 +77,14 @@ public class Controller {
 	
 	public static double getMaxYOriginal(){
 		return KDTree.getTree().top[1];
+	}
+	
+	public void getRoute(int start, int target, boolean isLengthWeighted){
+		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
+		dij.findRoute(start, target, isLengthWeighted);
+		
+		
+		
 	}
 
 }
