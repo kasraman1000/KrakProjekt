@@ -84,7 +84,9 @@ public class Controller {
 	 * @param target
 	 * @param isLengthWeighted
 	 */
-	public void getRoute(int start, int target, boolean isLengthWeighted){
+	public void getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
+		//Parse address
+		//Return node-id's as "int start" and "int target"
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		dij.findRoute(start, target, isLengthWeighted);
 		

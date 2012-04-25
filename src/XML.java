@@ -65,13 +65,11 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
-	public String createString(Road[] roads, boolean withRoute, Road[] route) throws ParserConfigurationException, 
+	public String createString(Road[] roads) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
 		
 		Document document = convertRoadArrayToDocument(roads);
-		
-		if(withRoute) addRoute(document, route);
 			
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
