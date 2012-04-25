@@ -1,12 +1,5 @@
 <html>
 <head>
-	<style type="text/css" media="screen">
-	    body { background:#eee; margin:10; overflow:hidden; }
-	    svg {
-	      display:block; border:1px solid #ccc; 
-		  width:95%; background:#fff; float: right;
-	    }
-	</style>
 <script type="text/javascript">
 var roads;
 var xmlns = "http://www.w3.org/2000/svg";
@@ -177,29 +170,39 @@ function clearRoute(){
 
 </script>
 </head>
-<body onLoad="init()">
-<div id="svg" style="float: right; width: 90%">
-	<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
-</div> 
-<div id="buttons" style="float: left;width: 10%;">
-	<button id="buttonUp" style="float:left; margin: 0px 47px 10px 47px;" type="button" onClick="clickUp()">Up</button>
-	<button id="buttonLeft" style="float: left; margin: 0px 50px 10px 0px;" type="button" onClick="clickLeft()">Left</button>
-	<button id="buttonRight" style="float: left; margin: 0px;" type="button" onClick="clickRight()">Right</button></br>
-	<button id="buttonDown" style="float: left; margin: 0px 47px 10px 42px;" type="button" onClick="clickDown()">Down</button></br>
-	<button id="buttonZoomIn" style="float: left; margin: 10px 10px 0px 35px;" type="button" onClick="zoomIn()">+</button>
-	<button id="buttonZoomOut" style="float: left; margin: 10px 20px 0px 10px;" type="button" onClick="zoomOut()">-</button>
-<div id="routeplan" style="margin: 200px 0px">
-	<p> Find Route </p>
-	From
-	<input id="fromAddress" name="text" type="text"/>
-	To
-	<input id="toAddress" name="text" type="text"/>
-	<input id="time" name="text" type="radio" checked/>Time<br/>
-	<input id="distance" name="text" type="radio"/>Distance<br/>
-	<input name="Submit" type="submit" value="Find Route" onClick="findRoute()"/>
-	<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()"/>
+<body onLoad="init()" style="background:#eee; margin:0;">
+<!-- <div style="width: 200px;background-color: #FFFFCC; float: left;">
+Left column
 </div>
-</div> 
+
+<div style="margin-left: 200px; background-color: #CCFFFF">
+Right column
+</div> -->
+<div id="buttons" style="float: left; width: 180px; height: 200px; margin: 0px;">
+	<div style="margin: 15px">
+	<button id="buttonUp" style="float:left; margin: 0px 47px 10px 50px; width: 50px" type="button" onClick="clickUp()">Up</button>
+	<button id="buttonLeft" style="float: left; margin: 0px 50px 10px 0px; width: 50px;" type="button" onClick="clickLeft()">Left</button>
+	<button id="buttonRight" style="float: left; margin: 0px; width: 50px" type="button" onClick="clickRight()">Right</button></br>
+	<button id="buttonDown" style="float: left; margin: 0px 47px 10px 50px; width: 50px" type="button" onClick="clickDown()">Down</button></br>
+	<button id="buttonZoomIn" style="float: left; margin: 10px 10px 0px 35px; width: 30px" type="button" onClick="zoomIn()">+</button>
+	<button id="buttonZoomOut" style="float: left; margin: 10px 20px 0px 10px; width: 30px" type="button" onClick="zoomOut()">-</button>
+	<div style="float: left; margin: 0px;">
+		<p style="margin: 0px; font: bold 14px Helvetica; margin: 60px 0px 10px 0px"> Find Route </p>
+		<p style="margin: 0px; font: 12px Helvetica;">From</p>
+		<input id="fromAddress" name="text" type="text" style="width: 165px"/>
+		<p style="margin: 0px; font: 12px Helvetica;margin: 10px 0px 0px 0px">To</p>
+		<input id="toAddress" name="text" type="text" style="margin: 0px 30px 10px 0px;width: 165px"/>
+		<input id="time" name="text" type="radio" checked/><p style="display:inline; margin: 0px; font: 12px Helvetica;">Time</p>
+		<input id="distance" name="text" type="radio"/><p style="display:inline;margin: 0px; font: 12px Helvetica;">Distance</p>
+		<input name="Submit" type="submit" value="Find Route" onClick="findRoute()" style="margin: 10px 0px 0px 0px"/>
+		<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()" style="margin: 10px 0px 0px 0px"/>
+	</div>
+	</div>
+ 
+</div>
+<div id="svg" style="border:1px solid #ccc; margin-left: 200px; background:#fff;">
+	<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
+</div>
 
 </body>
 </html>
