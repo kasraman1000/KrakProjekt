@@ -11,25 +11,14 @@ import java.util.HashSet;
 public class RoadSelector {
 
 	private static final int MAX_ROADS = 20000;
-	private static KDTree kdTree;
-
-	public RoadSelector() {
-		kdTree = KDTree.getTree();
-		try {		
-			kdTree.initialize("kdv_node_unload.txt","kdv_unload.txt");
-			System.out.println("PATH READ");
-		} catch (IOException e) {
-			System.out.println("Failed to initialize kdTree");
-			e.printStackTrace();
-		}
-	}
+	private static KDTree kdTree = KDTree.getTree();
 
 	/**
 	 * Searches the KDTree and filters the result
 	 * @param region The region to search for roads
 	 * @return The roads to show
 	 */
-	public Road[] search(Region region) {
+	public static Road[] search(Region region) {
 
 		//If coordinates are of wrong input, correct them
 		region.adjust();
@@ -68,7 +57,7 @@ public class RoadSelector {
 	 * @param max Maximum amount of roads to include	
 	 * @return The resulting roads
 	 */
-	private ArrayList<Road> filter(Collection<Road> roads, int max) {
+	private static ArrayList<Road> filter(Collection<Road> roads, int max) {
 		ArrayList<Road> result = new ArrayList<Road>();
 		int nextLevelRoads = 0;
 		int level = 5;
@@ -97,7 +86,7 @@ public class RoadSelector {
 	 * @param p2 Another point in the rectangle that bounds the viewport
 	 * @return The lowest priority that should be displayed
 	 */
-	private int zoomLevel(double[] p1, double[] p2)
+	private static int zoomLevel(double[] p1, double[] p2)
 	{
 		if(p2[0]-p1[0] < 20000)
 			return 1;
@@ -118,7 +107,7 @@ public class RoadSelector {
 	 * @param road	The road which should be filtered
 	 * @return whether the road has high enough priority to be displayed
 	 */
-	private boolean filterRoad(int zoomLevel, Road road)
+	private static boolean filterRoad(int zoomLevel, Road road)
 	{
 		if(road.getPriority() < zoomLevel)
 			return false;
