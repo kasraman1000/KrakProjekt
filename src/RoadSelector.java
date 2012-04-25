@@ -1,67 +1,60 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-/**
- * The Class responsible for determining what roads to show
- * @author Kasra
- */
 
 public class RoadSelector {
+
 
 	private static final int MAX_ROADS = 20000;
 	private static KDTree kdTree = KDTree.getTree();
 
 	/**
-	 * Searches the KDTree and filters the result
-	 * @param region The region to search for roads
-	 * @return The roads to show
+	 * Returns all roads in a rectangle bound by a region filtered by priority.
+	 * @param region The region which binds the viewport
+	 * @return All roads within the rectangle, which are relevant to display
 	 */
+
 	public static Road[] search(Region region) {
 
-		//If coordinates are of wrong input, correct them
-		region.adjust();
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
-
 		//Choosing filter dependent on the width of the viewport
 		int zoom = zoomLevel(p1, p2);
-		RoadStatus.setZoomlevel(zoom);
+		RoadStatus.setScale(zoom);
 
 		System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 
+		ArrayList<Node> nodes = kdTree.searchRange(region);
 
-		HashSet<Road> searchResult = kdTree.searchRange(region);
-		
-
-		//Deprecated method
-		/*ArrayList<Road> roads = new ArrayList<Road>();
-		 * for (Road r : searchResult) {
-			if(filterRoad(zoom, r))
+		HashSet<Road> roads = new HashSet<Road>();
+		for (Node n : nodes)
+		{
+			for(Road r : n.getRoads())
+			{
 				roads.add(r);
-		}*/
-		//Road[] result = roads.toArray(new Road[0]);
+			}
+		}
 		
-		Road[] result = filter(searchResult, MAX_ROADS).toArray(new Road[0]);
+		Road[] result = filter(roads, MAX_ROADS).toArray(new Road[0]);
 
 		System.out.println("Number of roads: " + result.length);
 		return result;
 	}
 	
 	/**
-	 * Returns an arraylist of a specified maximum of Roads
-	 * Lower priority roads are selected first  
-	 * @param roads Array of roads to select from
-	 * @param max Maximum amount of roads to include	
-	 * @return The resulting roads
+	 * Returns all roads in a rectangle bound by two points filtered by priority.
+	 * @param p1 x and y coordinates for one of the points
+	 * @param p2 x and y coordinates for the other point
+	 * @return All roads within the rectangle, which are relevant to display
 	 */
+
 	private static ArrayList<Road> filter(Collection<Road> roads, int max) {
 		ArrayList<Road> result = new ArrayList<Road>();
 		int nextLevelRoads = 0;
 		int level = 5;
-		
+
 		do {
 			nextLevelRoads = 0;
 			for (Road r : roads) {
@@ -71,14 +64,15 @@ public class RoadSelector {
 					nextLevelRoads++;
 			}
 			level--;
-			
+
 			System.out.println("Roads totalat current level: " + result.size());
 			System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
-			
+
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
-		
+
 		return result;
 	}
+
 	
 	/**
 	 * Returns the zoom level, which determines the filtering of the roads
@@ -97,12 +91,12 @@ public class RoadSelector {
 		if(p2[0]-p1[0] < 200000)
 			return 4;
 
-		return 5;
+			return 5;
 	}
+	
 	
 	/**
 	 * Returns true or false dependent on whether the road should be displayed or not according to the priority
-	 * (SOON TO BE DEPRECATED)
 	 * @param zoomLevel The priority that the road should be equals or greater than to be displayed
 	 * @param road	The road which should be filtered
 	 * @return whether the road has high enough priority to be displayed
@@ -114,4 +108,5 @@ public class RoadSelector {
 		else
 			return true;
 	}
+	
 }

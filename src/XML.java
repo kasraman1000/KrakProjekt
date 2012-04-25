@@ -72,6 +72,7 @@ public class XML{
 	public String createString(Road[] roads) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
+		
 		Document document = convertRoadArrayToDocument(roads);
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -83,11 +84,11 @@ public class XML{
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
 	    String xmlString = stringWriter.toString();
-	    	    
+	    
 	    return xmlString;
 	}
 	
-	
+
 	/**
 	 * Will create a xml-string with a svg-element containing lines from the Road[] given
 	 * 
@@ -131,7 +132,7 @@ public class XML{
 		for(Road road : roads){
 			Element line = document.createElement("line");
 
-			color =road.getColor();
+			color = road.getColor();
 			line.setAttribute("x1", road.getX1() + ""); 
 			line.setAttribute("y1", road.getY1() + ""); 
 			line.setAttribute("x2", road.getX2() + ""); 
@@ -146,4 +147,25 @@ public class XML{
 	    return document;
 	}
 
+	
+	//TODO This method has not yet been tested
+	private void addRoute(Document document, Road[] route) {
+		Color color = RoadStatus.getRouteColor();
+		Element gElement = document.getElementById("g");
+		for(Road road : route){
+			Element line = document.createElement("line");
+
+			line.setAttribute("x1", road.getX1() + ""); 
+			line.setAttribute("y1", road.getY1() + ""); 
+			line.setAttribute("x2", road.getX2() + ""); 
+			line.setAttribute("y2", road.getY2() + ""); 
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
+//			line.setAttribute("roadType", road.getType() + "");
+//			line.setAttribute("roadName", road.getName() + "");
+			gElement.appendChild(line);
+		}
+
+		
+	}
 }

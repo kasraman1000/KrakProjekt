@@ -10,24 +10,25 @@ import java.util.HashMap;
  *
  */
 public class RoadStatus {
-
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private static Color routeColor;
 	private static double scale;
+	
 
 	static{
 		loadRoadColors();
 		loadRoadWidths();
 		scale = 1;
 	}
-	
+
 	/**
 	 * Depending on the zoomlevel, the width of the roads will be chanced.
 	 * It is not necessary to set the zoomlevel, but is most preferable!
 	 * 
 	 * @param zoomLevel An int from 1-5 where 5 is closest to the object
 	 */
-	public static void setZoomlevel(int zoomLevel)
+	public static void setScale(int zoomLevel)
 	{
 		if      (zoomLevel <= 1) {scale = 0.05;}
 		else if (zoomLevel == 2) {scale = 0.1;}
@@ -35,6 +36,8 @@ public class RoadStatus {
 		else if (zoomLevel == 4) {scale = 0.5;}
 		else 					 {scale = 1;}
 	}
+
+
 
 
 	/**
@@ -48,11 +51,14 @@ public class RoadStatus {
 		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
+		
 		Color unknownRoads = Color.cyan;
-
+		
+		routeColor = Color.yellow;
+		
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
+
 		roadColors.put(1, largeRoads); //"Motorvej"
 		roadColors.put(2, mediumRoads); //"Motortrafikvej"
 		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -95,16 +101,14 @@ public class RoadStatus {
 		int smallRoads = 130;
 		int tinyRoads = 130;
 		int tunnels = 130;
-
 		int seaWays  = 130; 
 		int walkingPaths = 130;
-
-//		int bicyclePaths = 130;
 
 		int unknownRoads = 100;
 
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
+
 		roadWidths.put(1, largeRoads); //"Motorvej"
 		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
 		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -134,13 +138,14 @@ public class RoadStatus {
 		roadWidths.put(46, tunnels); //"MindreVejtunnel"
 		roadWidths.put(48, tunnels); //"Stitunnel"
 		roadWidths.put(80, seaWays); //"Faergeforbindelser"
+
 		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 
 	public static Color getRoadColor(int roadType){
 		return roadColors.get(roadType);
 	}
-	
+
 	/**
 	 * Get the width of the road depending on the type of the road and what zoomlevel there has been set.
 	 * The zoomlevel can be set in setZoomlevel();
@@ -149,5 +154,13 @@ public class RoadStatus {
 	 */
 	public static double getRoadWidth(int roadType){
 		return roadWidths.get(roadType)*scale;
+	}
+
+
+
+
+	public static Color getRouteColor() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
