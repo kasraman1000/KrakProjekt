@@ -57,7 +57,9 @@ public class Controller {
 	
 	
 	public static String getXmlString(Region region){
+		double time = System.nanoTime();
 		Road[] roads = RoadSelector.search(region);
+		System.out.println("Time to retrieve roads from RoadSelector " + (System.nanoTime() - time)/1000000000);
 		String s = "";
 		try {
 //			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");

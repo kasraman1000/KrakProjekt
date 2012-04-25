@@ -15,8 +15,9 @@ public class RoadSelector {
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
 
-	public static Road[] search(Region region) {
-
+	public static Road[] search(Region region) 
+	{
+		double time;
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
@@ -25,22 +26,26 @@ public class RoadSelector {
 
 		System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
-
+		
+		time = System.nanoTime();
 		ArrayList<Node> nodes = kdTree.searchRange(region);
+		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
 
-		HashSet<Road> roads = new HashSet<Road>();
-		for (Node n : nodes)
-		{
-			for(Road r : n.getRoads())
-			{
+		HashSet<Road> roads = new HashSet<Road>(1000000);
+		time = System.nanoTime();
+		for (Node n : nodes) {
+			for(Road r : n.getRoads()) {
 				roads.add(r);
 			}
 		}
+		System.out.println("Time to HashSet: " + (System.nanoTime()-time)/1000000000);
 		
-		Road[] result = filter(roads, MAX_ROADS).toArray(new Road[0]);
+		time = System.nanoTime();
+		ArrayList<Road> result = filter(roads, MAX_ROADS, zoom);
+		System.out.println("Time to filter by zoom: " + (System.nanoTime()-time)/1000000000);
 
-		System.out.println("Number of roads: " + result.length);
-		return result;
+		System.out.println("Number of roads: " + result.size());
+		return result.toArray(new Road[0]);
 	}
 	
 	/**
@@ -49,8 +54,36 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
+	private static ArrayList<Road> filter(Collection<Road> roads, int max, int zoom) 
+	{
+		ArrayList<Road> result = new ArrayList<Road>();
+		if(zoom < 5)
+		{
+			int count = 0;
+			for(Road r : roads) {
+				if(!(r.getPriority() < zoom)) {
+					count++;
+				}
 
-	private static ArrayList<Road> filter(Collection<Road> roads, int max) {
+			}
+			System.out.println("int count = " + count);
+			if(count > max) {
+				System.out.println("Increasing zoom from " + zoom + " to " + (zoom+1));
+				zoom++;
+			}
+		}
+		
+		for(Road r : roads) {
+			if(!(r.getPriority() < zoom)) {
+				result.add(r);
+			}
+		}
+		
+		return result;
+		
+	}
+	private static ArrayList<Road> filter(Collection<Road> roads, int max)
+	{
 		ArrayList<Road> result = new ArrayList<Road>();
 		int nextLevelRoads = 0;
 		int level = 5;
@@ -65,8 +98,8 @@ public class RoadSelector {
 			}
 			level--;
 
-			System.out.println("Roads totalat current level: " + result.size());
-			System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
+		//	System.out.println("Roads totalat current level: " + result.size());
+		//	System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
 
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
 
