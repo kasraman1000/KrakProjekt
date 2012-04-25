@@ -24,7 +24,7 @@ package routing;
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
 
-public class DirectedEdge { 
+public class DirectedEdgeKrak { 
 	private final int from;
     private final int to;
     private final String name;
@@ -37,7 +37,7 @@ public class DirectedEdge {
    /**
      * Create a directed edge from v to w with given weight.
      */
-    public DirectedEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint){
+    public DirectedEdgeKrak(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint){
         this.from = from;
         this.to = to;
         this.name = name;

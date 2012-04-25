@@ -71,6 +71,9 @@ public class XML{
 													TransformerConfigurationException,
 													TransformerException{
 		
+		//Only for debugging
+//		createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+		
 		Document document = convertRoadArrayToDocument(roads);
 			
 		

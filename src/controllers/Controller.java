@@ -3,6 +3,10 @@ package controllers;
 import java.io.IOException;
 import java.util.Iterator;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import models.*;
 import views.*;
 import routing.*;
@@ -36,7 +40,6 @@ public class Controller {
 		kdTree = KDTree.getTree();
 		try {
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
-//			Loader.load("TestNodes.txt", "TestEdges.txt");
 			kdTree.initialize(Loader.getNodesForKDTree());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -61,7 +64,6 @@ public class Controller {
 		String s = "";
 		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		try {
-//			xml.createFile(roads, "C:\\Users\\Mark\\Desktop\\TestingOfXml.xml");
 			s = xml.createString(roads);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -80,11 +82,25 @@ public class Controller {
 	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
 		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
-		Iterator<DirectedEdge> routeEdges = dij.findRoute(start, target, isLengthWeighted);
+		Stack<DirectedEdgeKrak> routeEdges = dij.findRoute(0, 675000, isLengthWeighted);
 	
 		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges);
 		
-		return xml.createString(routeAndRoads);
+		String xmlString = "";
+		
+		try {
+			xmlString = xml.createString(routeAndRoads);
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return xmlString;
 	}
 
 }

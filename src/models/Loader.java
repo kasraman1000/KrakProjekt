@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-import routing.DirectedEdge;
+import routing.DirectedEdgeKrak;
 import routing.EdgeWeightedDigraph;
 import routing.In;
 
@@ -86,9 +86,8 @@ public class Loader {
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 		
-		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
+		ArrayList<DirectedEdgeKrak> edges = new ArrayList<DirectedEdgeKrak>();
  
-		EdgeWeightedDigraph graph;
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -127,11 +126,11 @@ public class Loader {
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 			
 			//TODO fromPoint/toPoint might be changed
-			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
-			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
+			if      (direction.equals("'tf'")) edges.add(new DirectedEdgeKrak(from, to, name, dist, time, fromPoint, toPoint));
+			else if (direction.equals("'ft'")) edges.add(new DirectedEdgeKrak(to, from, name, dist, time, fromPoint, toPoint));
 			else if (!direction.equals("'n'")) {
-				edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
-				edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
+				edges.add(new DirectedEdgeKrak(from, to, name, dist, time, fromPoint, toPoint));
+				edges.add(new DirectedEdgeKrak(to, from, name, dist, time, fromPoint, toPoint));
 			}
 			
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
@@ -145,7 +144,7 @@ public class Loader {
 		
 		graph = new EdgeWeightedDigraph(nodeList.size());
 		
-		for(DirectedEdge e : edges){
+		for(DirectedEdgeKrak e : edges){
 			graph.addEdge(e);
 		}
 		

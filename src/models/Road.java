@@ -35,7 +35,7 @@ public class Road {
 	
 	public void setPriority()
 	{
-		if(type == 11 || type == 8 || type == 48 || type == 28)
+		if(type == 11 || type == 8 || type == 48 || type == 28 || type == 50)
 		{
 			priority = 1;
 		}
