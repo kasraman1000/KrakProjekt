@@ -70,11 +70,7 @@ public class DijkstraSP {
      * @param t Id for the Node to end
      */
     private void calculateRoute(int s, int t){
-    	
-    	System.out.println("G.V(): " + G.V());
-    	
-    	
-        distTo = new double[G.V()];
+    	distTo = new double[G.V()];
         edgeTo = new KrakEdge[G.V()];
         for (int v = 0; v < G.V(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;

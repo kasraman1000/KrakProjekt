@@ -1,19 +1,12 @@
 package models;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
-
-import routing.KrakEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
+import routing.KrakEdge;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
@@ -48,10 +41,11 @@ public class Loader {
 		HashMap<Integer, Node> nodeList = new HashMap<Integer, Node>();
 		
 		//String for storing the current line, which is being read
-		String[] textLineNodeArray;
+		String[] textLineNodeArray = null;
 		int nodeId;
 		double xCoord;
 		double yCoord;
+		
 		//Running through all nodes
 		while(inNodes.hasNextLine()){
 			textLineNodeArray = inNodes.readLine().split(",");
@@ -108,6 +102,22 @@ public class Loader {
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
 			
+			//To make sure the data is read in a correct way (ie. the name of the road is "Røde Sti, Den")
+			if(textLineRoadArray.length > 33){
+				for(int index=0; index<textLineRoadArray.length-1; index++){
+					if(!(textLineRoadArray[index].contains("''") || textLineRoadArray[index+1].contains("''")) &&
+								(textLineRoadArray[index].startsWith("'") && textLineRoadArray[index+1].endsWith("'"))){
+						
+						textLineRoadArray[index] = textLineRoadArray[index] + "," + textLineRoadArray[index+1];
+	
+						//Move the rest of the element one place to the left
+						for(int a=index+2; a<textLineRoadArray.length; a++){
+							textLineRoadArray[a-1] = textLineRoadArray[a];
+						}
+					}
+				}
+			}
+			
 			
 			/**
 			 * OBS Læg mærke til at ID'erne bliver minuset med 1!!!!
@@ -123,6 +133,13 @@ public class Loader {
 			vToHusnummer = Integer.valueOf(textLineRoadArray[8]);
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
+			
+//			if(vPost==9900){
+//				for(int der=0; der<textLineRoadArray.length; der++){
+//					System.out.print(textLineRoadArray[der] +  ",");
+//				}
+//				System.out.println();
+//			}
 			
 			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
@@ -152,6 +169,7 @@ public class Loader {
 			nodeList.get(to).addRoad(tempRoad);
 
 		}
+		
 		nodesForKDTree.addAll(nodeList.values());
 		
 		graph = new EdgeWeightedDigraph(nodeList.size());
@@ -160,21 +178,6 @@ public class Loader {
 			graph.addEdge(e);
 		}
 		
-//		
-//		System.out.println("Graph:");
-//		System.out.println(graph.E() + " edges and " + graph.V() + " nodes");
-//		
-//		return graph;
-//		
-//		//TODO
-//		//TODO
-//		//TODO
-//		//TODO
-//		//TODO
-//		
-//		
-//		
-//		
 //		
 //		
 //		

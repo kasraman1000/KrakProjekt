@@ -139,7 +139,7 @@ public class XML{
 		Color color;
 		for(Road road : roads){
 			Element line = document.createElement("line");
-
+			
 			color = road.getColor();
 			line.setAttribute("x1", road.getX1() + ""); 
 			line.setAttribute("y1", road.getY1() + ""); 
