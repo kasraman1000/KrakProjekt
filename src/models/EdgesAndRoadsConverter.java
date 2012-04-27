@@ -1,16 +1,16 @@
 /**
  * 
  */
-package routing;
+package models;
 
-import java.util.Iterator;
-import models.*;
+import routing.KrakEdge;
+import routing.Stack;
 
 /**
  * @author Yndal
  *
  */
-public class EdgesToRoadsConverter {
+public class EdgesAndRoadsConverter {
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -24,18 +24,19 @@ public class EdgesToRoadsConverter {
 	}
 
 
-	public static Road[] convertEdgesToRoads(Stack<KrakEdge> route, int firstHouseNumber, int lastHouseNumber){
-		Stack<Road> routeStack = new Stack<Road>();
-		
-		//Find min and max
-		//Create new Road[] and add all the route-Roads (and set the roadType to 50)
+	public static Road[] convertEdgesToRoads(Stack<KrakEdge> routeStack, int firstHouseNumber, int lastHouseNumber){
 		int routeType = 50;
 		Road tempRoad;
 		KrakEdge edge;
 		KrakEdge firstEdge = null;
 		KrakEdge lastEdge = null;
-		while(!route.isEmpty()){
-			edge = route.pop();
+		
+		Road[] route = new Road[routeStack.size()];
+		
+		//First and last edge are kept as edges, because of the possibility
+		//to expand the project further later on
+		for(int index=0; index<routeStack.size(); index++){
+			edge = routeStack.pop();
 			
 			findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
 			findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
@@ -55,39 +56,25 @@ public class EdgesToRoadsConverter {
 					routeType,
 					edge.getName()
 					);
-			
-			routeStack.push(tempRoad);
+			route[index] = tempRoad;
 		}
+		
 		//Remove last Road of route
 		routeStack.pop();
 		
-		//TODO MayAdd a big circle at the destination/startpoint
 		KrakEdge newFirstEdge = divideKrakEdge(firstEdge, true, firstHouseNumber);
 		KrakEdge newLastEdge = divideKrakEdge(lastEdge, false, lastHouseNumber);
 		
+		//Sets the Region for the route
+		route[0].setOrigo(new double[]{xMin, yMin});
+		route[0].setTop(new double[]{xMax, yMax});
 		
-		Road[] roads = RoadSelector.searchRange(new Region(xMin, yMin, xMax, yMax));
-		
-		//New empty array for the  combined roads and route (including start and target)
-		Road[] roadsAndRoute = new Road[roads.length+routeStack.size()+2];
-		
-		
-		for(int counter=0; counter<roads.length; counter++){
-			roadsAndRoute[counter] = roads[counter];
-		}
 		
 		//Add the part of the first Edge to the Road[]
-		roadsAndRoute[roads.length] = new Road(newFirstEdge.getFromPoint()[0], newFirstEdge.getFromPoint()[1], newFirstEdge.getToPoint()[0], newFirstEdge.getToPoint()[1], routeType, newFirstEdge.getName());
-		
-		
-		int counter = roads.length+1;
-		while(!routeStack.isEmpty()){
-			roadsAndRoute[counter] = routeStack.pop();
-			counter++;
-		}
+		route[0] = new Road(newFirstEdge.getFromPoint()[0], newFirstEdge.getFromPoint()[1], newFirstEdge.getToPoint()[0], newFirstEdge.getToPoint()[1], routeType, newFirstEdge.getName());
 		
 		//Add the part of the last Edge to the Road[]
-		roadsAndRoute[roadsAndRoute.length-1] = new Road(newLastEdge.getFromPoint()[0], newLastEdge.getFromPoint()[1], newLastEdge.getToPoint()[0], newLastEdge.getToPoint()[1], routeType, newLastEdge.getName());
+		route[route.length-1] = new Road(newLastEdge.getFromPoint()[0], newLastEdge.getFromPoint()[1], newLastEdge.getToPoint()[0], newLastEdge.getToPoint()[1], routeType, newLastEdge.getName());
 		
 //		System.out.println("xMin: " + xMin);
 //		System.out.println("yMin: " + yMin);
@@ -95,7 +82,7 @@ public class EdgesToRoadsConverter {
 //		System.out.println("yMax: " + yMax);
 		
 		
-		return roadsAndRoute;
+		return route;
 	}
 	
 	
@@ -145,9 +132,13 @@ public class EdgesToRoadsConverter {
 			fromPoint[0] = edge.getToPoint()[0] - (distX*factor);
 			fromPoint[1] = edge.getToPoint()[1] - (distY*factor);
 			toPoint = edge.getToPoint();
-			vFromHouseNumber = (int) (edge.getvToHouseNumber() - ((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); //TODO May be wrong (odd or even regarding the casting to and int)
+			
+			//TODO May be wrong (odd or even regarding the casting to and int)
+			vFromHouseNumber = (int) (edge.getvToHouseNumber() - ((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); 
 			vToHouseNumber = edge.getvToHouseNumber();
-			hFromHouseNumber = (int) (edge.gethToHouseNumber() - ((edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor));; //TODO May be wrong (odd or even regarding the casting to and int)
+			
+			//TODO May be wrong (odd or even regarding the casting to and int)
+			hFromHouseNumber = (int) (edge.gethToHouseNumber() - ((edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor)); 
 			hToHouseNumber = edge.gethToHouseNumber();
 			length = edge.getLength()-edge.getLength()*factor;
 			time = edge.getTime()-edge.getTime()*factor;
@@ -161,8 +152,12 @@ public class EdgesToRoadsConverter {
 			toPoint[0] = edge.getFromPoint()[0]+(edge.getToPoint()[0]-edge.getFromPoint()[0])*factor;
 			toPoint[1] = edge.getFromPoint()[1]+(edge.getToPoint()[1]-edge.getFromPoint()[1])*factor;
 			vFromHouseNumber = edge.getvFromHouseNumber();
-			vToHouseNumber = (int) (edge.getvFromHouseNumber()+((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); //TODO May be wrong (odd or even regarding the casting to and int)
+			
+			//TODO May be wrong (odd or even regarding the casting to and int)
+			vToHouseNumber = (int) (edge.getvFromHouseNumber()+((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); 
 			hFromHouseNumber = edge.gethFromHouseNumber(); 
+			
+			//TODO May be wrong (odd or even regarding the casting to and int)
 			hToHouseNumber = (int) (edge.gethFromHouseNumber() + (edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor);
 			length = edge.getLength()*factor;
 			time = edge.getLength()*factor;
@@ -174,12 +169,7 @@ public class EdgesToRoadsConverter {
 		return tempEdge;
 	}
 
-
-
-
-
-
-
+	
 	/**
 	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value
 	 * If it is, the maximum or minimum is updated.

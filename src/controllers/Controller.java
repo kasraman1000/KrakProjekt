@@ -1,15 +1,14 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import models.*;
-import views.*;
 import routing.*;
+import views.*;
 
 /**
  * 
@@ -26,15 +25,11 @@ public class Controller {
 	
 	
 	public static void main(String[] args) {
-		Controller controller = new Controller();
-		
-//		HashMap<Integer, HashMap<String,>>
+		Controller.startServer();
 	}
 	
-	/**
-	 * Will start up the Krak Server
-	 */
-	public Controller(){
+
+	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
@@ -48,7 +43,15 @@ public class Controller {
 		xml = new XML();
 		double end = System.nanoTime();
 		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
-		jsConnector = new JSConnector(this);
+	}
+	
+	
+	/**
+	 * Will start up the Krak Server
+	 * 
+	 */
+	public static void startServer(){
+		jsConnector = new JSConnector();
 	}
 	 
 
@@ -96,12 +99,15 @@ public class Controller {
 		
 		System.out.println("Route is containing " + routeEdges.size() + " roads");
 		
-		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
+		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
+		Region region = new Region(route[0].getX1(), route[0].getY1(), route[0].getX2(), route[0].getY2());		
+		Road[] roads = RoadSelector.searchRange(region);
+
 		
 		String xmlString = "";
 		
 		try {
-			xmlString = xml.createString(routeAndRoads);
+			xmlString = xml.createString(roads, route, xmlString, region);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

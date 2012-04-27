@@ -134,13 +134,6 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
-//			if(vPost==9900){
-//				for(int der=0; der<textLineRoadArray.length; der++){
-//					System.out.print(textLineRoadArray[der] +  ",");
-//				}
-//				System.out.println();
-//			}
-			
 			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
 			
@@ -154,12 +147,11 @@ public class Loader {
 			fromPoint = new double[]{nodeList.get(from).getCoord(0), nodeList.get(from).getCoord(1)};
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 			
-			//TODO fromPoint/toPoint might be changed
-			if      (direction.equals("'tf'")) edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+			if      (direction.equals("'tf'")) edges.add(new KrakEdge(to, from, name, dist, time, toPoint, fromPoint ,vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (direction.equals("'ft'")) edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (!direction.equals("'n'")) {
 				edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
-				edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+				edges.add(new KrakEdge(to, from, name, dist, time, toPoint, fromPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			}
 			
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
