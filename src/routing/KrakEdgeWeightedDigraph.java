@@ -27,7 +27,7 @@ package routing;
 
 
 
-public class EdgeWeightedDigraph {
+public class KrakEdgeWeightedDigraph {
     private final int V; //Nodes
     private int E; //Edges
     private Bag<KrakEdge>[] adj;
@@ -36,7 +36,7 @@ public class EdgeWeightedDigraph {
      * Create an empty edge-weighted digraph with V vertices.
      */
     @SuppressWarnings("unchecked")
-	public EdgeWeightedDigraph(int V) {
+	public KrakEdgeWeightedDigraph(int V) {
         if (V < 0) throw new RuntimeException("Number of vertices must be nonnegative");
         this.V = V;
         this.E = 0;
@@ -63,7 +63,7 @@ public class EdgeWeightedDigraph {
     /**
      * Copy constructor.
      */
-    public EdgeWeightedDigraph(EdgeWeightedDigraph G) {
+    public KrakEdgeWeightedDigraph(KrakEdgeWeightedDigraph G) {
         this(G.V());
         this.E = G.E();
         for (int v = 0; v < G.V(); v++) {

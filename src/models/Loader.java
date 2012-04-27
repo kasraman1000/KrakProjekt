@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import routing.EdgeWeightedDigraph;
+import routing.KrakEdgeWeightedDigraph;
 import routing.In;
 import routing.KrakEdge;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
-	private static EdgeWeightedDigraph graph;
+	private static KrakEdgeWeightedDigraph graph;
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -164,7 +164,7 @@ public class Loader {
 		
 		nodesForKDTree.addAll(nodeList.values());
 		
-		graph = new EdgeWeightedDigraph(nodeList.size());
+		graph = new KrakEdgeWeightedDigraph(nodeList.size());
 		
 		for(KrakEdge e : edges){
 			graph.addEdge(e);
@@ -278,7 +278,7 @@ public class Loader {
 	}
 	
 
-	public static EdgeWeightedDigraph getGraph(){
+	public static KrakEdgeWeightedDigraph getGraph(){
 		//TODO Add a nice Exception to throw
 //		if(graph == null) throw new DataNotLoadedException();
 		return graph;

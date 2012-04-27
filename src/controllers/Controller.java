@@ -88,8 +88,8 @@ public class Controller {
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		
 		//From Skagen to ITU  :O)
-		int tempFrom = 21199-1;
-		int tempTo = 442122-1;
+		int tempFrom = 0;//21199-1;
+		int tempTo = 100;//442122-1;
 		
 		//Temp!!
 		int firstHouseNumber = 2;
@@ -97,17 +97,15 @@ public class Controller {
 		
 		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);
 		
-		System.out.println("Route is containing " + routeEdges.size() + " roads");
-		
 		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
-		Region region = new Region(route[0].getX1(), route[0].getY1(), route[0].getX2(), route[0].getY2());		
+		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
 		Road[] roads = RoadSelector.searchRange(region);
 
 		
 		String xmlString = "";
 		
 		try {
-			xmlString = xml.createString(roads, route, xmlString, region);
+			xmlString = xml.createString(roads, route, StatusCode.ALL_WORKING.getDescription(), region);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

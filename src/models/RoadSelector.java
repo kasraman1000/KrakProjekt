@@ -50,7 +50,7 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-	public Road[] searchRange(double[] p1, double[] p2)
+	public static Road[] searchRange(double[] p1, double[] p2)
 	{
 		return searchRange(new Region(p1[0], p1[1], p2[0], p2[1]));
 	}

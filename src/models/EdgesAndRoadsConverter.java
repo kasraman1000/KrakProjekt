@@ -25,64 +25,193 @@ public class EdgesAndRoadsConverter {
 
 
 	public static Road[] convertEdgesToRoads(Stack<KrakEdge> routeStack, int firstHouseNumber, int lastHouseNumber){
+		Stack<Road> roadStack = new Stack<Road>();
+		
+		//Find min and max
+		//Create new Stack containing all the roads except the first and last.
+		/**
+		 * For some reason the routeStack.size() is invalid! 
+		 * Therefore this solution
+		 */
 		int routeType = 50;
 		Road tempRoad;
-		KrakEdge edge;
+		KrakEdge tempEdge;
 		KrakEdge firstEdge = null;
 		KrakEdge lastEdge = null;
-		
-		Road[] route = new Road[routeStack.size()];
-		
-		//First and last edge are kept as edges, because of the possibility
-		//to expand the project further later on
-		for(int index=0; index<routeStack.size(); index++){
-			edge = routeStack.pop();
+		int routeIndexCounter=0;
+		while(!routeStack.isEmpty()){
+			tempEdge = routeStack.pop();
+			routeIndexCounter++;
 			
-			findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
-			findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
+			findMinAndMaxValues(tempEdge.getFromPoint()[0],tempEdge.getFromPoint()[1]);
+			findMinAndMaxValues(tempEdge.getToPoint()[0],tempEdge.getToPoint()[1]);
 			
 			if(firstEdge==null){
-				firstEdge = edge;
+				firstEdge = tempEdge;
 				//Don't add the first Edge
 				continue;
 			}
-			lastEdge = edge;
+			lastEdge = tempEdge;
 			
 			tempRoad = new Road(
-					edge.getFromPoint()[0],
-					edge.getFromPoint()[1],
-					edge.getToPoint()[0],
-					edge.getToPoint()[1],
+					tempEdge.getFromPoint()[0],
+					tempEdge.getFromPoint()[1],
+					tempEdge.getToPoint()[0],
+					tempEdge.getToPoint()[1],
 					routeType,
-					edge.getName()
+					tempEdge.getName()
 					);
-			route[index] = tempRoad;
+			
+			roadStack.push(tempRoad);
+			
 		}
-		
 		//Remove last Road of route
-		routeStack.pop();
+		roadStack.pop();
 		
+		//Kept as edges for easing further development
 		KrakEdge newFirstEdge = divideKrakEdge(firstEdge, true, firstHouseNumber);
 		KrakEdge newLastEdge = divideKrakEdge(lastEdge, false, lastHouseNumber);
 		
-		//Sets the Region for the route
-		route[0].setOrigo(new double[]{xMin, yMin});
-		route[0].setTop(new double[]{xMax, yMax});
+		//The array going to be returned
+		Road[] routeArray = new Road[routeIndexCounter];
 		
 		
 		//Add the part of the first Edge to the Road[]
-		route[0] = new Road(newFirstEdge.getFromPoint()[0], newFirstEdge.getFromPoint()[1], newFirstEdge.getToPoint()[0], newFirstEdge.getToPoint()[1], routeType, newFirstEdge.getName());
-		
+		routeArray[0] = new Road(newFirstEdge.getFromPoint()[0], 
+								newFirstEdge.getFromPoint()[1], 
+								newFirstEdge.getToPoint()[0], 
+								newFirstEdge.getToPoint()[1], 
+								routeType, 
+								newFirstEdge.getName());
+				
 		//Add the part of the last Edge to the Road[]
-		route[route.length-1] = new Road(newLastEdge.getFromPoint()[0], newLastEdge.getFromPoint()[1], newLastEdge.getToPoint()[0], newLastEdge.getToPoint()[1], routeType, newLastEdge.getName());
+		routeArray[routeArray.length-1] = new Road(newLastEdge.getFromPoint()[0], 
+													newLastEdge.getFromPoint()[1], 
+													newLastEdge.getToPoint()[0], 
+													newLastEdge.getToPoint()[1], 
+													routeType, 
+													newLastEdge.getName());
+				
 		
+		for(int index=1; index<routeArray.length-1; index++){
+			routeArray[index] = roadStack.pop();
+		}
+		
+		//For debugging
+		if(!routeStack.isEmpty()) System.out.println("EdgesAndRoadsConverter.convertEdgesToRoads(): routeStack is NOT empty!!");
+		
+			
 //		System.out.println("xMin: " + xMin);
 //		System.out.println("yMin: " + yMin);
 //		System.out.println("xMax: " + xMax);
 //		System.out.println("yMax: " + yMax);
 		
 		
-		return route;
+		//Sets the Region for the route
+		routeArray[0].setOrigo(new double[]{xMin, yMin});
+		routeArray[0].setTop(new double[]{xMax, yMax});
+
+		
+		return routeArray;
+		
+		
+		
+//		int routeType = 50;
+//		Road tempRoad;
+//		KrakEdge edge;
+//		KrakEdge firstEdge = null;
+//		KrakEdge lastEdge = null;
+//		
+//		Road[] route = new Road[routeStack.size()];
+//		System.out.println("RouteStack.size(): " + routeStack.size());
+//		
+//		while(!routeStack.isEmpty()){
+//			edge = routeStack.pop();
+//			
+//			findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
+//			findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
+//			
+//			if(firstEdge==null){
+//				firstEdge = edge;
+//				//Don't add the first Edge
+//				continue;
+//			}
+//			lastEdge = edge;
+//			
+//			tempRoad = new Road(
+//					edge.getFromPoint()[0],
+//					edge.getFromPoint()[1],
+//					edge.getToPoint()[0],
+//					edge.getToPoint()[1],
+//					routeType,
+//					edge.getName()
+//					);
+//		
+//		}
+//		
+//		//First and last edge are kept as edges, because of the possibility
+//		//to expand the project further later on
+//		for(int index=0; index<routeStack.size(); index++){
+//			edge = routeStack.pop();
+//			
+//			findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
+//			findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
+//			
+//			if(firstEdge==null){
+//				firstEdge = edge;
+//				//Don't add the first Edge
+//				continue;
+//			}
+//			lastEdge = edge;
+//			
+//			tempRoad = new Road(
+//					edge.getFromPoint()[0],
+//					edge.getFromPoint()[1],
+//					edge.getToPoint()[0],
+//					edge.getToPoint()[1],
+//					routeType,
+//					edge.getName()
+//					);
+//			route[index] = tempRoad;
+//			System.out.println(index);
+//		}
+//		
+//		//Sets the Region for the route
+//		route[0].setOrigo(new double[]{xMin, yMin});
+//		route[0].setTop(new double[]{xMax, yMax});
+//
+//		
+//		int tempCounter=0;
+//		for(Road r : route){
+//			if(r == null){
+//				tempCounter++;
+//			}
+//		}
+//		System.out.println("tempCounter: " + tempCounter);
+//		System.out.println("EdgesAndRoadsConverter.convertEdgesToRoads() - Size of route array: " + route.length);
+//		System.out.println("EdgesAndRoadsConverter.convertEdgesToRoads() - ");
+//		
+//		//Remove last Road of route
+//		routeStack.pop();
+//		
+//		KrakEdge newFirstEdge = divideKrakEdge(firstEdge, true, firstHouseNumber);
+//		KrakEdge newLastEdge = divideKrakEdge(lastEdge, false, lastHouseNumber);
+//		
+//		
+//		
+//		//Add the part of the first Edge to the Road[]
+//		route[0] = new Road(newFirstEdge.getFromPoint()[0], newFirstEdge.getFromPoint()[1], newFirstEdge.getToPoint()[0], newFirstEdge.getToPoint()[1], routeType, newFirstEdge.getName());
+//		
+//		//Add the part of the last Edge to the Road[]
+//		route[route.length-1] = new Road(newLastEdge.getFromPoint()[0], newLastEdge.getFromPoint()[1], newLastEdge.getToPoint()[0], newLastEdge.getToPoint()[1], routeType, newLastEdge.getName());
+//		
+////		System.out.println("xMin: " + xMin);
+////		System.out.println("yMin: " + yMin);
+////		System.out.println("xMax: " + xMax);
+////		System.out.println("yMax: " + yMax);
+//		
+//		
+//		return route;
 	}
 	
 	
