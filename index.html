@@ -40,19 +40,13 @@
 			if(errorString.split(" ")[0]=="Error"){
 				errorCode = errorString.split(" ")[1];
 				switch(errorCode){
-				case "1":
-					document.getElementById("errorText").innerHTML = "The roadname is not correctly spelled";
+				case "4":
+					alert("Error 4");
 					break;
 				default:
-					document.getElementById("errorText").innerHTML = "An error has occured";
+					alert("An error has accured");
 				}
 			}
-		}
-		/*this function hides the current errormessage if there is any pressent
-		*/
-		function hideErrorMessage(){
-			document.getElementById("errorText").innerHTML = """;
-			
 		}
 		/*
 			Here the XML request is added to the SVG frame and shown in the browser.
@@ -173,7 +167,6 @@
 		}
 		
 		function findRoute(){
-			hideErrorMessage();
 			fromAddress = document.getElementById("fromAddress").value;
 			toAddress = document.getElementById("toAddress").value;
 			if(fromAddress == "" || toAddress == ""){
@@ -187,7 +180,6 @@
 		}
 		
 		function clearRoute(){
-			hideErrorMessage();
 			route = "";
 			getXML();
 		}
@@ -213,7 +205,6 @@
 					<input id="distance" name="text" type="radio"/><p style="display:inline;margin: 0px; font: 12px Helvetica;">Distance</p>
 					<input name="Submit" type="submit" value="Find Route" onClick="findRoute()" style="margin: 10px 0px 0px 0px"/>
 					<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()" style="margin: 10px 0px 0px 0px"/>
-					<p id="errorText" style="margin: 15px 0px 0px 0px; color: red;font: 12px Helvetica;"></p>
 				</div>
 			</div>
 		</div>
