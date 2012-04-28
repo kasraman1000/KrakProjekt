@@ -84,12 +84,12 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
-	public String createString(Road[] roads, Road[] route, String errorCode, Region region) throws ParserConfigurationException, 
+	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
 		//TODO
 		//Only for debugging
-		createFile(roads, route, errorCode, region, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
 		Document document = createNewDocumentWithRoot();
@@ -121,7 +121,8 @@ public class XML{
 		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
-		statusCodeElement.setAttribute("code", errorCode);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		
@@ -156,7 +157,7 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a File
 	 */
-	public void createFile(Road[] roads, Road[] route, String errorCode, Region region, String filename) throws ParserConfigurationException,
+	public void createFile(Road[] roads, Road[] route, Region region, StatusCode statusCode, String filename) throws ParserConfigurationException,
 														TransformerConfigurationException,
 														TransformerException{
 		
@@ -190,7 +191,8 @@ public class XML{
 		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
-		statusCodeElement.setAttribute("code", errorCode);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		

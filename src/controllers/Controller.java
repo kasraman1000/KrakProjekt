@@ -105,7 +105,7 @@ public class Controller {
 		String xmlString = "";
 		
 		try {
-			xmlString = xml.createString(roads, route, StatusCode.ALL_WORKING.getDescription(), region);
+			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
