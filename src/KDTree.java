@@ -13,7 +13,7 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
-
+	
 	private KDTree(int k)
 	{
 		this.k = k;
@@ -147,17 +147,17 @@ public class KDTree
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
 			}
-			if (kdn.right != null)
+		}
+		if (kdn.right != null)
+		{
+			if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
-				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					nodes.add(kdn.right.getNode());
-					fillWithSubTree(kdn.right, nodes, depth+2);
-				}
-				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
-				}
+				nodes.add(kdn.right.getNode());
+				fillWithSubTree(kdn.right, nodes, depth+2);
+			}
+			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
+			{
+				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
 			}
 		}
 

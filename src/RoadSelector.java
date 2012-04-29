@@ -61,7 +61,7 @@ public class RoadSelector {
 		{
 			int count = 0;
 			for(Road r : roads) {
-				if(!(r.getPriority() < zoom)) {
+				if(r.getPriority() >= zoom) {
 					count++;
 				}
 
@@ -74,7 +74,7 @@ public class RoadSelector {
 		}
 		
 		for(Road r : roads) {
-			if(!(r.getPriority() < zoom)) {
+			if(r.getPriority() >= zoom) {
 				result.add(r);
 			}
 		}
