@@ -1,9 +1,10 @@
-import java.awt.Point;
-import java.io.IOException;
+
+package models;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
+
 
 public class KDTree
 {
@@ -15,9 +16,6 @@ public class KDTree
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
 	
-	
-	
-	
 	private KDTree(int k)
 	{
 		this.k = k;
@@ -27,63 +25,17 @@ public class KDTree
 	{
 		return tree;
 	}
+	
+	public KDNode getRoot()
+	{
+		return root;
+	}
 
 	public void build(ArrayList<Node> nodes)
 	{
 		new KDNode(nodes, 0);
 		
 	}
-	
-	/**
-	 * Returns all roads in a rectangle bound by a region filtered by priority.
-	 * @param region The region which binds the viewport
-	 * @return All roads within the rectangle, which are relevant to display
-	 */
-	public HashSet<Road> searchRange(Region region)
-	{
-		double[] p1 = region.getLeftPoint();
-		double[] p2 = region.getRightPoint();
-		//Creating a HashSet to make sure that no road are contained twice.
-		HashSet<Road> roads = new HashSet<Road>(1000);
-		ArrayList<Node> nodes= new ArrayList<Node>();
-		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
-		
-		//Making sure that no road is added twice
-		for(Node n : nodes)
-		{
-			for(Road r : n.getRoads())
-			{
-				roads.add(r);
-			}
-		}
-		
-		return roads;
-	}
-	
-// COMMENTED FOLLOWING TWO FUNCTIONS BECAUSE I'M NOT SURE
-// WHAT TO DO WITH THEM FOR NOW -- Kasra
-	
-	/**
-	 * Returns all roads in a rectangle bound by two points filtered by priority.
-	 * @param p1 x and y coordinates for one of the points
-	 * @param p2 x and y coordinates for the other point
-	 * @return All roads within the rectangle, which are relevant to display
-	 */
-//	public Road[] searchRange(double[] p1, double[] p2)
-//	{
-//		return searchRange(new Region(p1[0], p1[1], p2[0], p2[1]));
-//	}
-	
-	/**
-	 * Returns all roads in a rectangle bound by two points filtered by priority.
-	 * @param p1 x and y coordinates for one of the points
-	 * @param p2 x and y coordinates for the other point
-	 * @return All roads within the rectangle, which are relevant to display
-	 */
-//	public Road[] searchRange(Point p1, Point p2)
-//	{
-//		return searchRange(new Region(p1.x, p1.y, p2.x, p2.y));
-//	}
 	
 	/**
 	 * Returns true if the two regions overlap or false if they do not.
@@ -93,11 +45,11 @@ public class KDTree
 	 * @param r2 x and y coordinates for the other point of the second region
 	 * @return true if the regions intersect, false if not
 	 */
-	private boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
+	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
-			if(r1[i] >= h2[i] || r2[i] <= h1[i]) return false;
+			if(r1[i] > h2[i] || r2[i] < h1[i]) return false;
 		}
 		return true;
 	}
@@ -110,7 +62,7 @@ public class KDTree
 	 * @param r2 x and y coordinates for the other point of the second region
 	 * @return true if the first region is fully contained in the second, false if not.
 	 */
-	private boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
+	public boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
@@ -130,7 +82,7 @@ public class KDTree
 	{
 		for(int i=0; i < k; i++)
 		{
-			if(kdn.getNode().coords[i] < r1[i] || kdn.getNode().coords[i] > r2[i]) return false;
+			if(kdn.getNode().getCoord(i) <= r1[i] || kdn.getNode().getCoord(i) >= r2[i]) return false;
 		}
 		return true;
 	}
@@ -159,17 +111,30 @@ public class KDTree
 	{
 		if(depth%k==0)
 		{ 
-			double[] result = {kdn.getNode().coords[0], r[1]};
+			double[] result = {kdn.getNode().getCoord(0), r[1]};
 			return result;
 		}
 		else
 		{
-			double[] result = {r[0] ,kdn.getNode().coords[1]};
+			double[] result = {r[0] ,kdn.getNode().getCoord(1)};
 			return result;
 		}
 	}
+	
+	public ArrayList<Node> searchRange(Region region)
+	{
+		//If coordinates are of wrong input, correct them
+		region.adjust();
+		double[] p1 = region.getLeftPoint();
+		double[] p2 = region.getRightPoint();
+		//Creating a HashSet to make sure that no road are contained twice.
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
 
-	private void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
+		return nodes;
+	}
+
+	public void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
 	{
 		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
 		
@@ -184,25 +149,24 @@ public class KDTree
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
 			}
-			if (kdn.right != null)
+		}
+		if (kdn.right != null)
+		{
+			if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
-				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					nodes.add(kdn.right.getNode());
-					fillWithSubTree(kdn.right, nodes, depth+2);
-				}
-				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
-				}
+				nodes.add(kdn.right.getNode());
+				fillWithSubTree(kdn.right, nodes, depth+2);
+			}
+			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
+			{
+				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
 			}
 		}
 
 	}
 	
-	public void initialize(String nodePath, String roadPath) throws IOException
+	public void initialize(ArrayList<Node> nodes)
 	{	
-		ArrayList<Node> nodes = KrakLoader.load(nodePath, roadPath);
 		tree.build(nodes);
 		origo = Road.getOrigo();
 		top = Road.getTop();
@@ -229,7 +193,7 @@ public class KDTree
 
 		public String toString()
 		{
-			return "X= " + node.coords[0] + " Y= " + node.coords[1];
+			return "X= " + node.getCoord(0) + " Y= " + node.getCoord(1);
 		}
 
 		public KDNode getLeftChild()
@@ -254,7 +218,7 @@ public class KDTree
 		 * @param depth	Recursion level of the function calling this function.
 		 * @return	median node of a small sample collection.
 		 */
-		public Node median(ArrayList<Node> nodes, int nth, int depth)
+		private Node median(ArrayList<Node> nodes, int nth, int depth)
 		{
 			int size = (int) (10*(Math.log10(nodes.size())+1));
 			Node[] randomNodes = new Node[size];
@@ -272,7 +236,7 @@ public class KDTree
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
 			Node pivot;
-			if(depth < 4 && nodes.size() > 150)
+			if(nodes.size() > 150)
 			{
 				pivot = nodes.get(100);
 			}
@@ -283,8 +247,8 @@ public class KDTree
 			
 			
 			for (Node n : nodes) {
-				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
-				else if (n.coords[dimension] > pivot.coords[dimension]) above.add(n);
+				if (n.getCoord(dimension) < pivot.getCoord(dimension)) below.add(n);
+				else if (n.getCoord(dimension) > pivot.getCoord(dimension)) above.add(n);
 				else if (pivot != n) above.add(n);
 			}
 			int i = below.size();
@@ -296,15 +260,15 @@ public class KDTree
 
 		}
 		/**
-		 * 
+		 * Returns the child node from a collection of nodes and recursively builds the KDTree.
 		 * @param nodes The nodes that the KDTree/subtree is build from
 		 * @param depth	Recursion depth of the function call.
 		 * @return	The KDNode that contains the median node for the nodes collection.
 		 */
-		public KDNode expand(ArrayList<Node> nodes, int depth)
+		private KDNode expand(ArrayList<Node> nodes, int depth)
 		{
 
-			if (nodes.size() > 2)
+			if (nodes.size() > 1)
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
@@ -312,15 +276,15 @@ public class KDTree
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
 				ArrayList<Node> leftNodes = new ArrayList<Node>();
-				double relevantCoord = medianNode.coords[dimension];
+				double relevantCoord = medianNode.getCoord(dimension);
 
 				for(Node n: nodes)
 				{
-					if(n.coords[dimension] < relevantCoord)
+					if(n.getCoord(dimension) < relevantCoord)
 					{
 						leftNodes.add(n);
 					}
-					else if(n.coords[dimension] >= relevantCoord)
+					else if(n.getCoord(dimension) >= relevantCoord)
 					{
 						rightNodes.add(n);
 					}
@@ -328,22 +292,6 @@ public class KDTree
 				if (!leftNodes.isEmpty()) result.left = expand(leftNodes, depth+1);
 				if (!rightNodes.isEmpty()) result.right = expand(rightNodes, depth+1);
 				return result;
-			}
-			else if (nodes.size() == 2)
-			{
-				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
-				{
-					KDNode result = new KDNode(nodes.get(0));
-					result.left = new KDNode(nodes.get(1));					
-					return result;
-
-				}
-				else
-				{
-					KDNode result = new KDNode(nodes.get(1));
-					result.left = new KDNode(nodes.get(0));
-					return result;
-				}
 			}
 			else
 			{

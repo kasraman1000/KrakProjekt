@@ -1,3 +1,4 @@
+package models;
 import java.awt.Color;
 import java.util.HashMap;
 
@@ -10,24 +11,26 @@ import java.util.HashMap;
  *
  */
 public class RoadStatus {
-
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	private static double scale;
-
+	
+	/**
+	 * To load the colors and widths of the roads the first time this class is called.
+	 */
 	static{
 		loadRoadColors();
 		loadRoadWidths();
 		scale = 1;
 	}
-	
+
 	/**
 	 * Depending on the zoomlevel, the width of the roads will be chanced.
 	 * It is not necessary to set the zoomlevel, but is most preferable!
 	 * 
 	 * @param zoomLevel An int from 1-5 where 5 is closest to the object
 	 */
-	public static void setZoomlevel(int zoomLevel)
+	public static void setScale(int zoomLevel)
 	{
 		if      (zoomLevel <= 1) {scale = 0.05;}
 		else if (zoomLevel == 2) {scale = 0.1;}
@@ -37,8 +40,10 @@ public class RoadStatus {
 	}
 
 
+
+
 	/**
-	 * Will load all the predefined road colors to a HashMap - only called in the constructor
+	 * Will load all the predefined road colors to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadColors(){
 		Color largeRoads = Color.red;
@@ -48,11 +53,13 @@ public class RoadStatus {
 		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-//		Color bicyclePaths = Color.gray;
+		Color routes = Color.yellow;
+		
 		Color unknownRoads = Color.cyan;
-
+		
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
+
 		roadColors.put(1, largeRoads); //"Motorvej"
 		roadColors.put(2, mediumRoads); //"Motortrafikvej"
 		roadColors.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -81,13 +88,14 @@ public class RoadStatus {
 		roadColors.put(45, tunnels); //"AndenVejtunnel"
 		roadColors.put(46, tunnels); //"MindreVejtunnel"
 		roadColors.put(48, tunnels); //"Stitunnel"
+		roadColors.put(50, routes); //Our own type for the searched route
 		roadColors.put(80, seaWays); //"Faergeforbindelser"
 		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 
 
 	/**
-	 * Will load all the predefined road widths to a HashMap - only called in the constructor
+	 * Will load all the predefined road widths to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadWidths(){
 		int largeRoads = 800;
@@ -95,16 +103,15 @@ public class RoadStatus {
 		int smallRoads = 130;
 		int tinyRoads = 130;
 		int tunnels = 130;
-
 		int seaWays  = 130; 
 		int walkingPaths = 130;
+		int routes = 130;
 
-//		int bicyclePaths = 130;
-
-		int unknownRoads = 100;
+		int unknownRoads = 130;
 
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
+
 		roadWidths.put(1, largeRoads); //"Motorvej"
 		roadWidths.put(2, mediumRoads); //"Motortrafikvej"
 		roadWidths.put(3, mediumRoads); //"PrimearruteOver6m"
@@ -133,14 +140,20 @@ public class RoadStatus {
 		roadWidths.put(45, tunnels); //"AndenVejtunnel"
 		roadWidths.put(46, tunnels); //"MindreVejtunnel"
 		roadWidths.put(48, tunnels); //"Stitunnel"
+		roadWidths.put(50, routes); //Our own type for the searched route
 		roadWidths.put(80, seaWays); //"Faergeforbindelser"
 		roadWidths.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
 
+	/**
+	 * Supply the client with the correct color of the roadtype specified
+	 * @param roadType Type of the road for which the color is wanted
+	 * @return A Color for the road
+	 */
 	public static Color getRoadColor(int roadType){
 		return roadColors.get(roadType);
 	}
-	
+
 	/**
 	 * Get the width of the road depending on the type of the road and what zoomlevel there has been set.
 	 * The zoomlevel can be set in setZoomlevel();
