@@ -62,17 +62,23 @@ public class Controller {
 	 * @param region The area to get the roads from
 	 * @return XML String containing all the roads in the Region
 	 */
-	public static String getXmlString(Region region){
-		String s = getRoadAndRoute("", "", false);
-//		Road[] roads = RoadSelector.searchRange(region);
-//		String s = "";
-//		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
-//		try {
-//			s = xml.createString(roads);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	public static String getXmlString(Region region, double bufferPercent){
+//		String s = getRoadAndRoute("", "", false);
+		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		String s = "";
+		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+		try {
+			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		return s;
 	}
 	
@@ -83,13 +89,13 @@ public class Controller {
 	 * @param target
 	 * @param isLengthWeighted
 	 */
-	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
+	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted, double bufferPercent){
 		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		
 		//From Skagen to ITU  :O)
-		int tempFrom = 0;//21199-1;
-		int tempTo = 100;//442122-1;
+		int tempFrom =21199-1;
+		int tempTo =442122-1;
 		
 		//Temp!!
 		int firstHouseNumber = 2;
@@ -97,9 +103,16 @@ public class Controller {
 		
 		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);
 		
+		
+	
+		
+		
+		
+		
+		//TODO 
 		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
 		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.searchRange(region);
+		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
 
 		
 		String xmlString = "";

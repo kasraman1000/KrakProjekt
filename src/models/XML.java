@@ -104,25 +104,25 @@ public class XML{
 		rootElement.appendChild(svgElement);
 		
 		//Add the roads (not routes) to the svg Element
-		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
-		roadElement.setAttribute("amount", roads.length +"");
-		svgElement.appendChild(roadElement);
+//		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
+//		roadElement.setAttribute("amount", roads.length +"");
+//		svgElement.appendChild(roadElement);
 		
-		addRoadsToElement(roads, roadElement);
+		addRoadsToElement(roads, svgElement);
 		
 		
 		//Add all the roads in the route to the svg Element
-		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
-		routeElement.setAttribute("amount", route.length +"");
-		svgElement.appendChild(routeElement);
+//		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
+//		routeElement.setAttribute("amount", route.length +"");
+//		svgElement.appendChild(routeElement);
 		
-		addRoadsToElement(route, routeElement);
+		//TODO Is the id-statement necessary
+		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
 		
 		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
-		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		
@@ -174,25 +174,25 @@ public class XML{
 		rootElement.appendChild(svgElement);
 		
 		//Add the roads (not routes) to the svg Element
-		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
-		roadElement.setAttribute("amount", roads.length +"");
-		svgElement.appendChild(roadElement);
+//		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
+//		roadElement.setAttribute("amount", roads.length +"");
+//		svgElement.appendChild(roadElement);
 		
-		addRoadsToElement(roads, roadElement);
+		addRoadsToElement(roads, svgElement);
 		
 		
 		//Add all the roads in the route to the svg Element
-		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
-		routeElement.setAttribute("amount", route.length +"");
-		svgElement.appendChild(routeElement);
+//		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
+//		routeElement.setAttribute("amount", route.length +"");
+//		svgElement.appendChild(routeElement);
 		
-		addRoadsToElement(route, routeElement);
-		
+		//TODO Is the id-statement necessary
+		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+				
 		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
-		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		
@@ -250,7 +250,40 @@ public class XML{
 										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
 			element.appendChild(line);
 		}
+		
+		
 	    
+	}
+	
+	private void addRouteElementsAfterRoads(Road[] route, Element element){
+		for(Road r : route){
+			Color color;
+			
+			//TODO For debugging
+			if(r == null){
+				System.out.println("XML.addRouteElementsAfterRoads(): A road was null!!");
+				continue;
+			}
+			
+			Element line = element.getOwnerDocument().createElement("line");
+			
+			color = r.getColor();
+			line.setAttribute("x1", r.getX1() + ""); 
+			line.setAttribute("y1", r.getY1() + ""); 
+			line.setAttribute("x2", r.getX2() + ""); 
+			line.setAttribute("y2", r.getY2() + ""); 
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
+			element.insertBefore(line, null);
+//			element.appendChild(line);
+		}
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	

@@ -1,10 +1,9 @@
 /**
  * 
  */
-package models;
+package routing;
 
-import routing.KrakEdge;
-import routing.Stack;
+import models.Road;
 
 /**
  * @author Yndal
