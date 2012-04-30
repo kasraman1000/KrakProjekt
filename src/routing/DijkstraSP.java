@@ -39,9 +39,9 @@ public class DijkstraSP {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private KrakEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
-    private EdgeWeightedDigraph G;
+    private KrakEdgeWeightedDigraph G;
     
-    public DijkstraSP(EdgeWeightedDigraph G){
+    public DijkstraSP(KrakEdgeWeightedDigraph G){
     	this.G = G;
     }
     
@@ -70,11 +70,7 @@ public class DijkstraSP {
      * @param t Id for the Node to end
      */
     private void calculateRoute(int s, int t){
-    	
-    	System.out.println("G.V(): " + G.V());
-    	
-    	
-        distTo = new double[G.V()];
+    	distTo = new double[G.V()];
         edgeTo = new KrakEdge[G.V()];
         for (int v = 0; v < G.V(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
@@ -126,7 +122,7 @@ public class DijkstraSP {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(KrakEdgeWeightedDigraph G, int s) {
 
         // check that edge weights are nonnegative
         for (KrakEdge e : G.edges()) {
