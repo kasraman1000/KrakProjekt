@@ -22,6 +22,7 @@ public class Controller {
 	
 	public Controller(){
 		System.out.println("System startup - please wait...");
+
 		roadSelector = new RoadSelector();
 		xml = new XML();
 		
