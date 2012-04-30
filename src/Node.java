@@ -1,7 +1,7 @@
 import java.util.HashSet;
 
 public class Node {
-	public final double[] coords;
+	private double[] coords;
 	private HashSet<Road> roads;
 	
 	public Node(double[] coords) {
@@ -22,4 +22,8 @@ public class Node {
 		return coords[index];
 	}
 	
+	public double[] getCoords()
+	{
+		return coords;
+	}
 }
