@@ -1,17 +1,18 @@
+package models;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import routing.Bag;
-import routing.DirectedEdge;
+import routing.KrakEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
 
-class Loader {
+public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static EdgeWeightedDigraph graph;
-	private static ArrayList<DirectedEdge> edges;
+	private static ArrayList<KrakEdge> edges;
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -80,13 +81,20 @@ class Loader {
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
-		edges = new ArrayList<DirectedEdge>();
+		edges = new ArrayList<KrakEdge>();
 
 		EdgeWeightedDigraph graph;
+
 		String[] textLineRoadArray;
 		int from;
 		int to;
 		int type;
+		int vPost;
+		int hPost;
+		int hFromHusnummer;
+		int hToHusnummer;
+		int vFromHusnummer;
+		int vToHusnummer;
 		double dist;
 		double time;
 		String name;
@@ -105,8 +113,14 @@ class Loader {
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
 			name = textLineRoadArray[6];
-			//time in minuttes
-
+			vPost = Integer.valueOf(textLineRoadArray[17]);
+			hPost = Integer.valueOf(textLineRoadArray[18]);
+			vFromHusnummer = Integer.valueOf(textLineRoadArray[7]);
+			vToHusnummer = Integer.valueOf(textLineRoadArray[8]);
+			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
+			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
+			
+			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
 
 			//tf = to->from
@@ -120,11 +134,11 @@ class Loader {
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 
 			//TODO fromPoint/toPoint might be changed
-			if      (direction.equals("'tf'")) edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
-			else if (direction.equals("'ft'")) edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
+			if      (direction.equals("'tf'")) edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+			else if (direction.equals("'ft'")) edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (!direction.equals("'n'")) {
-				edges.add(new DirectedEdge(from, to, name, dist, time, fromPoint, toPoint));
-				edges.add(new DirectedEdge(to, from, name, dist, time, fromPoint, toPoint));
+				edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
+				edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			}
 
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
@@ -138,7 +152,8 @@ class Loader {
 
 		graph = new EdgeWeightedDigraph(nodeList.size());
 
-		for(DirectedEdge e : edges){
+		
+		for(KrakEdge e : edges){
 			graph.addEdge(e);
 		}
 
@@ -158,8 +173,8 @@ class Loader {
 		
 	}
 	
-	public static ArrayList<DirectedEdge> getEdgesForTranslator() {
-		ArrayList<DirectedEdge> tempEdges = edges;
+	public static ArrayList<KrakEdge> getEdgesForTranslator() {
+		ArrayList<KrakEdge> tempEdges = edges;
 		edges = null;
 		return tempEdges;
 	}

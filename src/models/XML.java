@@ -1,8 +1,7 @@
+package models;
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,10 +14,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * This class is for the whole XML methods: 
@@ -65,21 +63,24 @@ public class XML{
 	 * 
 	 * @param roads All the roads to put into the xml-string
 	 * @return String with the xml containing the svg-element
-	 * @throws ParserConfigurationException
-	 * @throws TransformerConfigurationException
-	 * @throws TransformerException
+	 * @throws ParserConfigurationException If unable to create the new Document required to create the XML String
+	 * @throws TransformerConfigurationException If unable to create a new Transformer
+	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
 	public String createString(Road[] roads) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
 		
-		Document document = convertRoadArrayToDocument(roads);
+		//Only for debugging
+//		createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
+
+		Document document = convertRoadArrayToDocument(roads);
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	    Transformer transformer = transformerFactory.newTransformer();
 	    DOMSource source = new DOMSource(document);
 	    
-	    //TODO May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
+	    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
 	    StringWriter stringWriter = new StringWriter();
 	    StreamResult result = new StreamResult(stringWriter);
       	transformer.transform(source, result);
@@ -94,11 +95,11 @@ public class XML{
 	 * 
 	 * @param roads All the roads to put into the xml-file
 	 * @param filename Name of the file going to be created. Remember to write // if saving in a certain folder
-	 * @throws ParserConfigurationException
-	 * @throws TransformerConfigurationException
-	 * @throws TransformerException
+	 * @throws ParserConfigurationException If unable to create the new Document required to create the File
+	 * @throws TransformerConfigurationException If unable to create a new Transformer
+	 * @throws TransformerException If unable to transform the Document into a File
 	 */
-	public void createFile(Road[] roads, String filename) throws ParserConfigurationException, 
+	public void createFile(Road[] roads, String filename) throws ParserConfigurationException,
 														TransformerConfigurationException,
 														TransformerException{
 		
@@ -114,8 +115,14 @@ public class XML{
       	transformer.transform(source, result);
 	}		
 	
-	
-	private Document convertRoadArrayToDocument(Road[] roads) throws ParserConfigurationException, TransformerConfigurationException{
+	/**
+	 * Will turn all roads in the Road[] supplied into a Document
+	 * 
+	 * @param roads The roads to be added
+	 * @return The Document containing the roads
+	 * @throws ParserConfigurationException If unable to create a new Document
+	 */
+	private Document convertRoadArrayToDocument(Road[] roads) throws ParserConfigurationException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		Document document = docBuilder.newDocument();
@@ -143,29 +150,36 @@ public class XML{
 //			line.setAttribute("roadName", road.getName() + "");
 			gElement.appendChild(line);
 		}
-			
+				
 	    return document;
 	}
 
 	
-	//TODO This method has not yet been tested
-	private void addRoute(Document document, Road[] route) {
-		Color color = RoadStatus.getRouteColor();
-		Element gElement = document.getElementById("g");
-		for(Road road : route){
-			Element line = document.createElement("line");
-
-			line.setAttribute("x1", road.getX1() + ""); 
-			line.setAttribute("y1", road.getY1() + ""); 
-			line.setAttribute("x2", road.getX2() + ""); 
-			line.setAttribute("y2", road.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
-//			line.setAttribute("roadType", road.getType() + "");
-//			line.setAttribute("roadName", road.getName() + "");
-			gElement.appendChild(line);
-		}
-
-		
-	}
+//	//TODO This method has not yet been tested
+//	/**
+//	 * Will add the roads to the Document, but will give the roads a "route-color" to make sure, 
+//	 * that they will stand out from the rest of the roads.
+//	 *  
+//	 * @param document A Document already containing an Element with the nametag "g"
+//	 * @param route The roads to be marked as the route
+//	 */
+//	private void addRoute(Document document, Road[] route) {
+//		Color color = RoadStatus.getRouteColor();
+//		Element gElement = document.getElementById("g");
+//		for(Road road : route){
+//			Element line = document.createElement("line");
+//
+//			line.setAttribute("x1", road.getX1() + ""); 
+//			line.setAttribute("y1", road.getY1() + ""); 
+//			line.setAttribute("x2", road.getX2() + ""); 
+//			line.setAttribute("y2", road.getY2() + ""); 
+//			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+//										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
+////			line.setAttribute("roadType", road.getType() + "");
+////			line.setAttribute("roadName", road.getName() + "");
+//			gElement.appendChild(line);
+//		}
+//
+//		
+//	}
 }

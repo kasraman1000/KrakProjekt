@@ -1,4 +1,5 @@
-﻿import java.math.BigDecimal;
+﻿package models;
+import java.math.BigDecimal;
 
 public class Edge {
     

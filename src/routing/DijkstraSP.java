@@ -37,7 +37,7 @@ package routing;
 
 public class DijkstraSP {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
-    private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
+    private KrakEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
     private EdgeWeightedDigraph G;
     
@@ -52,20 +52,30 @@ public class DijkstraSP {
      * @param to Target
      * @param lengthWeighted True if length is weighted highest - else false to weight time the highest
      */
-    public Iterable<DirectedEdge> findRoute(int from, int to, boolean lengthWeighted) {
-    	DirectedEdge.setWeight(lengthWeighted);
+    public Stack<KrakEdge> findRoute(int from, int to, boolean lengthWeighted) {
+    	KrakEdge.setWeight(lengthWeighted);
     	
     	   if (!hasPathTo(from, to)) return null;
-           Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-           for (DirectedEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
+           Stack<KrakEdge> path = new Stack<KrakEdge>();
+           for (KrakEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
                path.push(e);
            }
            return path;
     }
     	
+    /**
+     * Fint the route from s to t
+     * 
+     * @param s Id for the Node to start
+     * @param t Id for the Node to end
+     */
     private void calculateRoute(int s, int t){
+    	
+    	System.out.println("G.V(): " + G.V());
+    	
+    	
         distTo = new double[G.V()];
-        edgeTo = new DirectedEdge[G.V()];
+        edgeTo = new KrakEdge[G.V()];
         for (int v = 0; v < G.V(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
         distTo[s] = 0.0;
@@ -75,7 +85,7 @@ public class DijkstraSP {
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj(v)){
+            for (KrakEdge e : G.adj(v)){
             	relax(e);
             	if(e.to() == t){
             		return;//All necessary data found
@@ -88,7 +98,7 @@ public class DijkstraSP {
     }
 
     // relax edge e and update pq if changed
-    private void relax(DirectedEdge e) {
+    private void relax(KrakEdge e) {
         int v = e.from(), w = e.to();
         if (distTo[w] > distTo[v] + e.weight()) {
             distTo[w] = distTo[v] + e.weight();
@@ -119,7 +129,7 @@ public class DijkstraSP {
     private boolean check(EdgeWeightedDigraph G, int s) {
 
         // check that edge weights are nonnegative
-        for (DirectedEdge e : G.edges()) {
+        for (KrakEdge e : G.edges()) {
             if (e.weight() < 0) {
                 System.err.println("negative edge weight detected");
                 return false;
@@ -141,7 +151,7 @@ public class DijkstraSP {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.V(); v++) {
-            for (DirectedEdge e : G.adj(v)) {
+            for (KrakEdge e : G.adj(v)) {
                 int w = e.to();
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
@@ -153,7 +163,7 @@ public class DijkstraSP {
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
         for (int w = 0; w < G.V(); w++) {
             if (edgeTo[w] == null) continue;
-            DirectedEdge e = edgeTo[w];
+            KrakEdge e = edgeTo[w];
             int v = e.from();
             if (w != e.to()) return false;
             if (distTo[v] + e.weight() != distTo[w]) {
