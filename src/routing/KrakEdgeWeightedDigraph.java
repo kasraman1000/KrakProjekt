@@ -3,9 +3,6 @@
  */
 package routing;
 
-import java.io.Serializable;
-
-
 
 /*************************************************************************
  *  Compilation:  javac EdgeWeightedDigraph.java

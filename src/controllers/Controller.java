@@ -41,7 +41,7 @@ public class Controller {
 		}
 		xml = new XML();
 		double end = System.nanoTime();
-		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
+		System.out.println("System up running... (In " + (end-start)/1e9 + " seconds)");
 	}
 	
 	
@@ -61,23 +61,23 @@ public class Controller {
 	 * @param region The area to get the roads from
 	 * @return XML String containing all the roads in the Region
 	 */
-	public static String getXmlString(Region region, double bufferPercent){
-//		String s = getRoadAndRoute("", "", false);
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
-		String s = "";
-		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
-		try {
-			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+	public static String getXmlString(Region region){//, double bufferPercent){
+		String s = getRoadAndRoute("", "", false, 0.7);
+//		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
+//		String s = "";
+//		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+//		try {
+//			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+//		} catch (TransformerConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ParserConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (TransformerException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
 		return s;
 	}
 	
@@ -102,63 +102,29 @@ public class Controller {
 		
 		
 		//ITU
-		int firstNodeId = EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceFrom);
+		int firstNodeId = pathPrefaceFrom.getEdge1().from(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceFrom);
 		
 		//An Edge in Skagen
-		int lastNodeId = EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceTo);
+		int lastNodeId = pathPrefaceTo.getEdge1().to(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceTo);
 		
 		
 		//Load the graph into Dijkstra and find the path
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
-		KrakEdge[] routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
-		
-		//Insert (if necessary) the correct starting/ending edge
-		routeEdges = EdgesAndRoadsConverter.correctRoute(routeEdges, pathPrefaceFrom, pathPrefaceTo);
-		
-		//Make the Edge[] to Road[] and make the last/first road start/stop by the house number
-		Road[] routeRoads = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, pathPrefaceFrom.getHouseNumber(), pathPrefaceTo.getHouseNumber());
-		
-		
-		
-		//Sidste og første Edge: Finde nærmeste node i forhold til husnummeret
-		//beregne rute fra de 2 pågældende noder
-		//tjekke om det lille vejstykke fra husnummeret -> noden findes igen i ruten (så skal den pågældende Edge fjernes)
-		//Tage imod 2xPathPreface
-	
-		
-		
-		/**
-		 * 
-		 * Hvis Den første Edge i ruten er lig PreFace.edge 1 eller 2 skal den første Edge tilpasses mht. husnummer
-		 * ellers skal PreFace.edge 1 eller 2 lægges til og tilpasset med husnummer
-		 * 
-		 */
-		
-		
-		
-		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
-		
-		//From Skagen to ITU  :O)
-//		int tempFrom =21199-1;
-//		int tempTo =442122-1;
-//		
-//		//Temp!!
-//		int firstHouseNumber = 2;
-//		int lastHouseNumber = 2;
-//		
-//		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);		
-//		
-//		
-//		//TODO 
-//		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
-		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		Stack<KrakEdge> routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
 
+		//Convert from stack to []
+		KrakEdge[] routeEdgesArray = EdgesAndRoadsConverter.convertRouteStackToArray(routeEdges);
 		
+		//Correct start and end of [] and do the house number thing 
+		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
+		
+		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
+		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
+
 		String xmlString = "";
 		
 		try {
-			xmlString = xml.createString(roads, routeRoads, region, StatusCode.ALL_WORKING);
+			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

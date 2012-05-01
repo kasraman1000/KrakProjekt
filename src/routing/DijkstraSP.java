@@ -52,19 +52,14 @@ public class DijkstraSP {
      * @param to Target
      * @param lengthWeighted True if length is weighted highest - else false to weight time the highest
      */
-    public KrakEdge[] findRoute(int from, int to, boolean lengthWeighted) {
+    public Stack<KrakEdge> findRoute(int from, int to, boolean lengthWeighted) {
     	KrakEdge.setWeight(lengthWeighted);
-    	
-    	   if (!hasPathTo(from, to)) return null;
-    	   KrakEdge[] correctRoute = new KrakEdge[edgeTo.length];
-    	   int index=0;
-//    	   Stack<KrakEdge> path = new Stack<KrakEdge>();
-           for (KrakEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
-        	   correctRoute[index++] = e;
-//               path.push(e);
-           }
-           return correctRoute;
-//           return path;
+    	if (!hasPathTo(from, to)) return null;
+    	Stack<KrakEdge> path = new Stack<KrakEdge>();
+    	for (KrakEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
+    		path.push(e);
+    	}
+    	return path;
     }
     	
     /**

@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class RoadStatus {
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
+	private static final int routeType;
 	private static double scale;
 	
 	/**
@@ -21,6 +22,7 @@ public class RoadStatus {
 	static{
 		loadRoadColors();
 		loadRoadWidths();
+		routeType = 50;
 		scale = 1;
 	}
 
@@ -162,5 +164,9 @@ public class RoadStatus {
 	 */
 	public static double getRoadWidth(int roadType){
 		return roadWidths.get(roadType)*scale;
+	}
+	
+	public static int getRouteType(){
+		return routeType;
 	}
 }

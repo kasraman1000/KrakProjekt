@@ -8,7 +8,6 @@ package routing;
  *
  *************************************************************************/
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -23,12 +22,12 @@ import java.util.NoSuchElementException;
  *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/13stacks">Section 1.3</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
-public class Bag<Item> implements Iterable<Item>, Serializable {
+public class Bag<Item> implements Iterable<Item> {
     private int N;         // number of elements in bag
     private Node first;    // beginning of bag
 
     // helper linked list class
-    private class Node implements Serializable {
+    private class Node {
         private Item item;
         private Node next;
     }

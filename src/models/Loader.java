@@ -134,12 +134,14 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
-			if(name.contains("Rued ")){
-				for(int index=0; index<textLineRoadArray.length; index++){
-					System.out.print(textLineRoadArray[index] + ",");
-				}
-				System.out.println();
-			}
+			//TODO
+			//For debugging, when hard coding something 
+//			if(name.contains("Rued ")){
+//				for(int index=0; index<textLineRoadArray.length; index++){
+//					System.out.print(textLineRoadArray[index] + ",");
+//				}
+//				System.out.println();
+//			}
 			
 			
 			

@@ -3,10 +3,6 @@
  */
 package routing;
 
-import java.io.Serializable;
-
-
-
 
 //Below is the syntax highlighted version of DirectedEdge.java from § Algorithms.   Here is the Javadoc.
 
