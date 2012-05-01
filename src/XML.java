@@ -126,7 +126,7 @@ public class XML{
 		document.appendChild(svgElement);
 		Element gElement = document.createElement("g");
 		svgElement.appendChild(gElement);
-		
+
 		Color color;
 		for(Road road : roads){
 			Element line = document.createElement("line");

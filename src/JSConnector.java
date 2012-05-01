@@ -61,6 +61,8 @@ public class JSConnector {
 			}else{
 				//TODO method that asks for mapdata and routeplanning
 			}
+			//TODO only for testing
+			response = XmlFhje.getTestXML();
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
