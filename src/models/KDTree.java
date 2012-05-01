@@ -1,6 +1,6 @@
+
 package models;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -15,7 +15,7 @@ public class KDTree
 	double[] top;
 	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
-
+	
 	private KDTree(int k)
 	{
 		this.k = k;
@@ -45,11 +45,11 @@ public class KDTree
 	 * @param r2 x and y coordinates for the other point of the second region
 	 * @return true if the regions intersect, false if not
 	 */
-	private boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
+	public boolean intersecting(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
-			if(r1[i] >= h2[i] || r2[i] <= h1[i]) return false;
+			if(r1[i] > h2[i] || r2[i] < h1[i]) return false;
 		}
 		return true;
 	}
@@ -62,7 +62,7 @@ public class KDTree
 	 * @param r2 x and y coordinates for the other point of the second region
 	 * @return true if the first region is fully contained in the second, false if not.
 	 */
-	private boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
+	public boolean fullyContained(double[] h1, double[] h2, double[] r1, double[] r2)
 	{
 		for(int i = 0; i < k; i++)
 		{
@@ -82,7 +82,7 @@ public class KDTree
 	{
 		for(int i=0; i < k; i++)
 		{
-			if(kdn.getNode().coords[i] < r1[i] || kdn.getNode().coords[i] > r2[i]) return false;
+			if(kdn.getNode().getCoord(i) <= r1[i] || kdn.getNode().getCoord(i) >= r2[i]) return false;
 		}
 		return true;
 	}
@@ -111,12 +111,12 @@ public class KDTree
 	{
 		if(depth%k==0)
 		{ 
-			double[] result = {kdn.getNode().coords[0], r[1]};
+			double[] result = {kdn.getNode().getCoord(0), r[1]};
 			return result;
 		}
 		else
 		{
-			double[] result = {r[0] ,kdn.getNode().coords[1]};
+			double[] result = {r[0] ,kdn.getNode().getCoord(1)};
 			return result;
 		}
 	}
@@ -149,23 +149,23 @@ public class KDTree
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
 			}
-			if (kdn.right != null)
+		}
+		if (kdn.right != null)
+		{
+			if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
-				if (fullyContained(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					nodes.add(kdn.right.getNode());
-					fillWithSubTree(kdn.right, nodes, depth+2);
-				}
-				else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
-				{
-					searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
-				}
+				nodes.add(kdn.right.getNode());
+				fillWithSubTree(kdn.right, nodes, depth+2);
+			}
+			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
+			{
+				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
 			}
 		}
 
 	}
 	
-	public void initialize(ArrayList<Node> nodes) throws IOException
+	public void initialize(ArrayList<Node> nodes)
 	{	
 		tree.build(nodes);
 		origo = Road.getOrigo();
@@ -193,7 +193,7 @@ public class KDTree
 
 		public String toString()
 		{
-			return "X= " + node.coords[0] + " Y= " + node.coords[1];
+			return "X= " + node.getCoord(0) + " Y= " + node.getCoord(1);
 		}
 
 		public KDNode getLeftChild()
@@ -236,7 +236,7 @@ public class KDTree
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();
 			Node pivot;
-			if(depth < 4 && nodes.size() > 150)
+			if(nodes.size() > 150)
 			{
 				pivot = nodes.get(100);
 			}
@@ -247,8 +247,8 @@ public class KDTree
 			
 			
 			for (Node n : nodes) {
-				if (n.coords[dimension] < pivot.coords[dimension]) below.add(n);
-				else if (n.coords[dimension] > pivot.coords[dimension]) above.add(n);
+				if (n.getCoord(dimension) < pivot.getCoord(dimension)) below.add(n);
+				else if (n.getCoord(dimension) > pivot.getCoord(dimension)) above.add(n);
 				else if (pivot != n) above.add(n);
 			}
 			int i = below.size();
@@ -260,7 +260,7 @@ public class KDTree
 
 		}
 		/**
-		 * 
+		 * Returns the child node from a collection of nodes and recursively builds the KDTree.
 		 * @param nodes The nodes that the KDTree/subtree is build from
 		 * @param depth	Recursion depth of the function call.
 		 * @return	The KDNode that contains the median node for the nodes collection.
@@ -268,7 +268,7 @@ public class KDTree
 		private KDNode expand(ArrayList<Node> nodes, int depth)
 		{
 
-			if (nodes.size() > 2)
+			if (nodes.size() > 1)
 			{
 				int dimension = depth%k;
 				Node medianNode = median(nodes, nodes.size()/2, depth);
@@ -276,15 +276,15 @@ public class KDTree
 				nodes.remove(medianNode);
 				ArrayList<Node> rightNodes = new ArrayList<Node>();
 				ArrayList<Node> leftNodes = new ArrayList<Node>();
-				double relevantCoord = medianNode.coords[dimension];
+				double relevantCoord = medianNode.getCoord(dimension);
 
 				for(Node n: nodes)
 				{
-					if(n.coords[dimension] < relevantCoord)
+					if(n.getCoord(dimension) < relevantCoord)
 					{
 						leftNodes.add(n);
 					}
-					else if(n.coords[dimension] >= relevantCoord)
+					else if(n.getCoord(dimension) >= relevantCoord)
 					{
 						rightNodes.add(n);
 					}
@@ -292,22 +292,6 @@ public class KDTree
 				if (!leftNodes.isEmpty()) result.left = expand(leftNodes, depth+1);
 				if (!rightNodes.isEmpty()) result.right = expand(rightNodes, depth+1);
 				return result;
-			}
-			else if (nodes.size() == 2)
-			{
-				if (nodes.get(0).coords[depth%k] > nodes.get(1).coords[depth%k])
-				{
-					KDNode result = new KDNode(nodes.get(0));
-					result.left = new KDNode(nodes.get(1));					
-					return result;
-
-				}
-				else
-				{
-					KDNode result = new KDNode(nodes.get(1));
-					result.left = new KDNode(nodes.get(0));
-					return result;
-				}
 			}
 			else
 			{

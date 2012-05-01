@@ -58,14 +58,15 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-	private static ArrayList<Road> filter(Collection<Road> roads, int max, int zoom) 
+
+	public static Road[] searchRange(double[] p1, double[] p2)
 	{
 		ArrayList<Road> result = new ArrayList<Road>();
 		if(zoom < 5)
 		{
 			int count = 0;
 			for(Road r : roads) {
-				if(!(r.getPriority() < zoom)) {
+				if(r.getPriority() >= zoom) {
 					count++;
 				}
 
@@ -78,7 +79,7 @@ public class RoadSelector {
 		}
 		
 		for(Road r : roads) {
-			if(!(r.getPriority() < zoom)) {
+			if(r.getPriority() >= zoom) {
 				result.add(r);
 			}
 		}
