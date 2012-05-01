@@ -21,7 +21,6 @@ import views.*;
 public class Controller {
 	private static XML xml;
 	private static KDTree kdTree;
-	private static JSConnector jsConnector;
 	
 	
 	public static void main(String[] args) {
@@ -51,7 +50,7 @@ public class Controller {
 	 * 
 	 */
 	public static void startServer(){
-		jsConnector = new JSConnector();
+		new JSConnector();
 	}
 	 
 
@@ -90,27 +89,68 @@ public class Controller {
 	 * @param isLengthWeighted
 	 */
 	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted, double bufferPercent){
-		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
+		
+		
+		//ITU
+		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
+													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
+														2);
+		//An Edge in Skagen
+		PathPreface pathPrefaceTo = new PathPreface(new KrakEdge(21194-1, 21199-1, "Kratvej", 8.73, 0.12, new double[]{5000,5000}, new double[]{10000,10000}, 9900, 9900, 0, 20, 1, 21), 
+													new KrakEdge(21199-1, 21194-1, "Kratvej", 8.73, 0.12, new double[]{10000,10000}, new double[]{5000,5000}, 9900, 9900, 0, 20, 1, 21), 
+													2);
+		
+		
+		//ITU
+		int firstNodeId = EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceFrom);
+		
+		//An Edge in Skagen
+		int lastNodeId = EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceTo);
+		
+		
+		//Load the graph into Dijkstra and find the path
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
+		KrakEdge[] routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
 		
-		//From Skagen to ITU  :O)
-		int tempFrom =21199-1;
-		int tempTo =442122-1;
+		//Insert (if necessary) the correct starting/ending edge
+		routeEdges = EdgesAndRoadsConverter.correctRoute(routeEdges, pathPrefaceFrom, pathPrefaceTo);
 		
-		//Temp!!
-		int firstHouseNumber = 2;
-		int lastHouseNumber = 2;
-		
-		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);
+		//Make the Edge[] to Road[] and make the last/first road start/stop by the house number
+		Road[] routeRoads = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, pathPrefaceFrom.getHouseNumber(), pathPrefaceTo.getHouseNumber());
 		
 		
+		
+		//Sidste og første Edge: Finde nærmeste node i forhold til husnummeret
+		//beregne rute fra de 2 pågældende noder
+		//tjekke om det lille vejstykke fra husnummeret -> noden findes igen i ruten (så skal den pågældende Edge fjernes)
+		//Tage imod 2xPathPreface
 	
 		
 		
+		/**
+		 * 
+		 * Hvis Den første Edge i ruten er lig PreFace.edge 1 eller 2 skal den første Edge tilpasses mht. husnummer
+		 * ellers skal PreFace.edge 1 eller 2 lægges til og tilpasset med husnummer
+		 * 
+		 */
 		
 		
-		//TODO 
-		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
+		
+		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
+		
+		//From Skagen to ITU  :O)
+//		int tempFrom =21199-1;
+//		int tempTo =442122-1;
+//		
+//		//Temp!!
+//		int firstHouseNumber = 2;
+//		int lastHouseNumber = 2;
+//		
+//		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);		
+//		
+//		
+//		//TODO 
+//		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
 		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
 		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
 
@@ -118,7 +158,7 @@ public class Controller {
 		String xmlString = "";
 		
 		try {
-			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
+			xmlString = xml.createString(roads, routeRoads, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -134,6 +134,16 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
+			if(name.contains("Rued ")){
+				for(int index=0; index<textLineRoadArray.length; index++){
+					System.out.print(textLineRoadArray[index] + ",");
+				}
+				System.out.println();
+			}
+			
+			
+			
+			
 			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
 			
