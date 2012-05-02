@@ -48,7 +48,7 @@ public class KDTreeTest {
 	public static void setup()
 	{
 		try {
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
 			nodes = Loader.getNodesForKDTree();
 			kdTree.initialize(nodes);
 		} catch (IOException e) {

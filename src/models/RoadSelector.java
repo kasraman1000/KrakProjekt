@@ -19,9 +19,10 @@ public class RoadSelector {
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
 
-	public static Road[] search(Region region) 
+	public static Road[] search(Region region, double bufferPercent) 
 	{
 		double time;
+		region.addBuffer(bufferPercent);
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
 		//Choosing filter dependent on the width of the viewport

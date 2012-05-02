@@ -29,7 +29,7 @@ public class Loader {
 
 
 	public static void load(String nodePath, String edgePath, String zipPath) throws IOException{
-		//Creates the map, that contains each city's zipcode
+		//Creates the map, that contains each city's zip code
 		buildZipCodeMap(zipPath);
 		//Creates a Scanner for the filenames specified
 		In inEdges = new In(new File(edgePath));
