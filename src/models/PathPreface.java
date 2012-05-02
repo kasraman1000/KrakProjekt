@@ -14,10 +14,19 @@ public class PathPreface{
 	KrakEdge edge2;
 	int houseNumber;
 	
-	PathPreface(KrakEdge e1, KrakEdge e2, int houseNumber){
+	public PathPreface(KrakEdge e1, KrakEdge e2, int houseNumber){
 		edge1 = e1;
 		edge2 = e2;
 		this.houseNumber = houseNumber;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PathPreface [edge1=" + edge1 + ",\n edge2=" + edge2
+				+ ",\n houseNumber=" + houseNumber + "]";
 	}
 
 	/**
