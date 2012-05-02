@@ -1,4 +1,5 @@
 package views;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -53,7 +54,18 @@ public class JSConnector {
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
 			Double y2 = Double.valueOf(parameters.get("y2"));
-			String response = Controller.getXmlString(new Region(x1,y1,x2,y2));
+			String from = parameters.get("from");
+			String to = parameters.get("to");
+			Boolean isDistance = Boolean.valueOf(parameters.get("isDistance"));
+			String response = "";
+			//if "from" is null then the client is not asking for routeplanning but only mapdata
+			if(from == null){
+				response = Controller.getXmlString(new Region(x1,y1,x2,y2));
+			}else{
+				//TODO method that asks for mapdata and routeplanning
+			}
+			//TODO only for testing
+//			response = XmlFhje.getTestXML();
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,7 +83,6 @@ public class JSConnector {
 //			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
 			String httpResponse = httpHeader + response;
-	//		output.writeUTF(httpResponse);
 			output.write(httpResponse.getBytes());
 			output.flush();
 			output.close();
