@@ -117,7 +117,16 @@ public class EdgeParser {
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
 			
-			String[] address = {"Annasvej","14","","",""};
+			String tempAdr = "Annasvej 14";
+			String[] address = AddressParser.parseAddress(tempAdr);
+			
+			for(int index=0; index<address.length; index++){
+				System.out.println(address[index] +",");
+			}
+			System.out.println(" but should be something like: " + tempAdr);
+			
+			
+//			String[] address = {"Annasvej","14","","",""};
 			//System.out.println(address[0]);
 			try {
 				System.out.println(EdgeParser.findPreface(address));

@@ -294,6 +294,16 @@ public class EdgesAndRoadsConverter {
 				newEdges[newEdges.length-1] = edgeToBeAddedAtEndOfRoute;
 		}
 
+		for(int index=0; index<newEdges.length; index++){
+			if(newEdges[index] == null) System.err
+					.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() - line 297: newEdges[" + index + "] == null");
+		}
+		System.out
+				.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() + linie 297: newEdges.size(): " + newEdges.length);
+		
+		
+		
+		
 		return changeFirstAndLastEdgeToHouseNumber(newEdges, pathPrefaceFrom, pathPrefaceTo);
 	}
 	
