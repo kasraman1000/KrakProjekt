@@ -1,7 +1,7 @@
+package models;
 import java.util.HashSet;
 
 public class Node {
-	
 	public final double[] coords;
 	private HashSet<Road> roads;
 	
@@ -9,7 +9,7 @@ public class Node {
 		this.coords = coords;
 		roads = new HashSet<Road>();
 	}
-	
+		
 	public void addRoad(Road r) {
 		roads.add(r);
 	}

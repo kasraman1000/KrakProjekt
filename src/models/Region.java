@@ -1,3 +1,4 @@
+package models;
 public class Region {
 	private double[] p1 = new double[2];
 	private double[] p2 = new double[2];

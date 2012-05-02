@@ -26,7 +26,9 @@
 				var responseXML = xmlhttp.responseXML;
 				var statusCode = responseXML.evaluate("//statusCode", roadsXML,
 						null, XPathResult.ANY_TYPE, null);
-				handleStatusCode(statusCode.iterateNext().textContent);
+				var statusCodeString = statusCode.iterateNext().textContent;
+				alert(statusCodeString);
+				handleStatusCode(statusCodeString);
 				var svg = responseXML.evaluate("//svg", roadsXML,
 						null, XPathResult.ANY_TYPE, null);
 				showSvg(svg.iterateNext());

@@ -1,3 +1,5 @@
+package views;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -6,16 +8,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
+import controllers.Controller;
+
+import models.Region;
+
 
 public class JSConnector {
-
-	private Controller controller;
-
 	/**
 	 * Constructor that makes the class ready for a request
 	 */
-	public JSConnector(Controller c) {
-		controller = c;
+	public JSConnector(){
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
 			ServerSocket ss = new ServerSocket(80);
@@ -47,6 +49,7 @@ public class JSConnector {
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
+//			System.out.println("js - handleRequest(): " + parameters.get("x1"));
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
@@ -62,7 +65,7 @@ public class JSConnector {
 				//TODO method that asks for mapdata and routeplanning
 			}
 			//TODO only for testing
-			response = XmlFhje.getTestXML();
+//			response = XmlFhje.getTestXML();
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -80,7 +83,6 @@ public class JSConnector {
 //			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
 			String httpResponse = httpHeader + response;
-	//		output.writeUTF(httpResponse);
 			output.write(httpResponse.getBytes());
 			output.flush();
 			output.close();
@@ -99,7 +101,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
-//		System.out.println("JSconnector.ReadParameters - line: " + line);
+		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark

@@ -1,8 +1,10 @@
+package models;
+
 import java.awt.Color;
 import java.awt.Point;
 
 /**
- * @author Yndal
+ * @author
  *
  */
 public class Road {
