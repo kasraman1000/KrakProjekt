@@ -1,9 +1,18 @@
-package routing;
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class AddressParser {
+class AddressParser {
+	
+//	public static void main(String[] args) {
+//		String test = "Annasvej 14";
+//		
+//		String[] result = parseAddress(test);
+//		
+//		for (int i = 0; i < result.length; i++) {
+//			System.out.println("\""+result[i]+"\"");
+//		}
+//		
+//	}
     
     /**
      * Parses a string and returns an array containing:
@@ -89,7 +98,7 @@ public class AddressParser {
      * to the number, it will include that as a house letter as well. 
      */
     private static void findHouseNumber(String s, String[] result) {
-        Pattern houseNumberPattern = Pattern.compile("\\b\\d{1,3}+.");
+        Pattern houseNumberPattern = Pattern.compile("\\b\\d{1,3}+.?");
         Matcher houseNumberMatcher = houseNumberPattern.matcher(s);
         
         // If the matcher finds something in the specified pattern (house number)
@@ -135,7 +144,4 @@ public class AddressParser {
             }
         }
     }
-    
-        
-    
 }
