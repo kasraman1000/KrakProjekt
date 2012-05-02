@@ -187,19 +187,18 @@ public class Loader {
 		
 	}
 	
-	public static ArrayList<KrakEdge> getEdgesForTranslator() {
-		ArrayList<KrakEdge> tempEdges = edges;
-		edges = null;
-		return tempEdges;
-	}
-
-
 	public static KrakEdgeWeightedDigraph getGraph(){
 		//TODO Add a nice Exception to throw
 		//		if(graph == null) throw new DataNotLoadedException();
 		return graph;
 	}
 
+	public static ArrayList<KrakEdge> getEdgesForTranslator() {
+		ArrayList<KrakEdge> tempEdges = edges;
+		edges = null;
+		return tempEdges;
+	}
+	
 	/**
 	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value
 	 * If it is, the maximum or minimum is updated.

@@ -10,6 +10,7 @@ import models.PathPreface;
 import routing.Bag;
 import routing.KrakEdge;
 
+//TODO: City name recognition
 
 public class EdgeParser {
 
