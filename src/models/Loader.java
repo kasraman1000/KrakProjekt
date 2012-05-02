@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import routing.KrakEdgeWeightedDigraph;
 import routing.In;
 import routing.KrakEdge;
+import routing.KrakEdgeWeightedDigraph;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
@@ -81,9 +81,7 @@ public class Loader {
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
-		edges = new ArrayList<KrakEdge>();
-
-		EdgeWeightedDigraph graph;
+		ArrayList<KrakEdge> edges = new ArrayList<KrakEdge>();
 
 		String[] textLineRoadArray;
 		int from;
