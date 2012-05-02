@@ -37,6 +37,7 @@ public class EdgesAndRoadsConverter {
 
 	private static KrakEdge divideKrakEdge(KrakEdge edge, boolean firstEdge, int houseNumber) {
 		//The new values
+		if(edge == null) System.out.println("EdgesAndRoadsConverter.divideKrakEdge() - Edge is null");
 		String name = edge.getName();
 		int vPost = edge.getvPost(); //TODO May not be true
 		int hPost = edge.gethPost(); //TODO May not be true
@@ -247,6 +248,7 @@ public class EdgesAndRoadsConverter {
 			//... the correct Edge are to be added in front of the route
 			if(routeEdges[0].to() == pathPrefaceFrom.getEdge1().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge1();//add first edge in front of route
 			else if(routeEdges[0].to() == pathPrefaceFrom.getEdge2().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge2();//add second edge in front of route
+			//TODO May add error handling
 			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - not corresponding to-id's!! Something serious is wrong!!");
 		
 		//If NOT either of the two Edge's in the pathPreface are equal to the last Edge in the route...
@@ -256,6 +258,7 @@ public class EdgesAndRoadsConverter {
 			//...the correct Edge must be added 
 			if(routeEdges[routeEdges.length-1].from() == pathPrefaceTo.getEdge1().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge1();
 			else if(routeEdges[routeEdges.length-1].from() == pathPrefaceTo.getEdge2().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge2();
+			//TODO May add error handling
 			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - not corresponding from-id's!! Something serious is wrong!!");
 		
 		int edgesToBeAdded = 0;
@@ -264,9 +267,9 @@ public class EdgesAndRoadsConverter {
 		
 		KrakEdge[] newEdges = new KrakEdge[routeEdges.length+edgesToBeAdded];
 	
-		//TODO
-		if(edgeToBeAddedInFrontOfRoute==null) System.out.println("Tuttelu");
-		if(edgeToBeAddedAtEndOfRoute==null) System.out.println("tralala");
+//		//TODO
+//		if(edgeToBeAddedInFrontOfRoute==null) System.out.println("Tuttelu");
+//		if(edgeToBeAddedAtEndOfRoute==null) System.out.println("tralala");
 		
 		//If Edges are to be added
 		if(edgesToBeAdded != 0){

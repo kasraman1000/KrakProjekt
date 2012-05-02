@@ -74,6 +74,11 @@ public class Loader {
 			coordArray.get(index)[1] = newY;
 	
 			nodeList.put(index, new Node(new double[]{newX, newY}));
+			
+//			//TODO FOr debugging
+//			if(index == 4417662 || index == 442122) System.out.println("nodeId: " + index + ", x: " + newX + ", y: " + newY);
+			
+		
 		}
 		
 		coordArray = null;
@@ -134,8 +139,8 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
-			//TODO
-			//For debugging, when hard coding something 
+//			//TODO
+//			//For debugging, when hard coding something 
 //			if(name.contains("Rued ")){
 //				for(int index=0; index<textLineRoadArray.length; index++){
 //					System.out.print(textLineRoadArray[index] + ",");
