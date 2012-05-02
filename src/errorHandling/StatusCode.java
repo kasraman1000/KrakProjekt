@@ -1,7 +1,7 @@
 /**
  * 
  */
-package models;
+package errorHandling;
 
 /**
  * @author Yndal
