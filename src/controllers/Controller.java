@@ -104,7 +104,7 @@ public class Controller {
 //													2);
 		
 		//Get fromPreface
-		String[] fromAddressArray = {"Annasvej","14","","4600","Køge"};//AddressParser.parseAddress(fromAddress);
+		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
 		PathPreface pathPrefaceFrom = null;
 		try {
 			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
@@ -114,7 +114,7 @@ public class Controller {
 		}
 		
 		//Get toPreface
-		String[] toAddressArray = {"Farstrupvej","5","","4600","Køge"};//AddressParser.parseAddress(toAddress);
+		String[] toAddressArray = AddressParser.parseAddress(toAddress);
 		PathPreface pathPrefaceTo = null;
 		try {
 			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);

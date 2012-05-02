@@ -1,7 +1,9 @@
+package routing;
+
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-class AddressParser {
+public class AddressParser {
 	
 //	public static void main(String[] args) {
 //		String test = "Annasvej 14";
