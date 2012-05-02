@@ -124,7 +124,6 @@ public class KDTree
 	public ArrayList<Node> searchRange(Region region)
 	{
 		//If coordinates are of wrong input, correct them
-		region.adjust();
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
 		//Creating a HashSet to make sure that no road are contained twice.

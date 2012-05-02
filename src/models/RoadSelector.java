@@ -15,10 +15,11 @@ public class RoadSelector {
 	 * @param region The region which binds the viewport
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-	public static Road[] searchRange(Region region)
+
+	public static Road[] search(Region region, double bufferPercent) 
 	{
-		//If coordinates are of wrong input, correct them
-		region.adjust();
+		double time;
+		region.addBuffer(bufferPercent);
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
@@ -50,9 +51,9 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-	public static Road[] searchRange(double[] p1, double[] p2)
+	public static Road[] searchRange(double[] p1, double[] p2, double bufferPercent)
 	{
-		return searchRange(new Region(p1[0], p1[1], p2[0], p2[1]));
+		return search(new Region(p1[0], p1[1], p2[0], p2[1]), bufferPercent);
 	}
 	
 	/**

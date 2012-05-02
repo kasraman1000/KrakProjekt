@@ -28,12 +28,11 @@ public class Loader {
 		yMax = 0.0;
 	}
 
-
-
 	public static void load(String nodePath, String edgePath, String zipPath) throws ServerStartupException{
 		try{		
 		//Creates the map, that contains each city's zipcode
 		buildZipCodeMap(zipPath);
+
 		//Creates a Scanner for the filenames specified
 			inEdges = new In(new File(edgePath));
 			inNodes = new In(new File(nodePath));
