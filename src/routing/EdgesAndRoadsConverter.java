@@ -318,10 +318,10 @@ public class EdgesAndRoadsConverter {
 		//Will reset the coordinates, so they can be used for the next search for min and max coordinates
 		resetCoordinateValues();
 		
-		System.out.println("xMin: " + xMin);
-		System.out.println("yMin: " + yMin);
-		System.out.println("xMax: " + xMax);
-		System.out.println("yMax: " + yMax);
+//		System.out.println("xMin: " + xMin);
+//		System.out.println("yMin: " + yMin);
+//		System.out.println("xMax: " + xMax);
+//		System.out.println("yMax: " + yMax);
 	
 		
 		for(int index=0; index<edges.length; index++){
@@ -337,11 +337,11 @@ public class EdgesAndRoadsConverter {
 										 edges[index].getName()
 										 );
 			
-		//TODO For debugging
-		if(edges[index].getFromPoint()[0] > 283000) System.out.println("Juhuuuu");
-		if(edges[index].getToPoint()[0] > 283000) System.out.println("Juhuuuu");
-		if(edges[index].getFromPoint()[0] < 1) System.out.println("Jaaaa");
-		if(edges[index].getToPoint()[0] < 1) System.out.println("Jaaaa");
+//		//TODO For debugging
+//		if(edges[index].getFromPoint()[0] > 283000) System.out.println("Juhuuuu");
+//		if(edges[index].getToPoint()[0] > 283000) System.out.println("Juhuuuu");
+//		if(edges[index].getFromPoint()[0] < 1) System.out.println("Jaaaa");
+//		if(edges[index].getToPoint()[0] < 1) System.out.println("Jaaaa");
 		
 		
 		

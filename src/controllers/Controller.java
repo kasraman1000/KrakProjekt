@@ -33,7 +33,7 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			Loader.load("TestNodes50000.txt","TestEdges50000.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
 			kdTree.initialize(Loader.getNodesForKDTree());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
