@@ -24,13 +24,10 @@
 					&& (xmlhttp.status == 0 || xmlhttp.status == 200)) {
 				clearTimeout(t);
 				var responseXML = xmlhttp.responseXML;
-				var statusCode = responseXML.evaluate("//statusCode", roadsXML,
-						null, XPathResult.ANY_TYPE, null);
-				var statusCodeString = statusCode.iterateNext().textContent;
-				alert(statusCodeString);
+				var statusCode = responseXML.evaluate("//statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
+				var statusCodeString = statusCode.iterateNext().getAttribute("code");
 				handleStatusCode(statusCodeString);
-				var svg = responseXML.evaluate("//svg", roadsXML,
-						null, XPathResult.ANY_TYPE, null);
+				var svg = responseXML.evaluate("//myns:svg", responseXML, resolver, XPathResult.ANY_TYPE, null);
 				showSvg(svg.iterateNext());
 			}
 		}
@@ -40,12 +37,15 @@
 		xmlhttp.open("GET", uri, true);
 		xmlhttp.send();
 	}
+	function resolver(){
+		return "http://www.w3.org/2000/svg";
+	}
 	/*This function checks whether or not the server is sending a error as response. If the
 	server is sending an error the method will show a propriate message to the user.
 	The format should follow this pattern: "Error [number]" eg. Error 4
 	 */
 	function handleStatusCode(statusCode) {
-		switch (errorCode) {
+		switch (statusCode) {
 		case "0":
 			//everything is normal - no error should be shown
 			break;
