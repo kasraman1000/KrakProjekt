@@ -4,6 +4,8 @@
 package routing;
 
 
+
+
 //Below is the syntax highlighted version of DirectedEdge.java from § Algorithms.   Here is the Javadoc.
 
 
@@ -192,10 +194,12 @@ public class KrakEdge {
 		return hToHouseNumber;
 	}
 
-/**
+	/**
      * Return a string representation of this edge.
      */
     public String toString() {
-        return from + "->" + to + ", " + length + " m and " + time + " minutes";
+        return name + ": " + from + "->" + to + ", " + length + " m and " + time + " minutes"
+        		+ "\t (house numbers: " + vFromHouseNumber + "-" + vToHouseNumber + ", "
+        		+ + hFromHouseNumber + "-" + hToHouseNumber + "), Postal code: " + vPost + "-" + hPost;
     }
 }

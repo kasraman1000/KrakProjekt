@@ -64,8 +64,8 @@ public class EdgeParser {
 				while (edges.hasNext()) {
 					KrakEdge ke = edges.next();
 					System.out.println(ke);
-					if (houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber() ||
-							houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())
+					if ((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
+							(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber()))
 						results.add(ke);
 				}
 			}
@@ -77,6 +77,8 @@ public class EdgeParser {
 			Iterator<KrakEdge> i = results.iterator();
 			while (i.hasNext()) 
 				System.out.println(i.next());
+			
+			System.out.println();
 			
 			if (!results.isEmpty()) {
 				
