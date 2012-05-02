@@ -1,6 +1,8 @@
 package models;
+
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import routing.Bag;
 import routing.KrakEdge;
 import routing.EdgeWeightedDigraph;
 import routing.In;
+import errorHandling.*;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
@@ -17,6 +20,8 @@ public class Loader {
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
+	private static In inEdges;
+	private static In inNodes;
 
 	static{
 		nodesForKDTree = new ArrayList<Node>();
@@ -27,10 +32,16 @@ public class Loader {
 	}
 
 
-	public static void load(String nodePath, String edgePath) throws IOException{
+	public static void load(String nodePath, String edgePath) throws ServerStartupException{
 		//Creates a Scanner for the filenames specified
-		In inEdges = new In(new File(edgePath));
-		In inNodes = new In(new File(nodePath));
+		try{
+			inEdges = new In(new File(edgePath));
+			inNodes = new In(new File(nodePath));
+		}
+		catch(FileNotFoundException e) {
+			String nameOfClass = Loader.class.getName();
+			throw new ServerStartupException(e, nameOfClass);
+		}
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();

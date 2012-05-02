@@ -23,10 +23,27 @@ import org.w3c.dom.Element;
  * 	It can create a string or file from a Road[]
  * 	It can create a Road[] from a file or string
  * 
- * @author Group KRAX
+ * @author Group 1
  *
  */
 public class XML{
+	private final String ROOT_ELEMENT_NAME;
+	private final String SVG_ELEMENT_NAME;
+	private final String ROAD_ELEMENT_NAME;
+	private final String ROUTE_ELEMENT_NAME;
+	private final String VIEWPORT_ELEMENT_NAME;
+	private final String STATUSCODE_ELEMENT_NAME;
+	
+	public XML(){
+		ROOT_ELEMENT_NAME = "root";
+		SVG_ELEMENT_NAME = "svg";
+		ROAD_ELEMENT_NAME = "roads";
+		ROUTE_ELEMENT_NAME =  "route";
+		VIEWPORT_ELEMENT_NAME =  "viewPort";
+		STATUSCODE_ELEMENT_NAME = "statusCode";
+	}
+	
+	
 	/**
 	 * This method is only for testing
 	 * @return Road[] An array of roads
@@ -67,15 +84,56 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
-	public String createString(Road[] roads) throws ParserConfigurationException, 
+	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) throws ParserConfigurationException, 
 													TransformerConfigurationException,
 													TransformerException{
-		
+		//TODO
 		//Only for debugging
-//		createFile(roads, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
-
-		Document document = convertRoadArrayToDocument(roads);
+		//Create the Document
+		Document document = createNewDocumentWithRoot();
+		
+		//Create the root Element
+		Element rootElement = document.createElement(ROOT_ELEMENT_NAME);
+		document.appendChild(rootElement);
+		
+		
+		//The svg Element
+		Element svgElement = createSvgElement(document);
+		rootElement.appendChild(svgElement);
+		
+		//Add the roads (not routes) to the svg Element
+//		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
+//		roadElement.setAttribute("amount", roads.length +"");
+//		svgElement.appendChild(roadElement);
+		
+		addRoadsToElement(roads, svgElement);
+		
+		
+		//Add all the roads in the route to the svg Element
+//		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
+//		routeElement.setAttribute("amount", route.length +"");
+//		svgElement.appendChild(routeElement);
+		
+		//TODO Is the id-statement necessary
+		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+		
+		
+		//Add the StatusCode Element to the RootElement
+		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		rootElement.appendChild(statusCodeElement);
+		
+		
+		//Add the ViewPortElement to the RootElement
+		Element viewPortElement = document.createElement(VIEWPORT_ELEMENT_NAME);
+		rootElement.appendChild(viewPortElement);
+		
+		addViewPortData(region, viewPortElement);
+		
+		
+		//Transform the Document into a XML String and return the String
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	    Transformer transformer = transformerFactory.newTransformer();
 	    DOMSource source = new DOMSource(document);
@@ -99,11 +157,51 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a File
 	 */
-	public void createFile(Road[] roads, String filename) throws ParserConfigurationException,
+	public void createFile(Road[] roads, Road[] route, Region region, StatusCode statusCode, String filename) throws ParserConfigurationException,
 														TransformerConfigurationException,
 														TransformerException{
 		
-		Document document = convertRoadArrayToDocument(roads);
+		//Create the Document
+		Document document = createNewDocumentWithRoot();
+		
+		//Create the root Element
+		Element rootElement = document.createElement(ROOT_ELEMENT_NAME);
+		document.appendChild(rootElement);
+		
+		
+		//The svg Element
+		Element svgElement = createSvgElement(document);
+		rootElement.appendChild(svgElement);
+		
+		//Add the roads (not routes) to the svg Element
+//		Element roadElement = document.createElement(ROAD_ELEMENT_NAME);
+//		roadElement.setAttribute("amount", roads.length +"");
+//		svgElement.appendChild(roadElement);
+		
+		addRoadsToElement(roads, svgElement);
+		
+		
+		//Add all the roads in the route to the svg Element
+//		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
+//		routeElement.setAttribute("amount", route.length +"");
+//		svgElement.appendChild(routeElement);
+		
+		//TODO Is the id-statement necessary
+		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+				
+		
+		//Add the StatusCode Element to the RootElement
+		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		rootElement.appendChild(statusCodeElement);
+		
+		
+		//Add the ViewPortElement to the RootElement
+		Element viewPortElement = document.createElement(VIEWPORT_ELEMENT_NAME);
+		rootElement.appendChild(viewPortElement);
+		
+		addViewPortData(region, viewPortElement);
+
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	    Transformer transformer = transformerFactory.newTransformer();
@@ -115,71 +213,84 @@ public class XML{
       	transformer.transform(source, result);
 	}		
 	
-	/**
-	 * Will turn all roads in the Road[] supplied into a Document
-	 * 
-	 * @param roads The roads to be added
-	 * @return The Document containing the roads
-	 * @throws ParserConfigurationException If unable to create a new Document
-	 */
-	private Document convertRoadArrayToDocument(Road[] roads) throws ParserConfigurationException{
+	
+	private Document createNewDocumentWithRoot() throws ParserConfigurationException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document document = docBuilder.newDocument();
 		
-		//The outer svg element 
-		Element svgElement = document.createElement("svg");
+		return docBuilder.newDocument();	
+	}
+	
+	private Element createSvgElement(Document document){
+		Element svgElement = document.createElement(SVG_ELEMENT_NAME);
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svgElement.setAttribute("version", "1.1");
-		document.appendChild(svgElement);
-		Element gElement = document.createElement("g");
-		svgElement.appendChild(gElement);
 		
-		Color color;
-		for(Road road : roads){
-			Element line = document.createElement("line");
-
-			color = road.getColor();
-			line.setAttribute("x1", road.getX1() + ""); 
-			line.setAttribute("y1", road.getY1() + ""); 
-			line.setAttribute("x2", road.getX2() + ""); 
-			line.setAttribute("y2", road.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
-//			line.setAttribute("roadType", road.getType() + "");
-//			line.setAttribute("roadName", road.getName() + "");
-			gElement.appendChild(line);
-		}
-				
-	    return document;
+		return svgElement;
 	}
-
 	
-//	//TODO This method has not yet been tested
-//	/**
-//	 * Will add the roads to the Document, but will give the roads a "route-color" to make sure, 
-//	 * that they will stand out from the rest of the roads.
-//	 *  
-//	 * @param document A Document already containing an Element with the nametag "g"
-//	 * @param route The roads to be marked as the route
-//	 */
-//	private void addRoute(Document document, Road[] route) {
-//		Color color = RoadStatus.getRouteColor();
-//		Element gElement = document.getElementById("g");
-//		for(Road road : route){
-//			Element line = document.createElement("line");
-//
-//			line.setAttribute("x1", road.getX1() + ""); 
-//			line.setAttribute("y1", road.getY1() + ""); 
-//			line.setAttribute("x2", road.getX2() + ""); 
-//			line.setAttribute("y2", road.getY2() + ""); 
-//			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-//										"stroke-width:" + RoadStatus.getRoadWidth(road.getType()));
-////			line.setAttribute("roadType", road.getType() + "");
-////			line.setAttribute("roadName", road.getName() + "");
-//			gElement.appendChild(line);
-//		}
-//
-//		
-//	}
+	
+	private void addRoadsToElement(Road[] roads, Element element){
+		for(Road r : roads){
+			Color color;
+			//TODO For debugging
+			if(r == null){
+				System.out.println("A road was null!!");
+				continue;
+			}
+			
+			Element line = element.getOwnerDocument().createElement("line");
+			
+			color = r.getColor();
+			line.setAttribute("x1", r.getX1() + ""); 
+			line.setAttribute("y1", r.getY1() + ""); 
+			line.setAttribute("x2", r.getX2() + ""); 
+			line.setAttribute("y2", r.getY2() + ""); 
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
+			element.appendChild(line);
+		}
+		
+		
+	    
+	}
+	
+	private void addRouteElementsAfterRoads(Road[] route, Element element){
+		for(Road r : route){
+			Color color;
+			
+			//TODO For debugging
+			if(r == null){
+				System.out.println("XML.addRouteElementsAfterRoads(): A road was null!!");
+				continue;
+			}
+			
+			Element line = element.getOwnerDocument().createElement("line");
+			
+			color = r.getColor();
+			line.setAttribute("x1", r.getX1() + ""); 
+			line.setAttribute("y1", r.getY1() + ""); 
+			line.setAttribute("x2", r.getX2() + ""); 
+			line.setAttribute("y2", r.getY2() + ""); 
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
+										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
+			element.insertBefore(line, null);
+//			element.appendChild(line);
+		}
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	private void addViewPortData(Region region, Element viewPortElement){
+		viewPortElement.setAttribute("x1",region.getLeftPoint()[0] +"");
+		viewPortElement.setAttribute("y1",region.getLeftPoint()[1] +"");
+		viewPortElement.setAttribute("x2",region.getRightPoint()[0] +"");
+		viewPortElement.setAttribute("y2",region.getRightPoint()[1] +"");
+	}
 }

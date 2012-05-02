@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import models.*;
 import views.*;
 import routing.*;
+import errorHandling.*;
 
 /**
  * 
@@ -39,12 +40,11 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
-			kdTree.initialize(Loader.getNodesForKDTree());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Loader.load("kdv_node_sunload.txt","kdv_sunload.txt");
+		} catch (ServerStartupException e) {
+			ErrorHandler.handleServerStartupException(e);
 		}
+		kdTree.initialize(Loader.getNodesForKDTree());
 		xml = new XML();
 		double end = System.nanoTime();
 		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
