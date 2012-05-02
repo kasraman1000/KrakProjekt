@@ -194,10 +194,12 @@ public class KrakEdge {
 		return hToHouseNumber;
 	}
 
-/**
+	/**
      * Return a string representation of this edge.
      */
     public String toString() {
-        return from + "->" + to + ", " + length + " m and " + time + " minutes";
+        return name + ": " + from + "->" + to + ", " + length + " m and " + time + " minutes"
+        		+ "\t (house numbers: " + vFromHouseNumber + "-" + vToHouseNumber + ", "
+        		+ + hFromHouseNumber + "-" + hToHouseNumber + ")";
     }
 }
