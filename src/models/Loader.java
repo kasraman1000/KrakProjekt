@@ -190,7 +190,7 @@ public class Loader {
 		
 	}
 	
-	private static void buildZipCodeMap(String zipPath)
+	public static void buildZipCodeMap(String zipPath) throws IOException
 	{
 		In inZipCodes = new In(new File(zipPath));
 		String[] zipCityLine;
