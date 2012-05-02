@@ -49,7 +49,6 @@ public class JSConnector {
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
-//			System.out.println("js - handleRequest(): " + parameters.get("x1"));
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));

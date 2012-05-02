@@ -3,8 +3,9 @@
 <script type="text/javascript">
 	function init() {
 		svgFrame = document.getElementById("svgframe");
-		xView1 = 0.0;
-		yView1 = 0.0;
+		bufferPercent = 0.7;
+		xView1 = 0;
+		yView1 = 0;
 		xView2 = 350000;
 		yView2 = 450000;
 		route = "";
@@ -20,24 +21,25 @@
 		var xmlhttp = new XMLHttpRequest();
 		var t = setTimeout("showTimeoutError()", 10000);
 		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4
-					&& (xmlhttp.status == 0 || xmlhttp.status == 200)) {
+			if (xmlhttp.readyState == 4 && (xmlhttp.status == 200)) {
 				clearTimeout(t);
 				var responseXML = xmlhttp.responseXML;
-				var statusCode = responseXML.evaluate("//statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
+				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
 				var statusCodeString = statusCode.iterateNext().getAttribute("code");
 				handleStatusCode(statusCodeString);
-				var svg = responseXML.evaluate("//myns:svg", responseXML, resolver, XPathResult.ANY_TYPE, null);
-				showSvg(svg.iterateNext());
+				var svg = responseXML.evaluate("/root/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
+				var viewPort = responseXML.evaluate("/root/viewPort", responseXML, null, XPathResult.ANY_TYPE, null);
+				showSvg(svg.iterateNext(),viewPort.iterateNext());
 			}
 		}
-		updateSurroundingData();
-		uri = "http://localhost/?x1=" + x1SurData + "&y1=" + y1SurData + "&x2="
-				+ x2SurData + "&y2=" + y2SurData + route + "";
+		var uri = "http://localhost/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
 		xmlhttp.open("GET", uri, true);
 		xmlhttp.send();
 	}
-	function resolver(){
+	/*
+	function to use in the evaluate method to show that the namespace is svg
+	*/
+	function svgResolver(){
 		return "http://www.w3.org/2000/svg";
 	}
 	/*This function checks whether or not the server is sending a error as response. If the
@@ -76,24 +78,26 @@
 		It also sets how big a part the user is able to move the viewbox, when 
 		either clicking right, left, up or down. 
 	 */
-	function showSvg(svg) {
-		if (svgFrame.hasChildNodes())
-			svgFrame.removeChild(svgFrame.firstChild);
+	function showSvg(svg,viewPort) {
+		if (svgFrame.hasChildNodes())svgFrame.removeChild(svgFrame.firstChild);
+		//alert(svg);
 		svgFrame.appendChild(svg);
-		setWidthandHeight();
-		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + wView
-				+ " " + hView);
-		panningDistanceVert = (yView2 - yView1) * 0.1;
-		panningDistanceHor = (xView2 - xView1) * 0.1;
+		xView1 = parseFloat(viewPort.getAttribute("x1"));
+		yView1 = parseFloat(viewPort.getAttribute("y1"));
+		xView2 = parseFloat(viewPort.getAttribute("x2"));
+		yView2 = parseFloat(viewPort.getAttribute("y2"));
+		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + getWidth() + " " + getHeight());
+		panningDistanceHor = getWidth() * 0.1;
+		panningDistanceVert = getHeight() * 0.1;
+		updateSurroundingData();
 	}
 
-	/*
-		This method uses the the diffence between the two sets of 
-		koordinates to set the height and width of the viewbox
-	 */
-	function setWidthandHeight() {
-		wView = xView2 - xView1;
-		hView = yView2 - yView1;
+	function getWidth(){
+		return xView2 - xView1;
+	}
+	
+	function getHeight(){
+		return yView2 - yView1;
 	}
 
 	/*
@@ -102,11 +106,10 @@
 		procentage that is fethed from the server. 
 	 */
 	function updateSurroundingData() {
-		x1SurData = xView1 - (xView2 - xView1) * 0.7;
-		x2SurData = xView2 + (xView2 - xView1) * 0.7;
-		y1SurData = yView1 - (yView2 - yView1) * 0.7;
-		y2SurData = yView2 + (yView2 - yView1) * 0.7;
-
+		x1SurData = xView1 - (xView2 - xView1) * bufferPercent;
+		x2SurData = xView2 + (xView2 - xView1) * bufferPercent;
+		y1SurData = yView1 - (yView2 - yView1) * bufferPercent;
+		y2SurData = yView2 + (yView2 - yView1) * bufferPercent;
 	}
 
 	/*
@@ -151,9 +154,7 @@
 		yView1 += y;
 		xView2 += x;
 		yView2 += y;
-		//setWidthandHeight();
-		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + wView
-				+ " " + hView);
+		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + getWidth() + " " + getHeight());
 	}
 
 	/*
@@ -166,10 +167,10 @@
 	function zoomIn() {
 		if (xView2 - xView1 < 1000)
 			return;
-		xView1 += wView * 0.20;
-		yView1 += hView * 0.20;
-		xView2 -= wView * 0.20;
-		yView2 -= hView * 0.20;
+		xView1 += getWidth() * 0.20;
+		yView1 += getHeight() * 0.20;
+		xView2 -= getWidth() * 0.20;
+		yView2 -= getHeight() * 0.20;
 		getXML();
 	}
 
@@ -178,16 +179,14 @@
 			init();
 			return;
 		}
-		setWidthandHeight();
-		xView1 -= wView * 0.20
+		xView1 -= getWidth() * 0.20
 		if (xView1 < 0)
 			xView1 = 0;
-		yView1 -= hView * 0.20;
+		yView1 -= getHeight() * 0.20;
 		if (yView1 < 0)
 			yView1 = 0;
-		xView2 += wView * 0.20;
-		yView2 += hView * 0.20;
-		//alert(xView1 + "  " + yView1);
+		xView2 += getWidth() * 0.20;
+		yView2 += getHeight() * 0.20;
 		getXML();
 	}
 
@@ -255,7 +254,7 @@
 					name="Submit" type="submit" value="Clear Route"
 					onClick="clearRoute()" style="margin: 10px 0px 0px 0px" />
 				<p id="errorText"
-					style="margin: 15px 0px 0px 0px; color: red; font: 12px Helvetica;"></p>
+					style="margin: 55px 0px 0px 0px; color: red; font: 12px Helvetica;"></p>
 			</div>
 		</div>
 	</div>
