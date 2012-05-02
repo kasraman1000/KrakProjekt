@@ -13,14 +13,10 @@ import models.Region;
 
 
 public class JSConnector {
-
-	private Controller controller;
-
 	/**
 	 * Constructor that makes the class ready for a request
 	 */
-	public JSConnector(Controller c) {
-		controller = c;
+	public JSConnector(){
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
 			ServerSocket ss = new ServerSocket(80);
@@ -52,20 +48,12 @@ public class JSConnector {
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
+//			System.out.println("js - handleRequest(): " + parameters.get("x1"));
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
 			Double y2 = Double.valueOf(parameters.get("y2"));
-			String from = parameters.get("from");
-			String to = parameters.get("to");
-			Boolean isDistance = Boolean.valueOf(parameters.get("isDistance"));
-			String response = "";
-			//if "from" is null then the client is not asking for routeplanning but only mapdata
-			if(from == null){
-				response = Controller.getXmlString(new Region(x1,y1,x2,y2));
-			}else{
-				//TODO method that asks for mapdata and routeplanning
-			}
+			String response = Controller.getXmlString(new Region(x1,y1,x2,y2));
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,7 +90,7 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String line) {
-//		System.out.println("JSconnector.ReadParameters - line: " + line);
+		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark

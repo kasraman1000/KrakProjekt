@@ -5,6 +5,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import models.KDTree;
+import models.Loader;
+import models.Node;
+import models.Region;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 

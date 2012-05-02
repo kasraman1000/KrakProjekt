@@ -33,7 +33,7 @@ public class KDTree
 
 	public void build(ArrayList<Node> nodes)
 	{
-		new KDNode(nodes, 0);
+		new KDNode(nodes);
 		
 	}
 	
@@ -148,6 +148,7 @@ public class KDTree
 			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
+				System.out.println("depth " + depth);
 			}
 		}
 		if (kdn.right != null)
@@ -160,6 +161,7 @@ public class KDTree
 			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
 				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
+				System.out.println("depth " + depth);
 			}
 		}
 
@@ -182,10 +184,14 @@ public class KDTree
 		{
 			node = n;
 		}
-
-		private KDNode(ArrayList<Node> nodes, int depth)
+		
+		/**
+		 * Constructor to build the kd-tree. Expand is called recursively until the tree is created.
+		 * @param nodes The nodes that the kd-tree is build from.
+		 */
+		private KDNode(ArrayList<Node> nodes)
 		{
-			KDNode kdn = expand(nodes, depth);
+			KDNode kdn = expand(nodes, 0);
 			node = kdn.getNode();
 			root = kdn;
 		}
@@ -265,7 +271,7 @@ public class KDTree
 		 * @param depth	Recursion depth of the function call.
 		 * @return	The KDNode that contains the median node for the nodes collection.
 		 */
-		private KDNode expand(ArrayList<Node> nodes, int depth)
+		public KDNode expand(ArrayList<Node> nodes, int depth)
 		{
 
 			if (nodes.size() > 1)
