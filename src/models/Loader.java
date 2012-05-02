@@ -13,6 +13,7 @@ public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
 	private static ArrayList<KrakEdge> edges = new ArrayList<KrakEdge>();
+	private static HashMap<String, Integer> zipCodeMap = new HashMap<String, Integer>();
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -27,14 +28,15 @@ public class Loader {
 	}
 
 
-	public static void load(String nodePath, String edgePath) throws IOException{
+	public static void load(String nodePath, String edgePath, String zipPath) throws IOException{
+		//Creates the map, that contains each city's zipcode
+		buildZipCodeMap(zipPath);
 		//Creates a Scanner for the filenames specified
 		In inEdges = new In(new File(edgePath));
 		In inNodes = new In(new File(nodePath));
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();
-
 
 		//For graph
 		HashMap<Integer, double[]> coordArray = new HashMap<Integer, double[]>();
@@ -186,6 +188,23 @@ public class Loader {
 		nodesForKDTree = null;
 		return tempNodes;
 		
+	}
+	
+	private static void buildZipCodeMap(String zipPath)
+	{
+		In inZipCodes = new In(new File(zipPath));
+		String[] zipCityLine;
+		
+		while(inZipCodes.hasNextLine()){
+			zipCityLine = inZipCodes.readLine().split(",");
+			zipCodeMap.put(zipCityLine[1], Integer.parseInt(zipCityLine[0]));
+		}
+		
+	}
+	
+	public static HashMap<String, Integer> getZipCodeMap()
+	{
+		return zipCodeMap;
 	}
 	
 	public static KrakEdgeWeightedDigraph getGraph(){

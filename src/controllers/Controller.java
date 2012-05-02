@@ -44,7 +44,7 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt","zip_codes.txt");
 			kdTree.initialize(Loader.getNodesForKDTree());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
