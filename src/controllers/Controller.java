@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -27,28 +26,34 @@ public class Controller {
 
 
 	public static void main(String[] args) {
-		Controller controller = new Controller();
-
-		//		HashMap<Integer, HashMap<String,>>
+		Controller.startServer();
 	}
+	
 
-	/**
-	 * Will start up the Krak Server
-	 */
-	public Controller(){
+	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			Loader.load("kdv_node_sunload.txt","kdv_sunload.txt");
+
+			Loader.load("kdv_node_sunload.txt","kdv_sunload.txt","zip_codes.txt");
 		} catch (ServerStartupException e) {
 			ErrorHandler.handleServerStartupException(e);
+
 		}
 		kdTree.initialize(Loader.getNodesForKDTree());
 		xml = new XML();
 		double end = System.nanoTime();
 		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
-		jsConnector = new JSConnector(this);
+	}
+	
+	
+	/**
+	 * Will start up the Krak Server
+	 * 
+	 */
+	public static void startServer(){
+		jsConnector = new JSConnector();
 	}
 
 
@@ -59,17 +64,24 @@ public class Controller {
 	 * @param region The area to get the roads from
 	 * @return XML String containing all the roads in the Region
 	 */
-	public static String getXmlString(Region region){
-		double time = System.nanoTime();
-		Road[] roads = RoadSelector.search(region);
-		System.out.println("Time to retrieve roads from RoadSelector " + (System.nanoTime() - time)/1000000000);
+
+	public static String getXmlString(Region region, double bufferPercent){
+//		String s = getRoadAndRoute("", "", false);
+		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
 		String s = "";
+		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		try {
-			s = xml.createString(roads);
-		} catch (Exception e) {
+			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		return s;
 	}
 
@@ -80,17 +92,35 @@ public class Controller {
 	 * @param target
 	 * @param isLengthWeighted
 	 */
-	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted){
+	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted, double bufferPercent){
 		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
-		Stack<KrakEdge> routeEdges = dij.findRoute(0, 675000, isLengthWeighted);
-
-		Road[] routeAndRoads = EdgesToRoadsConverter.convertEdgesToRoads(routeEdges);
+		
+		//From Skagen to ITU  :O)
+		int tempFrom =21199-1;
+		int tempTo =442122-1;
+		
+		//Temp!!
+		int firstHouseNumber = 2;
+		int lastHouseNumber = 2;
+		
+		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);
+		
+		
+	
+		
+		
+		
+		
+		//TODO 
+		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
+		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
+		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
 
 		String xmlString = "";
 
 		try {
-			xmlString = xml.createString(routeAndRoads);
+			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

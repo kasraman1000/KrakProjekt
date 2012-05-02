@@ -89,6 +89,7 @@ public class XML{
 													TransformerException{
 		//TODO
 		//Only for debugging
+		
 //		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
@@ -123,8 +124,8 @@ public class XML{
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+
 		rootElement.appendChild(statusCodeElement);
-		
 		
 		//Add the ViewPortElement to the RootElement
 		Element viewPortElement = document.createElement(VIEWPORT_ELEMENT_NAME);

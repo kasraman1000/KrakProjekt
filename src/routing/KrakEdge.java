@@ -34,22 +34,23 @@ public class KrakEdge {
     private final double[] toPoint;
     private final int vPost;
     private final int hPost;
-    private final int vFromHusnummer;
-    private final int vToHusnummer;
-    private final int hFromHusnummer;
-    private final int hToHusnummer;
+    private final int vFromHouseNumber;
+    private final int vToHouseNumber;
+    private final int hFromHouseNumber;
+    private final int hToHouseNumber;
     private static boolean isLengthWeighted;
     
    /**
      * Create a directed edge from v to w with given weight.
- * @param hToHusnummer 
- * @param hFromHusnummer 
- * @param vToHusnummer 
- * @param vFromHusnummer 
+ * @param hToHouseNumber 
+ * @param hFromHouseNumber 
+ * @param vToHouseNumber 
+ * @param vFromHouseNumber 
  * @param hPost 
  * @param vPost 
      */
-    public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, int vPost, int hPost, int vFromHusnummer, int vToHusnummer, int hFromHusnummer, int hToHusnummer){
+    public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, 
+    		int vPost, int hPost, int vFromHouseNumber, int vToHouseNumber, int hFromHouseNumber, int hToHouseNumber){
         this.from = from;
         this.to = to;
         this.name = name;
@@ -59,10 +60,10 @@ public class KrakEdge {
         this.toPoint = toPoint;
         this.vPost = vPost;
         this.hPost = hPost;
-        this.vFromHusnummer = vFromHusnummer;
-        this.vToHusnummer = vToHusnummer;
-        this.hFromHusnummer = hFromHusnummer;
-        this.hToHusnummer = hToHusnummer;
+        this.vFromHouseNumber = vFromHouseNumber;
+        this.vToHouseNumber = vToHouseNumber;
+        this.hFromHouseNumber = hFromHouseNumber;
+        this.hToHouseNumber = hToHouseNumber;
         
         isLengthWeighted = true;
     }
@@ -88,6 +89,15 @@ public class KrakEdge {
      */
     public String getName(){
     	return name;
+    }
+    
+    
+    public double getLength(){
+    	return length;
+    }
+    
+    public double getTime(){
+    	return time;
     }
 
    /**
@@ -157,37 +167,39 @@ public class KrakEdge {
 	}
 
 	/**
-	 * @return the vFromHusnummer
+	 * @return the vFromHouseNumber
 	 */
-	public int getvFromHusnummer() {
-		return vFromHusnummer;
+	public int getvFromHouseNumber() {
+		return vFromHouseNumber;
 	}
 
 	/**
-	 * @return the vToHusnummer
+	 * @return the vToHouseNumber
 	 */
-	public int getvToHusnummer() {
-		return vToHusnummer;
+	public int getvToHouseNumber() {
+		return vToHouseNumber;
 	}
 
 	/**
-	 * @return the hFromHusnummer
+	 * @return the hFromHouseNumber
 	 */
-	public int gethFromHusnummer() {
-		return hFromHusnummer;
+	public int gethFromHouseNumber() {
+		return hFromHouseNumber;
 	}
 
 	/**
-	 * @return the hToHusnummer
+	 * @return the hToHouseNumber
 	 */
-	public int gethToHusnummer() {
-		return hToHusnummer;
+	public int gethToHouseNumber() {
+		return hToHouseNumber;
 	}
 
-/**
+	/**
      * Return a string representation of this edge.
      */
     public String toString() {
-        return from + "->" + to + ", " + length + " m and " + time + " minutes";
+        return name + ": " + from + "->" + to + ", " + length + " m and " + time + " minutes"
+        		+ "\t (house numbers: " + vFromHouseNumber + "-" + vToHouseNumber + ", "
+        		+ + hFromHouseNumber + "-" + hToHouseNumber + ")";
     }
 }

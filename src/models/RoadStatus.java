@@ -105,7 +105,7 @@ public class RoadStatus {
 		int tunnels = 130;
 		int seaWays  = 130; 
 		int walkingPaths = 130;
-		int routes = 130;
+		int routes = 1400;
 
 		int unknownRoads = 130;
 
