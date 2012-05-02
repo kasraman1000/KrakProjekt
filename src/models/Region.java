@@ -30,8 +30,8 @@ public class Region {
 	public void addBuffer(double percent)
 	{
 		adjust();
-		double xBuffer = (p1[0] - p2[0])*percent;
-		double yBuffer = (p1[1] - p2[1])*percent;
+		double xBuffer = (p2[0] - p1[0])*percent;
+		double yBuffer = (p2[1] - p1[1])*percent;
 		p1[0] = p1[0] - xBuffer;
 		p2[0] = p2[0] + xBuffer;
 		p1[1] = p1[1] - yBuffer;

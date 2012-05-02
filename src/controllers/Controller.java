@@ -112,6 +112,9 @@ public class Controller {
 			e1.printStackTrace();
 		}
 		
+		if(pathPrefaceFrom == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceFrom == null at line 109!!!!");
+		
+		
 		//Get toPreface
 		String[] toAddressArray = AddressParser.parseAddress(toAddress);
 		PathPreface pathPrefaceTo = null;
@@ -121,6 +124,8 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		if(pathPrefaceTo == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceTo == null at line 122!!!!");
 		
 		
 		//ITU
