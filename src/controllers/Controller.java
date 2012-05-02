@@ -36,7 +36,7 @@ public class Controller {
 		kdTree = KDTree.getTree();
 		try {
 
-			Loader.load("kdv_node_sunload.txt","kdv_sunload.txt","zip_codes.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt","zip_codes.txt");
 		} catch (ServerStartupException e) {
 			ErrorHandler.handleServerStartupException(e);
 
