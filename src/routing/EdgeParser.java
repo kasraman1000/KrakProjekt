@@ -108,13 +108,16 @@ public class EdgeParser {
 			
 			// set up data
 			System.out.println("Attempting to load...");
+
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
+//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt");
+
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
 			
-			String[] address = {"Murciagade","4","","2300",""};
+			String[] address = {"Annasvej","14","","",""};
 			//System.out.println(address[0]);
 			try {
 				System.out.println(EdgeParser.findPreface(address));
