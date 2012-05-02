@@ -62,22 +62,22 @@ public class Controller {
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region){//, double bufferPercent){
-		String s = getRoadAndRoute("", "", false, 0.7);
-//		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
-//		String s = "";
-//		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
-//		try {
-//			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
-//		} catch (TransformerConfigurationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParserConfigurationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (TransformerException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//	
+//		String s = getRoadAndRoute("", "", false, 0.7);
+		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
+		String s = "";
+		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+		try {
+			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return s;
 	}
 	
