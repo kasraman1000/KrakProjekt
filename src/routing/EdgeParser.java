@@ -10,7 +10,6 @@ import models.PathPreface;
 import routing.Bag;
 import routing.KrakEdge;
 
-//TODO: City name recognition
 
 public class EdgeParser {
 
@@ -65,8 +64,8 @@ public class EdgeParser {
 				while (edges.hasNext()) {
 					KrakEdge ke = edges.next();
 					System.out.println(ke);
-					if (houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber() ||
-							houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())
+					if ((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
+							(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber()))
 						results.add(ke);
 				}
 			}
@@ -79,6 +78,8 @@ public class EdgeParser {
 			while (i.hasNext()) 
 				System.out.println(i.next());
 			
+			System.out.println();
+			
 			if (!results.isEmpty()) {
 				
 				KrakEdge k1 = results.remove(0);
@@ -90,9 +91,15 @@ public class EdgeParser {
 				// return result;
 				return new PathPreface(k1, k2, houseNumber);
 			}
-			else throw new Exception(); // if no result is found
+			else{
+				System.out.println("EdgeParser.findPreface() - No result found");
+				throw new Exception(); // if no result is found
+			}
 		}
-		else throw new Exception(); // if roadname doesn't match
+		else{
+			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
+			throw new Exception(); // if roadname doesn't match
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -101,13 +108,13 @@ public class EdgeParser {
 			
 			// set up data
 			System.out.println("Attempting to load...");
-			Loader.load("C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_node_unload.txt","C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_unload.txt");
+			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt");
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
 			
-			String[] address = {"Murciagade","4","","2300",""};
+			String[] address = {"Annasvej","14","","",""};
 			//System.out.println(address[0]);
 			try {
 				System.out.println(EdgeParser.findPreface(address));
