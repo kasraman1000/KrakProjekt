@@ -63,9 +63,8 @@ public class Controller {
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region, double bufferPercent){
-		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
+		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
-		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
 		try {
 			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
@@ -142,7 +141,7 @@ public class Controller {
 		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
 		
 		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
+		Road[] roads = RoadSelector.search(region, bufferPercent);
 
 		String xmlString = "";
 		

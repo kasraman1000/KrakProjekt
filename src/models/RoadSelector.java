@@ -46,7 +46,7 @@ public class RoadSelector {
 		System.out.println("Time to HashSet: " + (System.nanoTime()-time)/1000000000);
 		
 		time = System.nanoTime();
-		ArrayList<Road> result = filter(roads, MAX_ROADS, zoom);
+		ArrayList<Road> result = filter(roads, MAX_ROADS);
 		System.out.println("Time to filter by zoom: " + (System.nanoTime()-time)/1000000000);
 
 		System.out.println("Number of roads: " + result.size());
@@ -60,34 +60,34 @@ public class RoadSelector {
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
 
-	public static Road[] searchRange(double[] p1, double[] p2)
-	{
-		ArrayList<Road> result = new ArrayList<Road>();
-		if(zoom < 5)
-		{
-			int count = 0;
-			for(Road r : roads) {
-				if(r.getPriority() >= zoom) {
-					count++;
-				}
-
-			}
-			System.out.println("int count = " + count);
-			if(count > max) {
-				System.out.println("Increasing zoom from " + zoom + " to " + (zoom+1));
-				zoom++;
-			}
-		}
-		
-		for(Road r : roads) {
-			if(r.getPriority() >= zoom) {
-				result.add(r);
-			}
-		}
-		
-		return result;
-		
-	}
+//	public static Road[] searchRange(double[] p1, double[] p2)
+//	{
+//		ArrayList<Road> result = new ArrayList<Road>();
+//		if(zoom < 5)
+//		{
+//			int count = 0;
+//			for(Road r : roads) {
+//				if(r.getPriority() >= zoom) {
+//					count++;
+//				}
+//
+//			}
+//			System.out.println("int count = " + count);
+//			if(count > max) {
+//				System.out.println("Increasing zoom from " + zoom + " to " + (zoom+1));
+//				zoom++;
+//			}
+//		}
+//		
+//		for(Road r : roads) {
+//			if(r.getPriority() >= zoom) {
+//				result.add(r);
+//			}
+//		}
+//		
+//		return result;
+//		
+//	}
 	private static ArrayList<Road> filter(Collection<Road> roads, int max)
 	{
 		ArrayList<Road> result = new ArrayList<Road>();
