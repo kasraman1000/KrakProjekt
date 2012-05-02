@@ -35,6 +35,7 @@ public class Controller {
 		try {
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
 			kdTree.initialize(Loader.getNodesForKDTree());
+			EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,13 +62,13 @@ public class Controller {
 	 * @param region The area to get the roads from
 	 * @return XML String containing all the roads in the Region
 	 */
-	public static String getXmlString(Region region){//, double bufferPercent){
-//		String s = getRoadAndRoute("", "", false, 0.7);
+	public static String getXmlString(Region region, double bufferPercent){
 		Road[] roads = RoadSelector.searchRange(region);//, bufferPercent);
 		String s = "";
 		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
 		try {
-			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,18 +88,39 @@ public class Controller {
 	 * @param start
 	 * @param target
 	 * @param isLengthWeighted
+	 * @throws Exception 
 	 */
-	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted, double bufferPercent){
+	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
 		
 		
-		//ITU
-		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
-													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
-														2);
-		//An Edge in Skagen
-		PathPreface pathPrefaceTo = new PathPreface(new KrakEdge(21194-1, 21199-1, "Kratvej", 8.73, 0.12, new double[]{5000,5000}, new double[]{10000,10000}, 9900, 9900, 0, 20, 1, 21), 
-													new KrakEdge(21199-1, 21194-1, "Kratvej", 8.73, 0.12, new double[]{10000,10000}, new double[]{5000,5000}, 9900, 9900, 0, 20, 1, 21), 
-													2);
+//		//ITU
+//		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
+//													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
+//														2);
+//		//An Edge in Skagen
+//		PathPreface pathPrefaceTo = new PathPreface(new KrakEdge(21194-1, 21199-1, "Kratvej", 8.73, 0.12, new double[]{5000,5000}, new double[]{10000,10000}, 9900, 9900, 0, 20, 1, 21), 
+//													new KrakEdge(21199-1, 21194-1, "Kratvej", 8.73, 0.12, new double[]{10000,10000}, new double[]{5000,5000}, 9900, 9900, 0, 20, 1, 21), 
+//													2);
+		
+		//Get fromPreface
+		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
+		PathPreface pathPrefaceFrom = null;
+		try {
+			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//Get toPreface
+		String[] toAddressArray = AddressParser.parseAddress(toAddress);
+		PathPreface pathPrefaceTo = null;
+		try {
+			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 		//ITU

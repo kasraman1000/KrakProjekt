@@ -1,7 +1,9 @@
+package routing;
+
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-class AddressParser {
+public class AddressParser {
     
     /**
      * Parses a string and returns an array containing:

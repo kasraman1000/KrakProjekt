@@ -57,11 +57,13 @@ public class JSConnector {
 			String from = parameters.get("from");
 			String to = parameters.get("to");
 			Boolean isDistance = Boolean.valueOf(parameters.get("isDistance"));
+			double bufferPercent = Double.valueOf(parameters.get("bufferPercent"));
 			String response = "";
 			//if "from" is null then the client is not asking for routeplanning but only mapdata
 			if(from == null){
-				response = Controller.getXmlString(new Region(x1,y1,x2,y2));
+				response = Controller.getXmlString(new Region(x1,y1,x2,y2), bufferPercent);
 			}else{
+				response = Controller.getRoadAndRoute(from, to, isDistance, bufferPercent);
 				//TODO method that asks for mapdata and routeplanning
 			}
 			//TODO only for testing

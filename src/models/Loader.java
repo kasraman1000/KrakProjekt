@@ -11,6 +11,8 @@ import routing.KrakEdge;
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
+	private static ArrayList<KrakEdge> edges;
+	 
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -84,9 +86,10 @@ public class Loader {
 		coordArray = null;
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
-		
-		ArrayList<KrakEdge> edges = new ArrayList<KrakEdge>();
+
+		edges = new ArrayList<KrakEdge>();
  
+		
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -131,7 +134,7 @@ public class Loader {
 			to = Integer.valueOf(textLineRoadArray[1])-1;
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
-			name = textLineRoadArray[6];
+			name = textLineRoadArray[6].substring(1, textLineRoadArray[6].length()-1);
 			vPost = Integer.valueOf(textLineRoadArray[17]);
 			hPost = Integer.valueOf(textLineRoadArray[18]);
 			vFromHusnummer = Integer.valueOf(textLineRoadArray[7]);
@@ -206,7 +209,13 @@ public class Loader {
 //		if(graph == null) throw new DataNotLoadedException();
 		return graph;
 	}
-	
+
+	public static ArrayList<KrakEdge> getEdgesForTranslator() {
+		ArrayList<KrakEdge> tempEdges = edges;
+		edges = null;
+		return tempEdges;
+	}
+
 	
 	/**
 	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value

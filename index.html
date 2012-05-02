@@ -33,7 +33,7 @@
 		}
 		updateSurroundingData();
 		uri = "http://localhost/?x1=" + x1SurData + "&y1=" + y1SurData + "&x2="
-				+ x2SurData + "&y2=" + y2SurData + route + "";
+				+ x2SurData + "&y2=" + y2SurData + "&bufferPercent=0.7" + route + "";
 		xmlhttp.open("GET", uri, true);
 		xmlhttp.send();
 	}

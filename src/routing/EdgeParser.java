@@ -89,9 +89,15 @@ public class EdgeParser {
 				// return result;
 				return new PathPreface(k1, k2, houseNumber);
 			}
-			else throw new Exception(); // if no result is found
+			else{
+				System.out.println("EdgeParser.findPreface() - No result found");
+				throw new Exception(); // if no result is found
+			}
 		}
-		else throw new Exception(); // if roadname doesn't match
+		else{
+			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
+			throw new Exception(); // if roadname doesn't match
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -100,7 +106,7 @@ public class EdgeParser {
 			
 			// set up data
 			System.out.println("Attempting to load...");
-			Loader.load("C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_node_unload.txt","C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_unload.txt");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt");
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
