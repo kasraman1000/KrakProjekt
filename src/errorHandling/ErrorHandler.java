@@ -2,12 +2,12 @@ package errorHandling;
 
 public class ErrorHandler {
 
-public static void handleClientInputException(ClientInputException e){
-	
+public static StatusCode handleClientInputException(ClientInputException e){
+	return e.getStatusCode();
 }
 
 public static void handleServerStartupException(ServerStartupException e){
-	System.out.println("File not found in class: " + e.getNameOfClass() + ", exception: " + e.getException().getMessage());
+	System.out.println(e.getStatusCode());
 	System.exit(0);
 }
 

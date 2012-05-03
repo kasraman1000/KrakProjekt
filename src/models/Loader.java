@@ -38,8 +38,7 @@ public class Loader {
 			inNodes = new In(new File(nodePath));
 		}
 		catch(FileNotFoundException e) {
-			String nameOfClass = Loader.class.getName();
-			throw new ServerStartupException(e, nameOfClass);
+			throw new LoaderFileNotFoundException(e);
 		}
 		//Skip first line
 		inEdges.readLine();

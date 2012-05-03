@@ -1,17 +1,16 @@
 package errorHandling;
 
-public class ServerStartupException extends Exception {
-	private final String nameOfClass;
-	private final Exception e;
+public abstract class ServerStartupException extends Exception {
 	
-	public ServerStartupException(Exception e, String nameOfClass){
+	private Exception e;
+	
+	public ServerStartupException(Exception e){
 		this.e = e;
-		this.nameOfClass = nameOfClass;
 	}
-	public String getNameOfClass() {
-		return nameOfClass;
-	}
-	public Exception getException() {
+	
+	abstract StatusCode getStatusCode();
+	
+	public Exception geException(){
 		return e;
 	}
 	
