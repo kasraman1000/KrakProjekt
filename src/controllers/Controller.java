@@ -45,6 +45,30 @@ public class Controller {
 		System.out.println("System up running... (In " + (end-start)/1e9 + " seconds)");
 	}
 	
+	public static void TestRequest()
+	{
+		Region r1 = new Region(70000, 90000, 280000, 360000);
+		Road[] roads = RoadSelector.search(r1, 0.7);
+		double smallestX = Double.POSITIVE_INFINITY;
+		double greatestX = 0;
+		double smallestY = Double.POSITIVE_INFINITY;
+		double greatestY = 0;
+		for(Road r : roads)
+		{
+			if(r.getX1() < smallestX) {smallestX = r.getX1();}
+			if(r.getX2() < smallestX) {smallestX = r.getX2();}
+			if(r.getY1() < smallestY) {smallestY = r.getY1();}
+			if(r.getY2() < smallestY) {smallestY = r.getY2();}
+			
+			if(greatestX < r.getX1()) {greatestX = r.getX1();}
+			if(greatestX < r.getX2()) {greatestX = r.getX2();}
+			if(greatestY < r.getY1()) {greatestY = r.getY1();}
+			if(greatestY < r.getY2()) {greatestY = r.getY2();}
+		}
+		
+		System.out.println("Greatest x = " + greatestX + " greatest y = " + greatestY + " smallest x = " + smallestX + " smallest y = " + smallestY);
+	}
+	
 	
 	/**
 	 * Will start up the Krak Server
