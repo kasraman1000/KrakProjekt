@@ -95,6 +95,7 @@ public class Controller {
 		try {
 			System.out.println("Controller.getXmlString() - " + newRegion);
 			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
+			TestRequest();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
