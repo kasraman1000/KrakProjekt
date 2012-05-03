@@ -11,17 +11,24 @@ import errorHandling.*;
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
-	private static ArrayList<KrakEdge> edges = new ArrayList<KrakEdge>();
-	private static HashMap<String, Integer> zipCodeMap = new HashMap<String, Integer>();
+	private static ArrayList<KrakEdge> edges;
+	private static HashMap<String, Integer> zipCodeMap;
+	private static In inEdges;
+	private static In inNodes;
+	private static HashMap<Integer, double[]> coordArray;
+	private static HashMap<Integer, Node> nodeList;
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
-	private static In inEdges;
-	private static In inNodes;
+	private static long timeMillis;
 
 	static{
 		nodesForKDTree = new ArrayList<Node>();
+		edges = new ArrayList<KrakEdge>();
+		zipCodeMap = new HashMap<String, Integer>();
+		coordArray = new HashMap<Integer, double[]>();  //For graph
+		nodeList = new HashMap<Integer, Node>(); 		//For KD-Tree
 		xMin = 10000000.0;
 		yMin = 10000000.0;
 		xMax = 0.0;
@@ -31,7 +38,10 @@ public class Loader {
 	public static void load(String nodePath, String edgePath, String zipPath) throws ServerStartupException{
 		try{		
 		//Creates the map, that contains each city's zipcode
+		printLine();
+		setTime();
 		buildZipCodeMap(zipPath);
+		printTime("Build zip code map");
 
 		//Creates a Scanner for the filenames specified
 			inEdges = new In(new File(edgePath));
@@ -40,57 +50,25 @@ public class Loader {
 		catch(FileNotFoundException e) {
 			throw new LoaderFileNotFoundException(e);
 		}
+
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();
-
-		//For graph
-		HashMap<Integer, double[]> coordArray = new HashMap<Integer, double[]>();
-
-		//For KD-Tree
-		HashMap<Integer, Node> nodeList = new HashMap<Integer, Node>();
-
-		//String for storing the current line, which is being read
-		String[] textLineNodeArray = null;
-		int nodeId;
-		double xCoord;
-		double yCoord;
 		
-		//Running through all nodes
-		while(inNodes.hasNextLine()){
-			textLineNodeArray = inNodes.readLine().split(",");
-
-			/**
-			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
-			 */
-			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
-			xCoord = Double.valueOf(textLineNodeArray[3]);
-			yCoord = Double.valueOf(textLineNodeArray[4]);
-
-			coordArray.put(nodeId, new double[]{xCoord, yCoord});
-
-			findMinAndMaxValues(xCoord, yCoord);
-		}
-
+		setTime();
+		findExtremes();
+		printTime("Found original extremes");
 		//Rearranges the coordinates to the actual places in the graph and
 		//make the nodeMap for the KDTree
-		double newX;
-		double newY;
-		for(int index=0; index<coordArray.size(); index++){
-			newX = coordArray.get(index)[0]- xMin;
-			newY = yMax - coordArray.get(index)[1];
-
-			coordArray.get(index)[0] = newX;
-			coordArray.get(index)[1] = newY;
-
-			nodeList.put(index, new Node(new double[]{newX, newY}));
-		}
-
+		setTime();
+		recalculateCoordinates();
+		printTime("Recalculated coordinates");
+		//not in use past this
 		coordArray = null;
 		Road.setOrigo(new double[]{0, 0});
-
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
+		setTime();
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -171,17 +149,74 @@ public class Loader {
 			nodeList.get(to).addRoad(tempRoad);
 
 		}
+		printTime("Created edges");
 		
+		setTime();
 		nodesForKDTree.addAll(nodeList.values());
-
-		graph = new KrakEdgeWeightedDigraph(nodeList.size());
-
+		printTime("Added nodes to KDTree");
 		
-		for(KrakEdge e : edges){
-			graph.addEdge(e);
-		}
+		setTime();
+		buildGraph();
+		printTime("Build routing graph");
+		printLine();
+	}
+	
+	private static void setTime()
+	{
+		timeMillis = System.currentTimeMillis();
+	}
+	
+	private static void printTime(String s)
+	{
+		double time = System.currentTimeMillis()-timeMillis;
+		System.out.println(s+" in " + time/1000 + " seconds");
+	}
+	
+	private static void printLine()
+	{
+		System.out.println("------------------------");
 	}
 
+	private static void findExtremes()
+	{
+		//String for storing the current line, which is being read
+		String[] textLineNodeArray = null;
+		int nodeId;
+		double xCoord;
+		double yCoord;
+		
+		//Running through all nodes
+		while(inNodes.hasNextLine()){
+			textLineNodeArray = inNodes.readLine().split(",");
+
+			/**
+			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
+			 */
+			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
+			xCoord = Double.valueOf(textLineNodeArray[3]);
+			yCoord = Double.valueOf(textLineNodeArray[4]);
+
+			coordArray.put(nodeId, new double[]{xCoord, yCoord});
+
+			findMinAndMaxValues(xCoord, yCoord);
+		}
+	}
+	
+	private static void recalculateCoordinates()
+	{
+		double newX;
+		double newY;
+		for(int index=0; index<coordArray.size(); index++){
+			newX = coordArray.get(index)[0]- xMin;
+			newY = yMax - coordArray.get(index)[1];
+
+			coordArray.get(index)[0] = newX;
+			coordArray.get(index)[1] = newY;
+
+			nodeList.put(index, new Node(new double[]{newX, newY}));
+		}
+	}
+	
 	/**
 	 * Returns the collection that the KDTree is build from
 	 * @return ArrayList of all nodes
@@ -194,6 +229,14 @@ public class Loader {
 		nodesForKDTree = null;
 		return tempNodes;
 		
+	}
+	
+	private static void buildGraph()
+	{
+		graph = new KrakEdgeWeightedDigraph(nodeList.size());
+		for(KrakEdge e : edges){
+			graph.addEdge(e);
+		}
 	}
 	
 	private static void buildZipCodeMap(String zipPath) throws FileNotFoundException

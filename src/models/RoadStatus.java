@@ -3,12 +3,7 @@ import java.awt.Color;
 import java.util.HashMap;
 
 /**
- * 
- */
-
-/**
- * @author Yndal
- *
+ * A class to keep spare important info about drawing roads
  */
 public class RoadStatus {
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
@@ -38,9 +33,6 @@ public class RoadStatus {
 		else if (zoomLevel == 4) {scale = 0.5;}
 		else 					 {scale = 1;}
 	}
-
-
-
 
 	/**
 	 * Will load all the predefined road colors to a HashMap - only called in the "constructor"
@@ -92,7 +84,6 @@ public class RoadStatus {
 		roadColors.put(80, seaWays); //"Faergeforbindelser"
 		roadColors.put(99, unknownRoads); //"StednavneEksaktBeliggendeUkendt"
 	}
-
 
 	/**
 	 * Will load all the predefined road widths to a HashMap - only called in the "constructor"

@@ -3,8 +3,9 @@ package models;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
-
+/**
+ * Class responsible for picking out roads to show
+ */
 public class RoadSelector {
 
 	private static int lastZoomLevel = 5;

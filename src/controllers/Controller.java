@@ -12,12 +12,7 @@ import routing.*;
 import errorHandling.*;
 
 /**
- * 
- */
-
-/**
- * @author Yndal
- *
+ * The main controller responsible for program flow
  */
 public class Controller {
 	private static XML xml;
