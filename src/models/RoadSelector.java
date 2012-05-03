@@ -20,9 +20,11 @@ public class RoadSelector {
 	 * @param region The region which binds the viewport
 	 * @return All roads within the rectangle, which are relevant to display 
 	 */
-	public static Road[] search(Region region, double bufferPercent) 
+	public static Road[] search(Region r, double bufferPercent) 
 	{
 		double time;
+		//Create a new region that is a copy to prevent addBuffer from making changes to the object.
+		Region region = new Region(r.getLeftPoint()[0], r.getLeftPoint()[1], r.getRightPoint()[0], r.getRightPoint()[1]);
 		region.addBuffer(bufferPercent);
 		double[] p1 = region.getLeftPoint();
 		double[] p2 = region.getRightPoint();

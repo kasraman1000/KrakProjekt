@@ -16,6 +16,7 @@ import routing.KrakEdge;
 public class EdgeParser {
 
 	private static HashMap<String, Bag<KrakEdge>> edgeMap = new HashMap<String, Bag<KrakEdge>>();
+	private static HashMap<String, Integer> zipCodeMap;
 
 	/**
 	 * Builds up the structure for finding directed edges
@@ -35,6 +36,7 @@ public class EdgeParser {
 			}
 
 		}
+		zipCodeMap = Loader.getZipCodeMap();
 		System.out.println("Total roadnames: " + edgeMap.size());
 	}
 

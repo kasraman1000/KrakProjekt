@@ -24,7 +24,6 @@ public class Controller {
 	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
-		kdTree = KDTree.getTree();
 		try {
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
 			RoadSelector.initialize(Loader.getNodesForKDTree());
