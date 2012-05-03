@@ -27,4 +27,29 @@ public class Node {
 	{
 		return coords;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		/*
+		if(o.getClass() == Node.class)
+		{
+			Node compareNode = (Node) o;
+			if (compareNode.getCoord(0) == coords[0] && compareNode.getCoord(1) == coords[1])
+			{
+				return true;
+			}
+		}
+
+			return false;
+			 */
+		
+		return o == this;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "x=" + coords[0] + " y=" + coords[1];
+	}
 }
