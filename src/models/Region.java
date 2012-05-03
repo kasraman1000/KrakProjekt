@@ -1,4 +1,10 @@
 package models;
+
+/**
+ * A square region comprised of two points in 2d space
+ * The two points are in opposite corners of a square shape
+ * (2 x 2 doubleArrays)
+ */
 public class Region {
 	private final double ratio;
 	private double[] p1 = new double[2];
@@ -14,6 +20,10 @@ public class Region {
 		adjust();
 	}
 	
+	/**
+	 * Sets the higher coordinates to point 2,
+	 * and lower coordinates to point 1, ensuring consistency
+	 */
 	public void adjust()
 	{
 		if(p1[0] > p2[0])
@@ -46,6 +56,11 @@ public class Region {
 		}
 	}
 	
+	/**
+	 * Scales up the 'square' by a specified percentage,
+	 * increasing the square size.
+	 * @param percent The % to scale up
+	 */
 	public void addBuffer(double percent)
 	{
 		adjust();
@@ -59,11 +74,17 @@ public class Region {
 		
 	}
 
+	/**
+	 * @return the lower point of the two
+	 */
 	public double[] getLeftPoint()
 	{
 		return p1;
 	}
 	
+	/**
+	 * @return the higher point of the two
+	 */
 	public double[] getRightPoint()
 	{
 		return p2;

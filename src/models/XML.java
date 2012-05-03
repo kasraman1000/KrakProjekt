@@ -88,8 +88,8 @@ public class XML{
 													TransformerConfigurationException,
 													TransformerException{
 		//TODO
-		//Only for debugging
-		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+		//Only for debugging, uncomment for debug 
+//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
 		Document document = createNewDocumentWithRoot();
@@ -117,7 +117,7 @@ public class XML{
 //		svgElement.appendChild(routeElement);
 		
 		//TODO Is the id-statement necessary
-		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+		if(!(route==null || route.length == 0)) addRouteElementsAfterRoads(route, svgElement);
 		
 		
 		//Add the StatusCode Element to the RootElement
@@ -252,6 +252,7 @@ public class XML{
 										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
 			element.appendChild(line);
 		}
+		
 	}
 	
 	private void addRouteElementsAfterRoads(Road[] route, Element element){
