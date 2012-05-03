@@ -31,7 +31,7 @@ public class Controller {
 		kdTree = KDTree.getTree();
 		try {
 
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt","zip_codes.txt");
+			Loader.load("kdv_node_sunload.txt","kdv_unload.txt","zip_codes.txt");
 		} catch (ServerStartupException e) {
 			ErrorHandler.handleServerStartupException(e);
 
@@ -62,7 +62,7 @@ public class Controller {
 
 	public static String getXmlString(Region region, double bufferPercent){
 //		String s = getRoadAndRoute("", "", false);
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
 		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
 		try {
@@ -110,7 +110,7 @@ public class Controller {
 		//TODO 
 		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
 		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		Road[] roads = RoadSelector.search(region, bufferPercent);
 
 		String xmlString = "";
 

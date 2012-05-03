@@ -7,7 +7,7 @@ public static StatusCode handleClientInputException(ClientInputException e){
 }
 
 public static void handleServerStartupException(ServerStartupException e){
-	System.out.println(e.getStatusCode());
+	System.out.println(e.getStatusCode().getDescription());
 	System.exit(0);
 }
 
