@@ -1,19 +1,8 @@
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-class AddressParser {
+public class AddressParser {
 	
-	public static void main(String[] args) {
-		String test = "Annasvej 14";
-		
-		String[] result = parseAddress(test);
-		
-		for (int i = 0; i < result.length; i++) {
-			System.out.println("\""+result[i]+"\"");
-		}
-		
-	}
-    
     /**
      * Parses a string and returns an array containing:
      * 
@@ -145,6 +134,18 @@ class AddressParser {
         }
     }
     
-        
+	/**
+	 * Test method
+	 */
+	public static void main(String[] args) {
+		String test = "Annasvej 14";
+		
+		String[] result = parseAddress(test);
+		
+		for (int i = 0; i < result.length; i++) {
+			System.out.println("\""+result[i]+"\"");
+		}
+		
+	}     
     
 }
