@@ -63,10 +63,13 @@ public class Controller {
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region, double bufferPercent){
+		System.out.println("Controller.getXmlString() - the first region: " + region);
+		Region newRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
 		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
-		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
+//		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
 		try {
+			System.out.println("Controller.getXmlString() - " + newRegion);
 			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -92,7 +95,8 @@ public class Controller {
 	 */
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
 		
-		
+		fromAddress = "Annasvej 14, 4600 Køge";
+		toAddress = "Farstrupvej 5, 4600 Køge";
 //		//ITU
 //		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
 //													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
@@ -103,6 +107,7 @@ public class Controller {
 //													2);
 		
 		//Get fromPreface
+		System.out.println("Controller.getRoadAndRoute() - fromAddress is " + fromAddress);
 		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
 		PathPreface pathPrefaceFrom = null;
 		try {
@@ -116,6 +121,7 @@ public class Controller {
 		
 		
 		//Get toPreface
+		System.out.println("Controller.getRoadAndRoute() - toAddress is " + toAddress);
 		String[] toAddressArray = AddressParser.parseAddress(toAddress);
 		PathPreface pathPrefaceTo = null;
 		try {
@@ -151,6 +157,7 @@ public class Controller {
 		String xmlString = "";
 		
 		try {
+			System.out.println("Controller.getRoadAndRoute() - " + region);
 			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block

@@ -142,6 +142,7 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
+			
 //			//TODO
 //			//For debugging, when hard coding something 
 //			if(name.contains("Rued ")){

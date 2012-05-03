@@ -68,6 +68,11 @@ public class JSConnector {
 			}
 			//TODO only for testing
 //			response = XmlFhje.getTestXML();
+			
+			System.err.println("HandleRequest done");
+//			System.out.println(response);
+			
+			
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();

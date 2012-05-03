@@ -147,7 +147,7 @@ public class KDTree
 			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
-				System.out.println("depth " + depth);
+//				System.out.println("depth " + depth);
 			}
 		}
 		if (kdn.right != null)
@@ -160,7 +160,7 @@ public class KDTree
 			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
 				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
-				System.out.println("depth " + depth);
+//				System.out.println("depth " + depth);
 			}
 		}
 

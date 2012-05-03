@@ -166,39 +166,36 @@ public class EdgesAndRoadsConverter {
 
 
 	
-	private static boolean compareEdges(KrakEdge firstEdge, KrakEdge secondEdge){
+	private static boolean edgesAreEqual(KrakEdge firstEdge, KrakEdge secondEdge){
 		//TODO Is it enough to compare hashCodes???
 		
 		//Compare all data from each Edge: If all true, then return true else return false
-//		firstEdge.from();
-		secondEdge.from();
-		
 		
 		//Id's
-		if(firstEdge.from() != secondEdge.from()) 
-		if(firstEdge.to() != secondEdge.to())
+		if(firstEdge.from() == secondEdge.from()) 
+		if(firstEdge.to() == secondEdge.to())
 		
 		//Coordinates
-		if((firstEdge.getFromPoint()[0] != secondEdge.getFromPoint()[0]) ||
-			(firstEdge.getFromPoint()[1] != secondEdge.getFromPoint()[1]))
-		if((firstEdge.getToPoint()[0] != secondEdge.getToPoint()[0]) ||
-			(firstEdge.getToPoint()[1] != secondEdge.getToPoint()[1]))
+		if((firstEdge.getFromPoint()[0] == secondEdge.getFromPoint()[0]) ||
+			(firstEdge.getFromPoint()[1] == secondEdge.getFromPoint()[1]))
+		if((firstEdge.getToPoint()[0] == secondEdge.getToPoint()[0]) ||
+			(firstEdge.getToPoint()[1] == secondEdge.getToPoint()[1]))
 		
 		//House numbers
-		if(firstEdge.getvFromHouseNumber() != secondEdge.getvFromHouseNumber())
-		if(firstEdge.getvToHouseNumber() != secondEdge.getvToHouseNumber())
-		if(firstEdge.gethFromHouseNumber() != secondEdge.gethFromHouseNumber())
-		if(firstEdge.gethToHouseNumber() !=  secondEdge.gethToHouseNumber())
+		if(firstEdge.getvFromHouseNumber() == secondEdge.getvFromHouseNumber())
+		if(firstEdge.getvToHouseNumber() == secondEdge.getvToHouseNumber())
+		if(firstEdge.gethFromHouseNumber() == secondEdge.gethFromHouseNumber())
+		if(firstEdge.gethToHouseNumber() ==  secondEdge.gethToHouseNumber())
 		
 		//Postal numbers
-		if(firstEdge.getvPost() != secondEdge.getvPost())
-		if(firstEdge.gethPost() != secondEdge.gethPost())
+		if(firstEdge.getvPost() == secondEdge.getvPost())
+		if(firstEdge.gethPost() == secondEdge.gethPost())
 		
 		//Lengths
-		if(firstEdge.getLength() != secondEdge.getLength())
+		if(firstEdge.getLength() == secondEdge.getLength())
 		
 		//Names
-		if(firstEdge.getName() != secondEdge.getName())
+		if(firstEdge.getName().equals(secondEdge.getName()))
 		
 		//Time
 		if(firstEdge.getTime() != secondEdge.getTime())
@@ -218,6 +215,8 @@ public class EdgesAndRoadsConverter {
 		
 		for(int index=0; index<routeRoads.length; index++){
 			routeRoads[index] = routeEdges.pop();
+			if(routeRoads[index] == null) System.out.println("EdgesAndRoadsConverter.convertRouteStackToArray() - the null error is here!!");
+			
 		}
 
 		return routeRoads;
@@ -237,43 +236,62 @@ public class EdgesAndRoadsConverter {
 		 * 
 		 */
 		
+		//TODO For debugging
+		for(int index=0; index<routeEdges.length; index++){
+			if(routeEdges[index]==null) System.out
+					.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() - linie 243: route[" + index + "] is null");
+		}
+		
+		
+		
 		
 		//Will test if the first edge is the same as the one in the preface
 		KrakEdge edgeToBeAddedInFrontOfRoute = null;
 		KrakEdge edgeToBeAddedAtEndOfRoute = null;
 		
+		//TODO
+		//TODO
+		//TODO
+		//TODO
+		//TODO
+		
 		//If NOT either of the two Edge's in the preface are equal to the first edge in the route...
-		if(!(compareEdges(routeEdges[0], pathPrefaceFrom.getEdge1()) || compareEdges(routeEdges[0], pathPrefaceFrom.getEdge2())))
+		if(!(edgesAreEqual(routeEdges[0], pathPrefaceFrom.getEdge1()) || edgesAreEqual(routeEdges[0], pathPrefaceFrom.getEdge2())))
 			
 			//... the correct Edge are to be added in front of the route
-			if(routeEdges[0].to() == pathPrefaceFrom.getEdge1().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge1();//add first edge in front of route
-			else if(routeEdges[0].to() == pathPrefaceFrom.getEdge2().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge2();//add second edge in front of route
+			if(routeEdges[0].from() == pathPrefaceFrom.getEdge1().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge1();//add first edge in front of route
+			else if(routeEdges[0].from() == pathPrefaceFrom.getEdge2().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge2();//add second edge in front of route
 			//TODO May add error handling
-			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - not corresponding to-id's!! Something serious is wrong!!");
+			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - FIRST NODE - not corresponding to-id's!!\n" +
+					"routeEdges[0].from(): " + routeEdges[0].from() + " and pathPreface.getEdge1().to(): " + pathPrefaceFrom.getEdge1().to() + 
+					" and pathPrefaceFrom.getEdge2().to(): " + pathPrefaceFrom.getEdge2().to());
 		
 		//If NOT either of the two Edge's in the pathPreface are equal to the last Edge in the route...
-		if(!(compareEdges(routeEdges[routeEdges.length-1], pathPrefaceTo.getEdge1()) || 
-				compareEdges(routeEdges[routeEdges.length-1], pathPrefaceTo.getEdge2())))
+		if(!(edgesAreEqual(routeEdges[routeEdges.length-1], pathPrefaceTo.getEdge1()) || 
+				edgesAreEqual(routeEdges[routeEdges.length-1], pathPrefaceTo.getEdge2())))
 			
 			//...the correct Edge must be added 
-			if(routeEdges[routeEdges.length-1].from() == pathPrefaceTo.getEdge1().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge1();
-			else if(routeEdges[routeEdges.length-1].from() == pathPrefaceTo.getEdge2().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge2();
+			if(routeEdges[routeEdges.length-1].to() == pathPrefaceTo.getEdge1().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge1();
+			else if(routeEdges[routeEdges.length-1].to() == pathPrefaceTo.getEdge2().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge2();
 			//TODO May add error handling
-			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - not corresponding from-id's!! Something serious is wrong!!");
+			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - LAST NODE - not corresponding to-id's!!\n" +
+					"routeEdges[routeEdges.length-1].to(): " + routeEdges[routeEdges.length-1].to() + " and pathPreface.getEdge1().from(): " + pathPrefaceFrom.getEdge1().from() + 
+					" and pathPrefaceFrom.getEdge2().from(): " + pathPrefaceFrom.getEdge2().from());
 		
 		int edgesToBeAdded = 0;
 		if(edgeToBeAddedInFrontOfRoute != null) edgesToBeAdded++;
 		if(edgeToBeAddedAtEndOfRoute != null) edgesToBeAdded++;
 		
 		KrakEdge[] newEdges = new KrakEdge[routeEdges.length+edgesToBeAdded];
+		System.out.println("Linie 281 - KrakEdge[] newEdges = new KrakEdge[" + routeEdges.length + "+" + edgesToBeAdded + "];");
 	
 //		//TODO
 //		if(edgeToBeAddedInFrontOfRoute==null) System.out.println("Tuttelu");
 //		if(edgeToBeAddedAtEndOfRoute==null) System.out.println("tralala");
 		
 		//If Edges are to be added
+		int startPoint = 0;
 		if(edgesToBeAdded != 0){
-			int startPoint = 0;
 			
 			//If edge are going to be added in front of route, do it now
 			if(edgeToBeAddedInFrontOfRoute != null){
@@ -281,18 +299,19 @@ public class EdgesAndRoadsConverter {
 				startPoint = 1;
 			}
 			
-			//Add every old edge to the new array
-			int indexForOldEdges = 0;
-			for(int index=startPoint; index<routeEdges.length+startPoint; index++){
-				newEdges[index] = routeEdges[indexForOldEdges];
-				indexForOldEdges++;
-			}
-			
-			
 			//If edge are going to be added at end of route, do it now
 			if(edgeToBeAddedAtEndOfRoute != null)
 				newEdges[newEdges.length-1] = edgeToBeAddedAtEndOfRoute;
+		} 
+		
+		//Add every old edge to the new array
+		int indexForOldEdges = 0;
+		for(int index=startPoint; index<routeEdges.length+startPoint; index++){
+			newEdges[index] = routeEdges[indexForOldEdges];
+			indexForOldEdges++;
 		}
+		
+		
 
 		for(int index=0; index<newEdges.length; index++){
 			if(newEdges[index] == null) System.err

@@ -49,4 +49,9 @@ public class Region {
 	{
 		return p2;
 	}
+	
+	@Override
+	public String toString(){
+		return "Region - x1:" + p1[0] + ", y1:" + p1[1] + ", x2:" + p2[0] + ", y2:" + p2[1];
+	}
 }

@@ -89,7 +89,7 @@ public class XML{
 													TransformerException{
 		//TODO
 		//Only for debugging
-//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
 		Document document = createNewDocumentWithRoot();

@@ -167,10 +167,13 @@
 	function zoomIn() {
 		if (xView2 - xView1 < 1000)
 			return;
-		xView1 += getWidth() * 0.20;
-		yView1 += getHeight() * 0.20;
-		xView2 -= getWidth() * 0.20;
-		yView2 -= getHeight() * 0.20;
+		var currentHeight = getHeight();
+		var currentWidth = getWidth();	
+			
+		xView1 += currentWidth * 0.20;
+		yView1 += currentHeight * 0.20;
+		xView2 -= currentWidth * 0.20;
+		yView2 -= currentHeight * 0.20;
 		getXML();
 	}
 
@@ -179,14 +182,18 @@
 			init();
 			return;
 		}
-		xView1 -= getWidth() * 0.20
+		
+		var currentHeight = getHeight();
+		var currentWidth = getWidth();	
+		
+		xView1 -= currentWidth * 0.20
 		if (xView1 < 0)
 			xView1 = 0;
-		yView1 -= getHeight() * 0.20;
+		yView1 -= currentHeight * 0.20;
 		if (yView1 < 0)
 			yView1 = 0;
-		xView2 += getWidth() * 0.20;
-		yView2 += getHeight() * 0.20;
+		xView2 += currentWidth * 0.20;
+		yView2 += currentHeight * 0.20;
 		getXML();
 	}
 
