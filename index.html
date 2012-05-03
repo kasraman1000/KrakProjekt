@@ -199,10 +199,8 @@
 
 	function findRoute() {
 		hideErrorMessage();
-		fromAddress = document.getElementById("fromAddress").value;
-			
-		toAddress = document.getElementById("toAddress").value;
-		alert(fromAddress  + "&& " + toAddress);
+		fromAddress = encodeUTFString(document.getElementById("fromAddress").value);
+		toAddress = encodeUTFString(document.getElementById("toAddress").value);
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
@@ -218,6 +216,12 @@
 		route = "";
 		getXML();
 	}
+	
+	function encodeUTFString(s){
+		return encodeURIComponent(s);
+	}
+	
+
 </script>
 </head>
 <body onLoad="init()" style="background: #eee; margin: 0;">

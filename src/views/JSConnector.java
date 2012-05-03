@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
 import controllers.Controller;
@@ -107,7 +108,15 @@ public class JSConnector {
 	 * @param line the first line of the http request
 	 * @return returns a hashMap with the parameters
 	 */
-	private HashMap<String, String> readParameters(String line) {
+	private HashMap<String, String> readParameters(String inLine) {
+		String line = "";
+		try{
+			line = URLDecoder.decode(inLine, "UTF-8");
+		}
+		catch(Exception e)
+		{
+			System.out.println("EXCEPTION  " + e);
+		}
 		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
