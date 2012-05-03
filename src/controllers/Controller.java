@@ -95,6 +95,9 @@ public class Controller {
 		try {
 			System.out.println("Controller.getXmlString() - " + newRegion);
 			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
+
+			//TODO For debugging
+			TestRequest();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,17 +122,9 @@ public class Controller {
 	 */
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
 		
-		fromAddress = "Annasvej 14, 4600 Køge";
-		toAddress = "Farstrupvej 5, 4600 Køge";
-//		//ITU
-//		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
-//													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
-//														2);
-//		//An Edge in Skagen
-//		PathPreface pathPrefaceTo = new PathPreface(new KrakEdge(21194-1, 21199-1, "Kratvej", 8.73, 0.12, new double[]{5000,5000}, new double[]{10000,10000}, 9900, 9900, 0, 20, 1, 21), 
-//													new KrakEdge(21199-1, 21194-1, "Kratvej", 8.73, 0.12, new double[]{10000,10000}, new double[]{5000,5000}, 9900, 9900, 0, 20, 1, 21), 
-//													2);
-		
+		fromAddress = "Annasvej 14, 4600 KÃ¸ge";
+		toAddress = "Farstrupvej 5, 4600 KÃ¸ge";
+
 		//Get fromPreface
 		System.out.println("Controller.getRoadAndRoute() - fromAddress is " + fromAddress);
 		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
@@ -175,8 +170,12 @@ public class Controller {
 		//Correct start and end of [] and do the house number thing 
 		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
 		
-		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.search(region, bufferPercent);
+
+		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);	
+		System.out.println("Controller.getRoadAndRoute() - newRegion: " + newRegion);
+		
+		Road[] roads = RoadSelector.search(newRegion, bufferPercent);
+
 
 		String xmlString = "";
 		
