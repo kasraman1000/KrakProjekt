@@ -32,7 +32,7 @@
 				showSvg(svg.iterateNext(),viewPort.iterateNext());
 			}
 		}
-		var uri = "http://localhost:8080/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
+		var uri = "http://localhost/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
 		xmlhttp.open("GET", uri, true);
 		xmlhttp.send();
 	}
@@ -199,8 +199,8 @@
 
 	function findRoute() {
 		hideErrorMessage();
-		fromAddress = encodeUTFString(document.getElementById("fromAddress").value);
-		toAddress = encodeUTFString(document.getElementById("toAddress").value);
+		fromAddress = document.getElementById("fromAddress").value;
+		toAddress = document.getElementById("toAddress").value;
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
@@ -214,14 +214,8 @@
 	function clearRoute() {
 		hideErrorMessage();
 		route = "";
-		getXML(); 
+		getXML();
 	}
-	
-	function encodeUTFString(s){
-		return encodeURIComponent(s);
-	}
-	
-
 </script>
 </head>
 <body onLoad="init()" style="background: #eee; margin: 0;">
