@@ -15,8 +15,6 @@ import views.*;
  */
 public class Controller {
 	private static XML xml;
-	private static KDTree kdTree;
-	
 	
 	public static void main(String[] args) {
 		Controller.startServer();
