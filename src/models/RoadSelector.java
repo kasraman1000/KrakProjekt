@@ -10,6 +10,7 @@ public class RoadSelector {
 	private static int lastZoomLevel = 5;
 	private static KDTree tree = KDTree.getTree();
 	
+	
 	/**
 	 * Returns all roads in a rectangle bound by a region filtered by priority.
 	 * @param region The region which binds the viewport
