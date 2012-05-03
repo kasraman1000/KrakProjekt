@@ -60,35 +60,12 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
+	
+	public static void initialize(ArrayList<Node> nodes)
+	{
+		kdTree.initialize(nodes);
+	}
 
-//	public static Road[] searchRange(double[] p1, double[] p2)
-//	{
-//		ArrayList<Road> result = new ArrayList<Road>();
-//		if(zoom < 5)
-//		{
-//			int count = 0;
-//			for(Road r : roads) {
-//				if(r.getPriority() >= zoom) {
-//					count++;
-//				}
-//
-//			}
-//			System.out.println("int count = " + count);
-//			if(count > max) {
-//				System.out.println("Increasing zoom from " + zoom + " to " + (zoom+1));
-//				zoom++;
-//			}
-//		}
-//		
-//		for(Road r : roads) {
-//			if(r.getPriority() >= zoom) {
-//				result.add(r);
-//			}
-//		}
-//		
-//		return result;
-//		
-//	}
 	private static ArrayList<Road> filter(Collection<Road> roads, int max)
 	{
 		ArrayList<Road> result = new ArrayList<Road>();
