@@ -231,8 +231,8 @@ public class EdgesAndRoadsConverter {
 	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) {
 		/**
 		 * 
-		 * Hvis Den fï¿½rste Edge i ruten er lig PreFace.edge 1 eller 2 skal den fï¿½rste Edge tilpasses mht. husnummer
-		 * ellers skal PreFace.edge 1 eller 2 lï¿½gges til og tilpasset med husnummer
+		 * Hvis Den første Edge i ruten er lig PreFace.edge 1 eller 2 skal den første Edge tilpasses mht. husnummer
+		 * ellers skal PreFace.edge 1 eller 2 lægges til og tilpasset med husnummer
 		 * 
 		 */
 		
@@ -379,10 +379,6 @@ public class EdgesAndRoadsConverter {
 		//Sets the Region for the route
 		Road.setOrigo(new double[]{xMin, yMin});
 		Road.setTop(new double[]{xMax, yMax});
-		
-		System.out
-				.println("EdgesAndRoadsConverter.changeFirstAndLastEdgeToHouseNumber() - Top and Origo for Road has changed:\n" +
-						"xMin: " + xMin + ", yMin: " + yMin + ", xMax: " + xMax + "yMax: " + yMax);
 	
 		System.out.println("xMin: " + xMin);
 		System.out.println("yMin: " + yMin);

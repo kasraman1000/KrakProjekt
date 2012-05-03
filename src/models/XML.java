@@ -88,8 +88,8 @@ public class XML{
 													TransformerConfigurationException,
 													TransformerException{
 		//TODO
-		//Only for debugging
-		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+		//Only for debugging, uncomment for debug 
+//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
 		Document document = createNewDocumentWithRoot();
@@ -251,7 +251,7 @@ public class XML{
 			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
 										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
 			element.appendChild(line);
-		}
+		}	    
 	}
 	
 	private void addRouteElementsAfterRoads(Road[] route, Element element){

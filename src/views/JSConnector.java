@@ -6,14 +6,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URLDecoder;
 import java.util.HashMap;
-
 import controllers.Controller;
-
 import models.Region;
 
-
+/**
+ * The JavaScript connector, accepting requests from the browser client
+ */
 public class JSConnector {
 	/**
 	 * Constructor that makes the class ready for a request
@@ -21,7 +20,7 @@ public class JSConnector {
 	public JSConnector(){
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
-			ServerSocket ss = new ServerSocket(8080);
+			ServerSocket ss = new ServerSocket(80);
 			listenForBrowserRequest(ss);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -108,15 +107,7 @@ public class JSConnector {
 	 * @param line the first line of the http request
 	 * @return returns a hashMap with the parameters
 	 */
-	private HashMap<String, String> readParameters(String inLine) {
-		String line = "";
-		try{
-			line = URLDecoder.decode(inLine, "UTF-8");
-		}
-		catch(Exception e)
-		{
-			System.out.println("EXCEPTION  " + e);
-		}
+	private HashMap<String, String> readParameters(String line) {
 		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
