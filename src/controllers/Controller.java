@@ -6,19 +6,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import models.KDTree;
-import models.Loader;
-import models.Region;
-import models.Road;
-import models.RoadSelector;
-import models.RoadStatus;
-import models.StatusCode;
-import models.XML;
-import routing.DijkstraSP;
-import routing.EdgesAndRoadsConverter;
-import routing.KrakEdge;
-import routing.Stack;
-import views.JSConnector;
+import models.*;
+import routing.*;
+import views.*;
 
 /**
  * The main controller responsible for program flow
@@ -26,9 +16,8 @@ import views.JSConnector;
 public class Controller {
 	private static XML xml;
 	private static KDTree kdTree;
-	private static JSConnector jsConnector;
-
-
+	
+	
 	public static void main(String[] args) {
 		Controller.startServer();
 	}
@@ -39,15 +28,40 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt","zip_codes.txt");
+			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 			kdTree.initialize(Loader.getNodesForKDTree());
+			EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		xml = new XML();
 		double end = System.nanoTime();
-		System.out.println("System up running... (In " + (end-start)/1000000000 + " seconds)");
+		System.out.println("System up running... (In " + (end-start)/1e9 + " seconds)");
+	}
+	
+	public static void TestRequest()
+	{
+		Region r1 = new Region(70000, 90000, 280000, 360000);
+		Road[] roads = RoadSelector.search(r1, 0.7);
+		double smallestX = Double.POSITIVE_INFINITY;
+		double greatestX = 0;
+		double smallestY = Double.POSITIVE_INFINITY;
+		double greatestY = 0;
+		for(Road r : roads)
+		{
+			if(r.getX1() < smallestX) {smallestX = r.getX1();}
+			if(r.getX2() < smallestX) {smallestX = r.getX2();}
+			if(r.getY1() < smallestY) {smallestY = r.getY1();}
+			if(r.getY2() < smallestY) {smallestY = r.getY2();}
+			
+			if(greatestX < r.getX1()) {greatestX = r.getX1();}
+			if(greatestX < r.getX2()) {greatestX = r.getX2();}
+			if(greatestY < r.getY1()) {greatestY = r.getY1();}
+			if(greatestY < r.getY2()) {greatestY = r.getY2();}
+		}
+		
+		System.out.println("Greatest x = " + greatestX + " greatest y = " + greatestY + " smallest x = " + smallestX + " smallest y = " + smallestY);
 	}
 	
 	
@@ -56,25 +70,27 @@ public class Controller {
 	 * 
 	 */
 	public static void startServer(){
-		jsConnector = new JSConnector();
+		new JSConnector();
 	}
+	 
 
-
-
+	
 	/**
 	 * Will fetch all the roads in the Region specified 
 	 * 
 	 * @param region The area to get the roads from
 	 * @return XML String containing all the roads in the Region
 	 */
-
 	public static String getXmlString(Region region, double bufferPercent){
-//		String s = getRoadAndRoute("", "", false);
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		System.out.println("Controller.getXmlString() - the first region: " + region);
+		Region newRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
+		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
-		RoadStatus.setScale(RoadSelector.getLastZoomLevel());
+//		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
 		try {
-			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
+			System.out.println("Controller.getXmlString() - " + newRegion);
+			s = xml.createString(roads, null, newRegion, StatusCode.ALL_WORKING);
+			TestRequest();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,46 +100,85 @@ public class Controller {
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
+		
 		return s;
 	}
-
+	
 	/**
 	 * Not yet done...
 	 * 
 	 * @param start
 	 * @param target
 	 * @param isLengthWeighted
+	 * @throws Exception 
 	 */
-	public static String getRoadAndRoute(String fromAdress, String toAdress, boolean isLengthWeighted, double bufferPercent){
-		//Parse address and return node-id's as "int start" and "int target" (OBS: Add the OTHER id in the Edge to the route: Because of the housenumber-calculations
+	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
+		
+		fromAddress = "Annasvej 14, 4600 Køge";
+		toAddress = "Farstrupvej 5, 4600 Køge";
+//		//ITU
+//		PathPreface pathPrefaceFrom = new PathPreface(new KrakEdge(441762-1, 442122-1, "Roed Langgaards Vej", 199.345, 1.375, new double[]{0,0}, new double[]{1000,1000}, 2300, 2300, 0, 20, 1, 21), 
+//													new KrakEdge(442122-1, 441762-1, "Roed Langgaards Vej", 199.345,  1.375, new double[]{1000,1000}, new double[]{0,0}, 2300, 2300, 0, 20, 1, 21), 
+//														2);
+//		//An Edge in Skagen
+//		PathPreface pathPrefaceTo = new PathPreface(new KrakEdge(21194-1, 21199-1, "Kratvej", 8.73, 0.12, new double[]{5000,5000}, new double[]{10000,10000}, 9900, 9900, 0, 20, 1, 21), 
+//													new KrakEdge(21199-1, 21194-1, "Kratvej", 8.73, 0.12, new double[]{10000,10000}, new double[]{5000,5000}, 9900, 9900, 0, 20, 1, 21), 
+//													2);
+		
+		//Get fromPreface
+		System.out.println("Controller.getRoadAndRoute() - fromAddress is " + fromAddress);
+		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
+		PathPreface pathPrefaceFrom = null;
+		try {
+			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(pathPrefaceFrom == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceFrom == null at line 109!!!!");
+		
+		
+		//Get toPreface
+		System.out.println("Controller.getRoadAndRoute() - toAddress is " + toAddress);
+		String[] toAddressArray = AddressParser.parseAddress(toAddress);
+		PathPreface pathPrefaceTo = null;
+		try {
+			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(pathPrefaceTo == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceTo == null at line 122!!!!");
+		
+		
+		//ITU
+		int firstNodeId = pathPrefaceFrom.getEdge1().from(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceFrom);
+		
+		//An Edge in Skagen
+		int lastNodeId = pathPrefaceTo.getEdge1().to(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceTo);
+		
+		
+		//Load the graph into Dijkstra and find the path
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
+		Stack<KrakEdge> routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
+
+		//Convert from stack to []
+		KrakEdge[] routeEdgesArray = EdgesAndRoadsConverter.convertRouteStackToArray(routeEdges);
 		
-		//From Skagen to ITU  :O)
-		int tempFrom =21199-1;
-		int tempTo =442122-1;
+		//Correct start and end of [] and do the house number thing 
+		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
 		
-		//Temp!!
-		int firstHouseNumber = 2;
-		int lastHouseNumber = 2;
-		
-		Stack<KrakEdge> routeEdges = dij.findRoute(tempFrom, tempTo, isLengthWeighted);
-		
-		
-	
-		
-		
-		
-		
-		//TODO 
-		Road[] route = EdgesAndRoadsConverter.convertEdgesToRoads(routeEdges, firstHouseNumber, lastHouseNumber);
-		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.searchRange(region, bufferPercent);
+		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
+		Road[] roads = RoadSelector.search(newRegion, bufferPercent);
 
 		String xmlString = "";
-
+		
 		try {
-			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
+			System.out.println("Controller.getRoadAndRoute() - " + newRegion);
+			xmlString = xml.createString(roads, route, newRegion, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

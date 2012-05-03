@@ -1,215 +1,274 @@
 <html>
-	<head>
-		<script type="text/javascript">
-		function init(){
-			xView1 = 0.0;
-			yView1 = 0.0;
-			xView2 = 350000;
-			yView2 = 450000;
-			route = "";
-			getXML();
+<head>
+<script type="text/javascript">
+	function init() {
+		svgFrame = document.getElementById("svgframe");
+		bufferPercent = 0.7;
+		xView1 = 0;
+		yView1 = 0;
+		xView2 = 350000;
+		yView2 = 450000;
+		route = "";
+		getXML();
+	}
+	/*
+		This method creates a new httprequest to the server and sends the uri string. 
+		The uri string contains four koordinates 
+		The response from the server is saved in roads, which is then used in 
+		the method showSVG().
+	 */
+	function getXML() {
+		var xmlhttp = new XMLHttpRequest();
+		var t = setTimeout("showTimeoutError()", 10000);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && (xmlhttp.status == 200)) {
+				clearTimeout(t);
+				var responseXML = xmlhttp.responseXML;
+				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
+				var statusCodeString = statusCode.iterateNext().getAttribute("code");
+				handleStatusCode(statusCodeString);
+				var svg = responseXML.evaluate("/root/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
+				var viewPort = responseXML.evaluate("/root/viewPort", responseXML, null, XPathResult.ANY_TYPE, null);
+				showSvg(svg.iterateNext(),viewPort.iterateNext());
+			}
 		}
-		/*
-			This method creates a new httprequest to the server and sends the uri string. 
-			The uri string contains four koordinates 
-			The response from the server is saved in roads, which is then used in 
-			the method showSVG().
-		*/
-		function getXML(){
-			 var xmlhttp=new XMLHttpRequest();
-			  xmlhttp.onreadystatechange = function() {
-			    if (xmlhttp.readyState==4 && (xmlhttp.status==0 || xmlhttp.status==200)) {
-			    	errorString = xmlhttp.responseText.slice(0,200);
-			    	handleError();
-			    	roads = xmlhttp.responseXML.documentElement;
-				  	svgFrame = document.getElementById("svgframe");
-					showSvg();
-			    }
-			  }
-			  updateSurroundingData();
-			  uri = "http://localhost/?x1="+x1SurData+"&y1="+y1SurData+"&x2="+x2SurData+"&y2="+y2SurData+route+"";
-			  xmlhttp.open("GET",uri,true);
-			  xmlhttp.send();
+		var uri = "http://localhost/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
+		xmlhttp.open("GET", uri, true);
+		xmlhttp.send();
+	}
+	/*
+	function to use in the evaluate method to show that the namespace is svg
+	*/
+	function svgResolver(){
+		return "http://www.w3.org/2000/svg";
+	}
+	/*This function checks whether or not the server is sending a error as response. If the
+	server is sending an error the method will show a propriate message to the user.
+	The format should follow this pattern: "Error [number]" eg. Error 4
+	 */
+	function handleStatusCode(statusCode) {
+		switch (statusCode) {
+		case "0":
+			//everything is normal - no error should be shown
+			break;
+		case "1":
+			showError("The roadname is not correctly spelled");
+			break;
+		default:
+			showError("An error has occured");
+		}
+	}
+	function showError(text) {
+		document.getElementById("errorText").innerHTML = text;
+	}
+
+	/*this function hides the current errormessage if there is any pressent
+	 */
+	function hideErrorMessage() {
+		showError("");
+
+	}
+	/*Shows an error message if the server isn't responding
+	 */
+	function showTimeoutError() {
+		showError("The server is not responding");
+	}
+	/*
+		Here the XML request is added to the SVG frame and shown in the browser.
+		It also sets how big a part the user is able to move the viewbox, when 
+		either clicking right, left, up or down. 
+	 */
+	function showSvg(svg,viewPort) {
+		if (svgFrame.hasChildNodes())svgFrame.removeChild(svgFrame.firstChild);
+		//alert(svg);
+		svgFrame.appendChild(svg);
+		xView1 = parseFloat(viewPort.getAttribute("x1"));
+		yView1 = parseFloat(viewPort.getAttribute("y1"));
+		xView2 = parseFloat(viewPort.getAttribute("x2"));
+		yView2 = parseFloat(viewPort.getAttribute("y2"));
+		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + getWidth() + " " + getHeight());
+		panningDistanceHor = getWidth() * 0.1;
+		panningDistanceVert = getHeight() * 0.1;
+		updateSurroundingData();
+	}
+
+	function getWidth(){
+		return xView2 - xView1;
+	}
+	
+	function getHeight(){
+		return yView2 - yView1;
+	}
+
+	/*
+		Since we want to be able to load a bit more data than showed
+		in the viewbox we use the method to determine how big a 
+		procentage that is fethed from the server. 
+	 */
+	function updateSurroundingData() {
+		x1SurData = xView1 - (xView2 - xView1) * bufferPercent;
+		x2SurData = xView2 + (xView2 - xView1) * bufferPercent;
+		y1SurData = yView1 - (yView2 - yView1) * bufferPercent;
+		y2SurData = yView2 + (yView2 - yView1) * bufferPercent;
+	}
+
+	/*
+		The following four methods is used to set new koordinates of the viewbox.
+		Inside each method a if statement is added. This is used to check if the 
+		viewbox is moving 'outside' of the data	that we currently have from the server. 
+		If this is the case, getXML() is called and new data is fetched and added 
+		to the SVG frame. 
+	 */
+	function clickUp() {
+		if (yView1 < y1SurData)
+			getXML();
+		moveViewBox(0, -panningDistanceVert);
+
+	}
+
+	function clickDown() {
+		if (yView2 > y2SurData)
+			getXML();
+		moveViewBox(0, panningDistanceVert);
+	}
+
+	function clickRight() {
+		if (xView2 > x2SurData)
+			getXML();
+		moveViewBox(panningDistanceHor, 0);
+	}
+
+	function clickLeft() {
+		if (xView1 < x1SurData)
+			getXML();
+		moveViewBox(-panningDistanceHor, 0);
+	}
+	/*
+		Here are the new koordinates of the viewbox added and
+		set as new attributes. 
+		
+		@param x,y which is the x and y koordinates
+	 */
+	function moveViewBox(x, y) {
+		xView1 += x;
+		yView1 += y;
+		xView2 += x;
+		yView2 += y;
+		svgFrame.setAttribute("viewBox", xView1 + " " + yView1 + " " + getWidth() + " " + getHeight());
+	}
+
+	/*
+		The next two functions are used to zoom in and out. 
+		Both functions has an if-statement in the start, which
+		enables a limitation as to how far in and out its possible
+		for the user to zoom. Then we increase or decrease the size of 
+		the four koordinates xView1, yView1, xView2 and yView2. 
+	 */
+	function zoomIn() {
+		if (xView2 - xView1 < 1000)
+			return;
+		var currentHeight = getHeight();
+		var currentWidth = getWidth();	
 			
-		}
-		/*This function checks whether or not the server is sending a error as response. If the
-		server is sending an error the method will show appropriate message to the user.
-		The format should follow this pattern: "Error [number]" eg. Error 4
-		*/
-		function handleError(){
-			if(errorString.split(" ")[0]=="Error"){
-				errorCode = errorString.split(" ")[1];
-				switch(errorCode){
-				case "4":
-					alert("Error 4");
-					break;
-				default:
-					alert("An error has occured");
-				}
-			}
-		}
-		/*
-			Here the XML request is added to the SVG frame and shown in the browser.
-			It also sets how big a part the user is able to move the viewbox, when 
-			either clicking right, left, up or down. 
-		*/
-		function showSvg(){
-			if(svgFrame.hasChildNodes())
-				svgFrame.removeChild(svgFrame.firstChild);
-			svgFrame.appendChild(roads.firstChild); 	
-			setWidthandHeight();
-			svgFrame.setAttribute("viewBox", xView1 +" " + yView1 + " " + wView + " " + hView);
-			panningDistanceVert = (yView2 - yView1)*0.1;
-			panningDistanceHor = (xView2 - xView1)*0.1;
-			}
-		
-		/*
-			This method uses the the diffence between the two sets of 
-			koordinates to set the height and width of the viewbox
-		*/
-		function setWidthandHeight(){
-			wView = xView2 - xView1;
-			hView = yView2 - yView1;
+		xView1 += currentWidth * 0.20;
+		yView1 += currentHeight * 0.20;
+		xView2 -= currentWidth * 0.20;
+		yView2 -= currentHeight * 0.20;
+		getXML();
+	}
+
+	function zoomOut() {
+		if (xView2 - xView1 > 340000) {
+			init();
+			return;
 		}
 		
-		/*
-			Since we want to be able to load a bit more data than showed
-			in the viewbox we use the method to determine how big a 
-			procentage that is fethed from the server. 
-		*/
-		function updateSurroundingData(){
-			x1SurData = xView1 - (xView2-xView1)*0.7;
-			x2SurData = xView2 + (xView2-xView1)*0.7;
-			y1SurData = yView1 - (yView2-yView1)*0.7;
-			y2SurData = yView2 + (yView2-yView1)*0.7;
+		var currentHeight = getHeight();
+		var currentWidth = getWidth();	
 		
-		}
-		
-		/*
-			The following four methods is used to set new koordinates of the viewbox.
-			Inside each method a if statement is added. This is used to check if the 
-			viewbox is moving 'outside' of the data	that we currently have from the server. 
-			If this is the case, getXML() is called and new data is fetched and added 
-			to the SVG frame. 
-		*/	
-		function clickUp(){
-			if(yView1 < y1SurData)
-				getXML();
-			moveViewBox(0, -panningDistanceVert);
-			
-		}
-		
-		function clickDown(){	
-			if(yView2 > y2SurData)
-				getXML();
-			moveViewBox(0, panningDistanceVert);
-		}
-		
-		function clickRight(){
-			if(xView2 > x2SurData)
-				getXML();
-			moveViewBox(panningDistanceHor, 0);
-		}
-		
-		function clickLeft(){
-			if(xView1 < x1SurData)
-				getXML();
-			moveViewBox(-panningDistanceHor, 0);
-		}
-		/*
-			Here are the new koordinates of the viewbox added and
-			set as new attributes. 
-			
-			@param x,y which is the x and y koordinates
-		*/
-		function moveViewBox(x,y){
-			xView1 += x;
-			yView1 += y;
-			xView2 += x;
-			yView2 += y;
-			//setWidthandHeight();
-			svgFrame.setAttribute("viewBox", xView1+" " + yView1+" " + wView+" " +hView);
-		}
-		
-		/*
-			The next two functions are used to zoom in and out. 
-			Both functions has an if-statement in the start, which
-			enables a limitation as to how far in and out its possible
-			for the user to zoom. Then we increase or decrease the size of 
-			the four koordinates xView1, yView1, xView2 and yView2. 
-		*/
-		function zoomIn(){
-			if(xView2-xView1 < 1000)
-				return;
-			xView1 += wView * 0.20;
-			yView1 += hView * 0.20;
-			xView2 -= wView * 0.20;
-			yView2 -= hView * 0.20;
+		xView1 -= currentWidth * 0.25
+		if (xView1 < 0)
+			xView1 = 0;
+		yView1 -= currentHeight * 0.25;
+		if (yView1 < 0)
+			yView1 = 0;
+		xView2 += currentWidth * 0.25;
+		yView2 += currentHeight * 0.25;
+		getXML();
+	}
+
+	function findRoute() {
+		hideErrorMessage();
+		fromAddress = document.getElementById("fromAddress").value;
+		toAddress = document.getElementById("toAddress").value;
+		if (fromAddress == "" || toAddress == "") {
+			alert("Missing inputs");
+		} else {
+			isDistance = document.getElementById("distance").checked;
+			route = "&from=" + fromAddress + "&to=" + toAddress
+					+ "&isDistance=" + isDistance + "";
 			getXML();
 		}
-		
-		function zoomOut(){
-			if(xView2 - xView1 > 340000){
-				init();
-				return;
-			}
-			setWidthandHeight();
-			xView1 -= wView * 0.20
-			if(xView1 < 0)
-				xView1 = 0;
-			yView1 -= hView * 0.20;
-			if(yView1 < 0)
-				yView1 = 0;
-			xView2 += wView * 0.20;
-			yView2 += hView * 0.20;
-			//alert(xView1 + "  " + yView1);
-			getXML();
-		}
-		
-		function findRoute(){
-			fromAddress = document.getElementById("fromAddress").value;
-			toAddress = document.getElementById("toAddress").value;
-			if(fromAddress == "" || toAddress == ""){
-				alert("Missing inputs");
-			}
-			else{
-				isDistance = document.getElementById("distance").checked;
-				route = "&from="+fromAddress+"&to="+toAddress+"&isDistance="+isDistance+"";
-				getXML();
-			}
-		}
-		
-		function clearRoute(){
-			route = "";
-			getXML();
-		}
-		
-		</script>
-	</head>
-	<body onLoad="init()" style="background:#eee; margin:0;">
-		<div id="buttons" style="float: left; width: 180px; height: 200px; margin: 0px;">
-			<div style="margin: 15px">
-				<button id="buttonUp" style="float:left; margin: 0px 47px 10px 50px; width: 50px" type="button" onClick="clickUp()">Up</button>
-				<button id="buttonLeft" style="float: left; margin: 0px 50px 10px 0px; width: 50px;" type="button" onClick="clickLeft()">Left</button>
-				<button id="buttonRight" style="float: left; margin: 0px; width: 50px" type="button" onClick="clickRight()">Right</button></br>
-				<button id="buttonDown" style="float: left; margin: 0px 47px 10px 50px; width: 50px" type="button" onClick="clickDown()">Down</button></br>
-				<button id="buttonZoomIn" style="float: left; margin: 10px 10px 0px 35px; width: 30px" type="button" onClick="zoomIn()">+</button>
-				<button id="buttonZoomOut" style="float: left; margin: 10px 20px 0px 10px; width: 30px" type="button" onClick="zoomOut()">-</button>
-				<div style="float: left; margin: 0px;">
-					<p style="margin: 0px; font: bold 14px Helvetica; margin: 60px 0px 10px 0px"> Find Route </p>
-					<p style="margin: 0px; font: 12px Helvetica;">From</p>
-					<input id="fromAddress" name="text" type="text" style="width: 165px"/>
-					<p style="margin: 0px; font: 12px Helvetica;margin: 10px 0px 0px 0px">To</p>
-					<input id="toAddress" name="text" type="text" style="margin: 0px 30px 10px 0px;width: 165px"/>
-					<input id="time" name="text" type="radio" checked/><p style="display:inline; margin: 0px; font: 12px Helvetica;">Time</p>
-					<input id="distance" name="text" type="radio"/><p style="display:inline;margin: 0px; font: 12px Helvetica;">Distance</p>
-					<input name="Submit" type="submit" value="Find Route" onClick="findRoute()" style="margin: 10px 0px 0px 0px"/>
-					<input name="Submit" type="submit" value="Clear Route" onClick="clearRoute()" style="margin: 10px 0px 0px 0px"/>
-				</div>
+	}
+
+	function clearRoute() {
+		hideErrorMessage();
+		route = "";
+		getXML();
+	}
+</script>
+</head>
+<body onLoad="init()" style="background: #eee; margin: 0;">
+	<div id="buttons"
+		style="float: left; width: 180px; height: 200px; margin: 0px;">
+		<div style="margin: 15px">
+			<button id="buttonUp"
+				style="float: left; margin: 0px 47px 10px 50px; width: 50px"
+				type="button" onClick="clickUp()">Up</button>
+			<button id="buttonLeft"
+				style="float: left; margin: 0px 50px 10px 0px; width: 50px;"
+				type="button" onClick="clickLeft()">Left</button>
+			<button id="buttonRight"
+				style="float: left; margin: 0px; width: 50px" type="button"
+				onClick="clickRight()">Right</button>
+			</br>
+			<button id="buttonDown"
+				style="float: left; margin: 0px 47px 10px 50px; width: 50px"
+				type="button" onClick="clickDown()">Down</button>
+			</br>
+			<button id="buttonZoomIn"
+				style="float: left; margin: 10px 10px 0px 35px; width: 30px"
+				type="button" onClick="zoomIn()">+</button>
+			<button id="buttonZoomOut"
+				style="float: left; margin: 10px 20px 0px 10px; width: 30px"
+				type="button" onClick="zoomOut()">-</button>
+			<div style="float: left; margin: 0px;">
+				<p
+					style="margin: 0px; font: bold 14px Helvetica; margin: 60px 0px 10px 0px">
+					Find Route</p>
+				<p style="margin: 0px; font: 12px Helvetica;">From</p>
+				<input id="fromAddress" name="text" type="text" style="width: 165px" />
+				<p
+					style="margin: 0px; font: 12px Helvetica; margin: 10px 0px 0px 0px">To</p>
+				<input id="toAddress" name="text" type="text"
+					style="margin: 0px 30px 10px 0px; width: 165px" /> <input id="time"
+					name="text" type="radio" checked />
+				<p style="display: inline; margin: 0px; font: 12px Helvetica;">Time</p>
+				<input id="distance" name="text" type="radio" />
+				<p style="display: inline; margin: 0px; font: 12px Helvetica;">Distance</p>
+				<input name="Submit" type="submit" value="Find Route"
+					onClick="findRoute()" style="margin: 10px 0px 0px 0px" /> <input
+					name="Submit" type="submit" value="Clear Route"
+					onClick="clearRoute()" style="margin: 10px 0px 0px 0px" />
+				<p id="errorText"
+					style="margin: 55px 0px 0px 0px; color: red; font: 12px Helvetica;"></p>
 			</div>
 		</div>
-		<div id="svg" style="border:1px solid #ccc; margin-left: 200px; background:#fff;">
-			<svg xmlns="http://www.w3.org/2000/svg" id="svgframe" viewBox = "0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
-		</div>
-	</body>
+	</div>
+	<div id="svg"
+		style="border: 1px solid #ccc; margin-left: 200px; background: #fff;">
+		<svg xmlns="http://www.w3.org/2000/svg" id="svgframe"
+			viewBox="0 0 350000 450000" preserveAspectRatio="xMidYMid slice"></svg>
+	</div>
+</body>
 </html>

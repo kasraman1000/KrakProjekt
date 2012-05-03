@@ -7,7 +7,7 @@ import java.util.HashSet;
  * road objects (from kdv_unload.txt)
  */
 public class Node {
-	private double[] coords;
+	public final double[] coords;
 	private HashSet<Road> roads;
 	
 	public Node(double[] coords) {
@@ -36,7 +36,7 @@ public class Node {
 	{
 		return coords[index];
 	}
-	
+
 	/**
 	 * Returns the whole coordinate array 
 	 * (all coordinated of the node)
