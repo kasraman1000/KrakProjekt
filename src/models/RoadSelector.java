@@ -1,6 +1,7 @@
 package models;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,10 +15,15 @@ public class RoadSelector {
 	private static final int MAX_ROADS = 20000;
 	private static KDTree kdTree = KDTree.getTree();
 
+
+	
+	
+	
+	
 	/**
 	 * Returns all roads in a rectangle bound by a region filtered by priority.
 	 * @param region The region which binds the viewport
-	 * @return All roads within the rectangle, which are relevant to display
+	 * @return All roads within the rectangle, which are relevant to display 
 	 */
 	public static Road[] search(Region region, double bufferPercent) 
 	{
