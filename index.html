@@ -32,7 +32,7 @@
 				showSvg(svg.iterateNext(),viewPort.iterateNext());
 			}
 		}
-		var uri = "http://localhost/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
+		var uri = "http://localhost:8080/?x1=" + xView1 + "&y1=" + yView1 + "&x2="+ xView2 + "&y2=" + yView2 +"&bufferPercent="+ bufferPercent + route + "";
 		xmlhttp.open("GET", uri, true);
 		xmlhttp.send();
 	}
@@ -200,7 +200,9 @@
 	function findRoute() {
 		hideErrorMessage();
 		fromAddress = document.getElementById("fromAddress").value;
+			
 		toAddress = document.getElementById("toAddress").value;
+		alert(fromAddress  + "&& " + toAddress);
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
