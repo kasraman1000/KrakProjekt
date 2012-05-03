@@ -14,11 +14,6 @@ public class RoadSelector {
 
 	private static final int MAX_ROADS = 20000;
 	private static KDTree kdTree = KDTree.getTree();
-
-
-	
-	
-	
 	
 	/**
 	 * Returns all roads in a rectangle bound by a region filtered by priority.
@@ -41,9 +36,9 @@ public class RoadSelector {
 		time = System.nanoTime();
 		ArrayList<Node> nodes = kdTree.searchRange(region);
 		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
-
-		HashSet<Road> roads = new HashSet<Road>(1000000);
+		
 		time = System.nanoTime();
+		HashSet<Road> roads = new HashSet<Road>(100000, 0.3f);
 		for (Node n : nodes) {
 			for(Road r : n.getRoads()) {
 				roads.add(r);

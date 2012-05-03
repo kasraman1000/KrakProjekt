@@ -27,6 +27,7 @@ public class Road {
 		this.type = new Integer(type);
 		this.name = name;
 		hashCode = this.x1.hashCode()*(this.y2.hashCode()*31)+this.type.hashCode();
+		createHashCode();
 		setPriority();
 	}
 	
@@ -146,4 +147,30 @@ public class Road {
 	{
 		return hashCode;
 	}
+
+
+	public int createHashCode() {
+		final int prime = 31;
+		hashCode = 1;
+		hashCode = prime * hashCode + hashCode;
+		hashCode = prime * hashCode + ((name == null) ? 0 : name.hashCode());
+		hashCode = prime * hashCode + ((type == null) ? 0 : type.hashCode());
+		hashCode = prime * hashCode + ((x1 == null) ? 0 : x1.hashCode());
+		hashCode = prime * hashCode + ((x2 == null) ? 0 : x2.hashCode());
+		hashCode = prime * hashCode + ((y1 == null) ? 0 : y1.hashCode());
+		hashCode = prime * hashCode + ((y2 == null) ? 0 : y2.hashCode());
+		return hashCode;
+	}
+	
+	
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		return false;
+	}
+	
+	
 }
