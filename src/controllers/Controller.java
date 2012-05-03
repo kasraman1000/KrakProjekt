@@ -176,14 +176,14 @@ public class Controller {
 		//Correct start and end of [] and do the house number thing 
 		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
 		
-		Region region = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
-		Road[] roads = RoadSelector.search(region, bufferPercent);
+		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);		
+		Road[] roads = RoadSelector.search(newRegion, bufferPercent);
 
 		String xmlString = "";
 		
 		try {
-			System.out.println("Controller.getRoadAndRoute() - " + region);
-			xmlString = xml.createString(roads, route, region, StatusCode.ALL_WORKING);
+			System.out.println("Controller.getRoadAndRoute() - " + newRegion);
+			xmlString = xml.createString(roads, route, newRegion, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

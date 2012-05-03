@@ -1,12 +1,13 @@
 package models;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import routing.KrakEdgeWeightedDigraph;
 import routing.In;
 import routing.KrakEdge;
+import routing.KrakEdgeWeightedDigraph;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
@@ -21,7 +22,6 @@ public class Loader {
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
-
 	private static long timeMillis;
 
 	static{
@@ -37,50 +37,29 @@ public class Loader {
 	}
 
 
-
 	public static void load(String nodePath, String edgePath, String zipPath) throws IOException{
 		//Creates the map, that contains each city's zip code
 		printLine();
 		setTime();
 		buildZipCodeMap(zipPath);
 		printTime("Build zip code map");
-
 		//Creates a Scanner for the filenames specified
 		inEdges = new In(new File(edgePath));
 		inNodes = new In(new File(nodePath));
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();
-
+		
 		setTime();
 		findExtremes();
 		printTime("Found original extremes");
 		//Rearranges the coordinates to the actual places in the graph and
 		//make the nodeMap for the KDTree
-		double newX;
-		double newY;
-		for(int index=0; index<coordArray.size(); index++){
-			newX = coordArray.get(index)[0]- xMin;
-			newY = yMax - coordArray.get(index)[1];
-	
-			coordArray.get(index)[0] = newX;
-			coordArray.get(index)[1] = newY;
-	
-			nodeList.put(index, new Node(new double[]{newX, newY}));
-			
-//			//TODO FOr debugging
-//			if(index == 4417662 || index == 442122) System.out.println("nodeId: " + index + ", x: " + newX + ", y: " + newY);
-			
-		
-		}
-		
 		setTime();
 		recalculateCoordinates();
 		printTime("Recalculated coordinates");
 		//not in use past this
-
 		coordArray = null;
-
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
@@ -104,7 +83,6 @@ public class Loader {
 		String direction;
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
-			
 			//To make sure the data is read in a correct way (ie. the name of the road is "Røde Sti, Den")
 			if(textLineRoadArray.length > 33){
 				for(int index=0; index<textLineRoadArray.length-1; index++){
@@ -122,6 +100,7 @@ public class Loader {
 			}
 			
 			
+
 			/**
 			 * OBS Læg mærke til at ID'erne bliver minuset med 1!!!!
 			 */
@@ -137,31 +116,19 @@ public class Loader {
 			hFromHusnummer = Integer.valueOf(textLineRoadArray[9]);
 			hToHusnummer = Integer.valueOf(textLineRoadArray[10]);
 			
-			
-//			//TODO
-//			//For debugging, when hard coding something 
-//			if(name.contains("Rued ")){
-//				for(int index=0; index<textLineRoadArray.length; index++){
-//					System.out.print(textLineRoadArray[index] + ",");
-//				}
-//				System.out.println();
-//			}
-			
-			
-			
-			
 			//time in minutes
 			time = Double.valueOf(textLineRoadArray[26]);
-			
+
 			//tf = to->from
 			//ft = from->to
 			//n = no driving allowed
 			//<blank> = no restrictions
 			direction = textLineRoadArray[27]; 
-			
+
 			//Reading coordinates from the beginning of the road to the end of the road
 			fromPoint = new double[]{nodeList.get(from).getCoord(0), nodeList.get(from).getCoord(1)};
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
+
 			
 			if      (direction.equals("'tf'")) edges.add(new KrakEdge(to, from, name, dist, time, toPoint, fromPoint ,vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (direction.equals("'ft'")) edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
@@ -169,7 +136,7 @@ public class Loader {
 				edges.add(new KrakEdge(from, to, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 				edges.add(new KrakEdge(to, from, name, dist, time, toPoint, fromPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			}
-			
+
 			tempRoad = new Road(fromPoint[0], fromPoint[1], toPoint[0], toPoint[1], type, name);
 
 			//Adding references from node to road
@@ -182,11 +149,7 @@ public class Loader {
 		setTime();
 		nodesForKDTree.addAll(nodeList.values());
 		printTime("Added nodes to KDTree");
-		graph = new KrakEdgeWeightedDigraph(nodeList.size());
 		
-		for(KrakEdge e : edges){
-			graph.addEdge(e);
-		}
 		setTime();
 		buildGraph();
 		printTime("Build routing graph");
@@ -208,7 +171,6 @@ public class Loader {
 	{
 		System.out.println("------------------------");
 	}
-	
 
 	private static void findExtremes()
 	{
@@ -256,11 +218,14 @@ public class Loader {
 	 */
 	public static ArrayList<Node> getNodesForKDTree(){
 		//TODO Add a nice Exception to throw
-//		if(nodesForKDTree == null) throw new DataNotLoadedException();
-		return nodesForKDTree;
+		//		if(nodesForKDTree == null) throw new DataNotLoadedException();
+		//Using temporary variable to nullify nodesForKDTree
+		ArrayList<Node> tempNodes = nodesForKDTree;
+		nodesForKDTree = null;
+		return tempNodes;
+		
 	}
 	
-
 	private static void buildGraph()
 	{
 		graph = new KrakEdgeWeightedDigraph(nodeList.size());
@@ -269,7 +234,7 @@ public class Loader {
 		}
 	}
 	
-	public static void buildZipCodeMap(String zipPath)
+	private static void buildZipCodeMap(String zipPath)
 	{
 		In inZipCodes = new In(new File(zipPath));
 		String[] zipCityLine;
@@ -285,9 +250,10 @@ public class Loader {
 	{
 		return zipCodeMap;
 	}
+	
 	public static KrakEdgeWeightedDigraph getGraph(){
 		//TODO Add a nice Exception to throw
-//		if(graph == null) throw new DataNotLoadedException();
+		//		if(graph == null) throw new DataNotLoadedException();
 		return graph;
 	}
 
@@ -296,7 +262,6 @@ public class Loader {
 		edges = null;
 		return tempEdges;
 	}
-
 	
 	/**
 	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value
