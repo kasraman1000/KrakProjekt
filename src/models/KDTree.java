@@ -1,10 +1,10 @@
 
 package models;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-
 
 public class KDTree
 {
@@ -147,7 +147,7 @@ public class KDTree
 			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
-//				System.out.println("depth " + depth);
+
 			}
 		}
 		if (kdn.right != null)
@@ -160,7 +160,7 @@ public class KDTree
 			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
 				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
-//				System.out.println("depth " + depth);
+
 			}
 		}
 
@@ -265,7 +265,7 @@ public class KDTree
 
 		}
 		/**
-		 * Returns the child node from a collection of nodes and recursively builds the KDTree.
+		 * Returns the child node from a collection of nodes and recursively builds the KDTree. Note that expand does remove elements from the collection it is build from.
 		 * @param nodes The nodes that the KDTree/subtree is build from
 		 * @param depth	Recursion depth of the function call.
 		 * @return	The KDNode that contains the median node for the nodes collection.

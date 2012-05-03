@@ -23,4 +23,8 @@ public class Node {
 		return coords[index];
 	}
 	
+	public double[] getCoords()
+	{
+		return coords;
+	}
 }

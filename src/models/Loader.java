@@ -12,14 +12,24 @@ public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
 	private static ArrayList<KrakEdge> edges;
-	 
+	private static HashMap<String, Integer> zipCodeMap;
+	private static In inEdges;
+	private static In inNodes;
+	private static HashMap<Integer, double[]> coordArray;
+	private static HashMap<Integer, Node> nodeList;
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
-	
+
+	private static long timeMillis;
+
 	static{
 		nodesForKDTree = new ArrayList<Node>();
+		edges = new ArrayList<KrakEdge>();
+		zipCodeMap = new HashMap<String, Integer>();
+		coordArray = new HashMap<Integer, double[]>();  //For graph
+		nodeList = new HashMap<Integer, Node>(); 		//For KD-Tree
 		xMin = 10000000.0;
 		yMin = 10000000.0;
 		xMax = 0.0;
@@ -27,43 +37,24 @@ public class Loader {
 	}
 
 
-	public static void load(String nodePath, String edgePath) throws IOException{
+
+	public static void load(String nodePath, String edgePath, String zipPath) throws IOException{
+		//Creates the map, that contains each city's zip code
+		printLine();
+		setTime();
+		buildZipCodeMap(zipPath);
+		printTime("Build zip code map");
+
 		//Creates a Scanner for the filenames specified
-		In inEdges = new In(new File(edgePath));
-		In inNodes = new In(new File(nodePath));
+		inEdges = new In(new File(edgePath));
+		inNodes = new In(new File(nodePath));
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();
-		
-		
-		//For graph
-		HashMap<Integer, double[]> coordArray = new HashMap<Integer, double[]>();
-		
-		//For KD-Tree
-		HashMap<Integer, Node> nodeList = new HashMap<Integer, Node>();
-		
-		//String for storing the current line, which is being read
-		String[] textLineNodeArray = null;
-		int nodeId;
-		double xCoord;
-		double yCoord;
-		
-		//Running through all nodes
-		while(inNodes.hasNextLine()){
-			textLineNodeArray = inNodes.readLine().split(",");
-			
-			/**
-			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
-			 */
-			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
-			xCoord = Double.valueOf(textLineNodeArray[3]);
-			yCoord = Double.valueOf(textLineNodeArray[4]);
 
-			coordArray.put(nodeId, new double[]{xCoord, yCoord});
-			
-			findMinAndMaxValues(xCoord, yCoord);
-		}
-		
+		setTime();
+		findExtremes();
+		printTime("Found original extremes");
 		//Rearranges the coordinates to the actual places in the graph and
 		//make the nodeMap for the KDTree
 		double newX;
@@ -83,13 +74,17 @@ public class Loader {
 		
 		}
 		
+		setTime();
+		recalculateCoordinates();
+		printTime("Recalculated coordinates");
+		//not in use past this
+
 		coordArray = null;
+
 		Road.setOrigo(new double[]{0, 0});
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
-		edges = new ArrayList<KrakEdge>();
- 
-		
+		setTime();
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -182,18 +177,79 @@ public class Loader {
 			nodeList.get(to).addRoad(tempRoad);
 
 		}
+		printTime("Created edges");
 		
+		setTime();
 		nodesForKDTree.addAll(nodeList.values());
-		
+		printTime("Added nodes to KDTree");
 		graph = new KrakEdgeWeightedDigraph(nodeList.size());
 		
 		for(KrakEdge e : edges){
 			graph.addEdge(e);
 		}
-
+		setTime();
+		buildGraph();
+		printTime("Build routing graph");
+		printLine();
+	}
+	
+	private static void setTime()
+	{
+		timeMillis = System.currentTimeMillis();
+	}
+	
+	private static void printTime(String s)
+	{
+		double time = System.currentTimeMillis()-timeMillis;
+		System.out.println(s+" in " + time/1000 + " seconds");
+	}
+	
+	private static void printLine()
+	{
+		System.out.println("------------------------");
 	}
 	
 
+	private static void findExtremes()
+	{
+		//String for storing the current line, which is being read
+		String[] textLineNodeArray = null;
+		int nodeId;
+		double xCoord;
+		double yCoord;
+		
+		//Running through all nodes
+		while(inNodes.hasNextLine()){
+			textLineNodeArray = inNodes.readLine().split(",");
+
+			/**
+			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
+			 */
+			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
+			xCoord = Double.valueOf(textLineNodeArray[3]);
+			yCoord = Double.valueOf(textLineNodeArray[4]);
+
+			coordArray.put(nodeId, new double[]{xCoord, yCoord});
+
+			findMinAndMaxValues(xCoord, yCoord);
+		}
+	}
+	
+	private static void recalculateCoordinates()
+	{
+		double newX;
+		double newY;
+		for(int index=0; index<coordArray.size(); index++){
+			newX = coordArray.get(index)[0]- xMin;
+			newY = yMax - coordArray.get(index)[1];
+
+			coordArray.get(index)[0] = newX;
+			coordArray.get(index)[1] = newY;
+
+			nodeList.put(index, new Node(new double[]{newX, newY}));
+		}
+	}
+	
 	/**
 	 * Returns the collection that the KDTree is build from
 	 * @return ArrayList of all nodes
@@ -205,6 +261,30 @@ public class Loader {
 	}
 	
 
+	private static void buildGraph()
+	{
+		graph = new KrakEdgeWeightedDigraph(nodeList.size());
+		for(KrakEdge e : edges){
+			graph.addEdge(e);
+		}
+	}
+	
+	public static void buildZipCodeMap(String zipPath)
+	{
+		In inZipCodes = new In(new File(zipPath));
+		String[] zipCityLine;
+		
+		while(inZipCodes.hasNextLine()){
+			zipCityLine = inZipCodes.readLine().split(",");
+			zipCodeMap.put(zipCityLine[1], Integer.parseInt(zipCityLine[0]));
+		}
+		
+	}
+	
+	public static HashMap<String, Integer> getZipCodeMap()
+	{
+		return zipCodeMap;
+	}
 	public static KrakEdgeWeightedDigraph getGraph(){
 		//TODO Add a nice Exception to throw
 //		if(graph == null) throw new DataNotLoadedException();
