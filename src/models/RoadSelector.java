@@ -42,8 +42,8 @@ public class RoadSelector {
 		time = System.nanoTime();
 		HashSet<Road> roads = new HashSet<Road>(100000, 0.3f);
 		for (Node n : nodes) {
-			for(Road r : n.getRoads()) {
-				roads.add(r);
+			for(Road road : n.getRoads()) {
+				roads.add(road);
 			}
 		}
 		System.out.println("Time to HashSet: " + (System.nanoTime()-time)/1000000000);

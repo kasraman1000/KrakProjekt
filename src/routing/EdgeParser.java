@@ -64,7 +64,7 @@ public class EdgeParser {
 			// and add to result array
 			while (edges.hasNext()) {
 				KrakEdge ke = edges.next();
-				System.out.println(ke);
+//				System.out.println(ke);
 				if (((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
 						(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())) &&
 						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))

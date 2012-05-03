@@ -9,6 +9,7 @@
 		xView2 = 350000;
 		yView2 = 450000;
 		route = "";
+		findButtonClicked = false;
 		getXML();
 	}
 	/*
@@ -204,6 +205,7 @@
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
+			findButtonClicked = true;
 			isDistance = document.getElementById("distance").checked;
 			route = "&from=" + fromAddress + "&to=" + toAddress
 					+ "&isDistance=" + isDistance + "";
@@ -213,6 +215,8 @@
 
 	function clearRoute() {
 		hideErrorMessage();
+		document.getElementById("fromAddress").value = "";
+		document.getElementById("toAddress").value = "";
 		route = "";
 		getXML();
 	}
