@@ -1,11 +1,9 @@
 package models;
 
 import java.awt.Color;
-import java.awt.Point;
 
 /**
- * @author
- *
+ * The Road class, connecting nodes together
  */
 public class Road {
 	
@@ -142,7 +140,6 @@ public class Road {
 	public double getWidth(){
 		return RoadStatus.getRoadWidth(type);
 	}
-
 	
 	@Override
 	public int hashCode()

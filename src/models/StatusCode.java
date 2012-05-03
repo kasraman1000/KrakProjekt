@@ -1,12 +1,5 @@
-/**
- * 
- */
 package models;
 
-/**
- * @author Yndal
- *
- */
 public enum StatusCode {
 	ALL_WORKING(0, "Everything is running fine"),
 	IO_ERROR(1, "There was an error with the I/O"),

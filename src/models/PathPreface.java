@@ -6,8 +6,8 @@ package models;
 import routing.KrakEdge;
 
 /**
- * @author Yndal
- *
+ * Binds two directed edges together and a house number
+ * used for navigational purposes
  */
 public class PathPreface{
 	KrakEdge edge1;
@@ -20,9 +20,6 @@ public class PathPreface{
 		this.houseNumber = houseNumber;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "PathPreface [edge1=" + edge1 + ",\n edge2=" + edge2

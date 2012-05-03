@@ -21,12 +21,7 @@ import routing.Stack;
 import views.JSConnector;
 
 /**
- * 
- */
-
-/**
- * @author Yndal
- *
+ * The main controller responsible for program flow
  */
 public class Controller {
 	private static XML xml;

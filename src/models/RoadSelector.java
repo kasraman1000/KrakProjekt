@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-
-
+/**
+ * Class responsible for picking out roads to show
+ */
 public class RoadSelector {
 
 
@@ -18,7 +19,6 @@ public class RoadSelector {
 	 * @param region The region which binds the viewport
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-
 	public static Road[] search(Region region, double bufferPercent) 
 	{
 		double time;
