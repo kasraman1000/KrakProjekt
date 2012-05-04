@@ -86,11 +86,12 @@ public class Controller {
 	 */
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
 		
-		fromAddress = "Annasvej 14, 4600 Køge";
-		toAddress = "Farstrupvej 5, 4600 Køge";
+//		fromAddress = "Annasvej 14, 4600 Køge";
+//		toAddress = "Farstrupvej 5, 4600 Køge";
 
 		//Get fromPreface
 		System.out.println("Controller.getRoadAndRoute() - fromAddress is " + fromAddress);
+		System.out.println("Controller.getRoadAndRoute() - toAddress is " + toAddress);
 		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
 		PathPreface pathPrefaceFrom = null;
 		try {

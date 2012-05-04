@@ -250,7 +250,7 @@ public class EdgesAndRoadsConverter {
 		KrakEdge edgeToBeAddedAtEndOfRoute = null;
 		
 		//TODO
-		//TODO
+		//TODO What if one of the edges are null!!!! 
 		//TODO
 		//TODO
 		//TODO

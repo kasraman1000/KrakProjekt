@@ -199,17 +199,21 @@
 
 	function findRoute() {
 		hideErrorMessage();
-		fromAddress = document.getElementById("fromAddress").value;
-		toAddress = document.getElementById("toAddress").value;
+		fromAddress = encodeUTFString(document.getElementById("fromAddress").value);
+		toAddress = encodeUTFString(document.getElementById("toAddress").value);
+	
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
-			findButtonClicked = true;
 			isDistance = document.getElementById("distance").checked;
 			route = "&from=" + fromAddress + "&to=" + toAddress
 					+ "&isDistance=" + isDistance + "";
 			getXML();
 		}
+	}
+	
+	function encodeUTFString(s){
+		return encodeURIComponent(s);
 	}
 
 	function clearRoute() {
