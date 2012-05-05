@@ -60,8 +60,6 @@ public class JSConnector {
 			String to = parameters.get("to");
 			Boolean isDistance = Boolean.valueOf(parameters.get("isDistance"));
 			double bufferPercent = Double.valueOf(parameters.get("bufferPercent"));
-			System.out.println("JSConnector.handleRequest() - from is " + from);
-			System.out.println("JSConnector.handleRequest() - to is " + to);
 			String response = "";
 			//if "from" is null then the client is not asking for routeplanning but only mapdata
 			if(from == null){
@@ -112,12 +110,11 @@ public class JSConnector {
 	 * @return returns a hashMap with the parameters
 	 */
 	private HashMap<String, String> readParameters(String inLine) {
-		System.out.println("JSConnector.readParameters() - inLine is " + inLine);
 		String line = "";
 		try{
 			line = URLDecoder.decode(inLine, "UTF-8");
 		} catch(Exception e) {
-			 System.out.println("EXCEPTION  " + e);
+			 System.err.println("JSConnector.readParameters() - linie 117 EXCEPTION  " + e);
 		}
 		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();

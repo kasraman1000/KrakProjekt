@@ -85,44 +85,29 @@ public class Controller {
 	 * @throws Exception 
 	 */
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
+		double startTime = System.nanoTime();
 		
-//		fromAddress = "Annasvej 14, 4600 Køge";
-//		toAddress = "Farstrupvej 5, 4600 Køge";
-
-		//Get fromPreface
-		System.out.println("Controller.getRoadAndRoute() - fromAddress is " + fromAddress);
-		System.out.println("Controller.getRoadAndRoute() - toAddress is " + toAddress);
+		
 		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
+		String[] toAddressArray = AddressParser.parseAddress(toAddress);
 		PathPreface pathPrefaceFrom = null;
+		PathPreface pathPrefaceTo = null;
+		
 		try {
 			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		if(pathPrefaceFrom == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceFrom == null at line 109!!!!");
-		
-		
-		//Get toPreface
-		System.out.println("Controller.getRoadAndRoute() - toAddress is " + toAddress);
-		String[] toAddressArray = AddressParser.parseAddress(toAddress);
-		PathPreface pathPrefaceTo = null;
-		try {
 			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		if(pathPrefaceTo == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceTo == null at line 122!!!!");
+		if(pathPrefaceFrom == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceFrom == null at line 108!!!!");
+		if(pathPrefaceTo == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceTo == null at line 109!!!!");
 		
 		
-		//ITU
-		int firstNodeId = pathPrefaceFrom.getEdge1().from(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceFrom);
-		
-		//An Edge in Skagen
-		int lastNodeId = pathPrefaceTo.getEdge1().to(); //EdgesAndRoadsConverter.getNearestNodeId(pathPrefaceTo);
+		//Randomly chosen because of later tests of the exact id (performed in EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra())
+		int firstNodeId = pathPrefaceFrom.getEdge1().to(); 
+		int lastNodeId = pathPrefaceTo.getEdge1().to(); 
 		
 		
 		//Load the graph into Dijkstra and find the path
@@ -133,17 +118,20 @@ public class Controller {
 		KrakEdge[] routeEdgesArray = EdgesAndRoadsConverter.convertRouteStackToArray(routeEdges);
 		
 		//Correct start and end of [] and do the house number thing 
-		Road[] route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
+		Road[] route = null;
+		try {
+			route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);	
-		System.out.println("Controller.getRoadAndRoute() - newRegion: " + newRegion);
-		
 		Road[] roads = RoadSelector.search(newRegion, bufferPercent);
 
 		String xmlString = "";
 		
 		try {
-			System.out.println("Controller.getRoadAndRoute() - " + newRegion);
 			xmlString = xml.createString(roads, route, newRegion, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -155,6 +143,11 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		double endTime = System.nanoTime();
+		System.out.println("Controller.getRoadAndRoute() - Time taken to get route and roads: " + (endTime-startTime)/1e9 + " seconds");
+		
 		return xmlString;
 	}
 
