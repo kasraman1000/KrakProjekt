@@ -15,6 +15,8 @@ public class AddressParser {
      * 4: city name
      */
     public static String[] parseAddress(String s) throws IllegalArgumentException {
+    	System.out.println("Recieved following string to parse from: " + s);   	
+    	
         // The result array to return
         String[] result = {"","","","",""};
         
@@ -30,6 +32,12 @@ public class AddressParser {
         // Zipcode 
         findZipcode(s, result);
 
+        
+        System.out.println("Parser returned following...");
+        for (int i = 0; i < result.length; i++) {
+        	System.out.println(i + ") " + result[i]);
+        }
+        
         // We're done parsing, let's return the results
         return result;
     }

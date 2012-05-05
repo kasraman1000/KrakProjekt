@@ -26,6 +26,7 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		try {
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 			RoadSelector.initialize(Loader.getNodesForKDTree());
 			EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (IOException e) {

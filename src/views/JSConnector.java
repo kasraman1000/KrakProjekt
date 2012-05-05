@@ -65,7 +65,7 @@ public class JSConnector {
 			if(from == null){
 				response = Controller.getXmlString(new Region(x1,y1,x2,y2), bufferPercent);
 			}else{
-				response = Controller.getRoadAndRoute(from, to, isDistance, bufferPercent);
+				response = Controller.getRoadAndRoute(from.toLowerCase(), to.toLowerCase(), isDistance, bufferPercent);
 				//TODO method that asks for mapdata and routeplanning
 			}
 			//TODO only for testing
