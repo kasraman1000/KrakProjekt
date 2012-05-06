@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class RoadSelector {
 
 
-	private static final int MAX_ROADS = 20000;
+	private static final int MAX_ROADS = 30000;
 	private static KDTree kdTree = KDTree.getTree();
 	
 	/**
@@ -29,10 +29,10 @@ public class RoadSelector {
 		double[] p1 = copyRegion.getLeftPoint();
 		double[] p2 = copyRegion.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
-		int zoom = zoomLevel(p1, p2);
-		RoadStatus.setScale(zoom);
+		//int zoom = zoomLevel(p1, p2);
+		//RoadStatus.setScale(zoom);
 
-		System.out.println("zoom level " + zoom);
+		//System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 		
 		time = System.nanoTime();
@@ -40,7 +40,7 @@ public class RoadSelector {
 		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
 		
 		time = System.nanoTime();
-		HashSet<Road> roads = new HashSet<Road>(100000, 0.3f);
+		HashSet<Road> roads = new HashSet<Road>(100000, 0.5f);
 		for (Node n : nodes) {
 			for(Road r : n.getRoads()) {
 				roads.add(r);
@@ -88,7 +88,8 @@ public class RoadSelector {
 		//	System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
 
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
-
+		
+		RoadStatus.setScale(level+1);
 		return result;
 	}
 
