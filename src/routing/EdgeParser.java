@@ -60,6 +60,11 @@ public class EdgeParser {
 			// Find the zip code (if specified)
 			int zipcode;
 			if (address[3].length() > 0) zipcode = Integer.parseInt(address[3]);
+			// else, derive from city name
+			else if (address[4].length() > 0 && zipCodeMap.containsKey(address[4])) { 
+				zipcode = zipCodeMap.get(address[4]);
+				System.out.println("using '" + address[4] + "' as zipcode instead");
+			}
 			else zipcode = 0;
 
 			// For every edge, check if housenumber (and if specified, zipcode) matches, 
@@ -69,7 +74,7 @@ public class EdgeParser {
 				System.out.println(ke);
 				if (((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
 						(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())) &&
-						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
+						(zipcode == 0 || (zipcode >= ke.getvPost() && zipcode <= ke.gethPost())))
 					results.add(ke);
 			}
 
@@ -116,7 +121,7 @@ public class EdgeParser {
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
-			String[] address = {"Romsdalsgade","6","","",""};
+			String[] address = {"spindestræde","55","","","ishøj"};
 
 			//System.out.println(address[0]);
 			try {

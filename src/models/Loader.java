@@ -243,7 +243,7 @@ public class Loader {
 		
 		while(inZipCodes.hasNextLine()){
 			zipCityLine = inZipCodes.readLine().split(",");
-			zipCodeMap.put(zipCityLine[1], Integer.parseInt(zipCityLine[0]));
+			zipCodeMap.put(zipCityLine[1].toLowerCase(), Integer.parseInt(zipCityLine[0]));
 		}
 		
 	}
