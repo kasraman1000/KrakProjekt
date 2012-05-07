@@ -54,13 +54,9 @@ public class Controller {
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region, double bufferPercent){
-		System.out.println("Controller.getXmlString() - the first region: " + region);
-		//Region newRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
 		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
-//		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);
 		try {
-			System.out.println("Controller.getXmlString() - " + region);
 			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
