@@ -105,30 +105,21 @@ public class EdgeParser {
 	}
 
 	public static void main(String[] args) {
-		try {
-
-
-			// set up data
-			System.out.println("Attempting to load...");
-			//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+		// set up data
+		System.out.println("Attempting to load...");
+		//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
 //			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
-			System.out.println("Loading complete!");
-			System.out.println("Attempting to build EdgeParser...");
-			EdgeParser.build(Loader.getEdgesForTranslator());
-			System.out.println("EdgeParser built!");
-			String[] address = {"Romsdalsgade","6","","",""};
+		System.out.println("Loading complete!");
+		System.out.println("Attempting to build EdgeParser...");
+		EdgeParser.build(Loader.getEdgesForTranslator());
+		System.out.println("EdgeParser built!");
+		String[] address = {"Romsdalsgade","6","","",""};
 
-			//System.out.println(address[0]);
-			try {
-				System.out.println(EdgeParser.findPreface(address));
-			} catch (Exception e) {
-				System.out.println("Address not found!");
-				e.printStackTrace();
-			}
-
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		//System.out.println(address[0]);
+		try {
+			System.out.println(EdgeParser.findPreface(address));
+		} catch (Exception e) {
+			System.out.println("Address not found!");
 			e.printStackTrace();
 		}
 
