@@ -83,7 +83,6 @@ public class Controller {
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
 		double startTime = System.nanoTime();
 		
-		
 		String[] fromAddressArray = AddressParser.parseAddress(fromAddress);
 		String[] toAddressArray = AddressParser.parseAddress(toAddress);
 		PathPreface pathPrefaceFrom = null;
