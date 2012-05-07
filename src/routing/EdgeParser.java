@@ -65,11 +65,28 @@ public class EdgeParser {
 			while (edges.hasNext()) {
 				KrakEdge ke = edges.next();
 				System.out.println(ke);
-				if (((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
-						(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())) &&
+				int fromHHN = ke.gethFromHouseNumber();
+				int toHHN = ke.gethToHouseNumber();
+				int fromVHN = ke.getvFromHouseNumber();
+				int toVHN = ke.getvToHouseNumber();
+				if(fromHHN > toHHN){
+					int swap = fromHHN;
+					fromHHN = toHHN;
+					toHHN = fromHHN;
+				}
+				if(fromVHN > toVHN){
+					int swap = fromVHN;
+					fromVHN = toVHN;
+					toVHN = fromVHN;
+				}
+				
+				
+				if (((houseNumber >= fromHHN && houseNumber <= toHHN) ||
+						(houseNumber >= fromVHN && houseNumber <= toVHN)) &&
 						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
 					results.add(ke);
 			}
+			
 
 			//			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
 			//			System.out.println("Results.size(): " + results.size());
@@ -114,7 +131,7 @@ public class EdgeParser {
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
-			String[] address = {"Hvidovrevej","210","","",""};
+			String[] address = {"Vordingborgvej","","","",""};
 
 			//System.out.println(address[0]);
 			try {
