@@ -33,7 +33,11 @@ public class Controller {
 		System.out.println("System startup - please wait...");
 		kdTree = KDTree.getTree();
 		try {
+			//*
+			Loader.load("zealand_node.txt","zealand_edge.txt", "zip_codes.txt");
+			/*/
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+			//*/
 			kdTree.initialize(Loader.getNodesForKDTree());
 			EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (IOException e) {

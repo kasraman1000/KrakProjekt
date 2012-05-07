@@ -89,7 +89,7 @@ public class XML{
 													TransformerException{
 		//TODO
 		//Only for debugging
-		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
 		Document document = createNewDocumentWithRoot();
@@ -112,12 +112,20 @@ public class XML{
 		
 		
 		//Add all the roads in the route to the svg Element
-//		Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
-//		routeElement.setAttribute("amount", route.length +"");
-//		svgElement.appendChild(routeElement);
 		
 		//TODO Is the id-statement necessary
-		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+		if(!(route==null || route.length == 0)){
+			Element routeElement = document.createElement(ROUTE_ELEMENT_NAME);
+			Element svgElement2 = document.createElement(SVG_ELEMENT_NAME);
+//		routeElement.setAttribute("amount", route.length +"");
+			svgElement2.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+			svgElement2.setAttribute("version", "1.1");
+			svgElement2.setAttribute("width", "450000");
+			svgElement2.setAttribute("height", "350000");
+			rootElement.appendChild(routeElement);
+			routeElement.appendChild(svgElement2);
+			addRoadsToElement(route, svgElement2);
+		}
 		
 		
 		//Add the StatusCode Element to the RootElement
