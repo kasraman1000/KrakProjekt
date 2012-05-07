@@ -12,8 +12,9 @@ import java.util.HashSet;
 public class RoadSelector {
 
 
-	private static final int MAX_ROADS = 30000;
+	private static final int MAX_ROADS = 20000;
 	private static KDTree kdTree = KDTree.getTree();
+
 	
 	/**
 	 * Returns all roads in a rectangle bound by a region filtered by priority.
@@ -29,11 +30,9 @@ public class RoadSelector {
 		double[] p1 = copyRegion.getLeftPoint();
 		double[] p2 = copyRegion.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
-		//int zoom = zoomLevel(p1, p2);
-		//RoadStatus.setScale(zoom);
 
-		//System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
+
 		
 		time = System.nanoTime();
 		ArrayList<Node> nodes = kdTree.searchRange(copyRegion);
@@ -42,8 +41,8 @@ public class RoadSelector {
 		time = System.nanoTime();
 		HashSet<Road> roads = new HashSet<Road>(100000, 0.5f);
 		for (Node n : nodes) {
-			for(Road r : n.getRoads()) {
-				roads.add(r);
+			for(Road road : n.getRoads()) {
+				roads.add(road);
 			}
 		}
 		System.out.println("Time to HashSet: " + (System.nanoTime()-time)/1000000000);
@@ -88,11 +87,11 @@ public class RoadSelector {
 		//	System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
 
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
-		
+
 		RoadStatus.setScale(level+1);
 		return result;
-	}
 
+	}
 	
 	/**
 	 * Returns the zoom level, which determines the filtering of the roads

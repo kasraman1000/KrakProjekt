@@ -32,9 +32,11 @@ public class EdgeParser {
 				edgeMap.get(roadName).add(e); // Add this edge under the roadname
 			}
 			else {
-				edgeMap.put(roadName, new Bag<KrakEdge>()); // new roadname, create new bag
+				// new roadname, create new bag and add edge
+				Bag<KrakEdge> bag = new Bag<KrakEdge>();
+				bag.add(e);
+				edgeMap.put(roadName, bag);
 			}
-
 		}
 		zipCodeMap = Loader.getZipCodeMap();
 		System.out.println("Total roadnames: " + edgeMap.size());
@@ -71,13 +73,13 @@ public class EdgeParser {
 					results.add(ke);
 			}
 
-			//			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
-			//			System.out.println("Results.size(): " + results.size());
-			//			System.out.println("Results: ");
-			//
-			//			Iterator<KrakEdge> i = results.iterator();
-			//			while (i.hasNext()) 
-			//				System.out.println(i.next());
+			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
+			System.out.println("Results.size(): " + results.size());
+			System.out.println("Results: ");
+
+			Iterator<KrakEdge> i = results.iterator();
+			while (i.hasNext()) 
+				System.out.println(i.next());
 
 			// Build the PathPreface object
 			if (!results.isEmpty()) {
@@ -103,30 +105,21 @@ public class EdgeParser {
 	}
 
 	public static void main(String[] args) {
+		// set up data
+		System.out.println("Attempting to load...");
+		//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
+		System.out.println("Loading complete!");
+		System.out.println("Attempting to build EdgeParser...");
+		EdgeParser.build(Loader.getEdgesForTranslator());
+		System.out.println("EdgeParser built!");
+		String[] address = {"Romsdalsgade","6","","",""};
+
+		//System.out.println(address[0]);
 		try {
-
-
-			// set up data
-			System.out.println("Attempting to load...");
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
-			//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt");
-			System.out.println("Loading complete!");
-			System.out.println("Attempting to build EdgeParser...");
-			EdgeParser.build(Loader.getEdgesForTranslator());
-			System.out.println("EdgeParser built!");
-			String[] address = {"Hvidovrevej","210","","",""};
-
-			//System.out.println(address[0]);
-			try {
-				System.out.println(EdgeParser.findPreface(address));
-			} catch (Exception e) {
-				System.out.println("Address not found!");
-				e.printStackTrace();
-			}
-
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println(EdgeParser.findPreface(address));
+		} catch (Exception e) {
+			System.out.println("Address not found!");
 			e.printStackTrace();
 		}
 

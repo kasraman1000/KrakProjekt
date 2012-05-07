@@ -199,8 +199,9 @@
 
 	function findRoute() {
 		hideErrorMessage();
-		fromAddress = document.getElementById("fromAddress").value;
-		toAddress = document.getElementById("toAddress").value;
+		fromAddress = encodeUTFString(document.getElementById("fromAddress").value);
+		toAddress = encodeUTFString(document.getElementById("toAddress").value);
+	
 		if (fromAddress == "" || toAddress == "") {
 			alert("Missing inputs");
 		} else {
@@ -210,9 +211,15 @@
 			getXML();
 		}
 	}
+	
+	function encodeUTFString(s){
+		return encodeURIComponent(s);
+	}
 
 	function clearRoute() {
 		hideErrorMessage();
+		document.getElementById("fromAddress").value = "";
+		document.getElementById("toAddress").value = "";
 		route = "";
 		getXML();
 	}

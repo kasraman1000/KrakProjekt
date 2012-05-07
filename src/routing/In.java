@@ -19,6 +19,7 @@ package routing;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -92,15 +93,11 @@ public final class In {
    /**
      * Create an input stream from a file.
      */
-    public In(File file) {
+    public In(File file) throws FileNotFoundException {
 
-        try {
             scanner = new Scanner(file, charsetName);
             scanner.useLocale(usLocale);
-        }
-        catch (IOException ioe) {
-            System.err.println("Could not open " + file);
-        }
+        
     }
 
 

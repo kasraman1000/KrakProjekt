@@ -1,18 +1,18 @@
 package models;
-
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import routing.In;
-import routing.KrakEdge;
-import routing.KrakEdgeWeightedDigraph;
+import routing.*;
+import errorHandling.*;
 
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
 	private static ArrayList<KrakEdge> edges;
+	
 	private static HashMap<String, Integer> zipCodeMap;
 	private static In inEdges;
 	private static In inNodes;
@@ -36,16 +36,22 @@ public class Loader {
 		yMax = 0.0;
 	}
 
-
-	public static void load(String nodePath, String edgePath, String zipPath) throws IOException{
-		//Creates the map, that contains each city's zip code
+	public static void load(String nodePath, String edgePath, String zipPath) throws ServerStartupException{
+		try{		
+		//Creates the map, that contains each city's zipcode
 		printLine();
 		setTime();
 		buildZipCodeMap(zipPath);
 		printTime("Build zip code map");
+
 		//Creates a Scanner for the filenames specified
-		inEdges = new In(new File(edgePath));
-		inNodes = new In(new File(nodePath));
+			inEdges = new In(new File(edgePath));
+			inNodes = new In(new File(nodePath));
+		}
+		catch(FileNotFoundException e) {
+			throw new LoaderFileNotFoundException(e);
+		}
+
 		//Skip first line
 		inEdges.readLine();
 		inNodes.readLine();
@@ -83,7 +89,7 @@ public class Loader {
 		String direction;
 		while(inEdges.hasNextLine()){
 			textLineRoadArray = inEdges.readLine().split(",");
-			//To make sure the data is read in a correct way (ie. the name of the road is "Røde Sti, Den")
+			//To make sure the data is read in a correct way (ie. the name of the road is "Rï¿½de Sti, Den")
 			if(textLineRoadArray.length > 33){
 				for(int index=0; index<textLineRoadArray.length-1; index++){
 					if(!(textLineRoadArray[index].contains("''") || textLineRoadArray[index+1].contains("''")) &&
@@ -102,7 +108,7 @@ public class Loader {
 			
 
 			/**
-			 * OBS Læg mærke til at ID'erne bliver minuset med 1!!!!
+			 * OBS Lï¿½g mï¿½rke til at ID'erne bliver minuset med 1!!!!
 			 */
 			from = Integer.valueOf(textLineRoadArray[0])-1;
 			to = Integer.valueOf(textLineRoadArray[1])-1;
@@ -144,6 +150,7 @@ public class Loader {
 			nodeList.get(to).addRoad(tempRoad);
 
 		}
+		
 		printTime("Created edges");
 		
 		setTime();
@@ -185,7 +192,7 @@ public class Loader {
 			textLineNodeArray = inNodes.readLine().split(",");
 
 			/**
-			 * OBS Læg mærke til at ID'et bliver minuset med 1!!!!
+			 * OBS Lï¿½g mï¿½rke til at ID'et bliver minuset med 1!!!!
 			 */
 			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
 			xCoord = Double.valueOf(textLineNodeArray[3]);
@@ -234,7 +241,7 @@ public class Loader {
 		}
 	}
 	
-	private static void buildZipCodeMap(String zipPath)
+	private static void buildZipCodeMap(String zipPath) throws FileNotFoundException
 	{
 		In inZipCodes = new In(new File(zipPath));
 		String[] zipCityLine;
