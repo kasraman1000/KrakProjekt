@@ -13,6 +13,7 @@ import errorHandling.*;
 /**
  * The main controller responsible for program flow
  */
+
 public class Controller {
 	private static XML xml;
 	
