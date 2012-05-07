@@ -25,7 +25,7 @@ public class EdgeParser {
 	public static void build(ArrayList<KrakEdge> edges)
 	{
 		for(KrakEdge e : edges){
-			String roadName = e.getName();
+			String roadName = e.getName().toLowerCase();
 			//System.out.println(roadName + ",\t" + roadName.hashCode());
 
 			if (edgeMap.containsKey(roadName)) {
@@ -48,8 +48,8 @@ public class EdgeParser {
 	 * @return A PathPreface with the corresponding KrakEdges
 	 */
 	public static PathPreface findPreface(String[] address) throws Exception { //TODO: Fix exception til noget mere specifikt (AddressNotFoundException?)
-		if (edgeMap.containsKey(address[0])) {
-			Iterator<KrakEdge> edges = edgeMap.get(address[0]).iterator();
+		if (edgeMap.containsKey(address[0].toLowerCase())) {
+			Iterator<KrakEdge> edges = edgeMap.get(address[0].toLowerCase()).iterator();
 			ArrayList<KrakEdge> results = new ArrayList<KrakEdge>();
 
 			// Find the house number (if none specified, default to 1)
@@ -61,9 +61,8 @@ public class EdgeParser {
 			int zipcode;
 			if (address[3].length() > 0) zipcode = Integer.parseInt(address[3]);
 			// else, derive from city name
-			else if (address[4].length() > 0 && zipCodeMap.containsKey(address[4])) { 
-				zipcode = zipCodeMap.get(address[4]);
-				System.out.println("using '" + address[4] + "' as zipcode instead");
+			else if (address[4].length() > 0 && zipCodeMap.containsKey(address[4].toLowerCase())) { 
+				zipcode = zipCodeMap.get(address[4].toLowerCase());
 			}
 			else zipcode = 0;
 
@@ -71,16 +70,16 @@ public class EdgeParser {
 			// and add to result array
 			while (edges.hasNext()) {
 				KrakEdge ke = edges.next();
-				System.out.println(ke);
+//				System.out.println(ke);
 				if (((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
 						(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())) &&
 						(zipcode == 0 || (zipcode >= ke.getvPost() && zipcode <= ke.gethPost())))
 					results.add(ke);
 			}
 
-			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
-			System.out.println("Results.size(): " + results.size());
-			System.out.println("Results: ");
+//			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
+//			System.out.println("Results.size(): " + results.size());
+//			System.out.println("Results: ");
 
 			Iterator<KrakEdge> i = results.iterator();
 			while (i.hasNext()) 
@@ -121,7 +120,7 @@ public class EdgeParser {
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
-			String[] address = {"spindestræde","55","","","ishøj"};
+			String[] address = {"Spindestræde","55","","","Ishøj"};
 
 			//System.out.println(address[0]);
 			try {

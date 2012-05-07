@@ -109,7 +109,7 @@ public class Loader {
 			to = Integer.valueOf(textLineRoadArray[1])-1;
 			dist = Double.valueOf(textLineRoadArray[2]);
 			type = Integer.valueOf(textLineRoadArray[5]);
-			name = textLineRoadArray[6].substring(1, textLineRoadArray[6].length()-1).toLowerCase();
+			name = textLineRoadArray[6].substring(1, textLineRoadArray[6].length()-1);
 			vPost = Integer.valueOf(textLineRoadArray[17]);
 			hPost = Integer.valueOf(textLineRoadArray[18]);
 			vFromHusnummer = Integer.valueOf(textLineRoadArray[7]);
