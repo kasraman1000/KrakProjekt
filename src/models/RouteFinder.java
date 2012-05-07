@@ -12,12 +12,16 @@ import routing.*;
 public class RouteFinder {
 	KrakEdgeWeightedDigraph graph;
 	
+	public RouteFinder(KrakEdgeWeightedDigraph graph){
+		this.graph = graph;
+	}
+	
 	public Road[] getRoute(String from, String to, boolean isLengthWeighted){
 		String[] fromAddressArray = AddressParser.parseAddress(from);
 		String[] toAddressArray = AddressParser.parseAddress(to);
+		
 		PathPreface pathPrefaceFrom = null;
 		PathPreface pathPrefaceTo = null;
-		
 		try {
 			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
 			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
@@ -26,17 +30,13 @@ public class RouteFinder {
 			e1.printStackTrace();
 		}
 		
-		//TODO For debugging
-		if(pathPrefaceFrom == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceFrom == null at line 108!!!!");
-		if(pathPrefaceTo == null) System.err.println("Controller.getRoadAndRoute() - pathPrefaceTo == null at line 109!!!!");
+		Road[] result = getRoute(pathPrefaceFrom, pathPrefaceTo, isLengthWeighted);
 		
-		//TODO
-		//TODO
-		//TODO What if getEdge1 is null?
-		//TODO
-		//TODO
-		
-		
+		return result;
+	}
+	
+	
+	public Road[] getRoute(PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo, boolean isLengthWeighted){
 		//Randomly chosen because of later tests of the exact id (performed in EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra())
 		int firstNodeId; 
 		int lastNodeId; 
@@ -47,6 +47,7 @@ public class RouteFinder {
 		if(pathPrefaceTo.getEdge1() != null) lastNodeId = pathPrefaceTo.getEdge1().to();
 		else lastNodeId = pathPrefaceFrom.getEdge2().to();
 
+		
 		//Load the graph into Dijkstra and find the path
 		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
 		Stack<KrakEdge> routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
@@ -66,17 +67,4 @@ public class RouteFinder {
 		
 		return route;
 	}
-	
-	
-	public Road[] getRoute(KrakEdge start, KrakEdge target, boolean isLengthWeighted){
-		
-		
-		
-		
-		return null;
-	}
-	
-	
-	
-
 }
