@@ -134,39 +134,9 @@ public class EdgesAndRoadsConverter {
 
 
 
-	public static int getNearestNodeId(PathPreface pathPreface) {
-		KrakEdge edge1 = pathPreface.getEdge1();
-		KrakEdge edge2 = pathPreface.getEdge2();
-		int idForEdge1=-1;
-		int idForEdge2=-1;
-		double distanceForEdge1=1000000;
-		double distanceForEdge2=1000000;
-		
-		if(edge1 != null){
-			
-			
-		}
-		if(edge2 != null){
-			
-		}
-		
-		//TODO
-		if(idForEdge1 == -1 && idForEdge2 == -1){
-			System.out.println("EdgesAndRoadsConverter.getNearestNodeId(): Invalid result!!");
-//			throw new InvalidResultException;
-		}
-		if(distanceForEdge1<distanceForEdge2 && idForEdge1!=-1) return idForEdge1;
-		return idForEdge2;
-	}
-
-
-
-
-
-
-
-	
 	private static boolean edgesAreEqual(KrakEdge firstEdge, KrakEdge secondEdge){
+		//Test if both are null have already been checked in chachkStartAndTargetOfDijsktra() in this class
+		if(firstEdge == null || secondEdge == null) return false;
 		//TODO Is it enough to compare hashCodes???
 		
 		//Compare all data from each Edge: If all true, then return true else return false
@@ -198,8 +168,10 @@ public class EdgesAndRoadsConverter {
 		if(firstEdge.getName().equals(secondEdge.getName()))
 		
 		//Time
-		if(firstEdge.getTime() != secondEdge.getTime())
+		if(firstEdge.getTime() != secondEdge.getTime()){
+			System.err.println("EdgesAndRoadsConverter.edgesAreEqual() - two roads have been tested equal! :O)");
 			return true;
+		}
 			
 			return false;
 	}
@@ -215,8 +187,6 @@ public class EdgesAndRoadsConverter {
 		
 		for(int index=0; index<routeRoads.length; index++){
 			routeRoads[index] = routeEdges.pop();
-			if(routeRoads[index] == null) System.out.println("EdgesAndRoadsConverter.convertRouteStackToArray() - the null error is here!!");
-			
 		}
 
 		return routeRoads;
@@ -228,32 +198,14 @@ public class EdgesAndRoadsConverter {
 
 
 
-	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) {
-		/**
-		 * 
-		 * Hvis Den første Edge i ruten er lig PreFace.edge 1 eller 2 skal den første Edge tilpasses mht. husnummer
-		 * ellers skal PreFace.edge 1 eller 2 lægges til og tilpasset med husnummer
-		 * 
-		 */
-		
-		//TODO For debugging
-		for(int index=0; index<routeEdges.length; index++){
-			if(routeEdges[index]==null) System.out
-					.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() - linie 243: route[" + index + "] is null");
-		}
-		
-		
-		
+	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) throws Exception{
+		//Both edges at the Start or Target can't be null! There must be at least one valid value!
+		if(pathPrefaceFrom.getEdge1() == null && pathPrefaceFrom.getEdge2() == null) throw new Exception();
+		if(pathPrefaceTo.getEdge1() == null && pathPrefaceTo.getEdge2() == null) throw new Exception();
 		
 		//Will test if the first edge is the same as the one in the preface
 		KrakEdge edgeToBeAddedInFrontOfRoute = null;
 		KrakEdge edgeToBeAddedAtEndOfRoute = null;
-		
-		//TODO
-		//TODO
-		//TODO
-		//TODO
-		//TODO
 		
 		//If NOT either of the two Edge's in the preface are equal to the first edge in the route...
 		if(!(edgesAreEqual(routeEdges[0], pathPrefaceFrom.getEdge1()) || edgesAreEqual(routeEdges[0], pathPrefaceFrom.getEdge2())))
@@ -283,12 +235,7 @@ public class EdgesAndRoadsConverter {
 		if(edgeToBeAddedAtEndOfRoute != null) edgesToBeAdded++;
 		
 		KrakEdge[] newEdges = new KrakEdge[routeEdges.length+edgesToBeAdded];
-		System.out.println("Linie 281 - KrakEdge[] newEdges = new KrakEdge[" + routeEdges.length + "+" + edgesToBeAdded + "];");
-	
-//		//TODO
-//		if(edgeToBeAddedInFrontOfRoute==null) System.out.println("Tuttelu");
-//		if(edgeToBeAddedAtEndOfRoute==null) System.out.println("tralala");
-		
+
 		//If Edges are to be added
 		int startPoint = 0;
 		if(edgesToBeAdded != 0){
@@ -310,18 +257,6 @@ public class EdgesAndRoadsConverter {
 			newEdges[index] = routeEdges[indexForOldEdges];
 			indexForOldEdges++;
 		}
-		
-		
-
-		for(int index=0; index<newEdges.length; index++){
-			if(newEdges[index] == null) System.err
-					.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() - line 297: newEdges[" + index + "] == null");
-		}
-		System.out
-				.println("EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra() + linie 297: newEdges.size(): " + newEdges.length);
-		
-		
-		
 		
 		return changeFirstAndLastEdgeToHouseNumber(newEdges, pathPrefaceFrom, pathPrefaceTo);
 	}
@@ -347,12 +282,6 @@ public class EdgesAndRoadsConverter {
 		//Will reset the coordinates, so they can be used for the next search for min and max coordinates
 		resetCoordinateValues();
 		
-//		System.out.println("xMin: " + xMin);
-//		System.out.println("yMin: " + yMin);
-//		System.out.println("xMax: " + xMax);
-//		System.out.println("yMax: " + yMax);
-	
-		
 		for(int index=0; index<edges.length; index++){
 			//Find highest and lowest x and y-coordinates
 			findMinAndMaxValues(edges[index].getFromPoint()[0], edges[index].getFromPoint()[1]);
@@ -365,208 +294,12 @@ public class EdgesAndRoadsConverter {
 										 routeType,
 										 edges[index].getName()
 										 );
-			
-//		//TODO For debugging
-//		if(edges[index].getFromPoint()[0] > 283000) System.out.println("Juhuuuu");
-//		if(edges[index].getToPoint()[0] > 283000) System.out.println("Juhuuuu");
-//		if(edges[index].getFromPoint()[0] < 1) System.out.println("Jaaaa");
-//		if(edges[index].getToPoint()[0] < 1) System.out.println("Jaaaa");
-		
-		
-		
 		}
 		
 		//Sets the Region for the route
 		Road.setOrigo(new double[]{xMin, yMin});
 		Road.setTop(new double[]{xMax, yMax});
-	
-		System.out.println("xMin: " + xMin);
-		System.out.println("yMin: " + yMin);
-		System.out.println("xMax: " + xMax);
-		System.out.println("yMax: " + yMax);
-	
 		
 		return routeRoads;
-		
-		
-		
-		
-//		Stack<Road> roadStack = new Stack<Road>();
-		
-			//Find min and max
-			//Create new Stack containing all the roads except the first and last.
-			/**
-			 * For some reason the routeStack.size() is invalid! 
-			 * Therefore this solution
-			 */
-//			Road[] routeRoads = new Road[newEdges.length];
-//			int routeType = 50;
-//			Road tempRoad;
-//			KrakEdge firstEdge = routeEdges[0];
-//			KrakEdge lastEdge = routeEdges[routeEdges.length-1];
-//			int routeIndexCounter=0;
-//			
-//			//
-//			for(int index=1; index<routeEdges.length-1; index++){
-//				
-//				//Find highest and lowest x and y-coordinates
-//				findMinAndMaxValues(routeEdges[index].getFromPoint()[0],routeEdges[index].getFromPoint()[1]);
-//				findMinAndMaxValues(routeEdges[index].getToPoint()[0],routeEdges[index].getToPoint()[1]);
-//				
-//				routeRoads[index] = new Road(routeEdges[index].getFromPoint()[0],
-//										  	 routeEdges[index].getFromPoint()[1],
-//											 routeEdges[index].getToPoint()[0],
-//											 routeEdges[index].getToPoint()[1],
-//											 routeType,
-//											 routeEdges[index].getName()
-//											 );
-//				
-//				
-//			}
-//			
-//			
-//			//Kept as edges for easing further development
-//			KrakEdge newFirstEdge = divideKrakEdge(firstEdge, true, firstHouseNumber);
-//			KrakEdge newLastEdge = divideKrakEdge(lastEdge, false, lastHouseNumber);
-//			
-//			//Add the part of the first Edge to the Road[]
-//			routeRoads[0] = new Road(newFirstEdge.getFromPoint()[0], 
-//									newFirstEdge.getFromPoint()[1], 
-//									newFirstEdge.getToPoint()[0], 
-//									newFirstEdge.getToPoint()[1], 
-//									routeType, 
-//									newFirstEdge.getName());
-//					
-//			//Add the part of the last Edge to the Road[]
-//			routeRoads[routeRoads.length-1] = new Road(newLastEdge.getFromPoint()[0], 
-//														newLastEdge.getFromPoint()[1], 
-//														newLastEdge.getToPoint()[0], 
-//														newLastEdge.getToPoint()[1], 
-//														routeType, 
-//														newLastEdge.getName());
-//					
-//				
-////			System.out.println("xMin: " + xMin);
-////			System.out.println("yMin: " + yMin);
-////			System.out.println("xMax: " + xMax);
-////			System.out.println("yMax: " + yMax);
-//			
-//			
-//			//Sets the Region for the route
-//			routeRoads[0].setOrigo(new double[]{xMin, yMin});
-//			routeRoads[0].setTop(new double[]{xMax, yMax});
-//
-//			
-//			return routeRoads;
-//			
-//			
-//			
-//			int routeType = 50;
-//			Road tempRoad;
-//			KrakEdge edge;
-//			KrakEdge firstEdge = null;
-//			KrakEdge lastEdge = null;
-//			
-//			Road[] route = new Road[routeStack.size()];
-//			System.out.println("RouteStack.size(): " + routeStack.size());
-//			
-//			while(!routeStack.isEmpty()){
-//				edge = routeStack.pop();
-//				
-//				findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
-//				findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
-//				
-//				if(firstEdge==null){
-//					firstEdge = edge;
-//					//Don't add the first Edge
-//					continue;
-//				}
-//				lastEdge = edge;
-//				
-//				tempRoad = new Road(
-//						edge.getFromPoint()[0],
-//						edge.getFromPoint()[1],
-//						edge.getToPoint()[0],
-//						edge.getToPoint()[1],
-//						routeType,
-//						edge.getName()
-//						);
-//			
-//			}
-//			
-//			//First and last edge are kept as edges, because of the possibility
-//			//to expand the project further later on
-//			for(int index=0; index<routeStack.size(); index++){
-//				edge = routeStack.pop();
-//				
-//				findMinAndMaxValues(edge.getFromPoint()[0],edge.getFromPoint()[1]);
-//				findMinAndMaxValues(edge.getToPoint()[0],edge.getToPoint()[1]);
-//				
-//				if(firstEdge==null){
-//					firstEdge = edge;
-//					//Don't add the first Edge
-//					continue;
-//				}
-//				lastEdge = edge;
-//				
-//				tempRoad = new Road(
-//						edge.getFromPoint()[0],
-//						edge.getFromPoint()[1],
-//						edge.getToPoint()[0],
-//						edge.getToPoint()[1],
-//						routeType,
-//						edge.getName()
-//						);
-//				route[index] = tempRoad;
-//				System.out.println(index);
-//			}
-//			
-//			//Sets the Region for the route
-//			route[0].setOrigo(new double[]{xMin, yMin});
-//			route[0].setTop(new double[]{xMax, yMax});
-	//
-//			
-//			int tempCounter=0;
-//			for(Road r : route){
-//				if(r == null){
-//					tempCounter++;
-//				}
-//			}
-//			System.out.println("tempCounter: " + tempCounter);
-//			System.out.println("EdgesAndRoadsConverter.convertEdgesToRoads() - Size of route array: " + route.length);
-//			System.out.println("EdgesAndRoadsConverter.convertEdgesToRoads() - ");
-//			
-//			//Remove last Road of route
-//			routeStack.pop();
-//			
-//			KrakEdge newFirstEdge = divideKrakEdge(firstEdge, true, firstHouseNumber);
-//			KrakEdge newLastEdge = divideKrakEdge(lastEdge, false, lastHouseNumber);
-//			
-//			
-//			
-//			//Add the part of the first Edge to the Road[]
-//			route[0] = new Road(newFirstEdge.getFromPoint()[0], newFirstEdge.getFromPoint()[1], newFirstEdge.getToPoint()[0], newFirstEdge.getToPoint()[1], routeType, newFirstEdge.getName());
-//			
-//			//Add the part of the last Edge to the Road[]
-//			route[route.length-1] = new Road(newLastEdge.getFromPoint()[0], newLastEdge.getFromPoint()[1], newLastEdge.getToPoint()[0], newLastEdge.getToPoint()[1], routeType, newLastEdge.getName());
-//			
-////			System.out.println("xMin: " + xMin);
-////			System.out.println("yMin: " + yMin);
-////			System.out.println("xMax: " + xMax);
-////			System.out.println("yMax: " + yMax);
-//			
-//			
-//			return route;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 }

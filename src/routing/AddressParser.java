@@ -5,17 +5,6 @@ import java.util.regex.Matcher;
 
 public class AddressParser {
 	
-//	public static void main(String[] args) {
-//		String test = "Annasvej 14";
-//		
-//		String[] result = parseAddress(test);
-//		
-//		for (int i = 0; i < result.length; i++) {
-//			System.out.println("\""+result[i]+"\"");
-//		}
-//		
-//	}
-    
     /**
      * Parses a string and returns an array containing:
      * 
@@ -146,4 +135,18 @@ public class AddressParser {
             }
         }
     }
+    
+	/**
+	 * Test method
+	 */
+	public static void main(String[] args) {
+		String test = "Annasvej 14";
+		
+		String[] result = parseAddress(test);
+		
+		for (int i = 0; i < result.length; i++) {
+			System.out.println("\""+result[i]+"\"");
+		}
+		
+	}     
 }

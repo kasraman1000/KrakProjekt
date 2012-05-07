@@ -34,7 +34,6 @@ public class KDTree
 	public void build(ArrayList<Node> nodes)
 	{
 		new KDNode(nodes);
-		
 	}
 	
 	/**
