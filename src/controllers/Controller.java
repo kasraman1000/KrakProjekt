@@ -19,7 +19,6 @@ public class Controller {
 		Controller.startServer();
 	}
 	
-
 	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
