@@ -19,22 +19,21 @@ public class RoadSelector {
 	 * @param region The region which binds the viewport
 	 * @return All roads within the rectangle, which are relevant to display 
 	 */
-
-	public static Road[] search(Region r, double bufferPercent) 
+	public static Road[] search(Region region, double bufferPercent) 
 	{
 		double time;
 		//Create a new region that is a copy to prevent addBuffer from making changes to the object.
-		Region region = new Region(r.getLeftPoint()[0], r.getLeftPoint()[1], r.getRightPoint()[0], r.getRightPoint()[1]);
-		region.addBuffer(bufferPercent);
-		double[] p1 = region.getLeftPoint();
-		double[] p2 = region.getRightPoint();
+		Region copyRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
+		copyRegion.addBuffer(bufferPercent);
+		double[] p1 = copyRegion.getLeftPoint();
+		double[] p2 = copyRegion.getRightPoint();
 		//Choosing filter dependent on the width of the viewport
 		int zoom = zoomLevel(p1, p2);
 		System.out.println("zoom level " + zoom);
 		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
 		
 		time = System.nanoTime();
-		ArrayList<Node> nodes = kdTree.searchRange(region);
+		ArrayList<Node> nodes = kdTree.searchRange(copyRegion);
 		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
 		
 		time = System.nanoTime();
