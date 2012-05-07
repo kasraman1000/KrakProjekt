@@ -215,6 +215,54 @@ public class XML{
 	}		
 	
 	
+	public String createErrorString(StatusCode statusCode) throws ParserConfigurationException,TransformerConfigurationException,
+															TransformerException{
+		Road[] roads = new Road[2];
+			
+		roads[0] = new Road(0, 0, 1000, 1000, 1, "First Error Road");
+		roads[1] = new Road(0, 1000, 1000, 0, 1, "Second Error Road");
+		
+		//Create the Document
+				
+		Document document = createNewDocumentWithRoot();
+				
+		//Create the root Element
+		Element rootElement = document.createElement(ROOT_ELEMENT_NAME);
+		document.appendChild(rootElement);
+		
+		
+		//The svg Element
+		Element svgElement = createSvgElement(document);
+		rootElement.appendChild(svgElement);
+		
+		//Add the roads (not routes) to the svg Element
+		addRoadsToElement(roads, svgElement);
+		
+		//Add the StatusCode Element to the RootElement
+		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		rootElement.appendChild(statusCodeElement);
+		
+		//Add the ViewPortElement to the RootElement
+		Element viewPortElement = document.createElement(VIEWPORT_ELEMENT_NAME);
+		rootElement.appendChild(viewPortElement);
+		
+		addViewPortData(new Region(0, 0, 1000, 1000), viewPortElement);
+		
+		//Transform the Document into a XML String and return the String
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    Transformer transformer = transformerFactory.newTransformer();
+	    DOMSource source = new DOMSource(document);
+	    
+	    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
+	    StringWriter stringWriter = new StringWriter();
+	    StreamResult result = new StreamResult(stringWriter);
+      	transformer.transform(source, result);
+	    String xmlString = stringWriter.toString();
+	    
+	    return xmlString;
+	}
+	
 	private Document createNewDocumentWithRoot() throws ParserConfigurationException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
