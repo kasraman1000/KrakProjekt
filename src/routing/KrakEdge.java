@@ -200,6 +200,6 @@ public class KrakEdge {
     public String toString() {
         return name + ": " + from + "->" + to + ", " + length + " m and " + time + " minutes"
         		+ "\t (house numbers: " + vFromHouseNumber + "-" + vToHouseNumber + ", "
-        		+ + hFromHouseNumber + "-" + hToHouseNumber + ")";
+        		+ + hFromHouseNumber + "-" + hToHouseNumber + "), Postal code: " + vPost + "-" + hPost;
     }
 }

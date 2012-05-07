@@ -90,8 +90,7 @@ public class XML{
 													TransformerConfigurationException,
 													TransformerException{
 		//TODO
-		//Only for debugging
-		
+		//Only for debugging, uncomment for debug 
 //		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
@@ -120,13 +119,12 @@ public class XML{
 //		svgElement.appendChild(routeElement);
 		
 		//TODO Is the id-statement necessary
-		if(!(route==null || route.length == 0)) addRoadsToElement(route, svgElement);
+		if(!(route==null || route.length == 0)) addRouteElementsAfterRoads(route, svgElement);
 		
 		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
-
 		rootElement.appendChild(statusCodeElement);
 		
 		//Add the ViewPortElement to the RootElement
@@ -228,6 +226,8 @@ public class XML{
 		Element svgElement = document.createElement(SVG_ELEMENT_NAME);
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svgElement.setAttribute("version", "1.1");
+		svgElement.setAttribute("width", "450000");
+		svgElement.setAttribute("height", "350000");
 		
 		return svgElement;
 	}
@@ -254,8 +254,6 @@ public class XML{
 			element.appendChild(line);
 		}
 		
-		
-	    
 	}
 	
 	private void addRouteElementsAfterRoads(Road[] route, Element element){

@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.HashMap;
-import controllers.Controller;
+
 import models.Region;
+import controllers.Controller;
 
 /**
  * The JavaScript connector, accepting requests from the browser client
@@ -68,6 +70,10 @@ public class JSConnector {
 			}
 			//TODO only for testing
 //			response = XmlFhje.getTestXML();
+			
+			System.err.println("HandleRequest done");
+//			System.out.println(response);
+			
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,14 +108,20 @@ public class JSConnector {
 	 * @param line the first line of the http request
 	 * @return returns a hashMap with the parameters
 	 */
-	private HashMap<String, String> readParameters(String line) {
+	private HashMap<String, String> readParameters(String inLine) {
+		String line = "";
+		try{
+			line = URLDecoder.decode(inLine, "UTF-8");
+		} catch(Exception e) {
+			 System.err.println("JSConnector.readParameters() - linie 117 EXCEPTION  " + e);
+		}
 		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
 //		if(!hasParameters(line)) return result;
 		//discards everything before the questionmark
 		line = line.split("\\?")[1];
 		//discards everything after the space
-		line = line.split(" ")[0];
+		line = line.split(" HTTP")[0];
 		String[] lines = line.split("&");
 //		System.out.println("JSConnector.readParameters()");
 		for(String pair : lines){

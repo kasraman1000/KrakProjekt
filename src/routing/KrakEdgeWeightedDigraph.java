@@ -3,9 +3,6 @@
  */
 package routing;
 
-import java.io.Serializable;
-
-
 
 /*************************************************************************
  *  Compilation:  javac EdgeWeightedDigraph.java
@@ -29,7 +26,7 @@ import java.io.Serializable;
 
 
 
-public class KrakEdgeWeightedDigraph implements Serializable{
+public class KrakEdgeWeightedDigraph {
     private final int V; //Nodes
     private int E; //Edges
     private Bag<KrakEdge>[] adj;

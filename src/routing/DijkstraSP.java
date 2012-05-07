@@ -54,13 +54,12 @@ public class DijkstraSP {
      */
     public Stack<KrakEdge> findRoute(int from, int to, boolean lengthWeighted) {
     	KrakEdge.setWeight(lengthWeighted);
-    	
-    	   if (!hasPathTo(from, to)) return null;
-           Stack<KrakEdge> path = new Stack<KrakEdge>();
-           for (KrakEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
-               path.push(e);
-           }
-           return path;
+    	if (!hasPathTo(from, to)) return null;
+    	Stack<KrakEdge> path = new Stack<KrakEdge>();
+    	for (KrakEdge e = edgeTo[to]; e != null; e = edgeTo[e.from()]) {
+    		path.push(e);
+    	}
+    	return path;
     }
     	
     /**

@@ -16,6 +16,7 @@ import routing.KrakEdge;
 public class EdgeParser {
 
 	private static HashMap<String, Bag<KrakEdge>> edgeMap = new HashMap<String, Bag<KrakEdge>>();
+	private static HashMap<String, Integer> zipCodeMap;
 
 	/**
 	 * Builds up the structure for finding directed edges
@@ -31,10 +32,13 @@ public class EdgeParser {
 				edgeMap.get(roadName).add(e); // Add this edge under the roadname
 			}
 			else {
-				edgeMap.put(roadName, new Bag<KrakEdge>()); // new roadname, create new bag
+				// new roadname, create new bag and add edge
+				Bag<KrakEdge> bag = new Bag<KrakEdge>();
+				bag.add(e);
+				edgeMap.put(roadName, bag);
 			}
-
 		}
+		zipCodeMap = Loader.getZipCodeMap();
 		System.out.println("Total roadnames: " + edgeMap.size());
 	}
 
@@ -68,14 +72,14 @@ public class EdgeParser {
 						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
 					results.add(ke);
 			}
-			
-//			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
-//			System.out.println("Results.size(): " + results.size());
-//			System.out.println("Results: ");
-//
-//			Iterator<KrakEdge> i = results.iterator();
-//			while (i.hasNext()) 
-//				System.out.println(i.next());
+
+			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
+			System.out.println("Results.size(): " + results.size());
+			System.out.println("Results: ");
+
+			Iterator<KrakEdge> i = results.iterator();
+			while (i.hasNext()) 
+				System.out.println(i.next());
 
 			// Build the PathPreface object
 			if (!results.isEmpty()) {
@@ -88,10 +92,16 @@ public class EdgeParser {
 				// return result;
 				return new PathPreface(k1, k2, houseNumber);
 			}
-			else throw new Exception(); // if no result is found
 
+			else{
+				System.out.println("EdgeParser.findPreface() - No result found");
+				throw new Exception(); // if no result is found
+			}
 		}
-		else throw new Exception(); // if roadname doesn't match
+		else{
+			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
+			throw new Exception(); // if roadname doesn't match
+		}
 	}
 
 	public static void main(String[] args) {
@@ -100,13 +110,14 @@ public class EdgeParser {
 
 			// set up data
 			System.out.println("Attempting to load...");
-			Loader.load("C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_node_unload.txt","C:\\Users\\DE\\git\\KrakProjekt\\bin\\kdv_unload.txt","C:\\Users\\DE\\git\\KrakProjekt\\zip_codes.txt");
+			//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
+			String[] address = {"Romsdalsgade","6","","",""};
 
-			String[] address = {"Hvidovrevej","210","","",""};
 			//System.out.println(address[0]);
 			try {
 				System.out.println(EdgeParser.findPreface(address));

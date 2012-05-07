@@ -1,11 +1,10 @@
 
 package models;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
-
 
 public class KDTree
 {
@@ -35,7 +34,6 @@ public class KDTree
 	public void build(ArrayList<Node> nodes)
 	{
 		new KDNode(nodes);
-		
 	}
 	
 	/**
@@ -148,6 +146,7 @@ public class KDTree
 			else if (intersecting(cr1, changePoint(kdn, depth, cr2), r1, r2))
 			{
 				searchRange(kdn.left, nodes, depth+1, cr1, changePoint(kdn, depth, cr2), r1, r2);
+
 			}
 		}
 		if (kdn.right != null)
@@ -160,6 +159,7 @@ public class KDTree
 			else if (intersecting(changePoint(kdn, depth, cr1), cr2, r1, r2))
 			{
 				searchRange(kdn.right, nodes, depth+1, changePoint(kdn, depth, cr1), cr2, r1, r2);
+
 			}
 		}
 
