@@ -111,7 +111,7 @@ public class EdgeParser {
 			// set up data
 			System.out.println("Attempting to load...");
 			//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
-			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
+//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());

@@ -32,7 +32,7 @@ public class Controller {
 		catch (ServerStartupException e) {
 			ErrorHandler.handleServerStartupException(e);
 		}
-		kdTree.initialize(Loader.getNodesForKDTree());
+		RoadSelector.initialize(Loader.getNodesForKDTree());
 		xml = new XML();
 		double end = System.nanoTime();
 		System.out.println("System up running... (In " + (end-start)/1e9 + " seconds)");
