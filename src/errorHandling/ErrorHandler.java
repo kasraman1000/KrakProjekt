@@ -11,7 +11,7 @@ public static void handleServerStartupException(ServerStartupException e){
 	System.exit(0);
 }
 
-//public static void handleServerRuntimeException(ServerRuntimeException e){
-//	Exception exception = e.getException();
-//}
+public static void handleServerRuntimeException(ServerRuntimeException e){
+	System.out.println(e.getStatusCode().getDescription());
+}
 }
