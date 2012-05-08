@@ -27,7 +27,7 @@ public class Controller {
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
 		try {
-			/*
+			//*
 			Loader.load("zealand_node.txt","zealand_edge.txt", "zip_codes.txt");
 			/*/
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
