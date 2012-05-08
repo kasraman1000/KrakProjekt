@@ -79,7 +79,7 @@ public class XML{
 																									TransformerConfigurationException, 
 																									TransformerException{
 		//Only for debugging - uncomment to debug
-		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
+//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		Document document = createDocument(roads, route, region, statusCode);
 		
