@@ -9,6 +9,7 @@
 		xView2 = 350000;
 		yView2 = 450000;
 		route = "";
+		isRouteMode = false;
 		getXML();
 	}
 	/*
@@ -27,10 +28,16 @@
 				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
 				var statusCodeString = statusCode.iterateNext().getAttribute("code");
 				handleStatusCode(statusCodeString);
-				var svg = responseXML.evaluate("/root/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
+				var svg = responseXML.evaluate("/root/map/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
 				var viewPort = responseXML.evaluate("/root/viewPort", responseXML, null, XPathResult.ANY_TYPE, null);
+				routeSvgResult = responseXML.evaluate("/root/route/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
+				var routeSvgTemp;
+				if((routeSvgTemp = routeSvgResult.iterateNext())!=null){
+					routeSvg = routeSvgTemp;
+				}
 				showSvg(svg.iterateNext(),viewPort.iterateNext());
 				//this is done to reset the route so that it only asks the server for the route one time
+				
 				route = "";
 			}
 		}
@@ -82,9 +89,13 @@
 		either clicking right, left, up or down. 
 	 */
 	function showSvg(svg,viewPort) {
-		if (svgFrame.hasChildNodes())svgFrame.removeChild(svgFrame.firstChild);
-		//alert(svg);
+		while(svgFrame.hasChildNodes()){			
+			svgFrame.removeChild(svgFrame.firstChild);
+		}
 		svgFrame.appendChild(svg);
+		if(isRouteMode){
+			svgFrame.appendChild(routeSvg);
+		}
 		xView1 = parseFloat(viewPort.getAttribute("x1"));
 		yView1 = parseFloat(viewPort.getAttribute("y1"));
 		xView2 = parseFloat(viewPort.getAttribute("x2"));
@@ -213,6 +224,7 @@
 					+ "&isDistance=" + isDistance + "";
 			getXML();
 		}
+		isRouteMode = true;
 	}
 	
 	function encodeUTFString(s){
@@ -221,6 +233,7 @@
 
 	function clearRoute() {
 		hideErrorMessage();
+		isRouteMode = false;
 		document.getElementById("fromAddress").value = "";
 		document.getElementById("toAddress").value = "";
 		route = "";
