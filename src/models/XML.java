@@ -87,10 +87,9 @@ public class XML{
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
 	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) throws ParserConfigurationException, 
-													TransformerConfigurationException,
-													TransformerException{
-		//TODO
-		//Only for debugging, uncomment for debug 
+																									TransformerConfigurationException, 
+																									TransformerException{
+		//Only for debugging - uncomment to debug
 //		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
 		
 		//Create the Document
@@ -291,14 +290,14 @@ public class XML{
 			}
 			
 			Element line = element.getOwnerDocument().createElement("line");
-			
 			color = r.getColor();
 			line.setAttribute("x1", r.getX1() + ""); 
 			line.setAttribute("y1", r.getY1() + ""); 
 			line.setAttribute("x2", r.getX2() + ""); 
 			line.setAttribute("y2", r.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
+			line.setAttribute("vector-effect", "non-scaling-stroke");
+			line.setAttribute("stroke-width", RoadStatus.getRoadWidth(r.getType())+"");
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); ");
 			element.appendChild(line);
 		}
 		
