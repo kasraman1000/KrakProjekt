@@ -198,14 +198,14 @@ public class XML{
 			}
 			
 			Element line = element.getOwnerDocument().createElement("line");
-			
 			color = r.getColor();
 			line.setAttribute("x1", r.getX1() + ""); 
 			line.setAttribute("y1", r.getY1() + ""); 
 			line.setAttribute("x2", r.getX2() + ""); 
 			line.setAttribute("y2", r.getY2() + ""); 
-			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); " + 
-										"stroke-width:" + RoadStatus.getRoadWidth(r.getType()));
+			line.setAttribute("vector-effect", "non-scaling-stroke");
+			line.setAttribute("stroke-width", RoadStatus.getRoadWidth(r.getType())+"");
+			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); ");
 			element.appendChild(line);
 		}
 		
