@@ -10,17 +10,17 @@ public class RoadStatus {
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	private static final int routeType;
 	private static double scale;
-	
+
 	/**
 	 * To load the colors and widths of the roads the first time this class is called.
-	 */
+	 *//*
 	static{
 		loadRoadColors();
 		loadRoadWidths();
 		routeType = 50;
 		scale = 1;
 	}
-
+	*/
 	/**
 	 * 
 	 * Depending on the zoomlevel, the width of the roads will be chanced.
@@ -50,9 +50,9 @@ public class RoadStatus {
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
 		Color routes = Color.yellow;
-		
+
 		Color unknownRoads = Color.cyan;
-		
+
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"
 
@@ -168,7 +168,7 @@ public class RoadStatus {
 	public static double getRoadWidth(int roadType){
 		return roadWidths.get(roadType);
 	}
-	
+
 	public static int getRouteType(){
 		return routeType;
 	}
