@@ -3,6 +3,7 @@ package errorHandling;
 public class ErrorHandler {
 
 	public static StatusCode handleClientInputException(ClientInputException e){
+		System.out.println("Illigal input" + e.getMessage());
 		return e.getStatusCode();
 	}
 	
