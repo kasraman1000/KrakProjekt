@@ -10,6 +10,7 @@
 		yView2 = 450000;
 		route = "";
 		isRouteMode = false;
+		errorHasBeenSend = false;
 		getXML();
 	}
 	/*
@@ -28,6 +29,10 @@
 				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
 				var statusCodeString = statusCode.iterateNext().getAttribute("code");
 				handleStatusCode(statusCodeString);
+				if(errorHasBeenSend){
+					errorHasBeenSend = false;
+					return;
+				}
 				var svg = responseXML.evaluate("/root/map/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
 				var viewPort = responseXML.evaluate("/root/viewPort", responseXML, null, XPathResult.ANY_TYPE, null);
 				routeSvgResult = responseXML.evaluate("/root/route/myns:svg", responseXML, svgResolver, XPathResult.ANY_TYPE, null);
@@ -63,9 +68,11 @@
 			break;
 		case "1":
 			showError("The roadname is not correctly spelled");
+			errorHasBeenSend = true;
 			break;
 		default:
 			showError("An error has occured");
+			errorHasBeenSend = true;
 		}
 	}
 	function showError(text) {
