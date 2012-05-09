@@ -67,11 +67,28 @@ public class EdgeParser {
 			while (edges.hasNext()) {
 				KrakEdge ke = edges.next();
 				System.out.println(ke);
-				if (((houseNumber >= ke.gethFromHouseNumber() && houseNumber <= ke.gethToHouseNumber()) ||
-						(houseNumber >= ke.getvFromHouseNumber() && houseNumber <= ke.getvToHouseNumber())) &&
+				int fromHHN = ke.gethFromHouseNumber();
+				int toHHN = ke.gethToHouseNumber();
+				int fromVHN = ke.getvFromHouseNumber();
+				int toVHN = ke.getvToHouseNumber();
+				if(fromHHN > toHHN){
+					int swap = fromHHN;
+					fromHHN = toHHN;
+					toHHN = fromHHN;
+				}
+				if(fromVHN > toVHN){
+					int swap = fromVHN;
+					fromVHN = toVHN;
+					toVHN = fromVHN;
+				}
+				
+				
+				if (((houseNumber >= fromHHN && houseNumber <= toHHN) ||
+						(houseNumber >= fromVHN && houseNumber <= toVHN)) &&
 						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
 					results.add(ke);
 			}
+			
 
 			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
 			System.out.println("Results.size(): " + results.size());
@@ -105,24 +122,22 @@ public class EdgeParser {
 	}
 
 	public static void main(String[] args) {
-		// set up data
-		System.out.println("Attempting to load...");
-		//			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
-//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
-		System.out.println("Loading complete!");
-		System.out.println("Attempting to build EdgeParser...");
-		EdgeParser.build(Loader.getEdgesForTranslator());
-		System.out.println("EdgeParser built!");
-		String[] address = {"Romsdalsgade","6","","",""};
-
-		//System.out.println(address[0]);
 		try {
-			System.out.println(EdgeParser.findPreface(address));
-		} catch (Exception e) {
-			System.out.println("Address not found!");
-			e.printStackTrace();
-		}
-
+			// set up data
+			System.out.println("Attempting to load...");
+			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+			//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt");
+			System.out.println("Loading complete!");
+			System.out.println("Attempting to build EdgeParser...");
+			EdgeParser.build(Loader.getEdgesForTranslator());
+			System.out.println("EdgeParser built!");
+			String[] address = {"Vordingborgvej","","","",""};
+				System.out.println(EdgeParser.findPreface(address));
+			} catch (Exception e) {
+				System.out.println("Address not found!");
+				e.printStackTrace();
+			}
+		
 	}
 }
 
