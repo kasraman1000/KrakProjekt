@@ -19,6 +19,7 @@ public class AddressParser {
      */
     public static String[] parseAddress(String s) throws AddressInputFormatException {
     	// The result array to return
+
         String[] result = {"","","","",""};
         
         try{        
@@ -37,6 +38,12 @@ public class AddressParser {
         	throw new AddressInputFormatException();
         }
 
+        
+        System.out.println("Parser returned following...");
+        for (int i = 0; i < result.length; i++) {
+        	System.out.println(i + ") " + result[i]);
+        }
+        
         // We're done parsing, let's return the results
         return result;
     }
@@ -45,7 +52,7 @@ public class AddressParser {
      * Searches input string for road name
      */
     private static void findRoadName(String s, String[] result) throws PatternSyntaxException{
-        Pattern roadNamePattern = Pattern.compile("\\A[a-zA-Z��������'\\s]+\\b");
+        Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZæøåÆØÅüÜ'\\s]+\\b");
         Matcher roadNameMatcher = roadNamePattern.matcher(s);
         
         if (roadNameMatcher.find()) {
@@ -57,7 +64,7 @@ public class AddressParser {
      * Searches input string for city name
      */
     private static void findCityName(String s, String[] result) throws PatternSyntaxException{
-        Pattern cityNamePattern = Pattern.compile("\\b[a-zA-Z��������\\s]+\\z");
+        Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZæøåÆØÅüÜ\\s]+\\z");
         Matcher cityNameMatcher = cityNamePattern.matcher(s);
         
         // If the matcher finds something in the specified pattern (City name)

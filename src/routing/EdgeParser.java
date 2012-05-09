@@ -1,14 +1,15 @@
 package routing;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import models.Loader;
 import models.PathPreface;
-import routing.Bag;
-import routing.KrakEdge;
-import errorHandling.*;
+import errorHandling.ClientInputException;
+import errorHandling.NoSuchAddressException;
+import errorHandling.NoSuchRoadnameException;
+import errorHandling.ServerStartupException;
 
 //TODO: City name recognition
 /**
@@ -26,7 +27,7 @@ public class EdgeParser {
 	public static void build(ArrayList<KrakEdge> edges)
 	{
 		for(KrakEdge e : edges){
-			String roadName = e.getName();
+			String roadName = e.getName().toLowerCase();
 			//System.out.println(roadName + ",\t" + roadName.hashCode());
 
 			if (edgeMap.containsKey(roadName)) {
@@ -49,8 +50,8 @@ public class EdgeParser {
 	 * @return A PathPreface with the corresponding KrakEdges
 	 */
 	public static PathPreface findPreface(String[] address) throws ClientInputException {
-		if (edgeMap.containsKey(address[0])) {
-			Iterator<KrakEdge> edges = edgeMap.get(address[0]).iterator();
+		if (edgeMap.containsKey(address[0].toLowerCase())) {
+			Iterator<KrakEdge> edges = edgeMap.get(address[0].toLowerCase()).iterator();
 			ArrayList<KrakEdge> results = new ArrayList<KrakEdge>();
 
 			// Find the house number (if none specified, default to 1)
@@ -61,6 +62,10 @@ public class EdgeParser {
 			// Find the zip code (if specified)
 			int zipcode;
 			if (address[3].length() > 0) zipcode = Integer.parseInt(address[3]);
+			// else, derive from city name
+			else if (address[4].length() > 0 && zipCodeMap.containsKey(address[4].toLowerCase())) { 
+				zipcode = zipCodeMap.get(address[4].toLowerCase());
+			}
 			else zipcode = 0;
 
 			// For every edge, check if housenumber (and if specified, zipcode) matches, 
@@ -75,25 +80,25 @@ public class EdgeParser {
 				if(fromHHN > toHHN){
 					int swap = fromHHN;
 					fromHHN = toHHN;
-					toHHN = fromHHN;
+					toHHN = swap;
 				}
 				if(fromVHN > toVHN){
 					int swap = fromVHN;
 					fromVHN = toVHN;
-					toVHN = fromVHN;
+					toVHN = swap;
 				}
-				
-				
+
+
 				if (((houseNumber >= fromHHN && houseNumber <= toHHN) ||
 						(houseNumber >= fromVHN && houseNumber <= toVHN)) &&
 						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
 					results.add(ke);
 			}
-			
 
-			System.out.println("Bag.size(): " + edgeMap.get(address[0]).size());
-			System.out.println("Results.size(): " + results.size());
-			System.out.println("Results: ");
+
+						System.out.println("Bag.size(): " + edgeMap.get(address[0].toLowerCase()).size());
+						System.out.println("Results.size(): " + results.size());
+						System.out.println("Results: ");
 
 			Iterator<KrakEdge> i = results.iterator();
 			while (i.hasNext()) 
@@ -123,22 +128,27 @@ public class EdgeParser {
 	}
 
 	public static void main(String[] args) {
-		try {
+		try {	
 			// set up data
 			System.out.println("Attempting to load...");
-			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
-			//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt");
+			//Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
+						Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 			System.out.println("Loading complete!");
 			System.out.println("Attempting to build EdgeParser...");
 			EdgeParser.build(Loader.getEdgesForTranslator());
 			System.out.println("EdgeParser built!");
-			String[] address = {"Vordingborgvej","","","",""};
+
+			String[] address = {"Vordingborgvej","2","","",""};
+
+			try {
 				System.out.println(EdgeParser.findPreface(address));
-			} catch (Exception e) {
+			} catch (ClientInputException e) {
 				System.out.println("Address not found!");
 				e.printStackTrace();
 			}
-		
+		} 
+		catch (ServerStartupException e1) {
+			e1.printStackTrace();
+		}
 	}
 }
-
