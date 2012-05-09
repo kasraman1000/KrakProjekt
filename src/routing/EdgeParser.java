@@ -123,7 +123,7 @@ public class EdgeParser {
 		}
 		else{
 			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
-			throw new NoSuchRoadnameException(); // if roadname doesn't match
+			throw new NoSuchRoadnameException(address[0]); // if roadname doesn't match
 		}
 	}
 
