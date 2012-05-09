@@ -1,14 +1,6 @@
 package controllers;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import errorHandling.ServerStartupException;
-import errorHandling.StatusCode;
-
+import errorHandling.*;
 import models.*;
 import views.*;
 
@@ -35,8 +27,7 @@ public class Controller {
 			RoadSelector.initialize(Loader.getNodesForKDTree());
 			routing.EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (ServerStartupException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorHandler.handleServerStartupException(e);
 		}
 		xml = new XML();
 		double end = System.nanoTime();
@@ -64,15 +55,8 @@ public class Controller {
 		String s = "";
 		try {
 			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ServerRuntimeException e){
+			ErrorHandler.handleServerRuntimeException(e);
 		}
 		
 		return s;
@@ -90,7 +74,17 @@ public class Controller {
 		double startTime = System.nanoTime();
 		
 		RouteFinder routeFinder = new RouteFinder(Loader.getGraph());
-		Road[] route = routeFinder.getRoute(fromAddress, toAddress, isLengthWeighted);
+		Road[] route = null;
+		try{
+			route = routeFinder.getRoute(fromAddress, toAddress, isLengthWeighted);
+		} catch(ClientInputException e){
+			try{
+				xml.createErrorString(ErrorHandler.handleClientInputException(e));
+			}
+			catch(ServerRuntimeException e2){
+				ErrorHandler.handleServerRuntimeException(e2);
+			}
+		}
 				
 		Region newRegion = new Region(Road.getOrigo()[0], Road.getOrigo()[1], Road.getTop()[0], Road.getTop()[1]);	
 		Road[] roads = RoadSelector.search(newRegion, bufferPercent);
@@ -99,15 +93,8 @@ public class Controller {
 		
 		try {
 			xmlString = xml.createString(roads, route, newRegion, StatusCode.ALL_WORKING);
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ServerRuntimeException e){
+			ErrorHandler.handleServerRuntimeException(e);
 		}
 		
 		double endTime = System.nanoTime();

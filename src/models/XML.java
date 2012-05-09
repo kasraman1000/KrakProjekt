@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import errorHandling.StatusCode;
+import errorHandling.*;
 
 /**
  * This class is for the whole XML methods: 
@@ -86,9 +86,8 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
-	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) throws ParserConfigurationException, 
-													TransformerConfigurationException,
-													TransformerException{
+	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) 
+																		throws ServerRuntimeException{
 		//TODO
 		//Only for debugging, uncomment for debug 
 //		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
@@ -133,17 +132,22 @@ public class XML{
 		
 		addViewPortData(region, viewPortElement);
 		
+		String xmlString = "";
 		
-		//Transform the Document into a XML String and return the String
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	    Transformer transformer = transformerFactory.newTransformer();
-	    DOMSource source = new DOMSource(document);
-	    
-	    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
-	    StringWriter stringWriter = new StringWriter();
-	    StreamResult result = new StreamResult(stringWriter);
-      	transformer.transform(source, result);
-	    String xmlString = stringWriter.toString();
+		try{
+			//Transform the Document into a XML String and return the String
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    DOMSource source = new DOMSource(document);
+		    
+		    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
+		    StringWriter stringWriter = new StringWriter();
+		    StreamResult result = new StreamResult(stringWriter);
+	      	transformer.transform(source, result);
+		    xmlString = stringWriter.toString();
+		} catch(TransformerException e){
+			throw new XMLTransformerException(e);
+		}
 	    
 	    return xmlString;
 	}
@@ -158,10 +162,8 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a File
 	 */
-	public void createFile(Road[] roads, Road[] route, Region region, StatusCode statusCode, String filename) throws ParserConfigurationException,
-														TransformerConfigurationException,
-														TransformerException{
-		
+	public void createFile(Road[] roads, Road[] route, Region region, StatusCode statusCode, String filename) 
+																				throws ServerRuntimeException{
 		//Create the Document
 		Document document = createNewDocumentWithRoot();
 		
@@ -203,20 +205,22 @@ public class XML{
 		
 		addViewPortData(region, viewPortElement);
 
-		
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	    Transformer transformer = transformerFactory.newTransformer();
-	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	    DOMSource source = new DOMSource(document);
-	    
-	    StreamResult result = new StreamResult(new File(filename));
-	    
-      	transformer.transform(source, result);
+		try{			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		    DOMSource source = new DOMSource(document);
+		    
+		    StreamResult result = new StreamResult(new File(filename));
+		    
+	      	transformer.transform(source, result);
+		}catch(TransformerException e){
+			throw new XMLTransformerException(e);
+		}
 	}		
 	
 	
-	public String createErrorString(StatusCode statusCode) throws ParserConfigurationException,TransformerConfigurationException,
-															TransformerException{
+	public String createErrorString(StatusCode statusCode) throws ServerRuntimeException{
 		Road[] roads = new Road[2];
 			
 		roads[0] = new Road(0, 0, 1000, 1000, 1, "First Error Road");
@@ -249,25 +253,39 @@ public class XML{
 		
 		addViewPortData(new Region(0, 0, 1000, 1000), viewPortElement);
 		
-		//Transform the Document into a XML String and return the String
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	    Transformer transformer = transformerFactory.newTransformer();
-	    DOMSource source = new DOMSource(document);
-	    
-	    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
-	    StringWriter stringWriter = new StringWriter();
-	    StreamResult result = new StreamResult(stringWriter);
-      	transformer.transform(source, result);
-	    String xmlString = stringWriter.toString();
+		String xmlString = "";
+		
+		try{
+			//Transform the Document into a XML String and return the String
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    DOMSource source = new DOMSource(document);
+		    
+		    // May want to add a larger buffer by telling the constructor (fx. StringWriter(1024)) 
+		    StringWriter stringWriter = new StringWriter();
+		    StreamResult result = new StreamResult(stringWriter);
+	      	transformer.transform(source, result);
+		    xmlString = stringWriter.toString();
+		} catch(TransformerException e){
+			throw new XMLTransformerException(e);
+		}
 	    
 	    return xmlString;
 	}
 	
-	private Document createNewDocumentWithRoot() throws ParserConfigurationException{
+	private Document createNewDocumentWithRoot() throws XMLDocumentException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		
-		return docBuilder.newDocument();	
+		Document doc = null;
+		
+		try{
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			doc = docBuilder.newDocument();	
+		} catch(ParserConfigurationException e){
+			throw new XMLDocumentException(e);
+		}
+		
+		return doc;
 	}
 	
 	private Element createSvgElement(Document document){

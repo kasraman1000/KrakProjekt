@@ -13,7 +13,10 @@ public enum StatusCode {
 	SERVER_DOWN(2, "Server seems to be down"),
 	PARSE_ERROR(3, "There was an error during the parsing of the XML String"),
 	NO_SUCH_ADDRESS(4, "Couldn't find this address"),
-	LOADER_FILE_NOT_FOUND(5, "The loader couldn't find the data files");
+	NO_SUCH_ROADNAME(5, "This roadname does not exist"),
+	LOADER_FILE_NOT_FOUND(6, "The loader couldn't find the data files"),
+	XML_DOCUMENT(7, "The XML Document was not created properbly"),
+	XML_TRANSFORMER(8, "The transformation to a XML-string went bad");
 	
 	private final String description;
 	private final int codeNumber;

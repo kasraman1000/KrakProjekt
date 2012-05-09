@@ -8,6 +8,7 @@ import models.Loader;
 import models.PathPreface;
 import routing.Bag;
 import routing.KrakEdge;
+import errorHandling.*;
 
 //TODO: City name recognition
 /**
@@ -47,7 +48,7 @@ public class EdgeParser {
 	 * @param address The string array returned from AddressParser.parse()
 	 * @return A PathPreface with the corresponding KrakEdges
 	 */
-	public static PathPreface findPreface(String[] address) throws Exception { //TODO: Fix exception til noget mere specifikt (AddressNotFoundException?)
+	public static PathPreface findPreface(String[] address) throws ClientInputException {
 		if (edgeMap.containsKey(address[0])) {
 			Iterator<KrakEdge> edges = edgeMap.get(address[0]).iterator();
 			ArrayList<KrakEdge> results = new ArrayList<KrakEdge>();
@@ -95,12 +96,12 @@ public class EdgeParser {
 
 			else{
 				System.out.println("EdgeParser.findPreface() - No result found");
-				throw new Exception(); // if no result is found
+				throw new NoSuchAddressException(); // if no result is found
 			}
 		}
 		else{
 			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
-			throw new Exception(); // if roadname doesn't match
+			throw new NoSuchRoadnameException(); // if roadname doesn't match
 		}
 	}
 
