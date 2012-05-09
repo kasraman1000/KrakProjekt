@@ -22,9 +22,11 @@ public class RoadStatus {
 	}
 
 	/**
+	 * 
 	 * Depending on the zoomlevel, the width of the roads will be chanced.
 	 * It is not necessary to set the zoomlevel, but is most preferable!
 	 * 
+	 * @deprecated scale is not being used because we use none-scaling-strokes in the svg
 	 * @param zoomLevel An int from 1-5 where 5 is closest to the object
 	 */
 	public static void setScale(int zoomLevel)
@@ -91,6 +93,8 @@ public class RoadStatus {
 	 * Will load all the predefined road widths to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadWidths(){
+		/*
+		//old scaling values
 		int largeRoads = 400;
 		int mediumRoads = 250;
 		int smallRoads = 130;
@@ -99,9 +103,17 @@ public class RoadStatus {
 		int seaWays  = 130; 
 		int walkingPaths = 130;
 		int routes = 1400;
-
 		int unknownRoads = 130;
-
+		*/
+		int largeRoads = 4;
+		int mediumRoads = 3;
+		int smallRoads = 2;
+		int tinyRoads = 2;
+		int tunnels = 2;
+		int seaWays  = 2; 
+		int walkingPaths = 2;
+		int routes = 5;
+		int unknownRoads = 2;
 		roadWidths.put(0, unknownRoads); //"Unknown0"
 		roadWidths.put(95, unknownRoads); //"Unknown95"
 
@@ -154,7 +166,7 @@ public class RoadStatus {
 	 * @return A fitting width of the road to the current zoomlevel
 	 */
 	public static double getRoadWidth(int roadType){
-		return roadWidths.get(roadType)*scale;
+		return roadWidths.get(roadType);
 	}
 	
 	public static int getRouteType(){
