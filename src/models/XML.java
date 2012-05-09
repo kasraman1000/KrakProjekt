@@ -263,7 +263,7 @@ public class XML{
 			line.setAttribute("x2", r.getX2() + ""); 
 			line.setAttribute("y2", r.getY2() + ""); 
 			line.setAttribute("vector-effect", "non-scaling-stroke");
-			line.setAttribute("stroke-width", RoadStatus.getRoadWidth(r.getType())+"");
+			line.setAttribute("stroke-width", r.getWidth()+"");
 			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); ");
 			element.appendChild(line);
 		}
