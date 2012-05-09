@@ -19,6 +19,7 @@ public class AddressParser {
      */
     public static String[] parseAddress(String s) throws AddressInputFormatException {
     	// The result array to return
+
         String[] result = {"","","","",""};
         
         try{        
@@ -37,6 +38,12 @@ public class AddressParser {
         	throw new AddressInputFormatException();
         }
 
+        
+        System.out.println("Parser returned following...");
+        for (int i = 0; i < result.length; i++) {
+        	System.out.println(i + ") " + result[i]);
+        }
+        
         // We're done parsing, let's return the results
         return result;
     }
