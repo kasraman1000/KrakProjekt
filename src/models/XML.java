@@ -141,17 +141,26 @@ public class XML{
 	}
 
 	public String createErrorString(StatusCode statusCode) throws ServerRuntimeException{
-		Road[] roads = new Road[2];
-
-		roads[0] = new Road(0, 0, 1000, 1000, 1, "First Error Road");
-		roads[1] = new Road(0, 1000, 1000, 0, 1, "Second Error Road");
-		Road[] route = null;
-		Region region = new Region(0, 0, 1000, 1000);
-
 		//Create the Document
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		Document document = null;
+		
+		try{
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			document = docBuilder.newDocument();	
+		} catch(ParserConfigurationException e){
+			throw new XMLDocumentException(e);
+		}
+		
+		//Create the root Element
+		Element rootElement = document.createElement(ROOT_ELEMENT_NAME);
+		document.appendChild(rootElement);
 
-		Document document = createDocument(roads, route, region, statusCode);
-
+		//Add the StatusCode Element to the RootElement
+		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
+		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		rootElement.appendChild(statusCodeElement);
+		
 		String xmlString = "";
 		
 		try{

@@ -9,11 +9,11 @@ package errorHandling;
  */
 public enum StatusCode {
 	ALL_WORKING(0, "Everything is running fine"),
-	IO_ERROR(1, "There was an error with the I/O"),
+	NO_SUCH_ROADNAME(1, "This roadname does not exist"),
 	SERVER_DOWN(2, "Server seems to be down"),
 	PARSE_ERROR(3, "There was an error during the parsing of the XML String"),
 	NO_SUCH_ADDRESS(4, "Couldn't find this address"),
-	NO_SUCH_ROADNAME(5, "This roadname does not exist"),
+	IO_ERROR(5, "There was an error with the I/O"),
 	LOADER_FILE_NOT_FOUND(6, "The loader couldn't find the data files"),
 	XML_DOCUMENT(7, "The XML Document was not created properbly"),
 	XML_TRANSFORMER(8, "The transformation to a XML-string went bad");

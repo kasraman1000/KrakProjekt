@@ -81,7 +81,7 @@ public class Controller {
 			route = routeFinder.getRoute(fromAddress, toAddress, isLengthWeighted);
 		} catch(ClientInputException e){
 			try{
-				xml.createErrorString(ErrorHandler.handleClientInputException(e));
+				return xml.createErrorString(ErrorHandler.handleClientInputException(e));
 			}
 			catch(ServerRuntimeException e2){
 				ErrorHandler.handleServerRuntimeException(e2);
