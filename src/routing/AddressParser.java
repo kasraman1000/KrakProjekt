@@ -2,6 +2,9 @@ package routing;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
+
+import errorHandling.*;
 
 public class AddressParser {
 	
@@ -14,10 +17,12 @@ public class AddressParser {
      * 3: zip code
      * 4: city name
      */
-    public static String[] parseAddress(String s) throws IllegalArgumentException {
-        // The result array to return
+    public static String[] parseAddress(String s) throws AddressInputFormatException {
+    	// The result array to return
+
         String[] result = {"","","","",""};
         
+        try{        
         // Road Name 
         findRoadName(s, result);
         
@@ -29,7 +34,16 @@ public class AddressParser {
         
         // Zipcode 
         findZipcode(s, result);
+        }catch(PatternSyntaxException e){
+        	throw new AddressInputFormatException();
+        }
 
+        
+        System.out.println("Parser returned following...");
+        for (int i = 0; i < result.length; i++) {
+        	System.out.println(i + ") " + result[i]);
+        }
+        
         // We're done parsing, let's return the results
         return result;
     }
@@ -37,8 +51,8 @@ public class AddressParser {
     /**
      * Searches input string for road name
      */
-    private static void findRoadName(String s, String[] result) {
-        Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZæøåÆØÅüÜ'\\s]+\\b");
+    private static void findRoadName(String s, String[] result) throws PatternSyntaxException{
+        Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZÃ¦Ã¸Ã¥Ã†Ã˜Ã…Ã¼Ãœ'\\s]+\\b");
         Matcher roadNameMatcher = roadNamePattern.matcher(s);
         
         if (roadNameMatcher.find()) {
@@ -49,8 +63,8 @@ public class AddressParser {
     /**
      * Searches input string for city name
      */
-    private static void findCityName(String s, String[] result) {
-        Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZæøåÆØÅüÜ\\s]+\\z");
+    private static void findCityName(String s, String[] result) throws PatternSyntaxException{
+        Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZÃ¦Ã¸Ã¥Ã†Ã˜Ã…Ã¼Ãœ\\s]+\\z");
         Matcher cityNameMatcher = cityNamePattern.matcher(s);
         
         // If the matcher finds something in the specified pattern (City name)
@@ -76,7 +90,7 @@ public class AddressParser {
     /**
      * Searches input string for zipcode
      */
-    private static void findZipcode(String s, String[] result) {
+    private static void findZipcode(String s, String[] result) throws PatternSyntaxException{
         Pattern zipcodePattern = Pattern.compile("\\b[1-9]\\d{3}\\b");
         Matcher zipcodeMatcher = zipcodePattern.matcher(s);
         
@@ -88,7 +102,7 @@ public class AddressParser {
      * Searches input string for House number, and if a letter is attached 
      * to the number, it will include that as a house letter as well. 
      */
-    private static void findHouseNumber(String s, String[] result) {
+    private static void findHouseNumber(String s, String[] result) throws PatternSyntaxException{
         Pattern houseNumberPattern = Pattern.compile("\\b\\d{1,3}+.?");
         Matcher houseNumberMatcher = houseNumberPattern.matcher(s);
         
@@ -115,7 +129,7 @@ public class AddressParser {
      * Uses the cityNameMatcher to compare wether the letter found isn't
      * already a part of the city name
      */
-    private static void findHouseLetter(String s, String[] result, Matcher cityNameMatcher) {
+    private static void findHouseLetter(String s, String[] result, Matcher cityNameMatcher) throws PatternSyntaxException{
         if (result[2] == "") {
             Pattern houseLetterPattern = Pattern.compile("\\b[a-zA-Z]\\b");
             Matcher houseLetterMatcher = houseLetterPattern.matcher(s);
@@ -142,7 +156,13 @@ public class AddressParser {
 	public static void main(String[] args) {
 		String test = "Annasvej 14";
 		
-		String[] result = parseAddress(test);
+		String[] result = null;
+		
+		try{
+			result = parseAddress(test);
+		} catch(AddressInputFormatException e){
+			System.out.println("Address not found");
+		}
 		
 		for (int i = 0; i < result.length; i++) {
 			System.out.println("\""+result[i]+"\"");
