@@ -224,7 +224,7 @@
 		toAddress = encodeUTFString(document.getElementById("toAddress").value);
 	
 		if (fromAddress == "" || toAddress == "") {
-			alert("Missing inputs");
+			showError("Missing inputs");
 		} else {
 			isDistance = document.getElementById("distance").checked;
 			route = "&from=" + fromAddress + "&to=" + toAddress
