@@ -61,9 +61,33 @@
 				Alternativer?\\
 								
 			\subsubsection{User Interface}
-				length : 1 - 2 side\\
-				Hvilke krav har vi til brugerfladen??\\
-				Hvorfor bruger vi JS/Browser og ikke java Swing??\\
+				
+In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
+
+The requirement for the user interface is formulated in the project description as follows: "Design a coherent user interface, which includes the map, but probably also other components". To fulfull this requirement we have to first of all select a technology to show graphical data for the user. In our case there are two obvious options. The first one is to use Swing and the other one is to make a browser based solution. In the following we will discuss both solutions.
+
+\paragraph{Swing Solution}
+We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
+
+\paragraph{Browser solution}
+For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, xml and svg, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different svg commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
+
+Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
+
+\paragraph{Features}
+The second step in fulfilling the above mentioned requierment is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implementet and how these features should be implementet, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
+\paragraph{Road displaying}
+To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and svg. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
+ 
+\paragraph{Scalable map}
+The map needs to be scalable when the user drags the window. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basicly there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
+
+\paragraph{Zoom and panning}
+When discussing zoom and panning there are two aspects. The first one is to consider how much extra data should be passed from the server to the browser. We have chosen to call that extra data for buffer data. When choosing the amount of buffer data there are to extremes. The first one is to let the browser request exactly that amount of data that the user is requesting. This way of doing it would make sure that it would be easy to develop a new view, e.g. a smartphone app, because most of the functionality is located at the server. On the other hand the user might experience the program as slow if the user has a slow internet connection. The other extreme is to let the browser request all data in one call and only show what the user is asking for. This would require a lot of functionality in the view, but it might result in a good experience for the user if the internet connection is slow. We have chosen a compromize where the browser request buffer data for panning and not for zooming.
+The other aspect is to decide in what way the user should be able to zoom and pan. Since we know that it takes a long time to get the Java Script, HTML, SVG and XPath to work together we have chosen to settle for buttons in the browser as the only way for the user to navigate in the map. One could consider to make it possible for the user to use keyboard shortcuts and mouseevents for zooming and panning. 
+
+\paragraph{Routeshowing}
+There are to different approches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would be ran every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 				
 				
 		\subsection{Summary}
