@@ -23,7 +23,7 @@ public class Controller {
 			Loader.load("zealand_node.txt","zealand_edge.txt", "zip_codes.txt");
 			/*/
 			Loader.load("kdv_node_unload.txt","kdv_unload.txt", "zip_codes.txt");
-
+			//*/
 			//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
 
 			RoadSelector.initialize(Loader.getNodesForKDTree());
