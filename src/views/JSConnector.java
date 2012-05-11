@@ -22,7 +22,7 @@ public class JSConnector {
 	public JSConnector(){
 		try {
 			//the parameter in ServerSocket is 80 because that is the default port for localhost
-			ServerSocket ss = new ServerSocket(80);
+			ServerSocket ss = new ServerSocket(8080);
 			listenForBrowserRequest(ss);
 		} catch (IOException e) {
 			e.printStackTrace();
