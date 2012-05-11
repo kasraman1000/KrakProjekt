@@ -87,8 +87,6 @@ public class RoadSelector {
 		//	System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
 
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
-
-		RoadStatus.setScale(level+1);
 		return result;
 
 	}

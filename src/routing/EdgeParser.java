@@ -72,7 +72,6 @@ public class EdgeParser {
 			// and add to result array
 			while (edges.hasNext()) {
 				KrakEdge ke = edges.next();
-				System.out.println(ke);
 				int fromHHN = ke.gethFromHouseNumber();
 				int toHHN = ke.gethToHouseNumber();
 				int fromVHN = ke.getvFromHouseNumber();
