@@ -2,10 +2,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 import models.KDTree;
 import models.Loader;
@@ -55,8 +52,7 @@ public class KDTreeTest {
 			@SuppressWarnings("unchecked")
 			ArrayList<Node> buildNodes = (ArrayList<Node>) nodes.clone();
 			kdTree.initialize(buildNodes);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -77,13 +73,14 @@ public class KDTreeTest {
 		Region r4 = new Region(300000, 200000, 310000, 220000);
 		Region r5 = new Region(43750, 42750, 213850, 261450);
 		Region r6 = new Region(77770, 112743, 139006, 191466);
+		Region r7 = new Region(209560, 155016, 458392, 294984);
 		assertEquals(linearSizeRequest(r1), kdTreeSizeRequest(r1));
 		assertEquals(linearSizeRequest(r2), kdTreeSizeRequest(r2));
 		assertEquals(linearSizeRequest(r3), kdTreeSizeRequest(r3));
 		assertEquals(linearSizeRequest(r4), kdTreeSizeRequest(r4));
 		assertEquals(linearSizeRequest(r5), kdTreeSizeRequest(r5));
 		assertEquals(linearSizeRequest(r6), kdTreeSizeRequest(r6));
-		System.out.println(kdTreeSizeRequest(r2)+"");
+		assertEquals(linearSizeRequest(r7), kdTreeSizeRequest(r7));
 	}
 	
 	@Test
@@ -108,10 +105,4 @@ public class KDTreeTest {
 		assertTrue(kdTree.fullyContained(r2.getLeftPoint(), r2.getRightPoint(), r1.getLeftPoint(), r1.getRightPoint()));
 		assertFalse(kdTree.fullyContained(r3.getLeftPoint(), r3.getRightPoint(), r1.getLeftPoint(), r1.getRightPoint()));
 	}
-
-	
-	
-	
-	
-
 }
