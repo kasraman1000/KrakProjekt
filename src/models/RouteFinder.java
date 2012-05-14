@@ -4,6 +4,7 @@
 package models;
 
 import routing.*;
+import errorHandling.*;
 
 /**
  * @author Yndal
@@ -15,19 +16,14 @@ public class RouteFinder {
 	public RouteFinder(KrakEdgeWeightedDigraph graph){
 		this.graph = graph;
 	}
-	public Road[] getRoute(String from, String to, boolean isLengthWeighted){
+
+	
+	public Road[] getRoute(String from, String to, boolean isLengthWeighted) throws ClientInputException{
 		String[] fromAddressArray = AddressParser.parseAddress(from);
 		String[] toAddressArray = AddressParser.parseAddress(to);
 		
-		PathPreface pathPrefaceFrom = null;
-		PathPreface pathPrefaceTo = null;
-		try {
-			pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
-			pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		PathPreface pathPrefaceFrom = EdgeParser.findPreface(fromAddressArray);
+		PathPreface pathPrefaceTo = EdgeParser.findPreface(toAddressArray);
 		
 		Road[] result = getRoute(pathPrefaceFrom, pathPrefaceTo, isLengthWeighted);
 		

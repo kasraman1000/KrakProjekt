@@ -30,20 +30,17 @@ public class JSConnector {
 	}
 
 	/**
-	 * This method listens for a request from the browser and makes a recursive call
-	 * when a request happens
+	 * This method listens for a request from the browser
 	 * 
 	 * @param ss the ServerSocket object that creates the connection
+	 * @throws IOException 
 	 */
-	private void listenForBrowserRequest(ServerSocket ss) {
-		try {
-			Socket s = ss.accept();
-			handleRequest(s);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		listenForBrowserRequest(ss);
-
+	private void listenForBrowserRequest(ServerSocket ss) throws IOException {
+			Socket s;
+			while(true){
+				s = ss.accept();
+				handleRequest(s);
+			}
 	}
 	
 	private void handleRequest(Socket s) {

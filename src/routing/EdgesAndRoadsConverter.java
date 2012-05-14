@@ -5,7 +5,6 @@ package routing;
 
 import models.PathPreface;
 import models.Road;
-import models.RoadStatus;
 
 /**
  * @author Yndal
@@ -277,7 +276,7 @@ public class EdgesAndRoadsConverter {
 		
 		//Convert the array of edges into and array of roads (defined as the road type set to be Route)
 		Road[] routeRoads = new Road[edges.length];
-		int routeType = RoadStatus.getRouteType();
+		int routeType = Road.getRouteType();
 		
 		//Will reset the coordinates, so they can be used for the next search for min and max coordinates
 		resetCoordinateValues();
