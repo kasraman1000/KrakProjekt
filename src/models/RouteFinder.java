@@ -10,12 +10,11 @@ import routing.*;
  *
  */
 public class RouteFinder {
-	KrakEdgeWeightedDigraph graph;
+	private KrakEdgeWeightedDigraph graph;
 	
 	public RouteFinder(KrakEdgeWeightedDigraph graph){
 		this.graph = graph;
 	}
-	
 	public Road[] getRoute(String from, String to, boolean isLengthWeighted){
 		String[] fromAddressArray = AddressParser.parseAddress(from);
 		String[] toAddressArray = AddressParser.parseAddress(to);
@@ -49,13 +48,13 @@ public class RouteFinder {
 
 		
 		//Load the graph into Dijkstra and find the path
-		DijkstraSP dij = new DijkstraSP(Loader.getGraph());
+		DijkstraSP dij = new DijkstraSP(graph);
 		Stack<KrakEdge> routeEdges = dij.findRoute(firstNodeId,  lastNodeId, isLengthWeighted);
 
 		//Convert from stack to []
 		KrakEdge[] routeEdgesArray = EdgesAndRoadsConverter.convertRouteStackToArray(routeEdges);
 		
-		//Correct start and end of [] and do the house number thing 
+		//Correct start and end of [] - and compute the exact length of the first and last road 
 		Road[] route = null;
 		try {
 			route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
