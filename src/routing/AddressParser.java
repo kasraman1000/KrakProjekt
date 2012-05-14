@@ -39,10 +39,10 @@ public class AddressParser {
         }
 
         
-        System.out.println("Parser returned following...");
-        for (int i = 0; i < result.length; i++) {
-        	System.out.println(i + ") " + result[i]);
-        }
+//        System.out.println("Parser returned following...");
+//        for (int i = 0; i < result.length; i++) {
+//        	System.out.println(i + ") " + result[i]);
+//        }
         
         // We're done parsing, let's return the results
         return result;
