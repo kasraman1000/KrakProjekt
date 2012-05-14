@@ -5,12 +5,10 @@ import models.*;
 import views.*;
 
 /**
- * The main controller responsible for program flow
+ * The main controller responsible for the flow of the program
  */
 public class Controller {
-	private static XML xml;
-
-	public static void main(String[] args) {
+		public static void main(String[] args) {
 		Controller.startServer();
 	}
 
@@ -31,7 +29,6 @@ public class Controller {
 		} catch (ServerStartupException e) {
 			ErrorHandler.handleServerStartupException(e);
 		}
-		xml = new XML();
 		double end = System.nanoTime();
 		System.out.println("System up running... (In " + (end-start)/1e9 + " seconds)");
 	}
@@ -56,6 +53,7 @@ public class Controller {
 		Road[] roads = RoadSelector.search(region, bufferPercent);
 		String s = "";
 		try {
+			XML xml = new XML();
 			s = xml.createString(roads, null, region, StatusCode.ALL_WORKING);
 		} catch (ServerRuntimeException e){
 			ErrorHandler.handleServerRuntimeException(e);
@@ -64,18 +62,22 @@ public class Controller {
 		return s;
 	}
 
+
 	/**
-	 * Not yet done...
+	 * Will create a XML String containing all the information of the map and route to be showed
+	 * (plus an extra area for buffer, defined as a parameter). 
+	 * Will also contain informations of what area of the map that will be showed (the viewport)
 	 * 
-	 * @param start
-	 * @param target
-	 * @param isLengthWeighted
-	 * @throws Exception 
+	 * @param fromAddress The address to set as the start
+	 * @param toAddress The address to set as the target
+	 * @param isLengthWeighted Define to get a route weighted by length or travel time
+	 * @param bufferPercent Set how large an area to add at each side (fx. 0.70 == add 70% to each side)
+	 * @return String of the format XML containing the informations of the map data (roads) and the route
 	 */
 	public static String getRoadAndRoute(String fromAddress, String toAddress, boolean isLengthWeighted, double bufferPercent) {
-		double startTime = System.nanoTime();
-
 		RouteFinder routeFinder = new RouteFinder(Loader.getGraph());
+		XML xml = new XML();
+		
 		Road[] route = null;
 		try{
 			route = routeFinder.getRoute(fromAddress, toAddress, isLengthWeighted);
@@ -98,9 +100,6 @@ public class Controller {
 		} catch (ServerRuntimeException e){
 			ErrorHandler.handleServerRuntimeException(e);
 		}
-
-		double endTime = System.nanoTime();
-		System.out.println("Controller.getRoadAndRoute() - Time taken to get route and roads: " + (endTime-startTime)/1e9 + " seconds");
 
 		return xmlString;
 	}

@@ -1,10 +1,12 @@
 package models;
+
+//Java library imports
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//Program packages
 import routing.*;
 import errorHandling.*;
 
@@ -12,16 +14,21 @@ public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
 	private static ArrayList<KrakEdge> edges;
-	
 	private static HashMap<String, Integer> zipCodeMap;
+	
+	//The readers
 	private static In inEdges;
 	private static In inNodes;
+	
 	private static HashMap<Integer, double[]> coordArray;
 	private static HashMap<Integer, Node> nodeList;
+	
+	//Values to reposition the data (to avoid empty "frame" around the map)
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
+	
 	private static long timeMillis;
 
 	static{
