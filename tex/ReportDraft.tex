@@ -293,6 +293,9 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 			Hvorfor er de fejl/bugs i programmet - kan vi fjerne dem?\\
 			Hvad har de af konsekvenser for programmet?\\
 			Hvis vi havde mere tid, hvad ville vi så have brugt den på - fejl/bugs kontra mangler??\\
+			To make the controller able to control when each component of the program builds their individual structure, the loader holds the required data. This is implemented with static fields in the loader, which can not be removed with the garbage collector because the loader has references. This results in excess RAM usage, because these collections keep exsisting. To solve this problem, when the collection is requested, it is set to null. This imposes another problem in a development perspective, because if the getter methods are called again, they will return null.
+
+The process which filters roads in RoadSelector uses a HashSet, which sometimes uses approximately 8 times the usual time to function. This only happens when a very large region is requested and it is not possible to recreate the error reliably. As the error mainly has someting to do with the HashSet, which is implemented by java, we have not looked further into it. We suspect that the root of the problem has something to do with the RAM usage of the program or another interaction between the JVM and the system.
 			
 		\subsection{Results}
 			length : 0.5 side\\
