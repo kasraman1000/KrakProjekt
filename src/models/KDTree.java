@@ -16,17 +16,11 @@ public class KDTree
 	double[] origo;
 	//The biggest coordinates of the map.
 	double[] top;
-	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
 	
-	private KDTree(int k)
+	public KDTree(int k)
 	{
 		this.k = k;
-	}
-	
-	public static KDTree getTree()
-	{
-		return tree;
 	}
 	
 	public KDNode getRoot()
@@ -135,7 +129,7 @@ public class KDTree
 		double[] p2 = region.getRightPoint();
 		//Creating a HashSet to make sure that no road are contained twice.
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
+		searchRange(root, nodes, 0, origo, top, p1, p2);
 
 		return nodes;
 	}
@@ -185,7 +179,7 @@ public class KDTree
 	
 	public void initialize(ArrayList<Node> nodes)
 	{	
-		tree.build(nodes);
+		build(nodes);
 		origo = Road.getOrigo();
 		top = Road.getTop();
 	}
