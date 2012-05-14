@@ -72,13 +72,18 @@ public class KDTreeTest {
 	public void testSearchRegion()
 	{
 		Region r1 = new Region(0, 0, 10000000, 10000000);
-		Region r2 = new Region(10000, 10000, 20000, 20000);
-		Region r3 = new Region(100000, 100000, 300000, 300000);
+		Region r2 = new Region(0, 0, 70000, 90000);
+		Region r3 = new Region(100000, 0, 300000, 300000);
 		Region r4 = new Region(300000, 200000, 310000, 220000);
+		Region r5 = new Region(43750, 42750, 213850, 261450);
+		Region r6 = new Region(77770, 112743, 139006, 191466);
 		assertEquals(linearSizeRequest(r1), kdTreeSizeRequest(r1));
 		assertEquals(linearSizeRequest(r2), kdTreeSizeRequest(r2));
 		assertEquals(linearSizeRequest(r3), kdTreeSizeRequest(r3));
 		assertEquals(linearSizeRequest(r4), kdTreeSizeRequest(r4));
+		assertEquals(linearSizeRequest(r5), kdTreeSizeRequest(r5));
+		assertEquals(linearSizeRequest(r6), kdTreeSizeRequest(r6));
+		System.out.println(kdTreeSizeRequest(r2)+"");
 	}
 	
 	@Test
