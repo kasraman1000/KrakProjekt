@@ -6,8 +6,9 @@
 	\section{Preface}
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
 		Anders Brorup Jørgensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
-		IT-University of Denmark. 
-		\\All work done in the project are well-documented in the following report.
+		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
+		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.\\
+		MAALGRUPPE !! ! 
 	
 	\section{Background and Data}
 		length : 0.5 - 1 side\\
@@ -34,13 +35,14 @@
 		length : 1-3 sider\\
 		Analyse af de krav, som er beskrevet i foregående afsnit\\
 		Hvad skal vi have med i vores program, for at vi kan indfri disse krav?\\
-		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?
+		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
+		hvorfor har vi valgt edges og road objekter istedet for at holde det samlet?
+		
 		
 		\subsection{Thoughts toward design}
 			length : 0.5 side\\
 			Opsummering af foregående afsnit omkring analyse af samt en præcisering af kravene. Men dette afsnit, skal bare bruges som indledning. 
 			\subsubsection{Datastructure}
-				Mark skriver dette for KDtræ datastruktur
 				length : 1 - 2 side\\
 				Hvilke generelle overvejelser er skal der tager i forbindelse med valg af datastruktur? \\
 				Hvor mange har vi brug - hvilke krav er der til hver enkelt?\\
@@ -61,8 +63,6 @@ Two-dimensional range search
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
 
-
-
 				
 			\subsubsection{Algorithms}
 				length : 1 - 2 side\\
@@ -82,7 +82,7 @@ Construction of the kd-tree requires a median finding function, which is used ba
 			Opsummering\\
 			Kan vi indfri vores krav/maal for programmet, ved at bruge de ting, som vi har beskrevet i det her afsnit??\\
 			
-	\section{Implmentation}
+	\section{Implementation}
 		length : 0.5 - 1 side\\
 		Her beskrives kort hvad der kommer til at være i det kommende afsnit..
 		
@@ -94,8 +94,28 @@ Construction of the kd-tree requires a median finding function, which is used ba
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
 			Kort beskrivelse af hver klasse plus deres ansvar\\
+<<<<<<< HEAD
 			KDTree
 			The KDTree class is responsible for creating the data structure and implementing the search algorithm for range searches. The KDTree contains nodes, which are the input and output type. The output from the search function is used by the RoadSelector class. 
+=======
+			
+		\subsection{Errorhandling}
+			A good idea to handle exceptions is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
+			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
+			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
+			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
+			the outside, where and how the an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
+			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
+			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-errors. These types of errors a only errors that can be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors can occur and the level of criticalness, it's clear that they each require different handling. \
+			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass either one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
+			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
+			The advantages of doing it this way, is the overview and the easy way of expanding the system. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then will the controller and errorhandler class take care of the rest. 
+			
+			
+			
+			
+			
+>>>>>>> branch 'part2' of https://markthor@github.com/kasraman1000/KrakProjekt.git
 			
 	\section{Technical Description}
 		length : 0.5 - 1 side\\
@@ -143,6 +163,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		
 	\section{Process description}
 		lenght : 1 - sider\\
+		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the proces has been and what went good and what things that didn't work as good as it should have. \\
+		For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam. The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it has always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\
+		To enhance the collaboration process, we decided on a early state to use somekind of revision control. Both github.org and SVN were on the table as ideas, but we decided to go with Git.  \
+		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found. \
+		
+
+		Tidsplan
+		GIT
+		Meeting structure
+		
 		Hvordan er samarbejdet gaet i gruppen?\
 		Hvad kunne vi goere for at faet et bedre samarbejde?\
 		Hvad/hvilke ting var gode/daarlige i gruppen?\
