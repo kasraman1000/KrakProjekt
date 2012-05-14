@@ -94,10 +94,9 @@ Construction of the kd-tree requires a median finding function, which is used ba
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
 			Kort beskrivelse af hver klasse plus deres ansvar\\
-<<<<<<< HEAD
+
 			KDTree
 			The KDTree class is responsible for creating the data structure and implementing the search algorithm for range searches. The KDTree contains nodes, which are the input and output type. The output from the search function is used by the RoadSelector class. 
-=======
 			
 		\subsection{Errorhandling}
 			A good idea to handle exceptions is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
@@ -111,11 +110,6 @@ Construction of the kd-tree requires a median finding function, which is used ba
 			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
 			The advantages of doing it this way, is the overview and the easy way of expanding the system. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then will the controller and errorhandler class take care of the rest. 
 			
-			
-			
-			
-			
->>>>>>> branch 'part2' of https://markthor@github.com/kasraman1000/KrakProjekt.git
 			
 	\section{Technical Description}
 		length : 0.5 - 1 side\\
