@@ -10,6 +10,7 @@ public class KDTree
 {
 	//Dimensions
 	private int k;
+	
 	private KDNode root;
 	double[] origo;
 	double[] top;
@@ -198,16 +199,6 @@ public class KDTree
 		public String toString()
 		{
 			return "X= " + node.getCoord(0) + " Y= " + node.getCoord(1);
-		}
-
-		public KDNode getLeftChild()
-		{
-			return left;
-		}
-
-		public KDNode getRightChild()
-		{
-			return right;
 		}
 
 		public Node getNode()
