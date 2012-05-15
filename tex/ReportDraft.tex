@@ -10,7 +10,7 @@
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
 	
 	\section{Background and Data}
-		length : 0.5 - 1 side\\
+	
 		For this project we have been given the task of designing and creating a java-written program 
 		for the exam in the course 'First-Year-Project' on 2nd semester in the bachelorprogram. The basic idea of the 
 		program is, that it should use some existing mapdata of Denmark to visualize a map of Denmark and let the user be
@@ -26,28 +26,12 @@
 		\\	- The application should have a logical, consistent and reasonable fast and responsive user interface\\
 		
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore
-		 this map by zooming in and out, and otherwise navigating around. A user should also be able to select two adresses,
+		 this map by zooming in and out, and /*måske skulle man droppe otherwise, da der ikke er tale om et "enten eller"*/otherwise navigating around. A user should also be able to select two adresses,
 		 and get the shortest route between these two points calculated and shown on the map, with the map cut out to a
 		 fitting view of the route.
 	\section{Problemanalysis}
 		\subsection{Requirements}
 		length : 1-3 sider\\
-		To get an understanding of the requirements stated in the previous section, we will run through these, and try to 				analyze what is needed to meet them, and what the different solutions could be. But first, do we have any 					requirements or goals for our own application of such a program? Maybe not that specific, but we have some points of 				focus and some priorities:\\
-		We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not 		try to implement unnecessary features and functionality.\\
-		Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra 		memory or heap-space, that will be the cost.\\
-		The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new 				functionality, or maybe changing one of the data structures, the user interface or the platform\\
-		\\
-		But let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. As we are going to use map data, which includes coordinates, it would be easy to utilize this in the data structure. This could be either a KD-tree or Quad-tree structure\\
-ARGUMENT FOR KD-TRÆ OVER QUAD?\\
-We need to settle on a way to show the roads graphically. There have been some guidelines for us to either use a solution programed completely in Java, or write something for visualizing the map in a web-browser. The Java-solution is more uniform, and would be somewhat easier, as you cut out the connection. This would allow us to focus on implementing extra features, and polishing the program. With a web solution, we would cut of the graphical part of the program, and let the browser handle it. This would force some task on us, like connection and getting the encoding between the browser-client and the java-server right. But it also speaks to some of our own priorities. It will push the heavy data processing to the server. If this was a server for a web-application, space wouldn’t be a big problem, and you could optimize towards speed and making the client quicker. We have chosen to go ahead with a browser solution\\
-To visualize the map in Java, we would use the Swing-libraries. In the browser we could use different solutions. With the new HTML-5 standards, the “canvas”-element in javascript, could be used for the task. This would integrate well with the other features we would implement with javascript. The other possible solution is SVG, Scalable Vector Graphics. These would easily help us with the requirement that our program should scale when resizing the window. We will use SVG, because it is somewhat simpler, and goes well with XML, which we will use to send the map data from the server to the browser. This choice will help us with navigating around the visualization.\\
-Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include rotating the map, or tilting it. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data to zoom in SVG, because it consists of vectors.\\
-We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. To simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind, that you need to show all roads of the same type, you can avoid most of the trouble.\\
-We also need to be able to find the shortest path between points. If this needs to be done quickly, we could do it with a graph data structure, and build a Shortest Path Tree with it, from the first point until we find the second. The problem with this is that it is a different data structure that the one we use for the visualization. But if we argue that this is a web-server, and we prioritize speed over space, this would be the best choice, to have two separate data structures. So we will use a graph. We then need to build the SPT. There are multiple algorithms for doing this, we looked at the A*-algorithm, but do to time constraints we will be using Dijkstras.\\
-The last requirement we were given was about making the user interface logical, consistent and reasonably fast. This fit well with our own priorities, and some of the choices connected to this have already been explained above, and will be specified later.\\
-\\
-
-
 		Analyse af de krav, som er beskrevet i foregående afsnit\\
 		Hvad skal vi have med i vores program, for at vi kan indfri disse krav?\\
 		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
@@ -57,10 +41,7 @@ The last requirement we were given was about making the user interface logical, 
 		
 		\subsection{Thoughts toward design}
 			length : 0.5 side\\
-			Opsummering af foregående afsnit omkring analyse af samt en præcisering af kravene. Men dette afsnit, skal bare bruges som indledning.\\
-
-Continuing on from the former section, we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices specifies in the analysis.\\
-We have already decided that we need two data structures for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data via XML. We also need to think about the user interface design, and how it should support the features of the program.\\
+			Opsummering af foregående afsnit omkring analyse af samt en præcisering af kravene. Men dette afsnit, skal bare bruges som indledning. 
 			\subsubsection{Datastructure}
 				length : 1 - 2 side\\
 				Hvilke generelle overvejelser er skal der tager i forbindelse med valg af datastruktur? \\
@@ -143,7 +124,10 @@ There are to different approaches of showing the route when the user zooms or pa
 			length : 0.5 - 1 side\\
 			Beskrivelse af flowet gennem programmet\\
 			UML/Klasse diagram\\
-			
+		\subsection{UML Diagram}
+		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
+		
+		\includegraphics[width=120mm]{umlArrows.png}
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
 			Kort beskrivelse af hver klasse plus deres ansvar\\

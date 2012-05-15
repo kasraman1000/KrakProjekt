@@ -1,0 +1,152 @@
+<class-diagram version="1.0.4" icons="false" always-add-relationships="false" generalizations="false" 
+  realizations="false" associations="false" dependencies="false" nesting-relationships="false">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="controllers.Controller" project="kf04" 
+    file="/kf04/src/controllers/Controller.java" binary="false">    
+    <position height="-1" width="-1" x="251" y="199"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="views.JSConnector" project="kf04" 
+    file="/kf04/src/views/JSConnector.java" binary="false">    
+    <position height="-1" width="-1" x="60" y="47"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="models.Loader" project="kf04" 
+    file="/kf04/src/models/Loader.java" binary="false">    
+    <position height="-1" width="-1" x="510" y="86"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="models.KDTree" project="kf04" 
+    file="/kf04/src/models/KDTree.java" binary="false">    
+    <position height="-1" width="-1" x="479" y="277"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="models.KDTree.KDNode" project="kf04" 
+    file="/kf04/src/models/KDTree.java" binary="false">    
+    <position height="-1" width="-1" x="585" y="363"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="models.Node" project="kf04" 
+    file="/kf04/src/models/Node.java" binary="false">    
+    <position height="-1" width="-1" x="182" y="637"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="models.PathPreface" project="kf04" 
+    file="/kf04/src/models/PathPreface.java" binary="false">    
+    <position height="-1" width="-1" x="176" y="491"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="models.Region" project="kf04" 
+    file="/kf04/src/models/Region.java" binary="false">    
+    <position height="-1" width="-1" x="585" y="243"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="models.Road" project="kf04" 
+    file="/kf04/src/models/Road.java" binary="false">    
+    <position height="-1" width="-1" x="300" y="638"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="models.RoadSelector" project="kf04" 
+    file="/kf04/src/models/RoadSelector.java" binary="false">    
+    <position height="-1" width="-1" x="372" y="275"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="models.RouteFinder" project="kf04" 
+    file="/kf04/src/models/RouteFinder.java" binary="false">    
+    <position height="-1" width="-1" x="248" y="372"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="models.XML" project="kf04" file="/kf04/src/models/XML.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="85" y="224"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" name="errorHandling.ErrorHandler" project="kf04" 
+    file="/kf04/src/errorHandling/ErrorHandler.java" binary="false">    
+    <position height="-1" width="-1" x="268" y="71"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="14" corner="BOTTOM_RIGHT" language="java" name="routing.AddressParser" project="kf04" 
+    file="/kf04/src/routing/AddressParser.java" binary="false">    
+    <position height="-1" width="-1" x="290" y="477"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="15" corner="BOTTOM_RIGHT" language="java" name="routing.EdgeParser" project="kf04" 
+    file="/kf04/src/routing/EdgeParser.java" binary="false">    
+    <position height="-1" width="-1" x="62" y="483"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="16" corner="BOTTOM_RIGHT" language="java" name="routing.EdgesAndRoadsConverter" project="kf04" 
+    file="/kf04/src/routing/EdgesAndRoadsConverter.java" binary="false">    
+    <position height="-1" width="-1" x="450" y="477"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="17" corner="BOTTOM_RIGHT" language="java" name="routing.KrakEdge" project="kf04" 
+    file="/kf04/src/routing/KrakEdge.java" binary="false">    
+    <position height="-1" width="-1" x="57" y="635"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="18" corner="BOTTOM_RIGHT" language="java" name="routing.DijkstraSP" project="kf04" 
+    file="/kf04/src/routing/DijkstraSP.java" binary="false">    
+    <position height="-1" width="-1" x="595" y="483"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <classifier-display autosize="true" package="false" initial-value="false" signature="false" visibility="false">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="true" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
