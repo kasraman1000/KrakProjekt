@@ -141,28 +141,36 @@
 		to the SVG frame. 
 	 */
 	function clickUp() {
-		if (yView1 < y1SurData)
+		if (yView1 < y1SurData){
 			getXML();
+		}else{
 		moveViewBox(0, -panningDistanceVert);
+		}
 
 	}
 
 	function clickDown() {
-		if (yView2 > y2SurData)
+		if (yView2 > y2SurData){
 			getXML();
+		}else{
 		moveViewBox(0, panningDistanceVert);
+		}
 	}
 
 	function clickRight() {
-		if (xView2 > x2SurData)
+		if (xView2 > x2SurData){
 			getXML();
-		moveViewBox(panningDistanceHor, 0);
+		}else{
+			moveViewBox(panningDistanceHor, 0);
+		}
 	}
 
 	function clickLeft() {
-		if (xView1 < x1SurData)
+		if (xView1 < x1SurData){
 			getXML();
+		}else{
 		moveViewBox(-panningDistanceHor, 0);
+		}
 	}
 	/*
 		Here are the new koordinates of the viewbox added and
