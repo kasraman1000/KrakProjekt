@@ -73,10 +73,7 @@ Construction of the kd-tree requires a median finding function, which is used ba
 				Alternativer?\\
 								
 			\subsubsection{User Interface}
-				length : 1 - 2 side\\
-				Hvilke krav har vi til brugerfladen??\\
-				Hvorfor bruger vi JS/Browser og ikke java Swing??\\
-				
+
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
 
 The requirement for the user interface is formulated in the project description as follows: "Design a coherent user interface, which includes the map, but probably also other components". To fulfull this requirement we have to first of all select a technology to show graphical data for the user. In our case there are two obvious options. The first one is to use Swing and the other one is to make a browser based solution. In the following we will discuss both solutions.
@@ -276,10 +273,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 
 		
 	\section{User Manual}
-		length : 0.5 - 1\\
-		Er der noget brugeren skal goere for at programmet kan koere? - koder, filer, plugin?\\
-		Hvilken browser skal der bruges?\\
-		Hvordan skal brugeren koere programmet?\\
+		\paragraph{Starting the Program}\mbox{}\
+
+		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
+		\paragraph{Using the Program}\mbox{}\
+		
+		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\
+		\mbox{}\
+		
+		\includegraphics[width=110mm]{screendump.png}
+		
 		
 	\section{Testing}
 		length : 0.5 - 1 side\\
