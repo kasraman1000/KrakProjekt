@@ -6,12 +6,13 @@ import views.*;
 
 /**
  * The main controller responsible for the flow of the program
+ * 
+ * @author Group 1, B-SWU, 2012E
  */
 public class Controller {
 		public static void main(String[] args) {
 		Controller.startServer();
 	}
-
 
 	static{
 		double start = System.nanoTime();

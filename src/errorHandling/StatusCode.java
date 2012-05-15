@@ -1,11 +1,11 @@
-/**
- * 
- */
 package errorHandling;
 
 /**
- * @author Yndal
- *
+ * An Enum to contain all the different status codes of this program.
+ * This will describe what went wrong and give the possibility to
+ * sent an error code to the client or a local log. 
+ * 
+ * @author Group 1, B-SWU, 2012E
  */
 public enum StatusCode {
 	ALL_WORKING(0, "Everything is running fine"),

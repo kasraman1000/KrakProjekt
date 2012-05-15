@@ -11,24 +11,26 @@ import errorHandling.NoSuchAddressException;
 import errorHandling.NoSuchRoadnameException;
 import errorHandling.ServerStartupException;
 
-//TODO: City name recognition
+
 /**
  * Finds the directed edges associated with roadname/number/cityname/zipcode
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class EdgeParser {
-
 	private static HashMap<String, Bag<KrakEdge>> edgeMap = new HashMap<String, Bag<KrakEdge>>();
 	private static HashMap<String, Integer> zipCodeMap;
 
 	/**
 	 * Builds up the structure for finding directed edges
+	 * 
 	 * @param edges All directed edges for navigation
 	 */
 	public static void build(ArrayList<KrakEdge> edges)
 	{
 		for(KrakEdge e : edges){
 			String roadName = e.getName().toLowerCase();
-			//System.out.println(roadName + ",\t" + roadName.hashCode());
 
 			if (edgeMap.containsKey(roadName)) {
 				edgeMap.get(roadName).add(e); // Add this edge under the roadname
@@ -45,7 +47,8 @@ public class EdgeParser {
 	}
 
 	/**
-	 * Finds the KrakEdge corresponding to a stringArray of address search parameters 
+	 * Finds the KrakEdge corresponding to a stringArray of address search parameters
+	 *  
 	 * @param address The string array returned from AddressParser.parse()
 	 * @return A PathPreface with the corresponding KrakEdges
 	 */
@@ -94,15 +97,6 @@ public class EdgeParser {
 					results.add(ke);
 			}
 
-
-						System.out.println("Bag.size(): " + edgeMap.get(address[0].toLowerCase()).size());
-						System.out.println("Results.size(): " + results.size());
-						System.out.println("Results: ");
-
-			Iterator<KrakEdge> i = results.iterator();
-			while (i.hasNext()) 
-				System.out.println(i.next());
-
 			// Build the PathPreface object
 			if (!results.isEmpty()) {
 				KrakEdge k1 = results.remove(0);
@@ -116,12 +110,10 @@ public class EdgeParser {
 			}
 
 			else{
-				System.out.println("EdgeParser.findPreface() - No result found");
 				throw new NoSuchAddressException(); // if no result is found
 			}
 		}
 		else{
-			System.out.println("EdgeParser.findPreface() - Roadname doesn't match");
 			throw new NoSuchRoadnameException(address[0]); // if roadname doesn't match
 		}
 	}

@@ -1,18 +1,19 @@
 package models;
 
-import java.awt.Point;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * Class responsible for picking out roads to show
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class RoadSelector {
-
-
+	//Set the maximum amount of roads to be showed at once (beside a route)
 	private static final int MAX_ROADS = 20000;
+	
 	private static KDTree kdTree = KDTree.getTree();
 
 	
@@ -27,13 +28,8 @@ public class RoadSelector {
 		//Create a new region that is a copy to prevent addBuffer from making changes to the object.
 		Region copyRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
 		copyRegion.addBuffer(bufferPercent);
-		double[] p1 = copyRegion.getLeftPoint();
-		double[] p2 = copyRegion.getRightPoint();
+
 		//Choosing filter dependent on the width of the viewport
-
-		System.out.println("Searching region: x1: " + p1[0] + " y1: " + p1[1] + " x2: " + p2[0] + " y2: " + p2[1]);
-
-		
 		time = System.nanoTime();
 		ArrayList<Node> nodes = kdTree.searchRange(copyRegion);
 		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
@@ -61,12 +57,19 @@ public class RoadSelector {
 	 * @param p2 x and y coordinates for the other point
 	 * @return All roads within the rectangle, which are relevant to display
 	 */
-	
 	public static void initialize(ArrayList<Node> nodes)
 	{
 		kdTree.initialize(nodes);
 	}
 
+	/**
+	 * Add up till the maximum amount of roads (depending on their priority)
+	 * and return them
+	 * 
+	 * @param roads The roads to be sorted through
+	 * @param max The maximum amount of roads
+	 * @return The roads as an ArrayList of Roads
+	 */
 	private static ArrayList<Road> filter(Collection<Road> roads, int max)
 	{
 		ArrayList<Road> result = new ArrayList<Road>();
@@ -83,12 +86,8 @@ public class RoadSelector {
 			}
 			level--;
 
-		//	System.out.println("Roads totalat current level: " + result.size());
-		//	System.out.println("Roads at next level (" + level + "): " + nextLevelRoads);
-
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
 		return result;
-
 	}
 	
 	/**
@@ -125,5 +124,4 @@ public class RoadSelector {
 		else
 			return true;
 	}
-	
 }

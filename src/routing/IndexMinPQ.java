@@ -2,6 +2,10 @@ package routing;
 
 
 /*************************************************************************
+ * THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! THERE HAS BEEN NO MODIFICATIONS AT ALL
+ * IN THIS CLASS
+ *  
  *  Compilation:  javac IndexMinPQ.java
  *  Execution:    java IndexMinPQ
  *

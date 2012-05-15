@@ -30,6 +30,10 @@ import java.util.Scanner;
 
 
 /**
+ * THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! THERE HAS BEEN NO MODIFICATIONS AT ALL
+ * IN THIS CLASS!
+ * 
  *  <i>Input</i>. This class provides methods for reading strings
  *  and numbers from standard input, file input, URL, and socket.
  *  <p>

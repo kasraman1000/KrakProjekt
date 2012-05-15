@@ -10,7 +10,7 @@ public abstract class ServerRuntimeException extends Exception {
 	
 	abstract StatusCode getStatusCode();
 	
-	public Exception geException(){
+	public Exception getException(){
 		return e;
 	}
 	

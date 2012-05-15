@@ -12,6 +12,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
+ * 
+ * THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! THERE HAS BEEN NO MODIFICATIONS AT ALL
+ * IN THIS CLASS
+ * 
+ * 
  *  The <tt>Bag</tt> class represents a bag (or multiset) of 
  *  generic items. It supports insertion and iterating over the 
  *  items in arbitrary order.

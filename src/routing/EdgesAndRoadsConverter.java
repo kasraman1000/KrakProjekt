@@ -7,14 +7,23 @@ import models.PathPreface;
 import models.Road;
 
 /**
- * @author Yndal
+ * This is a helper class for when the route has been found:
+ * It is able to convert a Stack into an [], but most 
+ * importantly it makes sure that the start and end of the route
+ * is the right ones. When this is done it will trim the first and 
+ * last edge to start/end by the house number
+ * 
+ * @author Group 1, B-SWU, 2012E
  *
  */
 public class EdgesAndRoadsConverter {
+	//Values that we know for sure is higher than the ones from the data set
 	private static final double RESET_XMIN;
 	private static final double RESET_YMIN;
 	private static final double RESET_XMAX;
 	private static final double RESET_YMAX;
+	
+	//Values for route's coordinates
 	private static double xMin;
 	private static double yMin;
 	private static double xMax;
@@ -27,6 +36,9 @@ public class EdgesAndRoadsConverter {
 		RESET_YMAX = 0;
 	}
 
+	/**
+	 * Clears the values found previous
+	 */
 	private static void resetCoordinateValues(){
 		xMin = RESET_XMIN;
 		yMin = RESET_YMIN;
@@ -34,14 +46,21 @@ public class EdgesAndRoadsConverter {
 		yMax = RESET_YMAX;
 	}
 
+	/**
+	 * Will cut the edge into a smaller edge, deciding by the house number
+	 * 
+	 * @param edge The edge to be cut
+	 * @param firstEdge Tells what part of the edge to keep
+	 * @param houseNumber Where the house is located at the edge
+	 * @return A new edge that may be smaller than the one original
+	 */
 	private static KrakEdge divideKrakEdge(KrakEdge edge, boolean firstEdge, int houseNumber) {
-		//The new values
-		if(edge == null) System.out.println("EdgesAndRoadsConverter.divideKrakEdge() - Edge is null");
+		//Values that will not be changed
 		String name = edge.getName();
-		int vPost = edge.getvPost(); //TODO May not be true
-		int hPost = edge.gethPost(); //TODO May not be true
+		int vPost = edge.getvPost();
+		int hPost = edge.gethPost();
 		
-		//Not defined yet
+		//Values that are to be computed
 		int from;
 		int to;
 		double length;
@@ -117,6 +136,7 @@ public class EdgesAndRoadsConverter {
 	/**
 	 * Checking if two doubles is bigger than the maximum x or y value or smaller than the minimum x or y value
 	 * If it is, the maximum or minimum is updated.
+	 * 
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
@@ -127,12 +147,13 @@ public class EdgesAndRoadsConverter {
 		if(y > yMax) yMax = y;
 	}
 
-
-
-
-
-
-
+	/**
+	 * Will compare two edges.
+	 * 
+	 * @param firstEdge The edge to compare
+	 * @param secondEdge The edge to be compared to
+	 * @return Tells if the two edges are equal
+	 */
 	private static boolean edgesAreEqual(KrakEdge firstEdge, KrakEdge secondEdge){
 		//Test if both are null have already been checked in chachkStartAndTargetOfDijsktra() in this class
 		if(firstEdge == null || secondEdge == null) return false;
@@ -168,6 +189,7 @@ public class EdgesAndRoadsConverter {
 		
 		//Time
 		if(firstEdge.getTime() != secondEdge.getTime()){
+			//TODO Is it even possible to reach this?
 			System.err.println("EdgesAndRoadsConverter.edgesAreEqual() - two roads have been tested equal! :O)");
 			return true;
 		}
@@ -176,11 +198,12 @@ public class EdgesAndRoadsConverter {
 	}
 
 
-
-
-
-
-
+	/**
+	 * Can convert a Stack to an KrakEdge[]
+	 * 
+	 * @param routeEdges The stack to be converted
+	 * @return The new KrakEdge[]
+	 */
 	public static KrakEdge[] convertRouteStackToArray(Stack<KrakEdge> routeEdges) {
 		KrakEdge[] routeRoads = new KrakEdge[routeEdges.size()]; 
 		
@@ -191,14 +214,19 @@ public class EdgesAndRoadsConverter {
 		return routeRoads;
 	}
 
-
-
-
-
-
-
+	/**
+	 * Will make sure the correct start/end-edge is set.
+	 * 
+	 * @param routeEdges The route found from one node to another
+	 * @param pathPrefaceFrom The edges and house number where to start the route
+	 * @param pathPrefaceTo The edges and house number where to end the route
+	 * @return The precise route with the correct start and ending point
+	 */
 	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) throws Exception{
 		//Both edges at the Start or Target can't be null! There must be at least one valid value!
+		//TODO
+		//TODO
+		//TODO
 		if(pathPrefaceFrom.getEdge1() == null && pathPrefaceFrom.getEdge2() == null) throw new Exception();
 		if(pathPrefaceTo.getEdge1() == null && pathPrefaceTo.getEdge2() == null) throw new Exception();
 		
@@ -260,7 +288,16 @@ public class EdgesAndRoadsConverter {
 		return changeFirstAndLastEdgeToHouseNumber(newEdges, pathPrefaceFrom, pathPrefaceTo);
 	}
 	
-		
+	
+	/**
+	 * Uses some of the other methods in this class to cut some of the first and last
+	 * edge off to let the route start and stop by the house number instead of a node
+	 * 
+	 * @param edges The route
+	 * @param p1 The correct edge to start the route
+	 * @param p2 The correct edge to end the route
+	 * @return The route that has been cut off to fit the house numbers
+	 */
 	private static Road[] changeFirstAndLastEdgeToHouseNumber(KrakEdge[] edges, PathPreface p1, PathPreface p2){
 		
 		/**
@@ -271,8 +308,6 @@ public class EdgesAndRoadsConverter {
 		//Cut of some of the starting and ending edge
 		edges[0] = divideKrakEdge(edges[0], true, p1.getHouseNumber());
 		edges[edges.length-1] = divideKrakEdge(edges[edges.length-1], false, p2.getHouseNumber());
-		
-		
 		
 		//Convert the array of edges into and array of roads (defined as the road type set to be Route)
 		Road[] routeRoads = new Road[edges.length];

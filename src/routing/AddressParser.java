@@ -6,10 +6,19 @@ import java.util.regex.PatternSyntaxException;
 
 import errorHandling.*;
 
+/**
+ * This class is used for for dividing a String, which holds an address,
+ * into a String[] where each part of the address is set into each String.
+ * Fx. the street name as the first String, house number as the second, aso.
+ * 
+ * @author Group 1, B-SWU, 2012E
+ *
+ */
+
 public class AddressParser {
 	
     /**
-     * Parses a string and returns an array containing:
+     * Parses a String and returns an array containing:
      * 
      * 0: street name
      * 1: house number
@@ -38,18 +47,12 @@ public class AddressParser {
         	throw new AddressInputFormatException();
         }
 
-        
-        System.out.println("Parser returned following...");
-        for (int i = 0; i < result.length; i++) {
-        	System.out.println(i + ") " + result[i]);
-        }
-        
         // We're done parsing, let's return the results
         return result;
     }
     
     /**
-     * Searches input string for road name
+     * Searches input String for road name
      */
     private static void findRoadName(String s, String[] result) throws PatternSyntaxException{
         Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZæøåÆØÅüÜ'\\s]+\\b");
@@ -61,7 +64,7 @@ public class AddressParser {
     }
     
     /**
-     * Searches input string for city name
+     * Searches input String for city name
      */
     private static void findCityName(String s, String[] result) throws PatternSyntaxException{
         Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZæøåÆØÅüÜ\\s]+\\z");
@@ -82,13 +85,13 @@ public class AddressParser {
             }
         }
         
-        // Call findHouseLetter in here, becase it needs the Matcher-object 
+        // Call findHouseLetter in here, because it needs the Matcher-object 
         // from this method for comparisons
         findHouseLetter(s, result, cityNameMatcher);
     }
     
     /**
-     * Searches input string for zipcode
+     * Searches input String for zipcode
      */
     private static void findZipcode(String s, String[] result) throws PatternSyntaxException{
         Pattern zipcodePattern = Pattern.compile("\\b[1-9]\\d{3}\\b");
@@ -99,7 +102,7 @@ public class AddressParser {
     }
     
     /**
-     * Searches input string for House number, and if a letter is attached 
+     * Searches input String for house number, and if a letter is attached 
      * to the number, it will include that as a house letter as well. 
      */
     private static void findHouseNumber(String s, String[] result) throws PatternSyntaxException{
@@ -125,8 +128,8 @@ public class AddressParser {
     }
     
     /**
-     * Searches input string for House letter.
-     * Uses the cityNameMatcher to compare wether the letter found isn't
+     * Searches input String for house letter.
+     * Uses the cityNameMatcher to compare whether the letter found isn't
      * already a part of the city name
      */
     private static void findHouseLetter(String s, String[] result, Matcher cityNameMatcher) throws PatternSyntaxException{

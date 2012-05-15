@@ -21,7 +21,7 @@ public class JSConnector {
 	 */
 	public JSConnector(){
 		try {
-			//the parameter in ServerSocket is 80 because that is the default port for localhost
+			//The server will listen for requests at port 8080
 			ServerSocket ss = new ServerSocket(8080);
 			listenForBrowserRequest(ss);
 		} catch (IOException e) {
@@ -36,19 +36,24 @@ public class JSConnector {
 	 * @throws IOException 
 	 */
 	private void listenForBrowserRequest(ServerSocket ss) throws IOException {
-			Socket s;
-			while(true){
-				s = ss.accept();
-				handleRequest(s);
-			}
+		Socket s;
+		while(true){
+			s = ss.accept();
+			handleRequest(s);
+		}
 	}
 	
+	/**
+	 * Converst the request to data types and calls for a xml-String from the Controller
+	 * 
+	 * @param s The socket to handle the request from
+	 */
 	private void handleRequest(Socket s) {
 		BufferedReader input;
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			HashMap<String,String> parameters = readParameters(input.readLine());
-//			System.out.println("js - handleRequest(): " + parameters.get("x1"));
+
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
 			Double x2 = Double.valueOf(parameters.get("x2"));
@@ -57,19 +62,15 @@ public class JSConnector {
 			String to = parameters.get("to");
 			Boolean isDistance = Boolean.valueOf(parameters.get("isDistance"));
 			double bufferPercent = Double.valueOf(parameters.get("bufferPercent"));
+			
 			String response = "";
+			
 			//if "from" is null then the client is not asking for routeplanning but only mapdata
 			if(from == null){
 				response = Controller.getXmlString(new Region(x1,y1,x2,y2), bufferPercent);
 			}else{
 				response = Controller.getRoadAndRoute(from, to, isDistance, bufferPercent);
-				//TODO method that asks for mapdata and routeplanning
 			}
-			//TODO only for testing
-//			response = XmlFhje.getTestXML();
-			
-			System.err.println("HandleRequest done");
-//			System.out.println(response);
 			
 			sendResponseToBrowser(s,response);
 		} catch (IOException e) {
@@ -78,14 +79,14 @@ public class JSConnector {
 	}
 
 	/**
+	 * Sends to response to the browser through the socket
 	 * 
 	 * @param s the socket that contains the outputstream
-	 * @param response 
+	 * @param response What will be sent to to the browser
 	 */
 	private void sendResponseToBrowser(Socket s, String response) {
 		try {
 			DataOutputStream output = new DataOutputStream(s.getOutputStream());
-//			String xmlString = "<g><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"0\" style=\"stroke:black;stroke-width:5\" /><line x1=\"400\" y1=\"200\" x2=\"0\" y2=\"400\" style=\"stroke:yellow;stroke-width:5\"/></g>";
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
 			String httpResponse = httpHeader + response;
 			output.write(httpResponse.getBytes());
@@ -95,7 +96,6 @@ public class JSConnector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -112,19 +112,16 @@ public class JSConnector {
 		} catch(Exception e) {
 			 System.err.println("JSConnector.readParameters() - linie 117 EXCEPTION  " + e);
 		}
-		System.out.println("JSconnector.ReadParameters - line: " + line);
 		HashMap<String,String> result = new HashMap<String,String>();
-//		if(!hasParameters(line)) return result;
+		
 		//discards everything before the questionmark
 		line = line.split("\\?")[1];
-		//discards everything after the space
+
+		//discards everything after the space and "HTTP"
 		line = line.split(" HTTP")[0];
 		String[] lines = line.split("&");
-//		System.out.println("JSConnector.readParameters()");
 		for(String pair : lines){
 			String[] pairArray = pair.split("=");
-
-//			System.out.println(pairArray[0] + ": " + pairArray[1]);
 			result.put(pairArray[0], pairArray[1]);
 		}
 		return result;
