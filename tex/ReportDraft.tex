@@ -163,6 +163,12 @@ Since the program, at this point, is rather simple it only contains of a few met
 				
 				\paragraph{Loader}\mbox{}\
 				
+The overall purpose of the Loader class is to load the Krak data from a textfile and on the basis of the textfile it creates four different datastructures: a list of nodes used to build the KDTree datastructure, a graph to be used by the DijkstraSP class to find the shortes route, a list of edges to be used by the EdgeParser class to translate a user-typed address to an Edges object and the last datastructure it creates is a map of zip codes which is also used by the EdgeParser class. In addition to loading the textfile and making datastructures the Loader class is also responsible of repositioning the nodes' coordinates so that the upper left corner of the map is located in 0,0.
+
+In the following we will describe the class in details. The first text file to be read is the node file. Each line is read one at a time and for every line a node is stored in a collection. The class iterates through the collection and finds minimum and maximum for x and y values. After that the class iterates one more time through the collection and calculates a new x and y value.  
+
+When the node file have been read the class continues and reads the edge file. This file is also read one line at a time and for each line a KrakEdge and a Road object is created. The KrakEdge gets all the properties from the file and it gets a x and y value from the matching nodes. The Road object is being referenced to the matching nodes so that the KDTree class later on will be able to return the appropriate map section. The last thing that happens in the Loader class is that the KrakEdgeWeightedDigraph class is being instantiated and all the edges read from the text file are being added to that object. 
+
 				\paragraph{Node}\mbox{}\
 				
 				This data class is an representation of geographical points which are connected to eachother with road segments(edges??). These Node objects are constructed(Which class?) using the data in the supplied Krak data files. 
