@@ -5,11 +5,11 @@ package routing;
 
 
 
-
-//Below is the syntax highlighted version of DirectedEdge.java from § Algorithms.   Here is the Javadoc.
-
-
 /*************************************************************************
+ *  THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! THERE HAS BEEN MASSIVE CHANGES TO MAKE
+ * IT FIT OUR NEEDS - MOST OF THE CLASS HAS BEEN CHANGED/EDITED
+ *  
  *  Compilation:  javac DirectedEdge.java
  *  Execution:    java DirectedEdge
  *
@@ -42,12 +42,12 @@ public class KrakEdge {
     
    /**
      * Create a directed edge from v to w with given weight.
- * @param hToHouseNumber 
- * @param hFromHouseNumber 
- * @param vToHouseNumber 
- * @param vFromHouseNumber 
- * @param hPost 
- * @param vPost 
+	 * @param hToHouseNumber 
+	 * @param hFromHouseNumber 
+	 * @param vToHouseNumber 
+	 * @param vFromHouseNumber 
+	 * @param hPost 
+	 * @param vPost 
      */
     public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, 
     		int vPost, int hPost, int vFromHouseNumber, int vToHouseNumber, int hFromHouseNumber, int hToHouseNumber){
@@ -91,11 +91,18 @@ public class KrakEdge {
     	return name;
     }
     
-    
+    /**
+     * The length of the edge
+     * @return length
+     */
     public double getLength(){
     	return length;
     }
     
+    /**
+     * The time to get from one end of the edge to the other (in minutes)
+     * @return time
+     */
     public double getTime(){
     	return time;
     }
@@ -114,7 +121,9 @@ public class KrakEdge {
     /**
      * Return the time of this edge
      */
-    public double time(){ return time; }
+    public double time(){ 
+    	return time; 
+    }
 
     /**
      * Tells whether the length or traveltime of the edges are used as weight

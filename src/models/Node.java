@@ -2,9 +2,10 @@ package models;
 import java.util.HashSet;
 
 /**
- * Node, points loaded in from kdv_node_unload.txt
- * these points are connected to eachother with 
- * road objects (from kdv_unload.txt)
+ * Node that represents an end of a road object
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class Node {
 	public final double[] coords;
@@ -15,6 +16,10 @@ public class Node {
 		roads = new HashSet<Road>();
 	}
 		
+	/**
+	 * Add the Road r to this Node
+	 * @param r Road to be added
+	 */
 	public void addRoad(Road r) {
 		roads.add(r);
 	}

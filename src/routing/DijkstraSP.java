@@ -5,6 +5,11 @@ package routing;
 
 
 /*************************************************************************
+ * THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! WE HAVE MADE A FEW CHANGES IN THIS
+ * TO MAKE IT FIT OUR NEEDS.
+ * 
+ * 
  *  Compilation:  javac DijkstraSP.java
  *  Execution:    java DijkstraSP input.txt s
  *  Dependencies: EdgeWeightedDigraph.java IndexMinPQ.java Stack.java DirectedEdge.java
@@ -83,7 +88,7 @@ public class DijkstraSP {
             for (KrakEdge e : G.adj(v)){
             	relax(e);
             	if(e.to() == t){
-            		return;//All necessary data found
+            		return;//All necessary data found for this specific route
             	}
             }
         }
@@ -169,38 +174,4 @@ public class DijkstraSP {
         
         return true;
     }
-    
-    
-  
-//    public void setWeight(boolean lengthWeighted){
-//    	pq..minKey().
-//    }
-
-
-//    public static void main(String[] args) {
-//        In in = new In(args[0]);
-//        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-//        int s = Integer.parseInt(args[1]);
-//
-//        // compute shortest paths
-//        DijkstraSP sp = new DijkstraSP(G, s);
-//
-//
-//        // print shortest path
-//        for (int t = 0; t < G.V(); t++) {
-//            if (sp.hasPathTo(t)) {
-//                StdOut.printf("%d to %d (%.2f)  ", s, t, sp.distTo(t));
-//                if (sp.hasPathTo(t)) {
-//                    for (DirectedEdge e : sp.pathTo(t)) {
-//                        StdOut.print(e + "   ");
-//                    }
-//                }
-//                StdOut.println();
-//            }
-//            else {
-//                StdOut.printf("%d to %d         no path\n", s, t);
-//            }
-//        }
-//    }
-
 }

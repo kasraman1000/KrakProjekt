@@ -5,6 +5,10 @@ package routing;
 
 
 /*************************************************************************
+ * THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ * THE "BADS" COURSE! THERE HAS ONLY BEEN MINOR MODIFICATIONS
+ * IN THIS CLASS
+ * 
  *  Compilation:  javac EdgeWeightedDigraph.java
  *  Execution:    java EdgeWeightedDigraph V E
  *  Dependencies: Bag.java DirectedEdge.java
@@ -43,21 +47,6 @@ public class KrakEdgeWeightedDigraph {
         for (int v = 0; v < V; v++)
             adj[v] = new Bag<KrakEdge>();
     }
-
-//   /**
-//     * Create a edge-weighted digraph with V vertices and E edges.
-//     */
-//    public EdgeWeightedDigraph(int V, int E) {
-//        this(V);
-//        if (E < 0) throw new RuntimeException("Number of edges must be nonnegative");
-//        for (int i = 0; i < E; i++) {
-//            int v = (int) (Math.random() * V);
-//            int w = (int) (Math.random() * V);
-//            double weight = Math.round(100 * Math.random()) / 100.0;
-//            DirectedEdge e = new DirectedEdge(v, w, weight);
-//            addEdge(e);
-//        }
-//    }
 
     /**
      * Copy constructor.
@@ -149,33 +138,4 @@ public class KrakEdgeWeightedDigraph {
         }
         return s.toString();
     }
-    
-//    /**
-//     * Choose between the edges should be weighted by their length or travel time
-//     * @param isLengthWeighted True (length weighted) or false (time weighted) 
-//     */
-//    public void setWeight(boolean isLengthWeighted){
-////    	(routing.DirectedEdge) DirectedEdge.
-//    	DirectedEdge.setWeight(isLengthWeighted);
-//    }
-//    
-//    /**
-//     * Tells if the edges are weighted by their length or travel time
-//     * @return True if length weighted and false if time weighted
-//     */
-//    public boolean isLengthWeighted(){
-//    	return DirectedEdge.isLengthWeighted();
-//    }
-    
-    
-
-//    /**
-//     * Test client.
-//     */
-//    public static void main(String[] args) {
-//        In in = new In(args[0]);
-//        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-//        StdOut.println(G);
-//    }
-
 }

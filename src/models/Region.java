@@ -1,18 +1,26 @@
 package models;
 
 /**
- * A square region comprised of two points in 2d space
+ * A square region comprised of two points in 2-dimensional space
  * The two points are in opposite corners of a square shape
  * (2 x 2 doubleArrays)
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class Region {
-	private final double ratio;
 	private double[] p1 = new double[2];
 	private double[] p2 = new double[2];
 	
+	/**
+	 * The Constructor
+	 * @param x1 X coordinate of the first point
+	 * @param y1 Y coordinate of the first point
+	 * @param x2 X coordinate of the last point
+	 * @param y2 Y coordinate of the last point
+	 */
 	public Region(double x1,double y1,double x2,double y2)
 	{
-		ratio = 16/9; //To fit a screen
 		p1[0] = x1;
 		p1[1] = y1;
 		p2[0] = x2;
@@ -70,8 +78,6 @@ public class Region {
 		p2[0] = p2[0] + xBuffer;
 		p1[1] = p1[1] - yBuffer;
 		p2[1] = p2[1] + yBuffer;
-		
-		
 	}
 
 	/**

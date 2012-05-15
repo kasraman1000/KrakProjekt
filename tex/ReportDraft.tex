@@ -59,7 +59,8 @@ The type of data to be stored, should be considered as much as the data structur
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree(discussed later in this chapter) more shallow, and therefore faster. 
 The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering. Also one of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
 
-Algorithms
+\paragraph{Algorithms}\mbox{}\
+
 Two-dimensional range search
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
@@ -81,27 +82,35 @@ Construction of the kd-tree requires a median finding function, which is used ba
 
 The requirement for the user interface is formulated in the project description as follows: "Design a coherent user interface, which includes the map, but probably also other components". To fulfull this requirement we have to first of all select a technology to show graphical data for the user. In our case there are two obvious options. The first one is to use Swing and the other one is to make a browser based solution. In the following we will discuss both solutions.
 
-\paragraph{Swing Solution}
+\paragraph{Swing Solution}\mbox{}\
+
 We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
-\paragraph{Browser solution}
+\paragraph{Browser solution}\mbox{}\
+
 For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, xml and svg, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different svg commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
 Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
 
-\paragraph{Features}
+\paragraph{Features}\mbox{}\
+
 The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
-\paragraph{Road displaying}
+
+\paragraph{Road displaying}\mbox{}\
+
 To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and svg. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
  
-\paragraph{Scalable Map}
+\paragraph{Scalable Map}\mbox{}\
+
 The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
 
-\paragraph{Zoom and Panning}
+\paragraph{Zoom and Panning}\mbox{}\
+
 When discussing zoom and panning there are two aspects. The first one is to consider how much extra data should be passed from the server to the browser. We have chosen to call that extra data for buffer data. When choosing the amount of buffer data there are two extremes. The first one is to let the browser request exactly that amount of data that the user is requesting. This way of doing it would make sure that it would be easy to develop a new view, e.g. a smartphone app, because most of the functionality is located at the server. On the other hand the user might experience the program as slow if the user has a slow internet connection. The other extreme is to let the browser request all data in one call and only show what the user is asking for. This would require a lot of functionality in the view, but it might result in a good experience for the user if the internet connection is slow. We have chosen a compromise where the browser request buffer data for panning and not for zooming.
 The other aspect is to decide in what way the user should be able to zoom and pan. Since we know that it takes a long time to get the Java Script, HTML, SVG and XPath to work together we have chosen to settle for buttons in the browser as the only way for the user to navigate in the map. One could consider to make it possible for the user to use keyboard shortcuts and mouseevents for zooming and panning. 
 
-\paragraph{Routeshowing}
+\paragraph{Route Displaying}\mbox{}\
+
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
 				
@@ -304,15 +313,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		
 	\section{Process description}
 		lenght : 1 - sider\\
-		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have. \\
-		For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam. The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it has always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\
-		We also used another collaboration tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were on the table as ideas, but we decided to go with Git.  \
-		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found. \
+		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
+		\paragraph{Collaboration tools}\mbox{}\
 		
-
-		Tidsplan
-		GIT
-		Meeting structure
+		For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam. The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\
+		We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, due to the fact that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time\
+		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.
+		\paragraph{Group dynamics}\mbox{}\
+		
+		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
+		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester, where some of the group members had a lot more stressful project period.  
 		
 		Hvordan er samarbejdet gaet i gruppen?\
 		Hvad kunne vi goere for at faet et bedre samarbejde?\
@@ -324,7 +334,625 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		length : 0.5 - 1 side\\
 		Skal bare lige runde projektet af..
 	
-	\section{Appendix}
+
+		\subsection{resume}
 		
+		\begin{center}
+		06-02-12
+		\end{center}
+				\paragraph{Tilstede: Alle}
+				\paragraph{Dagsorden:}
+				\begin{itemize}
+					\item Loesninger
+					\item Versionsstyring
+				\end{itemize}
+				
+			\paragraph{Beskrivelse af dagen:}
+			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
+			\paragraph{Faerdige ting:}
+			
+			\paragraph{Aftaler/Beslutninger:}
+			
+			\paragraph{Hvem goer hvad:}
+			Klasserne skrives faerdig til naeste gang.\
+			
+			\paragraph{Naeste gang:}
+			Vi moedes naeste gang onsdag kl 10.\mbox{}\\
+			
+			\begin{center}
+		13-02-12
+		\end{center}
+				\paragraph{Tilstede: Alle, undtagen Mark}
+				\paragraph{Dagsorden:}
+				\begin{itemize}
+					\item Skriv specifikation til metoden
+					\item Blackbox testing
+					\item Kasra forklare kode
+					\item Whitebox testing
+				\end{itemize}
+				
+			\paragraph{Beskrivelse af dagen:}
+			
+			\paragraph{Faerdige ting:}
+			Vi har oprettet et projekt i kursusbasen.\
+			Specifikationen er skrevet faerdig
+			
+			\paragraph{Aftaler/Beslutninger:}
+			Vi har besluttet at vente med versionsstyring indtil vi har forelaesning i det. Vi har ogsaa besluttet at droppe etage delen i rutesoegning. 
+			
+			\paragraph{Hvem goer hvad:}
+			Lars og Jacob arbejder på blackbox til onsdag. Kasra vil skrive metoden om og rydde op i den, samt supplere med et flowchart over metoden.
+			\paragraph{Naeste gang:}\mbox{}\\
+			
+			\begin{center}
+		15-02-12
+		\end{center}
+				\paragraph{Tilstede: Alle}
+				\paragraph{Dagsorden:}
+				\begin{itemize}
+					\item Revideret kode linje for linje
+					\item Kigge Black box test
+					\item Rette kode til specifikationen
+					\item Forventingstabeller til White box
+					\item Whitebox test
+				\end{itemize}
+				
+			\paragraph{Beskrivelse af dagen:}
+			Vi har idag gennemgaet koden og faaet rettet en smule i den og kigget på black box testen.
+			
+			\paragraph{Faerdige ting:}
+			
+			\paragraph{Aftaler/Beslutninger}
+			
+			\paragraph{Hvem goer hvad:}
+			Til fredag, vil Jakob refaktorere AddressParser og især dele den primære metode ind i flere små – dels for at skabe overblik men også for at kunne White Box teste på en bedre måde.
+Anders vil knytte en kommentar til Black box testen, hvor der bliver fortalt om resultaterne.
+Fredag efter sidste forelæsning vil vi mødes og aftale hvad vi hver især skal lave. Det skal fx aftales hvem der white box tester de forskellige metoder og så vil vi inden mandag (eller mandag formiddag) samle hele afleveringen.
+Dem der arbejder med white box testene skal hver lave en forventningstabel til den de aktuelle tests.
+
+			\paragraph{Naeste gang:}\mbox{}\\
+			
+			\begin{center}
+		20-02-2012
+		\end{center}
+		\paragraph{Tilstede: Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Vi skal lave regex 
+					\item Der skal ryddes op i koden
+					\item Laese opgaven igennem
+					 
+		\end{itemize}
 		
+		\paragraph{Beskrivelse af dagen:}
+		Vi har planlagt hvordan ovenstående punkter skal løses, gennemgået opgaven der skal afleveres onsdag d. 29/2 og kommet med gode, konkrete forslag til hvordan vi vil læse opgaven.
+Dem der har påtaget sig nogen af ovenstående opgaver, skal have disse klar til onsdag.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		Det er fastsat at vi onsdag d. 7/3 at vi har læst vores kapitler igennem og gør klar til at fremlægge disse for klassen.
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		19-03-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Vi har udarbejdet et UML diagram
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		Vi aftaler at vi som udgangspunkt fremover mødes mandage og onsdage klokken 10 for at arbejde på projektet.
+		\paragraph{Hvor goer hvad:}
+		onsdag 21/3
+Git opsætning + foredrag (Kasra)
+Google calendar (Jakob)
+
+mandag 26/3
+xmlCreator (Lars)
+NodeTree + Road (Kasra + Mark)
+
+onsdag 28/3
+Js+ Html + svg (Filip + Jakob + Anders)
+Test
+		\paragraph{Naeste gang:}\mbox{}\\
+			
+			
+			\begin{center}
+		21-03-12
+		\end{center}
+		
+		\paragraph{Tilstede: alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Efter vi sidste gang fik delt arbejdsopgaverne op mellem os, så har vi arbejdet i smågrupper hele dagen. 
+Kasra og Mark arbejder på datastrukturen, Lars har arbejdet på XML-creator klassen(som har ansvaret for at lave en XML fil) og Filip, Jacob og Anders har arbejdet på HTML/Javascript.
+Efter mange snedige overvejelser omkring kd-træer og generelt omkring datastrukturen, er Kasra og Mark, så småt efter dagens arbejde,  i stand til at bevæge sig over i selve ”implementeringsfasen”.  Lars er færdig med XML-creator og skal påbegynde en ny arbejdsopgave fra næste møde. Tremandsgruppen som har arbejdet med HTML/Javascript er nået et pænt stykke i dag og skal næste gang begynde at se på kommunikationen mellem browser og java(server).
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		26-03-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Jacob}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Ved dagens afslutning har Anders og Filip fået set rigtig meget på kommunikationen mellem Java og JavaScript. Vi er blevet enige om at vi prøver at implementere systemet så der skrives en xml-fil til harddisken for hver gang der skal zoomes, ændres view, osv. Anders og Filip er kommet så langt at de kan få ”hul igennem” fra JS til Java, men kun én gang fra Java til JS. Det er derfra de vil arbejde videre næste gang.Lars har finpudset XML-klassen samt prøvet at hjælpe Anders og Filip, så godt det nu kunne lade sig gøre.
+Kasra og Anders har fået godt styr på KD-træ-strukturen og har i dag arbejdet meget med selve søgningen i KD-træet. De føler det er meget tæt på og er på nuværende tidspunkt i gang med sidste del af debuging’en.
+
+		\paragraph{Faerdige ting:}
+		Anders, Filip og Lars ser til at vi bliver mere færdige med JS-delen.
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		28-03-12
+		\end{center}
+		
+		\paragraph{Tilstede:Alle, undtagen Jacob}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Lars har refaktorereret koden og lavet et backup java gui, som vi kan bruge i tilfælde af at browserens gui ikke virker og sammensat søgings-algorithmen med xml-creatoren.
+Mark har arbejdet på at teste og debugge søgningsalgorithmen samt at optimere den. Kasra har arbejdet på en simplere udgave af søgningsalgorithmen, i tilfælde af at den anden ikke virkede.
+Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt via fil(gemme en fil også læse den), mens Fillip har prøvet at få hovedløsningen til at virke.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		Vores næste møde er tirsdag d 3. april, hvor de individuelle moduler skal være færdige hvis muligt. Her er det planen at vi sætter programmet sammen.
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		04-04-12
+		\end{center}
+		
+		\paragraph{Tilstede:Lars, Filip og Anders}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar string, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		09-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Jacob}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Efter sidste møde, hvor vi fik kommunikationen mellem server og klient til at kører, skulle vi nu tilføje funktionalitet til at vores kort. Det vil sige, at vi i dag skulle arbejde på at kunne zoome ind og ud, samt bevæge viewboxen(”synsfeltet”) rundt. Tidligere havde Anders legede en lille smule med det, men til trods for det, så skulle det vise sig, at blive en ganske stor udfordring. Først og fremmest havde vores veje beholdt deres oprindelige koordinater fra Krak-dataen, hvilket betød, at området vores de lå var omkring 450000-900000 for x og 6050000-6400000 for y. Derfor skulle disse nu laves om, så de kom ned på et et ordenligt niveau. Derefter skulle de nye informationer nu tilføjes i Javascriptet, så det kom til at vise det rigtigt. Dernæst skulle vi finde et passende zoom niveau og sørger for at der hele tiden blev sendt de rigtige koordinater over til serveren. Men tiltrods for at vi havde mange småting, som ikke ville gå vores vej i dag, så fik vi løst det og fik mere eller mindre nået de ting vi skulle. 
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}
+		Næste møde bliver tirsdag 10-04-12, hvor de sidste ting skal laves og sidste hånd skal ligges på rapporten. \mbox{}\\ 
+		
+		\begin{center}
+		10-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Lars, Filip og Anders}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					 
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		I dag var sidste dag inden afleveringen af første del af det samlede projekt. Vi skulle få vores zoom funktioner til at fungere 100%, få samlet op på en masse småting og så selvfølgelig få skrevet det sidste på vores rapport.
+Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny svg fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		16-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item 
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Skal der være tidspunkter hvor vi ikke koder og kun snakker design?\
+Vi skal være fælles om at diskutere de overordnede beslutninger og derefter dele opgaver ud.\
+
+Vi læser opgavebeskrivelsen igennem.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		Vi fortsætter med at arbejde mandag og onsdag fra kl. 10 til 18 som udgangspunkt. Når bosk slutter indrager vi torsdagen også.\
+		Lav analysen færdig inden for de første 2 uger. Der er enighed om at dette er en god ide.\
+		Overordnede principper:
+		\begin{itemize}
+		\item - startuptime
+		\item - ram usage
+		\item + faster routeplanning + visualization
+		\item + fast and reactive navigation
+		\end{itemize}
+			
+		\paragraph{Hvor goer hvad:}
+		Gennemgå hinandens kode. + læs om Dijkstra 
+		
+		\paragraph{Naeste gang:}
+		Snak om ansvarsomraader + oprydning i koden.
+		Rutesoegning\mbox{}\\
+		
+		\begin{center}
+		18-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Kode oprydning
+					\item Kd-tree
+					\item rutesoegning
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Design choices:
+•	Der skrives en RoadSelection-klasse, med ansvar for at hente de rigtige Road-objekter ud fra KdTree, beregne zoom-niveau(Hvilken prioritet af veje skal med)
+•	Der skrives en static RoadStatus-klasse der står for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.
+•	Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal være, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som så kalder videre til RoadStatus. På denne måde skal XML-klassen heller ikke holde styr på vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber også modularitet.
+•	Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud på alle veje.
+•	Krakloader skal kun kendes af KdTree, det er kun den der bruger den.
+KD-træ:
+Udskydt, da rutesøgning blev opprioriteret.
+Rutesøgning:
+•	Vi skal have opbygget en ny datastruktur, nok en form for graf. Vi vil ikke som udgangspunkt arbejde med rettede grafer.
+•	Denne datastruktur skal sendes til en algoritme, der ud fra den opbygger et shortest-path-tree omkring en node eller road. Dette bliver nok en udgave af Dijkstra’s algoritme. Desuden skal denne stoppe, når den har fundet den korteste rute til en given node eller road. Derefter skal ruten returneres som et Road[].
+•	Vi vil til start ikke forkorte vores graf inden rutesøgning, da vi forudser problemer med dette.
+•	De gamle klasser skal udbygges til at håndtere rutesøgning, bl.a. requests i Javascript og opbygning af XML. Ruteplanen skal have sin egen farve og tegnes over de andre veje.
+•	Der skal være en metode til at vælge start og slutpunkt. Vi vil fokusere på adresser frem for musse-klik. Vi mener at det er en mere brugervenlig tilgang, med mere teknisk udfordring for os. Vi vil arbejde videre med den adressParser vi skrev tidligt i projektet.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		•	Ryd ud i egen kode - kommenter ordentligt, slet udkommenteret kode og ubrugte metoder\
+•	Kasra laver et branch/tag på Git, der indeholder de filer der er i brug lige nu. Desuden opstiller han lidt guidelines for hvordan og hvornår folk selv brancher ud.\
+•	Anders laver en skabelon for referater, som skal bruges fremover\
+•	Filip skriver liste ofr hvem der er referent fremover.
+
+
+		\paragraph{Naeste gang:}
+På mandag d. 23/4 2012:\
+•	I HTML, Javascript og SVG skal der kigges på skalering, buffer og hvidebjælker.\
+•	KdTree skal refaktoreres, så dette kun er en datastruktur, og RoadSelection skal skrives så den indeholder de funktioner der er beskrevet i dette referat.\
+•	RoadStatus skal skrives så den står for de funktioner der beskrevet i dette referat.\mbox{}\\
+
+\begin{center}
+		23-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Kasra}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Rutesoegning - hvordan goer vi?
+					\item Fordeling af arbejdsopgaver
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Hvordan skal rutesøgningen udføres?; Skal vi kunne markere to punkter på  kortet eller kunne søge efter en adresse via to strenge? \
+Hvor skal vi gemme resultatet af rutesøgningen? For den skal jo gemmes et sted, da vi jo skal kunne zoome ind og ud OG beholde søgeresultatet.  
+
+		\paragraph{Faerdige ting:}
+		Anders og Filip har fixet bufferen i index.html samt de hvide bjælker i svg’en. \
+Lars har lavet roadStatus og omdøbt KrakLoader til Loader og flyttet den fra KdTree til Controlleren. 
+
+		\paragraph{Aftaler/Beslutninger:}
+		\begin{itemize}
+		\item Alle klasser er ”lukket” og mere eller mindre færdiggjorte til mandag den 7.
+\item Onsdag den 25 er der to mand, som sætter sig og begynder at snakke rapport og får sat nogle punkter og overskrifter på de enkelte dele.
+\item Man skal kunne søge efter en rute efter de bestemmelser, som tidligere er bestemt i adressesøgningen opgaven.  
+		\end{itemize}
+		\paragraph{Hvor goer hvad:}
+		Mark laver en ’translater’ som kan læse vejnavne og 4200.\
+Filip og Anders laver noget GUI.
+
+		\paragraph{Naeste gang:}
+Vi skal snakke fejlhåndtering og beslutte os for, hvad vi gør vi de fejl.\
+ Mark vil gerne stå for at skrive nogle test.\
+Anders og Jacob kigger på rapport.\mbox{}\\
+
+\begin{center}
+		25-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Jacob}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Git - Vi arbejder i branches 
+					\item RoadSelector
+					\item Rutesoegning
+					\item Fejlhaantering
+					\item Test
+					\item Testdata
+					\item Rapport
+					\item Edge Translator
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		
+		Generelt:
+•	Vi skriver vores egne exceptions, for at gruppere de exceptions som fanges af de forskellige metoder i de forskellige klasser. Disse exception-klasser indeholder så information om den oprindelige exception, og i hvilken klasse om metode den blev kastet. 
+o	Ulempen ved at lave vores egne exceptions, kan være at noget information går tabt
+o	Fordelen er at mindske den sortering Controleren skal foretage, og at der ligger en strategi for fejlhåndtering til brug ved udvidelse.
+•	Exception gribes så af Controlleren, som sender dem med et kald til vores fejlhåndterings klasse.
+o	Vi bevare at Controleren skal have minimal funktionalitet, og bare styrer de kald der sendes rundt.
+•	Vi skriver en fejlhåndteringsklasse, som tolker de exceptions der sendes fra Controleren.
+o	Vi for samlet fejlhåndtering i en klasse, og alle ændringer af hvordan dette skal håndteres sker her, og det er let at udvide.
+•	Fejlhåndterings-klassen sender en passende fejl/status-kode tilbage til Controleren, som sender denne med til et kald til Xml-creator, som skriver det ind i en Xml-fil, der sendes til klienten
+•	Javascript står for at tolke denne fejl/status-kode, og udskrive en fejlmeddelelse til brugeren.
+o	Javascript kan selv gruppere fejlkoder
+o	Hvis vi skiftede klient, system eller brugergrænseflade, ville denne kunne gruppere fejlkoderne anderledes, og udskrive andre feljmeddelelser som passer til klient og system 
+•	Fejl-typer:
+o	Fejl som server rapporterer til klient
+•	Følger strukturen ovenfor
+o	Fejl i klienten	
+•	Håndteres i Javascript
+o	Fejl i serveren som den ikke selv kan rapportere til klienten:
+•	Javascript: Under http-request, on-ready-state sættes en timeout, som giver fejl hvis serveren ikke svare.
+
+		\paragraph{Faerdige ting:}
+		
+		\paragraph{Aftaler/Beslutninger:}
+		
+		\paragraph{Hvor goer hvad:}
+		EdgeTranslator, Mark Kasra\
+Fejlhåndtering, Filip\
+Rapport, Lars Jacob\
+Dijkstra, Lars\
+Generelt: Folk kigger på deres kode og finder ud af hvad der skal testes.
+
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		30-04-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Kasra}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item KdTree v. Mark
+					\item Fejlhaandtering
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		
+		\paragraph{Faerdige ting:}
+		•	Lars har skrevet til Taus omkring møde onsdag. Gerne kl 11, så vi har en time til at forberede os i.
+		\paragraph{Aftaler/Beslutninger:}
+		Onsdag d. 2: Rutesøgning funktionelt færdig\
+Torsdag d. 3: Fejlhåndterings funktioner implementeret.\
+Mandag d. 6: Folk installerer LaTeX
+
+		\paragraph{Hvor goer hvad:}
+		De forskellige dele af rutesøgning gøres færdige.
+		\paragraph{Naeste gang:}
+Vi snakker med Taus om fejlhåndtering\
+Implantation af Fejlhåndtering\
+Rutesøgning sammensættes\mbox{}\\
+
+\begin{center}
+		02-05-12
+		\end{center}
+		
+		\paragraph{Tilstede:Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item UML
+					\item Rapportudkast
+					\item Fejlhaandtering
+					\item rutesoegning
+					\item Debugging
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Taus var syg, så vi kunne ikke holde det aftalte møde med ham, i stedet vil vi forsøge et møde med Pagh senere.\
+		I sammenhæng med rutesøgning: vi antager at hvis to directed edges’ from/to ID’er ikke er identiske, men indeholder samme husnummer og vejnavn, er de ikke relateret til hinanden, og skal ikke betragtes som samme vej. Dette opstår som oftest hvis der ikke specificeres et postnummer med til søgningen.
+		\paragraph{Faerdige ting:}
+		EdgeParser\
+		ZipCodeMap
+		\paragraph{Aftaler/Beslutninger:}
+		Vi vil holde et møde med Pagh på Mandag, hvis muligt
+		\paragraph{Hvor goer hvad:}
+		Lars prøver at samle alle delene sammen til rutesøgningen.
+		\paragraph{Naeste gang:}
+Fortsættelse af i dags arbejde\mbox{}\\
+
+
+\begin{center}
+		03-05-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Filip ser på tekststrenge fra JS til Java
+					\item Mark og Lars ser på merge hele projektet
+					\item UML-diagram
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		
+		\paragraph{Faerdige ting:}
+		Mark har fundet en ”fejl” i sin test til KD-træet og nu slået fast at der ikke er nogle (kendte) bugs i KD-træet! ☺ 
+		\paragraph{Aftaler/Beslutninger:}
+		-	Vi er blevet enige om en endelig struktur for vores fejlhåndtering – den virker umiddelbart lidt voldsom, men er særdeles velegnet med henblik på udbygning af programmet senere.
+		\paragraph{Hvor goer hvad:}
+		-	Mark ser på KD-træet\
+Filip prøver at få sin computer til at samarbejde med Git.\
+Anders ser på rapport\
+Jakob vil prøve at se mere på fejlhåndteringer, hvis programmet bliver samlet inden.\
+Lars prøver at få samlet programmet helt sammen\
+Kasra læser Jakob og Anders’s preface til rapporten
+
+		\paragraph{Naeste gang:}
+		Møde med Rasmus Pagh, hvor vi bl.a. vil spørge ind til hvad han synes om fejlhåndteringen\
+Er det (igen) planen at vi skal blive helt færdig med selve programmeringen!\mbox{}\\
+
+\begin{center}
+		07-05-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Anders}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Snak med Rasmus Pagh
+					\item Opdel arbejdsopgaver
+					\item Implementer fejlhaandtering i programmet
+					\item Fordel rapportafsnit
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Der er blevet diskuteret hvorvidt klienten skulle kunne gemme en rutevejledning for at serveren ikke skal finde ruten igen hver gang der navigeres på kortet. Desuden er der blevet diskuteret hvordan dette skulle implementeres, og hvordan klienten skulle vide hvor bred linjen der repræsenterer rutesøgningen skulle være, ved navigering efter rutesøgning. 
+Taus rådede os til at gemme noderne i kd-træet i collections som indeholder 10 til 100 noder. Det har vi valgt at lade være med eftersom det kun giver hukommelses optimering og næsten ingen performance optimering. 
+
+		\paragraph{Faerdige ting:}
+		Vi har ikke fået lavet code-freeze, så der er intet der er helt færdigt endnu.
+		\paragraph{Aftaler/Beslutninger:}
+		Vi har besluttet at få klienten til at huske ruten og selv forlænge XML dokumentet med ruten når der navigeres. Desuden skal XML dokumentet have en attribut der angiver vejenes tykkelse på zoomniveauet. Alternativt har vi tænkt på at bruge svg keywordet non-scalable, der vil gøre roadStatus og alt andet, der har med skalering af vejenes tykkelse at gøre, overflødigt. 
+Efter en snak med Rasmus Pagh om vores måde at håndtere fejl, er vi blevet enige om at holde os til den overordnede fejlhånderingsklasse og dens tilhørende klassehierarki. 
+Vi har besluttet at lave en klasse der indeholder addressParser, edgeParser og DijstraSP, da dette indkapsler vores ruteplanlægningssystem og gør controlleren mere ansvarsløs.
+ 
+
+		\paragraph{Hvor goer hvad:}
+		Mark lærer hvordan man sætter et billede ind i git. Skriver datastrukturafsnit(mht visualisering, dvs ikke ruteplanlægning) og hvorfor vi har to datastrukturer.
+
+Filip skriver teknisk beskrivelse af JavaScript og JsConnector.
+
+Lars skriver teknisk beskrivelse af XML og hvorfor vi har valgt den opbygning af XML, som vi har. Derudover skriver han om vores valg af ruteplanlægnings datastrukturen under datastrukturafsnittet.
+
+		\paragraph{Naeste gang:}\mbox{}\\
+		
+		\begin{center}
+		09-05-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Kasra}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Diskussion af problemanalysen
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Vi diskuterede hvordan problemanalysen skulle bygges op.  Vi blev enige om, at der skulle i starten af analysen være en generel fortolkning af rapportkravene og der skulle så her slåes fast, hvilke ting/komponenter, der er nødvendige for at vi kan indfri projektets overordnede krav. 
+Vi laver en oversigt over hvem der skal skrive hvad til mandag. Filen hedder: HvemskriverHvad og ligger i drop’eren. Dette betød en længere diskussion, samt præcision, af hvad der skal stå under hvert punkt. 
+
+		\paragraph{Faerdige ting:}
+		Programmet er (næsten ☺ ) færdigt. 
+		\paragraph{Aftaler/Beslutninger:}
+		I HvemSkriverHvad ligger i dropperen, hvor der står hvem der skal skrive hvad og til hvornår.\  
+Vi tester følgende:\
+Whitebox af AddressParser\
+Test af KdTree\
+Blackbox af addressParser\
+Vi vil være færdige og klar til at afleverer mandag den 20/5. 
+
+		\paragraph{Hvor goer hvad:}
+		Rapportskrivning \
+Kasra laver Blackbox af EdgeParser+AddressParser\
+Alle skriver noget i rapporten. Der står beskrevet i ’HvemSkriverHvad’ filen, hvem der skriver hvad. 
+
+		\paragraph{Naeste gang:}
+Vi samler op på alle de dele der er skrevet i rapporten og så fordeler vi de sidste afsnit  OG faar fordelt de tests, som der også skal laves.\mbox{}\\
+
+\begin{center}
+		14-05-12
+		\end{center}
+		
+		\paragraph{Tilstede: Alle, undtagen Jacob}
+		\paragraph{Dagsorden:}
+		\begin{itemize}
+					\item Rette rapportdele
+					\item "Hvor er vi henne i rapporten?"
+					
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Vi startede ud med at få lavet en fordeling af ting, der skulle rettes og hvem der retter hvad. Herefter har vi diskuteret lidt småting om blandt andet test og forskellige rapportdele. Tilsidst har vi fordelt de resterende punkter og aftalt af mødes igen på onsdag, hvor folk har skrevet deres ting færdig.
+		\paragraph{Faerdige ting:}
+		Preface
+Background and Data
+
+		\paragraph{Aftaler/Beslutninger:}
+		Vi har rapporten færdig fredag og så retter folk frem til mandag, hvor der bliver skrevet ud. 
+		\paragraph{Hvor goer hvad:}
+		Mark: Retter proces beskrivelsen, skriver summary af analysen, skriver udkast til produkt konklusion og ’errors, bugs and list of needs’ og skriver lidt mere på sine egne klasser(mere teknisk)\
+Lars: Skriver javadoc + retter kode og skriver lidt mere på sine klasse beskrivelser (mere teknisk).\
+Kasra: Skriver ’Testing’ afsnittet og blackbox afsnittet og skriver lidt mere på sine egne klasse beskrivelser(mere teknisk).\
+Filip: Læser og retter Preface og Background and data afsnittene. Skriver ’brugervejledning’, ’Loader’ class og ’error, bugs and list of needs’.\
+Anders: Færdiggør Errorhandling og Procesbeskrivelsen. Laver alle referater om til .tex format. Få styr på whitebox test delen.  Skema over hvem har lavet hvad.\ 
+Jacob: Problemanalyse, requirements, indledning til thoughts toward design og gerne summary af problemanalysen. 
+
+		\paragraph{Naeste gang:} 
+		Vi retter alle de nye afsnit igennem.\
+Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og appendix og litteraturliste.  
+
 \end{document}

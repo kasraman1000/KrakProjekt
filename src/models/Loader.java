@@ -10,6 +10,13 @@ import java.util.HashMap;
 import routing.*;
 import errorHandling.*;
 
+/**
+ * The class responsible for loading all data into the server
+ * 
+ * @author Group 1, B-SWU, 2012E
+ *
+ */
+
 public class Loader {
 	private static ArrayList<Node> nodesForKDTree;
 	private static KrakEdgeWeightedDigraph graph;
@@ -20,6 +27,7 @@ public class Loader {
 	private static In inEdges;
 	private static In inNodes;
 	
+	//Temporary Maps 
 	private static HashMap<Integer, double[]> coordArray;
 	private static HashMap<Integer, Node> nodeList;
 	
@@ -28,7 +36,8 @@ public class Loader {
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
-	
+
+	//For prints of start up time
 	private static long timeMillis;
 
 	static{
@@ -43,6 +52,14 @@ public class Loader {
 		yMax = 0.0;
 	}
 
+	/**
+	 * Will load all the data needed from the krak files specified
+	 * 
+	 * @param nodePath Path for the krak nodes file (may not be absolute)
+	 * @param edgePath Path for the krak edges file (may not be absolute)
+	 * @param zipPath Path for the zip code file (may not be absolute)
+	 * @throws ServerStartupException If the server can not start up - will execute some actions afterwards
+	 */
 	public static void load(String nodePath, String edgePath, String zipPath) throws ServerStartupException{
 		try{		
 		//Creates the map, that contains each city's zipcode
@@ -51,9 +68,9 @@ public class Loader {
 		buildZipCodeMap(zipPath);
 		printTime("Build zip code map");
 
-		//Creates a Scanner for the filenames specified
-			inEdges = new In(new File(edgePath));
-			inNodes = new In(new File(nodePath));
+		//Creates a Scanner for the filenames specified - copied from the BADS course
+		inEdges = new In(new File(edgePath));
+		inNodes = new In(new File(nodePath));
 		}
 		catch(FileNotFoundException e) {
 			throw new LoaderFileNotFoundException(e);
@@ -64,12 +81,12 @@ public class Loader {
 		inNodes.readLine();
 		
 		setTime();
-		findExtremes();
+		getCoordinates();
 		printTime("Found original extremes");
 		//Rearranges the coordinates to the actual places in the graph and
 		//make the nodeMap for the KDTree
 		setTime();
-		recalculateCoordinates();
+		rearrangeCoordinates();
 		printTime("Recalculated coordinates");
 		//not in use past this
 		coordArray = null;
@@ -77,6 +94,8 @@ public class Loader {
 		Road.setTop(new double[]{xMax-xMin, yMax-yMin});
 
 		setTime();
+		
+		//Values to extract from the krak edges file
 		String[] textLineRoadArray;
 		int from;
 		int to;
@@ -115,7 +134,7 @@ public class Loader {
 			
 
 			/**
-			 * OBS L�g m�rke til at ID'erne bliver minuset med 1!!!!
+			 * NB Note the ID's are minused by 1
 			 */
 			from = Integer.valueOf(textLineRoadArray[0])-1;
 			to = Integer.valueOf(textLineRoadArray[1])-1;
@@ -142,7 +161,7 @@ public class Loader {
 			fromPoint = new double[]{nodeList.get(from).getCoord(0), nodeList.get(from).getCoord(1)};
 			toPoint = new double[]{nodeList.get(to).getCoord(0), nodeList.get(to).getCoord(1)};
 
-			
+			//Adding the edge the right places (will be added to the graph later)
 			if      (direction.equals("'tf'")) edges.add(new KrakEdge(to, from, name, dist, time, toPoint, fromPoint ,vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (direction.equals("'ft'")) edges.add(new KrakEdge(to, from, name, dist, time, fromPoint, toPoint, vPost, hPost, vFromHusnummer, vToHusnummer, hFromHusnummer, hToHusnummer));
 			else if (!direction.equals("'n'")) {
@@ -155,7 +174,6 @@ public class Loader {
 			//Adding references from node to road
 			nodeList.get(from).addRoad(tempRoad);
 			nodeList.get(to).addRoad(tempRoad);
-
 		}
 		
 		printTime("Created edges");
@@ -170,26 +188,41 @@ public class Loader {
 		printLine();
 	}
 	
+	/**
+	 * Set the time field to now 
+	 */
 	private static void setTime()
 	{
 		timeMillis = System.currentTimeMillis();
 	}
 	
+	/**
+	 * Print the time from setTime() to now with the String s in front
+	 * 
+	 * @param s String to set in front of time
+	 */
 	private static void printTime(String s)
 	{
 		double time = System.currentTimeMillis()-timeMillis;
 		System.out.println(s+" in " + time/1000 + " seconds");
 	}
 	
+	/**
+	 * Print a line of -'s to the console (only used to get a better overview)
+	 */
 	private static void printLine()
 	{
 		System.out.println("------------------------");
 	}
 
-	private static void findExtremes()
+	/**
+	 * Used for extracting the coordinates from the Krak nodes file
+	 */
+	private static void getCoordinates()
 	{
 		//String for storing the current line, which is being read
-		String[] textLineNodeArray = null;
+		String[] textLineNodeArray;
+		
 		int nodeId;
 		double xCoord;
 		double yCoord;
@@ -199,7 +232,7 @@ public class Loader {
 			textLineNodeArray = inNodes.readLine().split(",");
 
 			/**
-			 * OBS L�g m�rke til at ID'et bliver minuset med 1!!!!
+			 * NB Note the ID's are minused by 1
 			 */
 			nodeId = Integer.valueOf(textLineNodeArray[2])-1;
 			xCoord = Double.valueOf(textLineNodeArray[3]);
@@ -211,7 +244,10 @@ public class Loader {
 		}
 	}
 	
-	private static void recalculateCoordinates()
+	/**
+	 * Remove the empty "frame" around the map (if there is any)
+	 */
+	private static void rearrangeCoordinates()
 	{
 		double newX;
 		double newY;
@@ -227,19 +263,20 @@ public class Loader {
 	}
 	
 	/**
-	 * Returns the collection that the KDTree is build from
+	 * Returns the collection that the KDTree is build from - Must only be called once!!!
 	 * @return ArrayList of all nodes
 	 */
 	public static ArrayList<Node> getNodesForKDTree(){
-		//TODO Add a nice Exception to throw
-		//		if(nodesForKDTree == null) throw new DataNotLoadedException();
-		//Using temporary variable to nullify nodesForKDTree
+		//Using temporary variable to nullify nodesForKDTree to spare use of ram
 		ArrayList<Node> tempNodes = nodesForKDTree;
 		nodesForKDTree = null;
 		return tempNodes;
 		
 	}
 	
+	/**
+	 * Load all the edges into the graph
+	 */
 	private static void buildGraph()
 	{
 		graph = new KrakEdgeWeightedDigraph(nodeList.size());
@@ -248,6 +285,12 @@ public class Loader {
 		}
 	}
 	
+	/**
+	 * Create the zip code map
+	 * 
+	 * @param zipPath Path for the zipCode file (may not be absolute)
+	 * @throws FileNotFoundException If the file was not found
+	 */
 	private static void buildZipCodeMap(String zipPath) throws FileNotFoundException
 	{
 		In inZipCodes = new In(new File(zipPath));
@@ -260,19 +303,30 @@ public class Loader {
 		
 	}
 	
+	/**
+	 * Get the zipeCode map
+	 * @return zipCodeMap
+	 */
 	public static HashMap<String, Integer> getZipCodeMap()
 	{
 		return zipCodeMap;
 	}
 	
+	/**
+	 * Get the graph
+	 * @return graph
+	 */
 	public static KrakEdgeWeightedDigraph getGraph(){
-		//TODO Add a nice Exception to throw
-		//		if(graph == null) throw new DataNotLoadedException();
 		return graph;
 	}
 
+	/**
+	 * Get edges - must only be called once!!
+	 * @return copy of edges;
+	 */
 	public static ArrayList<KrakEdge> getEdgesForTranslator() {
 		ArrayList<KrakEdge> tempEdges = edges;
+		//Set to null to spare use of ram
 		edges = null;
 		return tempEdges;
 	}

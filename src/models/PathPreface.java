@@ -6,14 +6,24 @@ package models;
 import routing.KrakEdge;
 
 /**
- * Binds two directed edges together and a house number
- * used for navigational purposes
+ * Represents an KrakEdge, but tells if the edge is a one way road 
+ * or no driving is allowed. Besides that it will also contain a 
+ * house number
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class PathPreface{
 	KrakEdge edge1;
 	KrakEdge edge2;
 	int houseNumber;
 	
+	/**
+	 * The Constructor
+	 * @param e1 The edge the one way (if any)
+	 * @param e2 The edge the other way (if any)
+	 * @param houseNumber The house number to start/end
+	 */
 	public PathPreface(KrakEdge e1, KrakEdge e2, int houseNumber){
 		edge1 = e1;
 		edge2 = e2;
@@ -46,5 +56,4 @@ public class PathPreface{
 	public int getHouseNumber() {
 		return houseNumber;
 	}
-	
 }

@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.util.HashMap;
 
 /**
- * The Road class, connecting nodes together
+ * Representing a straight piece of road
+ * 
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class Road {
-	
-	
 	private Double x1; //Road start
 	private Double y1; //Road start
 	private Double x2; //Road end
@@ -17,6 +18,8 @@ public class Road {
 	private String name;
 	private int hashCode;
 	private int priority;
+	
+	//Static values
 	private static final HashMap<Integer, Color> roadColors = new HashMap<Integer, Color>();
 	private static final HashMap<Integer, Integer> roadWidths = new HashMap<Integer, Integer>();
 	private static double[] top;
@@ -29,6 +32,16 @@ public class Road {
 		routeType = 50;
 	}
 	
+	/**
+	 * The Constructor
+	 * 
+	 * @param x1 X coordinate of the first point
+	 * @param y1 Y coordinate of the first point
+	 * @param x2 X coordinate of the last point
+	 * @param y2 Y coordinate of the last point
+	 * @param type Type of the road (according to the krak file)
+	 * @param name Name of the road
+	 */
 	public Road(double x1, double y1, double x2, double y2, int type, String name){
 		this.x1 = x1;
 		this.y1 = y1;
@@ -41,8 +54,10 @@ public class Road {
 		setPriority();
 	}
 	
-	
-	public void setPriority()
+	/**
+	 * Set this roads priority to decide at what zoom level it will be displayed
+	 */
+	private void setPriority()
 	{
 		if(type == 11 || type == 8 || type == 48 || type == 28)
 		{
@@ -65,6 +80,7 @@ public class Road {
 			priority = 5;
 		}
 	}
+	
 	
 	@Override
 	public String toString() {
@@ -119,51 +135,70 @@ public class Road {
 		return name;
 	}
 	
-	public static double[] getTop()
-	{
+	/**
+	 * @return The static maximum point of the Roads
+	 */
+	public static double[] getTop(){
 		return top;
 	}
-	
-	public static void setTop(double[] top)
-	{
+	/**
+	 * @param top The static maximum point of the Roads
+	 */
+	public static void setTop(double[] top){
 		Road.top = top;
 	}
 	
-	public static double[] getOrigo()
-	{
+	/**
+	 * @return The static minimum point of the Roads
+	 */
+	public static double[] getOrigo(){
 		return origo;
 	}
 	
-	public static void setOrigo(double[] origo)
-	{
+	/**
+	 * @param origo The static minimum point of the Roads
+	 */
+	public static void setOrigo(double[] origo){
 		Road.origo = origo;
 	}
 	
-	public int getPriority()
-	{
+	/**
+	 * @return The priority of the road
+	 */
+	public int getPriority(){
 		return priority;
 	}
 	
+	/**
+	 * @return The color of the road
+	 */
 	public Color getColor(){
 		return roadColors.get(type);
 	}
 	
+	/**
+	 * @return the width of the road
+	 */
 	public double getWidth(){
 		return roadWidths.get(type);
 	}
 	
+	/**
+	 * @return The type set to define a route element
+	 */
 	public static int getRouteType(){
 		return routeType;
 	}
 	
 	@Override
-	public int hashCode()
-	{
+	public int hashCode(){
 		return hashCode;
 	}
 
-
-	public int createHashCode() {
+	/**
+	 * @return Our own hashcode
+	 */
+	public int createHashCode(){
 		final int prime = 31;
 		hashCode = 1;
 		hashCode = prime * hashCode + hashCode;
@@ -180,7 +215,7 @@ public class Road {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj){
 		if (this == obj)
 			return true;
 		return false;
@@ -190,18 +225,6 @@ public class Road {
 	 * Will load all the predefined road widths to a HashMap - only called in the "constructor"
 	 */
 	private static void loadRoadWidths(){
-		/*
-		//old scaling values
-		int largeRoads = 400;
-		int mediumRoads = 250;
-		int smallRoads = 130;
-		int tinyRoads = 130;
-		int tunnels = 130;
-		int seaWays  = 130; 
-		int walkingPaths = 130;
-		int routes = 1400;
-		int unknownRoads = 130;
-		*/
 		int largeRoads = 4;
 		int mediumRoads = 3;
 		int smallRoads = 2;
@@ -252,15 +275,15 @@ public class Road {
 	 */
 	private static void loadRoadColors(){
 		Color largeRoads = Color.red;
-		Color mediumRoads = new Color(0.9607f, 0.7215f, 0.0f); //Color mediumRoads = Color.yellow;
-		Color smallRoads = Color.black;
-		Color tinyRoads = Color.pink;
+		Color mediumRoads = Color.black;
+		Color smallRoads = Color.lightGray;
+		Color tinyRoads = Color.magenta;
 		Color tunnels = Color.orange;
 		Color seaWays  = Color.blue;
 		Color walkingPaths = Color.green;
-		Color routes = Color.yellow;
+		Color routes = Color.cyan;
 		
-		Color unknownRoads = Color.cyan;
+		Color unknownRoads = Color.pink;
 		
 		roadColors.put(0, unknownRoads); //"Unknown0"
 		roadColors.put(95, unknownRoads); //"Unknown95"

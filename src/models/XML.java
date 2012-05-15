@@ -1,4 +1,5 @@
 package models;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.StringWriter;
@@ -8,25 +9,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import errorHandling.*;
 
 /**
- * This class is for the whole XML methods: 
- * 	It can create a string or file from a Road[]
- * 	It can create a Road[] from a file or string
- * 
- * @author Group 1
+ * This class is for the making of and XML String or file
  *
+ * @author Group 1, B-SWU, 2012E
+ * 
  */
 public class XML{
 	private final String ROOT_ELEMENT_NAME;
@@ -36,6 +32,9 @@ public class XML{
 	private final String VIEWPORT_ELEMENT_NAME;
 	private final String STATUSCODE_ELEMENT_NAME;
 	
+	/**
+	 * The Constructor - sets what the groups in the XML will be named
+	 */
 	public XML(){
 		ROOT_ELEMENT_NAME = "root";
 		SVG_ELEMENT_NAME = "svg";
@@ -47,7 +46,8 @@ public class XML{
 	
 	
 	/**
-	 * This method is only for testing
+	 * This method is only for testing (makes 5 roads)
+	 * 
 	 * @return Road[] An array of roads
 	 */
 	public Road[] createRoadsForTesting(){
@@ -64,6 +64,7 @@ public class XML{
 	
 	/**
 	 * Method used for testing performance
+	 * 
 	 * @param numberOfRoads The number of roads to be created
 	 * @return Road[] The roads created
 	 */
@@ -76,20 +77,22 @@ public class XML{
 		
 		return roads;
 	}
+	
 	/**
-	 * Will create a xml-string with a svg-element containing lines
+	 * Will create a XML String
 	 * 
-	 * @param roads All the roads to put into the xml-string
-	 * @return String with the xml containing the svg-element
-	 * @throws ParserConfigurationException If unable to create the new Document required to create the XML String
-	 * @throws TransformerConfigurationException If unable to create a new Transformer
-	 * @throws TransformerException If unable to transform the Document into a XML String
+	 * @param roads All the roads to put into the XML-string
+	 * @return String with the XML containing the svg-element
+	 *  
+	 * @param roads All the roads to be added in the XML
+	 * @param route The route the be added in the XML
+	 * @param region What region the viewer shall show
+	 * @param statusCode Tells if anything went wrong
+	 * @return The String containing the XML
+	 * @throws ServerRuntimeException If the creating of the XML went wrong
 	 */
 	public String createString(Road[] roads, Road[] route, Region region, StatusCode statusCode) 
 																		throws ServerRuntimeException{
-		//Only for debugging, uncomment for debug 
-//		createFile(roads, route, region, statusCode, "C:\\Users\\Yndal\\Desktop\\xmlTest.xml");
-		
 		Document document = createDocument(roads, route, region, statusCode);
 		
 		String xmlString = "";
@@ -113,17 +116,17 @@ public class XML{
 	}
 	
 	/**
-	 * Will create a xml-string with a svg-element containing lines from the Road[] given
+	 * Will create a file containing the XML (useful for debugging)
 	 * 
-	 * @param roads All the roads to put into the xml-file
-	 * @param filename Name of the file going to be created. Remember to write // if saving in a certain folder
-	 * @throws ParserConfigurationException If unable to create the new Document required to create the File
-	 * @throws TransformerConfigurationException If unable to create a new Transformer
-	 * @throws TransformerException If unable to transform the Document into a File
+	 * @param roads All the roads to be added in the XML
+	 * @param route The route the be added in the XML
+	 * @param region What region the viewer shall show
+	 * @param statusCode Tells if anything went wrong
+	 * @param filename The name of the file to be created (may also specify the path)
+	 * @throws ServerRuntimeException If the creating of the XML went wrong
 	 */
 	public void createFile(Road[] roads, Road[] route, Region region, StatusCode statusCode, String filename) 
 																					throws ServerRuntimeException{
-		
 		Document document = createDocument(roads, route, region, statusCode);
 		
 		try{			
@@ -190,8 +193,17 @@ public class XML{
 	 * @throws TransformerConfigurationException If unable to create a new Transformer
 	 * @throws TransformerException If unable to transform the Document into a XML String
 	 */
+	
+	/**
+	 * Creates the document to contain the whole XML
+	 * @param roads The roads to be in the SVG element
+	 * @param route The route to be in the SVg element
+	 * @param region The region of the map to be shown
+	 * @param statusCode Sets the status to be shown for the client (if needed)
+	 * @return The document - ready to be transformed
+	 * @throws XMLDocumentException If anything went wrong
+	 */
 	private Document createDocument(Road[] roads, Road[] route, Region region, StatusCode statusCode) throws XMLDocumentException{
-		
 		//Create the Document
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		Document document = null;
@@ -223,7 +235,6 @@ public class XML{
 			addRoadsToElement(route, svgRouteElement);
 		}
 		
-		
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
@@ -231,12 +242,18 @@ public class XML{
 		
 		//Add the ViewPortElement to the RootElement
 		Element viewPortElement = document.createElement(VIEWPORT_ELEMENT_NAME);
-		addViewPortData(region, viewPortElement);
+		addViewPort(region, viewPortElement);
 		rootElement.appendChild(viewPortElement);
 		
 	    return document;
 	}
 	
+	/**
+	 * Creates the SVG element with the correct attributes
+	 * 
+	 * @param document The document to create the svg element from
+	 * @return The svg element
+	 */
 	private Element createSvgElement(Document document){
 		Element svgElement = document.createElement(SVG_ELEMENT_NAME);
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
@@ -247,17 +264,16 @@ public class XML{
 		return svgElement;
 	}
 	
+	/**
+	 * Will add the roads supplied to the element supplied
+	 * 
+	 * @param roads The roads to be added
+	 * @param element The element the roads shall be added to
+	 */
 	private void addRoadsToElement(Road[] roads, Element element){
 		for(Road r : roads){
-			Color color;
-			//TODO For debugging
-			if(r == null){
-				System.out.println("A road was null!!");
-				continue;
-			}
-			
 			Element line = element.getOwnerDocument().createElement("line");
-			color = r.getColor();
+			Color color = r.getColor();
 			line.setAttribute("x1", r.getX1() + ""); 
 			line.setAttribute("y1", r.getY1() + ""); 
 			line.setAttribute("x2", r.getX2() + ""); 
@@ -267,10 +283,15 @@ public class XML{
 			line.setAttribute("style", "stroke:RGB(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + "); ");
 			element.appendChild(line);
 		}
-		
 	}
 	
-	private void addViewPortData(Region region, Element viewPortElement){
+	/**
+	 * Adds the viewPortElement to the document
+	 * 
+	 * @param region The region the client shall show
+	 * @param viewPortElement The element representing the viewPort
+	 */
+	private void addViewPort(Region region, Element viewPortElement){
 		viewPortElement.setAttribute("x1",region.getLeftPoint()[0] +"");
 		viewPortElement.setAttribute("y1",region.getLeftPoint()[1] +"");
 		viewPortElement.setAttribute("x2",region.getRightPoint()[0] +"");

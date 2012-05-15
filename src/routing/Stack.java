@@ -20,6 +20,10 @@ import java.util.NoSuchElementException;
 
 
 /**
+ *  THIS CLASS HAS BEEN COPIED FROM THE BOOK S&W USED IN
+ *  THE "BADS" COURSE! THERE HAS BEEN NO MODIFICATIONS AT ALL
+ *  IN THIS CLASS
+ *  
  *  The <tt>Stack</tt> class represents a last-in-first-out (LIFO) stack of generic items.
  *  It supports the usual <em>push</em> and <em>pop</em> operations, along with methods
  *  for peeking at the top item, testing if the stack is empty, and iterating through

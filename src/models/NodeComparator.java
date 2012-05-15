@@ -1,20 +1,32 @@
 package models;
 import java.util.Comparator;
 
+/**
+ * Helper class capable of comparing two nodes
+ * by their coordinates
+ * 
+ * @author Group 1, B-SWU, 2012E
+ *
+ */
 
-
-public class NodeComparator implements Comparator {
+public class NodeComparator implements Comparator<Node> {
 	int dimension;
 	
+	/**
+	 * Constructor for NodeComparator
+	 * @param depth Depth of the current nodes
+	 * @param k Amount of dimensions in the KDTree
+	 */
 	public NodeComparator(int depth, int k)
 	{
 		dimension = depth%k;
 	}
 	
-	public int compare(Object o1, Object o2)
+	/**
+	 * Compare the two Nodes regarding their coordinates
+	 */
+	public int compare(Node n1, Node n2)
 	{
-		Node n1 = (Node) o1;
-		Node n2 = (Node) o2;
 		if(n1.getCoord(dimension) > n2.getCoord(dimension))
 		{
 			return 1;
