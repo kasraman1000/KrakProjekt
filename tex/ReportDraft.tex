@@ -4,8 +4,8 @@
 	\tableofcontents
 	\newpage
 	\section{Preface}
-		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
-		Anders Brorup Jørgensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
+		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Soerensen og
+		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.\\
 		MAALGRUPPE !! ! 
@@ -55,11 +55,12 @@
 The visualization data structure
  
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range. When
-\includegraphics{../../../Desktop/epsRoadDS} searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
+ searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree(discussed later in this chapter) more shallow, and therefore faster. 
 The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering. Also one of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
 
-Algorithms
+\paragraph{Algorithms}\mbox{}\
+
 Two-dimensional range search
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
@@ -81,28 +82,36 @@ Construction of the kd-tree requires a median finding function, which is used ba
 
 The requirement for the user interface is formulated in the project description as follows: "Design a coherent user interface, which includes the map, but probably also other components". To fulfull this requirement we have to first of all select a technology to show graphical data for the user. In our case there are two obvious options. The first one is to use Swing and the other one is to make a browser based solution. In the following we will discuss both solutions.
 
-\paragraph{Swing Solution}
+\paragraph{Swing Solution}\mbox{}\
+
 We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
-\paragraph{Browser solution}
+\paragraph{Browser solution}\mbox{}\
+
 For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, xml and svg, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different svg commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
 Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
 
-\paragraph{Features}
+\paragraph{Features}\mbox{}\
+
 The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
-\paragraph{Road displaying}
+
+\paragraph{Road displaying}\mbox{}\
+
 To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and svg. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
  
-\paragraph{Scalable map}
-The map needs to be scalable when the user drags the window. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basicly there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
+\paragraph{Scalable Map}\mbox{}\
 
-\paragraph{Zoom and panning}
-When discussing zoom and panning there are two aspects. The first one is to consider how much extra data should be passed from the server to the browser. We have chosen to call that extra data for buffer data. When choosing the amount of buffer data there are to extremes. The first one is to let the browser request exactly that amount of data that the user is requesting. This way of doing it would make sure that it would be easy to develop a new view, e.g. a smartphone app, because most of the functionality is located at the server. On the other hand the user might experience the program as slow if the user has a slow internet connection. The other extreme is to let the browser request all data in one call and only show what the user is asking for. This would require a lot of functionality in the view, but it might result in a good experience for the user if the internet connection is slow. We have chosen a compromize where the browser request buffer data for panning and not for zooming.
+The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
+
+\paragraph{Zoom and Panning}\mbox{}\
+
+When discussing zoom and panning there are two aspects. The first one is to consider how much extra data should be passed from the server to the browser. We have chosen to call that extra data for buffer data. When choosing the amount of buffer data there are two extremes. The first one is to let the browser request exactly that amount of data that the user is requesting. This way of doing it would make sure that it would be easy to develop a new view, e.g. a smartphone app, because most of the functionality is located at the server. On the other hand the user might experience the program as slow if the user has a slow internet connection. The other extreme is to let the browser request all data in one call and only show what the user is asking for. This would require a lot of functionality in the view, but it might result in a good experience for the user if the internet connection is slow. We have chosen a compromise where the browser request buffer data for panning and not for zooming.
 The other aspect is to decide in what way the user should be able to zoom and pan. Since we know that it takes a long time to get the Java Script, HTML, SVG and XPath to work together we have chosen to settle for buttons in the browser as the only way for the user to navigate in the map. One could consider to make it possible for the user to use keyboard shortcuts and mouseevents for zooming and panning. 
 
-\paragraph{Routeshowing}
-There are to different approches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would be ran every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
+\paragraph{Route Displaying}\mbox{}\
+
+There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
 				
 				
@@ -123,9 +132,119 @@ There are to different approches of showing the route when the user zooms or pan
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
 			Kort beskrivelse af hver klasse plus deres ansvar\\
+			
+			\subsubsection{Controllers}
+			
+				\paragraph{Controller}\mbox{}\
+				
+Controller is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the request/data back and forth.  This is also the reason why it is all static. \
+Since the program, at this point, is rather simple it only contains of a few methods. All it needs to take of is the starting of the server, getting a part of the map or a part of the map also displaying a route.
 
-			KDTree
-			The KDTree class is responsible for creating the data structure and implementing the search algorithm for range searches. The KDTree contains nodes, which are the input and output type. The output from the search function is used by the RoadSelector class. 
+					
+			\subsubsection{Error handling}
+				
+				\paragraph{LoaderFileNotFoundException}\mbox{}\
+				
+				\paragraph{NoSuchAddressException}\mbox{}\
+				
+				\paragraph{ServerRuntimeException}\mbox{}\
+				
+				\paragraph{ServerStartupException}\mbox{}\
+				
+				\paragraph{StatusCode}\mbox{}\
+				
+				\paragraph{ErrorHandler}\mbox{}\
+				
+			\subsubsection{Models}
+			
+				\paragraph{KDTree}\mbox{}\
+				
+				The KDTree class is responsible for creating the data structure and implementing the search algorithm for range searches. The KDTree contains nodes, which are the input and output type. The KDTree gets its input nodes from the Loader class. The output from the search function is used by the RoadSelector class. 
+				
+				\paragraph{Loader}\mbox{}\
+				
+				\paragraph{Node}\mbox{}\
+				
+				This data class is an representation of geographical points which are connected to eachother with road segments(edges??). These Node objects are constructed(Which class?) using the data in the supplied Krak data files. 
+				
+				\paragraph{NodeComperator}\mbox{}\
+				
+This Comperator is used when building the KD-tree. It compares a specific coordinate of two nodes to decide which one is higher and lower(Hvorfor er det interessant?). The coordinate can be chosen at the time the object is constructed(Hvad mener du med det?).
+
+				\paragraph{PathPreface}\mbox{}\
+				
+Since the graph that we have implemented is a directed graph, there can potentially be two edges for each road segment(edge?), one going each way. This object consists of up to two KradEdges, and a house number specifying which road segment the PathPreface object is representing.
+
+				\paragraph{Region}\mbox{}\
+				
+This data class is a representation of a square region, defined by 2 two-dimensional points. These two points are the coordinates of the opposite corners of a square.
+				
+				\paragraph{Road}\mbox{}\
+				
+The Road class is a data object to represent a straight piece of a road. It will contain information of the roads type, width, starting point, ending point, name, and so forth(Er der andre ting, end dem du lige har nævnt her?). Compared to the KrakEdge it will carry a lot less information.
+				
+				\paragraph{RoadSelector}\mbox{}\
+				
+This class is an result of keeping the KD-Tree as a purely data structure class. It adds additional functionality when it comes to determining what Road objects to show to the user, based on a given Region. It offers additional filtering based on prioritising different Road types.\\
+Hvad er det som den tilfører ekstra funktionalitet til? 
+Additional filtering - i forhold til hvad??
+				
+				\paragraph{RouteFinder}\mbox{}\
+				
+/*The RouteFinder class*/ RouteFinder is used only to get a better and more organized design: It keeps track of all the classes used to find a route, all the way from the input of two /*address strings*/ String to the output of a /*array of roads*/ Road[], which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will also /*cut the length of the first and last*/ cut of the first and last Road object to stop/start the route from where we suppose the house number will be. This is not the actual location of the house, but is computed from the total amount of house numbers at the road.
+/*RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.*/
+RouteFinder is the only class that handles data from the following classes is handling all the data from the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.
+
+				
+				\paragraph{XML}\mbox{}\
+				
+/*The purpose of this class is to create a XML file  which can be converted to a String and returned to the client*/This class’s purpose is to create a XML file or String, which can be used for our GUI in JavaScript. /*The class contains code which create XML elements, as for instance */It is preset to contain certain groups, as for instance roads, route, viewport or statusCode. It will fill the groups with data taken as parameters from the method signature.  /*The class contains a method for making a file, which is mainly used for debugging.*/ The reason why it is possible to make a file is mainly for debugging.
+XML is only called from the Controller.
+
+				
+			\subsubsection{Routing}\mbox{}\
+			
+				\paragraph{AddressParser}\mbox{}\
+				
+This class is responsible for parsing /*parsing a roadname typed by the user*/ the user input. It uses regular expressions to identify the road name, road number and associated letter, zip Code and city name.
+				
+				\paragraph{DijkstraSP}\mbox{}\
+				
+This class has been copied from a book/*(Sedgewick and Wayne p. ????)*/ in another course (BADS) and modified to fit our program. DijkstraSP contains Dijkstra’s algorithm, /*is the following important?*/which we have learned during the course BADS. It will be loaded with a KrakEdgeWeightedDigraph and supply you with the shortest path from a starting point to a target. At normal circumstances it would find the shortest path to each node in the graph, but we have modified the algorithm to stop computing, when the shortest path have been found to improve performance.\
+This class will use some specific versions of for instance a Stack (not the one from java.util.) /*and*/or PriorityQueue to be functioning. These /*classes*/have also been taken from the book in the course BADS, but may not be mentioned elsewhere. 
+				
+				\paragraph{EdgeParser}\mbox{}\
+				
+This class associates road names, numbers, zip codes, and city names with the correct directed edges in the graph. This is used to find a specific object based on the user search input.
+				
+				\paragraph{EdgesAndRoadsConverter}\mbox{}\
+				
+This class is used as a part of our route searching system. It only has two purposes: The first is /*simply*/simple to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.
+/*To make sure that the correct start and target is used the class is taking care of adding the correct KrakEdge if it is needed. The class also calculates the length of the first and last KrakEdge based on the house number.*/\
+It may be a bit tricky to find the exact place to start and end the search of a route, regarding to two nodes ids in each KrakEdge. Therefore this class makes sure the correct KrakEdge is added (if needed) and made into a smaller KrakEdge, if the start/target is for instance in the middle of the KrakEdge, depending on the house number.
+				
+				\paragraph{KrakEdge}\mbox{}\
+				
+The KrakEdge is a data object, representing a straight piece of road and used when searching for a route./*It carries*/ It will carry a lot more information than a Road, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing /*whether*/to get a route with the shortest distance or shortest time.
+*This class has been copied from a book in another course (BADS) and modified to fit our program.
+
+				
+				\paragraph{KrakEdgeWeightedDigraph}\mbox{}\
+				
+This class /*contains*/is one of our data structures, which is used when searching for a route. It is a directed graph, that contains information of how many KrakEdges there has a connection to a certain node. The graph is directed, so it can distinguish a one way road from a road with no driving prohibitions. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. 
+*This class has been copied from a book in another course (BADS) and modified slightly to fit our program.
+
+
+				
+			\subsubsection{View}
+			
+				\paragraph{JSConnector}\mbox{}\
+				
+				This class is responsible of listening for requests from the browser. When the class receives a request it parses the url string. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both mapdata and route. The class then returns the resulting xml string to the browser. 
+						
+				\paragraph{index.html}\mbox{}\
+				
+				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 				
 			
 		\subsection{Errorhandling}
 			A good idea to handle exceptions is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
@@ -134,10 +253,12 @@ There are to different approches of showing the route when the user zooms or pan
 			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
 			the outside, where and how the an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
 			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
-			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-errors. These types of errors a only errors that can be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors can occur and the level of criticalness, it's clear that they each require different handling. \
+			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
 			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass either one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
 			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
 			The advantages of doing it this way, is the overview and the easy way of expanding the system. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then will the controller and errorhandler class take care of the rest. 
+			
+			
 			
 			
 	\section{Technical Description}
@@ -186,15 +307,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		
 	\section{Process description}
 		lenght : 1 - sider\\
-		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have. \\
-		For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam. The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it has always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\
-		We also used another collaboration tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were on the table as ideas, but we decided to go with Git.  \
-		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found. \
+		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
+		\paragraph{Collaboration tools}\mbox{}\
 		
-
-		Tidsplan
-		GIT
-		Meeting structure
+		For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam. The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\
+		We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, due to the fact that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time\
+		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.
+		\paragraph{Group dynamics}\mbox{}\
+		
+		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
+		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester, where some of the group members had a lot more stressful project period.  
 		
 		Hvordan er samarbejdet gaet i gruppen?\
 		Hvad kunne vi goere for at faet et bedre samarbejde?\

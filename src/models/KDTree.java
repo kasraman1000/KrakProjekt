@@ -10,21 +10,17 @@ public class KDTree
 {
 	//Dimensions
 	private int k;
-	
+	//The root node in the tree structure
 	private KDNode root;
+	//The smallest coordinates of the map.
 	double[] origo;
+	//The biggest coordinates of the map.
 	double[] top;
-	private static KDTree tree = new KDTree(2);
 	private static Random r = new Random();
 	
-	private KDTree(int k)
+	public KDTree(int k)
 	{
 		this.k = k;
-	}
-	
-	public static KDTree getTree()
-	{
-		return tree;
 	}
 	
 	public KDNode getRoot()
@@ -121,6 +117,11 @@ public class KDTree
 		}
 	}
 	
+	/**
+	 * Returns a collection with nodes in the region.
+	 * @param region The region to search.
+	 * @return	A collection with nodes contained in the region.
+	 */
 	public ArrayList<Node> searchRange(Region region)
 	{
 		//If coordinates are of wrong input, correct them
@@ -128,11 +129,21 @@ public class KDTree
 		double[] p2 = region.getRightPoint();
 		//Creating a HashSet to make sure that no road are contained twice.
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		tree.searchRange(root, nodes, 0, origo, top, p1, p2);
+		searchRange(root, nodes, 0, origo, top, p1, p2);
 
 		return nodes;
 	}
-
+	
+	/**
+	 * Fills a collection with nodes from the tree in the given region.
+	 * @param kdn The node to define regions.
+	 * @param nodes	The collection to hold the result, which is built recursively.
+	 * @param depth	The recursion depth of the method call.
+	 * @param cr1	The smallest coordinate set of the region, which the call is investigating.
+	 * @param cr2	The biggest coordinate set of the region, which the call is investigating.
+	 * @param r1	The smallest coordinate of the search region.
+	 * @param r2	The biggest coordinate of the search region.
+	 */
 	public void searchRange(KDNode kdn, ArrayList<Node> nodes, int depth, double[] cr1, double[] cr2, double[] r1, double[] r2)
 	{
 		if(nodeContained(kdn, r1, r2)) {nodes.add(kdn.getNode());}
@@ -168,7 +179,7 @@ public class KDTree
 	
 	public void initialize(ArrayList<Node> nodes)
 	{	
-		tree.build(nodes);
+		build(nodes);
 		origo = Road.getOrigo();
 		top = Road.getTop();
 	}
@@ -225,8 +236,14 @@ public class KDTree
 			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
 			return randomNodes[size/2];
 		}
-		
-		private Node medianTest(ArrayList<Node> nodes, int nth, int depth) {
+		/**
+		 * Returns the nth element from a collection. This method is not used in the program.
+		 * @param nodes Collection to retrieve the element from.
+		 * @param nth	The index which the returned element should have.
+		 * @param depth	Recursion level of the function calling this function.
+		 * @return	nth element from the collection.
+		 */
+		private Node medianComplex(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
 			ArrayList<Node> above = new ArrayList<Node>();

@@ -14,7 +14,7 @@ public class RoadSelector {
 	//Set the maximum amount of roads to be showed at once (beside a route)
 	private static final int MAX_ROADS = 20000;
 	
-	private static KDTree kdTree = KDTree.getTree();
+	private static KDTree kdTree;
 
 	
 	/**
@@ -59,6 +59,7 @@ public class RoadSelector {
 	 */
 	public static void initialize(ArrayList<Node> nodes)
 	{
+		kdTree = new KDTree(2);
 		kdTree.initialize(nodes);
 	}
 
