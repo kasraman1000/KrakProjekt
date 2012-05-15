@@ -7,8 +7,7 @@
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Soerensen og
 		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
-		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.\\
-		MAALGRUPPE !! ! 
+		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
 	
 	\section{Background and Data}
 		length : 0.5 - 1 side\\
@@ -247,16 +246,18 @@ This class /*contains*/is one of our data structures, which is used when searchi
 				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 				
 			
 		\subsection{Errorhandling}
-			A good idea to handle exceptions is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
+			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
 			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
 			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
 			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
-			the outside, where and how the an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
+			the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
 			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
 			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
-			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass either one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
+			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
 			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
-			The advantages of doing it this way, is the overview and the easy way of expanding the system. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then will the controller and errorhandler class take care of the rest. 
+			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.
+			
+			/* maaske noget med de negative sider af vores system??*/ 
 			
 			
 			
