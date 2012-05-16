@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import models.Region;
 import controllers.Controller;
+import errorHandling.*;
 
 /**
  * The JavaScript connector, accepting requests from the browser client
@@ -19,14 +20,17 @@ public class JSConnector {
 	/**
 	 * Constructor that makes the class ready for a request
 	 */
-	public JSConnector(){
+	public JSConnector() throws ServerRuntimeException, 
+								ServerStartupException{
+		ServerSocket ss = null;
 		try {
 			//The server will listen for requests at port 8080
-			ServerSocket ss = new ServerSocket(8080);
-			listenForBrowserRequest(ss);
+			ss = new ServerSocket(8080);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ConnectorSocketException(e);
 		}
+
+		listenForBrowserRequest(ss);
 	}
 
 	/**
@@ -35,10 +39,15 @@ public class JSConnector {
 	 * @param ss the ServerSocket object that creates the connection
 	 * @throws IOException 
 	 */
-	private void listenForBrowserRequest(ServerSocket ss) throws IOException {
-		Socket s;
+	private void listenForBrowserRequest(ServerSocket ss) throws ServerRuntimeException {
+		Socket s = null;
 		while(true){
-			s = ss.accept();
+			try{
+				s = ss.accept();
+			}
+			catch(IOException e){
+				throw new ConnectorIOException(e);
+			}
 			handleRequest(s);
 		}
 	}
@@ -47,12 +56,17 @@ public class JSConnector {
 	 * Converts the request to data types and calls for a xml-String from the Controller
 	 * 
 	 * @param s The socket to handle the request from
+	 * @throws ServerRuntimeException 
 	 */
-	private void handleRequest(Socket s) {
+	private void handleRequest(Socket s) throws ServerRuntimeException {
 		BufferedReader input;
+		HashMap<String,String> parameters = null;
 		try {
 			input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			HashMap<String,String> parameters = readParameters(input.readLine());
+			parameters = readParameters(input.readLine());
+		} catch (IOException e) {
+			throw new ConnectorIOException(e);
+		}
 
 			Double x1 = Double.valueOf(parameters.get("x1"));
 			Double y1 = Double.valueOf(parameters.get("y1"));
@@ -73,9 +87,7 @@ public class JSConnector {
 			}
 			
 			sendResponseToBrowser(s,response);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	/**
@@ -84,7 +96,7 @@ public class JSConnector {
 	 * @param s the socket that contains the outputstream
 	 * @param response What will be sent to to the browser
 	 */
-	private void sendResponseToBrowser(Socket s, String response) {
+	private void sendResponseToBrowser(Socket s, String response) throws ServerRuntimeException{
 		try {
 			DataOutputStream output = new DataOutputStream(s.getOutputStream());
 			String httpHeader = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
@@ -94,7 +106,7 @@ public class JSConnector {
 			output.close();
 			s.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ConnectorIOException(e);
 		}
 	}
 
@@ -105,12 +117,12 @@ public class JSConnector {
 	 * @param line the first line of the http request
 	 * @return returns a hashMap with the parameters
 	 */
-	private HashMap<String, String> readParameters(String inLine) {
+	private HashMap<String, String> readParameters(String inLine) throws ServerRuntimeException{
 		String line = "";
 		try{
 			line = URLDecoder.decode(inLine, "UTF-8");
 		} catch(Exception e) {
-			 System.err.println("JSConnector.readParameters() - linie 117 EXCEPTION  " + e);
+			throw new ConnectorDecodingException(e);
 		}
 		HashMap<String,String> result = new HashMap<String,String>();
 		

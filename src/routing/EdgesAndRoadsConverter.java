@@ -5,6 +5,7 @@ package routing;
 
 import models.PathPreface;
 import models.Road;
+import errorHandling.*;
 
 /**
  * This is a helper class for when the route has been found:
@@ -218,7 +219,8 @@ public class EdgesAndRoadsConverter {
 	 * @param pathPrefaceTo The edges and house number where to end the route
 	 * @return The precise route with the correct start and ending point
 	 */
-	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) throws Exception{
+	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo)
+																																throws ClientInputException{
 		//Will test if the first edge is the same as the one in the preface
 		KrakEdge edgeToBeAddedInFrontOfRoute = null;
 		KrakEdge edgeToBeAddedAtEndOfRoute = null;
@@ -229,10 +231,7 @@ public class EdgesAndRoadsConverter {
 			//... the correct Edge are to be added in front of the route
 			if(routeEdges[0].from() == pathPrefaceFrom.getEdge1().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge1();//add first edge in front of route
 			else if(routeEdges[0].from() == pathPrefaceFrom.getEdge2().to()) edgeToBeAddedInFrontOfRoute = pathPrefaceFrom.getEdge2();//add second edge in front of route
-			//TODO May add error handling
-			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - FIRST NODE - not corresponding to-id's!!\n" +
-					"routeEdges[0].from(): " + routeEdges[0].from() + " and pathPreface.getEdge1().to(): " + pathPrefaceFrom.getEdge1().to() + 
-					" and pathPrefaceFrom.getEdge2().to(): " + pathPrefaceFrom.getEdge2().to());
+			else throw new RoutingEdgeErrorException(routeEdges[0].from(),pathPrefaceFrom.getEdge1().to(),pathPrefaceFrom.getEdge2().to());
 		
 		//If NOT either of the two Edge's in the pathPreface are equal to the last Edge in the route...
 		if(!(edgesAreEqual(routeEdges[routeEdges.length-1], pathPrefaceTo.getEdge1()) || 
@@ -241,10 +240,7 @@ public class EdgesAndRoadsConverter {
 			//...the correct Edge must be added 
 			if(routeEdges[routeEdges.length-1].to() == pathPrefaceTo.getEdge1().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge1();
 			else if(routeEdges[routeEdges.length-1].to() == pathPrefaceTo.getEdge2().from()) edgeToBeAddedAtEndOfRoute = pathPrefaceTo.getEdge2();
-			//TODO May add error handling
-			else System.out.println("EdgesAndRoadsConverter.comparePathPrefaceAndRoute() - LAST NODE - not corresponding to-id's!!\n" +
-					"routeEdges[routeEdges.length-1].to(): " + routeEdges[routeEdges.length-1].to() + " and pathPreface.getEdge1().from(): " + pathPrefaceFrom.getEdge1().from() + 
-					" and pathPrefaceFrom.getEdge2().from(): " + pathPrefaceFrom.getEdge2().from());
+			else throw new RoutingEdgeErrorException(routeEdges[0].from(),pathPrefaceFrom.getEdge1().to(),pathPrefaceFrom.getEdge2().to());
 		
 		int edgesToBeAdded = 0;
 		if(edgeToBeAddedInFrontOfRoute != null) edgesToBeAdded++;
