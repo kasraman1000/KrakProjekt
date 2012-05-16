@@ -39,7 +39,13 @@ public class Controller {
 	 * 
 	 */
 	public static void startServer(){
-		new JSConnector();
+		try {
+			new JSConnector();
+		} catch (ServerRuntimeException e) {
+			ErrorHandler.handleServerRuntimeException(e);
+		} catch (ServerStartupException e) {
+			ErrorHandler.handleServerStartupException(e);
+		}
 	}
 
 
