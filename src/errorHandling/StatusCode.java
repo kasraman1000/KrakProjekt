@@ -17,7 +17,10 @@ public enum StatusCode {
 	LOADER_FILE_NOT_FOUND(6, "The loader couldn't find the data files"),
 	XML_DOCUMENT(7, "The XML Document was not created properbly"),
 	XML_TRANSFORMER(8, "The transformation to a XML-string went bad"),
-	ROUTING_EDGE_ERROR(9,"The route does not start or end at the desired destination");
+	ROUTING_EDGE_ERROR(9,"The route does not start or end at the desired destination"),
+	CONNECTOR_IO(10,"Something went wrong when trying to send or recieve data from the browser"),
+	CONNECTOR_SOCKET(11,"Could not make the socket for the connection"),
+	CONNECTOR_DECODING(12,"Couldn't decode the input from the browser");
 	
 	private final String description;
 	private final int codeNumber;
