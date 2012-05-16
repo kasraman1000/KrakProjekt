@@ -19,6 +19,10 @@ import errorHandling.*;
 public class JSConnector {
 	/**
 	 * Constructor that makes the class ready for a request
+	 * 
+	 * @throws ServerStartupException If the server is unable to start up the JSConnector
+	 * @throws ServerRuntimeException If server crashes
+	 *
 	 */
 	public JSConnector() throws ServerRuntimeException, 
 								ServerStartupException{
@@ -37,7 +41,7 @@ public class JSConnector {
 	 * This method listens for a request from the browser
 	 * 
 	 * @param ss the ServerSocket object that creates the connection
-	 * @throws IOException 
+	 * @throws ServerRuntimeException If unable to handle the request
 	 */
 	private void listenForBrowserRequest(ServerSocket ss) throws ServerRuntimeException {
 		Socket s = null;
@@ -56,7 +60,7 @@ public class JSConnector {
 	 * Converts the request to data types and calls for a xml-String from the Controller
 	 * 
 	 * @param s The socket to handle the request from
-	 * @throws ServerRuntimeException 
+	 * @throws ServerRuntimeException If unable to handle the request
 	 */
 	private void handleRequest(Socket s) throws ServerRuntimeException {
 		BufferedReader input;
@@ -95,6 +99,7 @@ public class JSConnector {
 	 * 
 	 * @param s the socket that contains the outputstream
 	 * @param response What will be sent to to the browser
+	 * @throws ServerRuntimeException If the server is unable to send the request
 	 */
 	private void sendResponseToBrowser(Socket s, String response) throws ServerRuntimeException{
 		try {
@@ -116,6 +121,7 @@ public class JSConnector {
 	 * 
 	 * @param line the first line of the http request
 	 * @return returns a hashMap with the parameters
+	 * @throws ServerRuntimeException If unable to decode the request to UTF-8 format
 	 */
 	private HashMap<String, String> readParameters(String inLine) throws ServerRuntimeException{
 		String line = "";

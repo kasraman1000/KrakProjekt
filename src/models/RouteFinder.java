@@ -49,6 +49,7 @@ public class RouteFinder {
 	 * @param pathPrefaceTo A PathPreface showing where to end
 	 * @param isLengthWeighted Tells if the route should depend on the length of travel time
 	 * @return An ArrayList of Roads to represent the route
+	 * @throws ClientInputException If it is invalid inout from the client
 	 */
 	public Road[] getRoute(PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo, boolean isLengthWeighted) throws ClientInputException{
 		//Randomly chosen because of later tests of the exact id (performed in EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra())
