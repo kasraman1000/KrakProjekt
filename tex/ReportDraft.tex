@@ -165,8 +165,6 @@ There are to different approaches of showing the route when the user zooms or pa
 			length : 0.5 - 1 side\\
 			Beskrivelse af flowet gennem programmet\\
 			When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server. The Controller class gets information to complete the request from different components of the program. When the region and route information has been generated it is send as a String to the client.\\
-
 When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
 
 			UML/Klasse diagram\\
