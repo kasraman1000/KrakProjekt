@@ -36,6 +36,10 @@ public class Loader {
 	private static double yMin;
 	private static double xMax;
 	private static double yMax;
+	
+	//Values used to specify the height and width of the rearranged map
+	private static double mapHeight;
+	private static double mapWidth;
 
 	//For prints of start up time
 	private static long timeMillis;
@@ -242,6 +246,8 @@ public class Loader {
 
 			findMinAndMaxValues(xCoord, yCoord);
 		}
+		mapHeight = yMax-yMin;
+		mapWidth = xMax-xMin;
 	}
 	
 	/**
@@ -342,5 +348,21 @@ public class Loader {
 		if(x > xMax) xMax = x;
 		if(y < yMin) yMin = y;
 		if(y > yMax) yMax = y;
+	}
+	
+	/**
+	 * Get the map height
+	 * @return Height of the map
+	 */
+	public static double getMapHeight(){
+		return mapHeight;
+	}
+	
+	/**
+	 * Get the map width
+	 * @return Width of the map
+	 */
+	public static double getMapWidth(){
+		return mapWidth;
 	}
 }

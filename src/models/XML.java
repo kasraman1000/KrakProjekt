@@ -81,9 +81,6 @@ public class XML{
 	/**
 	 * Will create a XML String
 	 * 
-	 * @param roads All the roads to put into the XML-string
-	 * @return String with the XML containing the svg-element
-	 *  
 	 * @param roads All the roads to be added in the XML
 	 * @param route The route the be added in the XML
 	 * @param region What region the viewer shall show
@@ -143,6 +140,13 @@ public class XML{
 		}
 	}
 
+	/**
+	 * Is a method for backup if an error has occurred
+	 *  
+	 * @param statusCode The code being send to the client
+	 * @return The String with the status code being sent to the client
+	 * @throws ServerRuntimeException If this also messes up
+	 */
 	public String createErrorString(StatusCode statusCode) throws ServerRuntimeException{
 		//Create the Document
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -184,16 +188,7 @@ public class XML{
 	    return xmlString;
 	}
 
-	/**
-	 * Will create a xml-string with a svg-element containing lines
-	 * 
-	 * @param roads All the roads to put into the xml-string
-	 * @return String with the xml containing the svg-element
-	 * @throws ParserConfigurationException If unable to create the new Document required to create the XML String
-	 * @throws TransformerConfigurationException If unable to create a new Transformer
-	 * @throws TransformerException If unable to transform the Document into a XML String
-	 */
-	
+		
 	/**
 	 * Creates the document to contain the whole XML
 	 * @param roads The roads to be in the SVG element
@@ -258,8 +253,8 @@ public class XML{
 		Element svgElement = document.createElement(SVG_ELEMENT_NAME);
 		svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svgElement.setAttribute("version", "1.1");
-		svgElement.setAttribute("width", "450000");
-		svgElement.setAttribute("height", "350000");
+		svgElement.setAttribute("width", Loader.getMapWidth() +"");
+		svgElement.setAttribute("height", Loader.getMapHeight() +"");
 		
 		return svgElement;
 	}

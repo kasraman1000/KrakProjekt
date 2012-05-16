@@ -8,9 +8,13 @@ import java.util.HashSet;
  * 
  */
 public class Node {
-	public final double[] coords;
+	private final double[] coords;
 	private HashSet<Road> roads;
 	
+	/**
+	 * The Constructor
+	 * @param coords The coordinates of the node
+	 */
 	public Node(double[] coords) {
 		this.coords = coords;
 		roads = new HashSet<Road>();

@@ -22,11 +22,11 @@ public class RouteFinder {
 	}
 
 	/**
-	 * Will find the route 
+	 * Will find the route using address Strings
 	 * 
 	 * @param from The place to start
 	 * @param to The place to end
-	 * @param isLengthWeighted Should the route depend on the length or time travelt
+	 * @param isLengthWeighted Should the route depend on the length or time traveled
 	 * @return The route as an array of Roads
 	 * @throws ClientInputException If the input is invalid
 	 */
@@ -43,11 +43,13 @@ public class RouteFinder {
 	}
 	
 	/**
+	 * Will find the route using Prefaces for start and destination
 	 * 
 	 * @param pathPrefaceFrom A PathPreface showing where to start
 	 * @param pathPrefaceTo A PathPreface showing where to end
 	 * @param isLengthWeighted Tells if the route should depend on the length of travel time
 	 * @return An ArrayList of Roads to represent the route
+	 * @throws ClientInputException If it is invalid inout from the client
 	 */
 	public Road[] getRoute(PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo, boolean isLengthWeighted) throws ClientInputException{
 		//Randomly chosen because of later tests of the exact id (performed in EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra())

@@ -24,6 +24,9 @@ public class NodeComparator implements Comparator<Node> {
 	
 	/**
 	 * Compare the two Nodes regarding their coordinates
+	 * @param n1 The node to be compared
+	 * @param n2 The node to compare to
+	 * @return -1 if the value is less, 0 if equal and 1 if greater
 	 */
 	public int compare(Node n1, Node n2)
 	{

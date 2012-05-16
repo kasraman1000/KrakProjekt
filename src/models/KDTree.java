@@ -236,6 +236,8 @@ public class KDTree
 			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
 			return randomNodes[size/2];
 		}
+		
+		@Deprecated
 		/**
 		 * Returns the nth element from a collection. This method is not used in the program.
 		 * @param nodes Collection to retrieve the element from.
@@ -243,6 +245,7 @@ public class KDTree
 		 * @param depth	Recursion level of the function calling this function.
 		 * @return	nth element from the collection.
 		 */
+		@SuppressWarnings("unused")
 		private Node medianComplex(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();
