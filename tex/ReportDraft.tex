@@ -2,13 +2,15 @@
 \usepackage{graphicx}
 \begin{document}
 	\tableofcontents
+	
 	\newpage
 	\section{Preface}
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Soerensen og
 		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
-	
+		
+	\newpage
 	\section{Background and Data}
 	
 		For this project we have been given the task of designing and creating a java-written program 
@@ -33,7 +35,8 @@
 
 		 and get the shortest route between these two points calculated and shown on the map, with the map cut out to a
 		 fitting view of the route.
-
+		 
+	\newpage
 	\section{Limitations}
 		
 		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider
@@ -49,8 +52,8 @@
 		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
 		hvorfor har vi valgt edges og road objekter istedet for at holde det samlet?\\
 		
- To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, we will list our own points of focus and use these as arguments for one or another solution.\\
-
+ To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, we will list our own points of focus and use these as arguments for one or another solution in the following analyze.\\
+/*Skal der vaere en analyse her af vores fokuspunkter??*/
  We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not     try to implement unnecessary features and functionality.\\
 
 Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
@@ -64,22 +67,21 @@ We need to settle on a way to show the roads graphically. There have been some g
 
 To visualize the map in Java, we would use the Swing-libraries. In the browser we could use different solutions. With the new HTML-5 standards, the “canvas”-element in javascript, could be used for the task. This would integrate well with the other features we would implement with javascript. The other possible solution is SVG, Scalable Vector Graphics. These would easily help us with the requirement that our program should scale when resizing the window. We will use SVG, because it is somewhat simpler, and goes well with XML, which we will use to send the map data from the server to the browser. This choice will help us with navigating around the visualization.\\
 
-Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include rotating the map, or tilting it/*andre eksempler*/. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data/*hmm*?*/ to zoom in SVG, because it consists of vectors.\\
+Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include dragging the map around using the mouse or rotating the map, or tilting it. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data/*hmm?*/ to zoom in SVG, because it consists of vectors.\\
 
-We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. To simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind, that you need to show all roads of the same type, you can avoid most of the trouble.\\
+We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. We can simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would therefore look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind that you need to show all roads of the same type, you can avoid most of the trouble.\\
 
 We also need to be able to find the shortest path between points. If this needs to be done quickly, we could do it with a graph data structure, and build a Shortest Path Tree with it, from the first point until we find the second. The problem with this is that it is a different data structure that the one we use for the visualization. But if we argue that this is a web-server, and we prioritize speed over space, this would be the best choice, to have two separate data structures. So we will use a graph. We then need to build the SPT. There are multiple algorithms for doing this, we looked at the A*-algorithm, but do to time constraints we will be using Dijkstras.\\
 
-The last requirement we were given was about making the user interface logical, consistent and reasonably fast. This fit well with our own priorities, and some of the choices connected to this have already been explained above, and will be specified later.\\
+The last requirement we were given was about making the user interface logical, consistent and reasonably fast. This fit well with our own priorities, and some of the choices connected to this have already been pointed out in the above and will be specified later.\\
 \\
 
 		
 		\subsection{Thoughts toward design}
 			length : 0.5 side\\
-			Opsummering af foregående afsnit omkring analyse af samt en præcisering af kravene. Men dette afsnit, skal bare bruges som indledning. \\
-Continuing on from the former section, we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices specifies in the analysis.\\
+			In the former section we analyzed the requirements more deeply and we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices specified in the analysis.\\
 
-We have already decided that we need two data structures for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data via XML. We also need to think about the user interface design, and how it should support the features of the program.\\
+We have already decided that we need more than one data structure for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data by XML. We also need to think about the user interface design, and how it should support the features of the program.\\
 			\subsubsection{Datastructure}
 				length : 1 - 2 side\\
 				Hvilke generelle overvejelser er skal der tager i forbindelse med valg af datastruktur? \\
@@ -154,6 +156,7 @@ There are to different approaches of showing the route when the user zooms or pa
 			Opsummering\\
 			Kan vi indfri vores krav/maal for programmet, ved at bruge de ting, som vi har beskrevet i det her afsnit??\\
 			
+	\newpage		
 	\section{Implementation}
 		length : 0.5 - 1 side\\
 		Her beskrives kort hvad der kommer til at være i det kommende afsnit..
@@ -161,11 +164,17 @@ There are to different approaches of showing the route when the user zooms or pa
 		\subsection{Flow description}
 			length : 0.5 - 1 side\\
 			Beskrivelse af flowet gennem programmet\\
+			When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
+When a user of the application wants to see a part of the map, a request is send to the java server. The Controller class gets information to complete the request from different components of the program. When the region and route information has been generated it is send as a String to the client.\\
+
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
+
 			UML/Klasse diagram\\
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
 		
 		\includegraphics[width=120mm]{umlArrows.png}
+		\newpage
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
 			Kort beskrivelse af hver klasse plus deres ansvar\\
@@ -316,8 +325,8 @@ This class /*contains*/is one of our data structures, which is used when searchi
 						
 				\paragraph{index.html}\mbox{}\
 				
-				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 				
-			
+				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 
+		\newpage	
 		\subsection{Errorhandling}
 			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
 			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
@@ -334,14 +343,14 @@ This class /*contains*/is one of our data structures, which is used when searchi
 			
 			
 			
-			
+	\newpage		
 	\section{Technical Description}
 		length : 0.5 - 1 side\\
 		Beskrivelse af nogen af de meget tekniske og 'tunge' metoder\\
 Creation of the data structure is done by calling the expand method on a KDNode object, which will construct the tree recursively. The KDNode is a nested class, which serves as a container for the real node object. Each KDNode has references to its child nodes, the left is smaller than the nodes relevant coordinate and the right one is greater or equal to. The expand method finds the median node from the input collection and returns that node as the child node. It calls the same method twice, each with approximately half of the collection it was given, divided by the median node. By changing the axis, which the median is calculated from, a two dimensional tree is constructed.
 Searching in the tree is done from a region input. When visiting a node, a region is defined from the axis, which the node was chosen as median from. For instance the first node (root node) defines two regions that ranges from the largest to the smallest y-coordinate. The left region for this node ranges from the smallest x-coordinate to the nodes x-coordinate and the right ranges from the biggest x-coordinate to the nodes x-coordinate. For both regions the geometrical functions fullyContained and intersecting investigates how they relate to the input region. If the region is fully contained in the input region it returns all child nodes. If it is intersecting, this function is called recursively.
-
-		
+			
+	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
 
@@ -353,7 +362,7 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		
 		\includegraphics[width=110mm]{screendump.png}
 		
-		
+	\newpage
 	\section{Testing}
 		length : 0.5 - 1 side\\
 		Generelle overvejelser omkring test\\
@@ -379,11 +388,13 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 			Forventningstabeller?\\
 			Hvad kan vi bruge de her test til i forhold til programmet?\\
 			
+	\newpage
 	\section{Product conclusion}
 		length : 1 - 2 sider\\
 		Har vi indfriet de krav til programmet, som vi omtalte i tidligere afsnit?\\
 		Hvad ville vi goere anderleds, hvis vi havde muligheden?\\
 		Mangler der noget, for at vi kan sende det her program paa gaden?\\
+		\newpage
 		
 	\section{Process description}
 		lenght : 1 - sider\\
@@ -408,12 +419,12 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		Hvad/hvilke ting var gode/daarlige i gruppen?\
 		Har vi brugt nogle vaerktoejer til at styrke vores samarbejde? Kunne vi have brugt nogen?\
 		
-	
+	\newpage
 	\section{Final thoughts}
 		length : 0.5 - 1 side\\
 		Skal bare lige runde projektet af..
 	
-
+	\section{Appendix}
 		\subsection{resume}
 		
 		\begin{center}
@@ -735,10 +746,10 @@ Vi læser opgavebeskrivelsen igennem.
 		\paragraph{Beskrivelse af dagen:}
 		Design choices:
 	Der skrives en RoadSelection-klasse, med ansvar for at hente de rigtige Road-objekter ud fra KdTree, beregne zoom-niveau(Hvilken prioritet af veje skal med)
-•	Der skrives en static RoadStatus-klasse der står for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.
-•	Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal være, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som så kalder videre til RoadStatus. På denne måde skal XML-klassen heller ikke holde styr på vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber også modularitet.
-•	Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud på alle veje.
-•	Krakloader skal kun kendes af KdTree, det er kun den der bruger den.
+Der skrives en static RoadStatus-klasse der står for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.\\
+Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal være, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som så kalder videre til RoadStatus. På denne måde skal XML-klassen heller ikke holde styr på vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber også modularitet.\\
+Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud på alle veje.\\
+Krakloader skal kun kendes af KdTree, det er kun den der bruger den.\\
 KD-træ:
 Udskydt, da rutesøgning blev opprioriteret.
 Rutesøgning:
