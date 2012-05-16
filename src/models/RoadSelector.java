@@ -20,6 +20,7 @@ public class RoadSelector {
 	/**
 	 * Returns all roads in a rectangle bound by a region filtered by priority.
 	 * @param region The region which binds the viewport
+	 * @param bufferPercent How much to add at each side of the region (fx. 0.7 == 70%)
 	 * @return All roads within the rectangle, which are relevant to display 
 	 */
 	public static Road[] search(Region region, double bufferPercent) 
@@ -53,9 +54,7 @@ public class RoadSelector {
 	
 	/**
 	 * Returns all roads in a rectangle bound by two points filtered by priority.
-	 * @param p1 x and y coordinates for one of the points
-	 * @param p2 x and y coordinates for the other point
-	 * @return All roads within the rectangle, which are relevant to display
+	 * @param nodes The nodes to put into the KDTree
 	 */
 	public static void initialize(ArrayList<Node> nodes)
 	{
@@ -89,40 +88,5 @@ public class RoadSelector {
 
 		} while (!((result.size() + nextLevelRoads) > max) && level > 1);
 		return result;
-	}
-	
-	/**
-	 * Returns the zoom level, which determines the filtering of the roads
-	 * @param p1 A point in the rectangle that bounds the viewport
-	 * @param p2 Another point in the rectangle that bounds the viewport
-	 * @return The lowest priority that should be displayed
-	 */
-	private static int zoomLevel(double[] p1, double[] p2)
-	{
-		if(p2[0]-p1[0] < 20000)
-			return 1;
-		if(p2[0]-p1[0] < 40000)
-			return 2;
-		if(p2[0]-p1[0] < 80000)
-			return 3;
-		if(p2[0]-p1[0] < 200000)
-			return 4;
-
-			return 5;
-	}
-	
-	
-	/**
-	 * Returns true or false dependent on whether the road should be displayed or not according to the priority
-	 * @param zoomLevel The priority that the road should be equals or greater than to be displayed
-	 * @param road	The road which should be filtered
-	 * @return whether the road has high enough priority to be displayed
-	 */
-	private static boolean filterRoad(int zoomLevel, Road road)
-	{
-		if(road.getPriority() < zoomLevel)
-			return false;
-		else
-			return true;
 	}
 }
