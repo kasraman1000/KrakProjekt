@@ -47,7 +47,7 @@ public class Region {
 			p2[1] = swap;
 		}
 		
-		//Make the right ratio
+		//Make the right ratio (fitting a widescreen)
 		double height = p2[1] - p1[1];
 		double width = p2[0] - p1[0];
 		

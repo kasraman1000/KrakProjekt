@@ -218,6 +218,7 @@ public class EdgesAndRoadsConverter {
 	 * @param pathPrefaceFrom The edges and house number where to start the route
 	 * @param pathPrefaceTo The edges and house number where to end the route
 	 * @return The precise route with the correct start and ending point
+	 * @throws ClientInputException If the input from the client is invalid
 	 */
 	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo)
 																																throws ClientInputException{

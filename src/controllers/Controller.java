@@ -10,7 +10,7 @@ import views.*;
  * @author Group 1, B-SWU, 2012E
  */
 public class Controller {
-		public static void main(String[] args) {
+	public static void main(String[] args) {
 		Controller.startServer();
 	}
 
