@@ -236,6 +236,8 @@ public class KDTree
 			Arrays.sort(randomNodes, 0, randomNodes.length-1, nc);
 			return randomNodes[size/2];
 		}
+		
+		@Deprecated
 		/**
 		 * Returns the nth element from a collection. This method is not used in the program.
 		 * @param nodes Collection to retrieve the element from.
