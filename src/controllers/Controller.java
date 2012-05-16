@@ -48,6 +48,7 @@ public class Controller {
 	 * Will fetch all the roads in the Region specified 
 	 * 
 	 * @param region The area to get the roads from
+	 * @param bufferPercent How much to add to each side as a buffer (0.7 == add 70%)
 	 * @return XML String containing all the roads in the Region
 	 */
 	public static String getXmlString(Region region, double bufferPercent){
@@ -104,5 +105,4 @@ public class Controller {
 
 		return xmlString;
 	}
-
 }

@@ -96,12 +96,12 @@ public class EdgesAndRoadsConverter {
 			fromPoint[1] = edge.getToPoint()[1] - (distY*factor);
 			toPoint = edge.getToPoint();
 			
-			//TODO May be wrong (odd or even regarding the casting to and int)
-			vFromHouseNumber = (int) (edge.getvToHouseNumber() - ((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); 
+			//0.5 is added because of the casting from double to int
+			vFromHouseNumber = (int) (edge.getvToHouseNumber() - ((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor) +0.5); 
 			vToHouseNumber = edge.getvToHouseNumber();
 			
-			//TODO May be wrong (odd or even regarding the casting to and int)
-			hFromHouseNumber = (int) (edge.gethToHouseNumber() - ((edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor)); 
+			//0.5 is added because of the casting from double to int
+			hFromHouseNumber = (int) (edge.gethToHouseNumber() - ((edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor) +0.5); 
 			hToHouseNumber = edge.gethToHouseNumber();
 			length = edge.getLength()-edge.getLength()*factor;
 			time = edge.getTime()-edge.getTime()*factor;
@@ -116,12 +116,12 @@ public class EdgesAndRoadsConverter {
 			toPoint[1] = edge.getFromPoint()[1]+(edge.getToPoint()[1]-edge.getFromPoint()[1])*factor;
 			vFromHouseNumber = edge.getvFromHouseNumber();
 			
-			//TODO May be wrong (odd or even regarding the casting to and int)
-			vToHouseNumber = (int) (edge.getvFromHouseNumber()+((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor)); 
+			//0.5 is added because of the casting from double to int
+			vToHouseNumber = (int) (edge.getvFromHouseNumber()+((edge.getvToHouseNumber()-edge.getvFromHouseNumber())*factor) +0.5); 
 			hFromHouseNumber = edge.gethFromHouseNumber(); 
 			
-			//TODO May be wrong (odd or even regarding the casting to and int)
-			hToHouseNumber = (int) (edge.gethFromHouseNumber() + (edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor);
+			//0.5 is added because of the casting from double to int
+			hToHouseNumber = (int) (edge.gethFromHouseNumber() + (edge.gethToHouseNumber()-edge.gethFromHouseNumber())*factor +0.5);
 			length = edge.getLength()*factor;
 			time = edge.getLength()*factor;
 		
@@ -157,7 +157,6 @@ public class EdgesAndRoadsConverter {
 	private static boolean edgesAreEqual(KrakEdge firstEdge, KrakEdge secondEdge){
 		//Test if both are null have already been checked in chachkStartAndTargetOfDijsktra() in this class
 		if(firstEdge == null || secondEdge == null) return false;
-		//TODO Is it enough to compare hashCodes???
 		
 		//Compare all data from each Edge: If all true, then return true else return false
 		
@@ -189,12 +188,9 @@ public class EdgesAndRoadsConverter {
 		
 		//Time
 		if(firstEdge.getTime() != secondEdge.getTime()){
-			//TODO Is it even possible to reach this?
-			System.err.println("EdgesAndRoadsConverter.edgesAreEqual() - two roads have been tested equal! :O)");
 			return true;
 		}
-			
-			return false;
+		return false;
 	}
 
 
@@ -223,13 +219,6 @@ public class EdgesAndRoadsConverter {
 	 * @return The precise route with the correct start and ending point
 	 */
 	public static Road[] checkStartAndTargetOfDijkstra(KrakEdge[] routeEdges, PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo) throws Exception{
-		//Both edges at the Start or Target can't be null! There must be at least one valid value!
-		//TODO
-		//TODO
-		//TODO
-		if(pathPrefaceFrom.getEdge1() == null && pathPrefaceFrom.getEdge2() == null) throw new Exception();
-		if(pathPrefaceTo.getEdge1() == null && pathPrefaceTo.getEdge2() == null) throw new Exception();
-		
 		//Will test if the first edge is the same as the one in the preface
 		KrakEdge edgeToBeAddedInFrontOfRoute = null;
 		KrakEdge edgeToBeAddedAtEndOfRoute = null;

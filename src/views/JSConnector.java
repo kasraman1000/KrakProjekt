@@ -44,7 +44,7 @@ public class JSConnector {
 	}
 	
 	/**
-	 * Converst the request to data types and calls for a xml-String from the Controller
+	 * Converts the request to data types and calls for a xml-String from the Controller
 	 * 
 	 * @param s The socket to handle the request from
 	 */
@@ -127,6 +127,14 @@ public class JSConnector {
 		return result;
 	}
 	
+	/**
+	 * Not used at the current moment, but very useful if the project is to be expanded (and for debugging)
+	 * It will tell if the request has any parameters.
+	 * 
+	 * @param line String that may contain requests
+	 * @return True if there are any parameters - else false
+	 */
+	@SuppressWarnings("unused")
 	private boolean hasParameters(String line) {
 		//search the string and tells if it contains a questionmark
 		return line.indexOf("\\?")!=-1;

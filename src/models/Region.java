@@ -19,7 +19,7 @@ public class Region {
 	 * @param x2 X coordinate of the last point
 	 * @param y2 Y coordinate of the last point
 	 */
-	public Region(double x1,double y1,double x2,double y2)
+	public Region(double x1, double y1, double x2, double y2)
 	{
 		p1[0] = x1;
 		p1[1] = y1;
