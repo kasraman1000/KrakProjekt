@@ -49,7 +49,7 @@ public class RouteFinder {
 	 * @param isLengthWeighted Tells if the route should depend on the length of travel time
 	 * @return An ArrayList of Roads to represent the route
 	 */
-	public Road[] getRoute(PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo, boolean isLengthWeighted){
+	public Road[] getRoute(PathPreface pathPrefaceFrom, PathPreface pathPrefaceTo, boolean isLengthWeighted) throws ClientInputException{
 		//Randomly chosen because of later tests of the exact id (performed in EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra())
 		int firstNodeId; 
 		int lastNodeId; 
@@ -72,12 +72,7 @@ public class RouteFinder {
 		
 		//Correct start and end of [] - and compute the exact length of the first and last road 
 		Road[] route = null;
-		try {
-			route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		route = EdgesAndRoadsConverter.checkStartAndTargetOfDijkstra(routeEdgesArray, pathPrefaceFrom, pathPrefaceTo);
 				
 		return route;
 	}

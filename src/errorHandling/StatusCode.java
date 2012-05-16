@@ -16,7 +16,8 @@ public enum StatusCode {
 	IO_ERROR(5, "There was an error with the I/O"),
 	LOADER_FILE_NOT_FOUND(6, "The loader couldn't find the data files"),
 	XML_DOCUMENT(7, "The XML Document was not created properbly"),
-	XML_TRANSFORMER(8, "The transformation to a XML-string went bad");
+	XML_TRANSFORMER(8, "The transformation to a XML-string went bad"),
+	ROUTING_EDGE_ERROR(9,"The route does not start or end at the desired destination");
 	
 	private final String description;
 	private final int codeNumber;

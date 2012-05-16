@@ -18,15 +18,19 @@
 		\\This dataset is from the danish mapprovider Krak.dk and it consists of two text files. A file with all the points 
 		and a file with all connections between these points.  
 		\\The application should meet the following requirements:
-		\\	- Draw all roads in the dataset
-		\\	- The map-visualization should adjust acordingly to changes of the windows size
-		\\	- The user should be able to navigate in the visualization
-		\\	- The application should have a minimum of clutter and therefore be able to set a priority of the roads
-		\\	- Be able to compute and show the shortest path between two points given by the user
-		\\	- The application should have a logical, consistent and reasonable fast and responsive user interface\\
+		\begin{itemize}
+		\item Draw all roads in the dataset
+		\item The map-visualization should adjust acordingly to changes of the windows size
+		\item The user should be able to navigate in the visualization
+		\item The application should have a minimum of clutter and therefore be able to set a priority of the roads
+		\item Be able to compute and show the shortest path between two points given by the user
+		\item The application should have a logical, consistent and reasonable fast and responsive user interface\\
+		\end{itemize}
 		
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore
+
 		 this map by zooming in and out and navigating around. A user should also be able to select two adresses,
+
 		 and get the shortest route between these two points calculated and shown on the map, with the map cut out to a
 		 fitting view of the route.
 
@@ -44,24 +48,23 @@
 		Hvad skal vi have med i vores program, for at vi kan indfri disse krav?\\
 		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
 		hvorfor har vi valgt edges og road objekter istedet for at holde det samlet?\\
- To get an understanding of the requirements stated in the previous section, we will run through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, do we have any           requirements or goals for our own application of such a program? Maybe not that specific, but we have some points of         focus and some priorities:\\
+		
+ To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, we will list our own points of focus and use these as arguments for one or another solution.\\
 
  We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not     try to implement unnecessary features and functionality.\\
 
 Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
 
- The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new         functionality, or maybe changing one of the data structures, the user interface or the platform\\
+ The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
 \\
 
- But let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. As we are going to use map data, which includes coordinates, it would be easy to utilize this in the data structure. This could be either a KD-tree or Quad-tree structure\\
+ But let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. As we are going to use map data, which includes coordinates, it would be easy to utilize this in the data structure/*Jeg fatter ikke lige den saetning?*/. \\
 
-ARGUMENT FOR KD-TRÆ OVER QUAD?\\
-
-We need to settle on a way to show the roads graphically. There have been some guidelines for us to either use a solution programed completely in Java, or write something for visualizing the map in a web-browser. The Java-solution is more uniform, and would be somewhat easier, as you cut out the connection. This would allow us to focus on implementing extra features, and polishing the program. With a web solution, we would cut of the graphical part of the program, and let the browser handle it. This would force some task on us, like connection and getting the encoding between the browser-client and the java-server right. But it also speaks to some of our own priorities. It will push the heavy data processing to the server. If this was a server for a web-application, space wouldn’t be a big problem, and you could optimize towards speed and making the client quicker. We have chosen to go ahead with a browser solution\\
+We need to settle on a way to show the roads graphically. There have been some guidelines for us to either use a solution programed completely in Java, or write something for visualizing the map in a web-browser. The Java-solution is more uniform, and would be somewhat easier, as you cut out the connection/*What connection?*/. This would allow us to focus on implementing extra features, and polishing the program. With a web solution, we would cut of the graphical part of the program, and let the browser handle it. This would force some task on us, like connection and getting the encoding between the browser-client and the java-server right. But it also speaks to some of our own priorities. It will push the heavy data processing to the server. If this was a server for a web-application, space wouldn’t be a big problem, and you could optimize towards speed and making the client quicker. We have chosen to go ahead with a browser solution\\
 
 To visualize the map in Java, we would use the Swing-libraries. In the browser we could use different solutions. With the new HTML-5 standards, the “canvas”-element in javascript, could be used for the task. This would integrate well with the other features we would implement with javascript. The other possible solution is SVG, Scalable Vector Graphics. These would easily help us with the requirement that our program should scale when resizing the window. We will use SVG, because it is somewhat simpler, and goes well with XML, which we will use to send the map data from the server to the browser. This choice will help us with navigating around the visualization.\\
 
-Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include rotating the map, or tilting it. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data to zoom in SVG, because it consists of vectors.\\
+Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include rotating the map, or tilting it/*andre eksempler*/. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data/*hmm*?*/ to zoom in SVG, because it consists of vectors.\\
 
 We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. To simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind, that you need to show all roads of the same type, you can avoid most of the trouble.\\
 
@@ -342,8 +345,8 @@ This class /*contains*/is one of our data structures, which is used when searchi
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\
-		\mbox{}\
+		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\\
+		
 		
 		\includegraphics[width=110mm]{screendump.png}
 		
@@ -391,6 +394,11 @@ This class /*contains*/is one of our data structures, which is used when searchi
 		
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester, where some of the group members had a lot more stressful project period.  
+		
+		
+		Tilføjelser:
+		Medtage læringsmaal i beskrivelsen. 
+		Hvad har vi lært ved at bruge nogle nye teknologier fremfor SWING?
 		
 		Hvordan er samarbejdet gaet i gruppen?\
 		Hvad kunne vi goere for at faet et bedre samarbejde?\
@@ -723,7 +731,7 @@ Vi læser opgavebeskrivelsen igennem.
 		
 		\paragraph{Beskrivelse af dagen:}
 		Design choices:
-•	Der skrives en RoadSelection-klasse, med ansvar for at hente de rigtige Road-objekter ud fra KdTree, beregne zoom-niveau(Hvilken prioritet af veje skal med)
+	Der skrives en RoadSelection-klasse, med ansvar for at hente de rigtige Road-objekter ud fra KdTree, beregne zoom-niveau(Hvilken prioritet af veje skal med)
 •	Der skrives en static RoadStatus-klasse der står for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.
 •	Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal være, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som så kalder videre til RoadStatus. På denne måde skal XML-klassen heller ikke holde styr på vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber også modularitet.
 •	Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud på alle veje.
