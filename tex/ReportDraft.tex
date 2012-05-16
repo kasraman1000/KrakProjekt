@@ -370,6 +370,26 @@ This class /*contains*/is one of our data structures, which is used when searchi
 			Hvorfor er de fejl/bugs i programmet - kan vi fjerne dem?\\
 			Hvad har de af konsekvenser for programmet?\\
 			Hvis vi havde mere tid, hvad ville vi så have brugt den på - fejl/bugs kontra mangler??\\
+When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
+\\
+We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
+\\
+When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
+\\
+When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+\\
+If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
+\\
+The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+\\
+When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9nth time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
+\\
+It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
+\\
+The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
+\\
+
+			
 			
 		\subsection{Results}
 			length : 0.5 side\\
