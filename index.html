@@ -25,6 +25,7 @@
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && (xmlhttp.status == 200)) {
 				clearTimeout(t);
+				hideErrorMessage();
 				var responseXML = xmlhttp.responseXML;
 				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
 				var statusCodeString = statusCode.iterateNext().getAttribute("code");
