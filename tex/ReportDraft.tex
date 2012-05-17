@@ -178,8 +178,11 @@ When a user of the application wants to see a part of the map, a request is send
 			
 				\paragraph{Controller}\mbox{}\
 				
-Controller is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the request/data back and forth.  This is also the reason why it is all static. \
-Since the program, at this point, is rather simple it only contains of a few methods. All it needs to take of is the starting of the server, getting a part of the map or a part of the map also displaying a route.
+The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static. 
+Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
+If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return a Road[] that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
+Now the Controller sents all these informations to the XML class and forward the returned String to the JSConnector.
+The same will be done, when asked for a piece of the map, but without the part with the RouteFinder.\\
 
 					
 			\subsubsection{Error handling}
@@ -355,7 +358,9 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\\
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. /*Do instead of "If"*/ If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
+
+		 \mbox{}\\
 		
 		
 		\includegraphics[width=110mm]{screendump.png}

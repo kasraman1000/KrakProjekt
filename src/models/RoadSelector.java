@@ -25,30 +25,21 @@ public class RoadSelector {
 	 */
 	public static Road[] search(Region region, double bufferPercent) 
 	{
-		double time;
 		//Create a new region that is a copy to prevent addBuffer from making changes to the object.
 		Region copyRegion = new Region(region.getLeftPoint()[0], region.getLeftPoint()[1], region.getRightPoint()[0], region.getRightPoint()[1]);
 		copyRegion.addBuffer(bufferPercent);
 
 		//Choosing filter dependent on the width of the viewport
-		time = System.nanoTime();
 		ArrayList<Node> nodes = kdTree.searchRange(copyRegion);
-		System.out.println("Time to KDTree search: " + (System.nanoTime()-time)/1000000000);
 		
-		time = System.nanoTime();
 		HashSet<Road> roads = new HashSet<Road>(100000, 0.5f);
 		for (Node n : nodes) {
 			for(Road road : n.getRoads()) {
 				roads.add(road);
 			}
 		}
-		System.out.println("Time to HashSet: " + (System.nanoTime()-time)/1000000000);
-		
-		time = System.nanoTime();
 		ArrayList<Road> result = filter(roads, MAX_ROADS);
-		System.out.println("Time to filter by zoom: " + (System.nanoTime()-time)/1000000000);
-
-		System.out.println("Number of roads: " + result.size());
+	
 		return result.toArray(new Road[0]);
 	}
 	
