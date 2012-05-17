@@ -91,7 +91,7 @@ We have already decided that we need more than one data structure for visualizat
 				Hvorfor har vi valgt lige netop denne datastruktur - Hvilke af vores krav indfrier de?\\
 				Alternativer - Fordele / ulemper?\\
 
-				As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and startup time, but as performance is higher priority, this is the choice that fulfills the requirements the most.
+				As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and startup time, but as performance is higher priority, this is the choice that fulfils the requirements the most.
 
 \paragraph{The visualization data structure}
 
@@ -344,9 +344,9 @@ The last method called createFile() is made for debugging, to see what actually 
 				
 This class is responsible for parsing /*parsing a roadname typed by the user*/ the user input. It uses regular expressions to identify the road name, road number and associated letter, zip Code and city name.
 				
-				\paragraph{DijkstraSP}\mbox{}\
+				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
 				
-This class has been copied from Sedgewick and Wayne \cite{sedgewickAndWayneDijkstraSP} used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
 When the route has been computed and should be returned, it will follow the computed route backwards to add it all up in a Stack to make the returned route come in the right order.\\
 Since the graph is made from a real set of roads, there can be no negative roads. This is also one of the reasons why we choose Dijkstra: It’s faster but cannot be used for negative edges. \\
 DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In\cite{sedgewickAndWayneIn}, IndexMinPQ\cite{sedgewickAndWayneIndexMinPQ} and Stack\cite{sedgewickAndWayneStack} (not the one from java.util.) to be functioning. These classes have also been taken from Sedgewick and Wayne in the course BADS, but may not be mentioned elsewhere. \\
@@ -365,14 +365,14 @@ Another important thing this class takes care off is to determent what view that
 
 
 				
-				\paragraph{KrakEdge}\mbox{}\
+				\paragraph{KrakEdge \cite{sedgewickAndWayneDirectedEdge}}\mbox{}\
 				
-The KrakEdge\cite{sedgewickAndWayneDirectedEdge} is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. The KrakEdge is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
 
 				
-				\paragraph{KrakEdgeWeightedDigraph}\mbox{}\
+				\paragraph{KrakEdgeWeightedDigraph \cite{sedgewickAndWayneEdgeWeightedDigraph}}\mbox{}\
 				
-The KrakEdgeWeightedDigraph\cite{sedgewickAndWayneEdgeWeightedDigraph} contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. The KrakEdgeWeightedDigraph contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
 When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, it will do this either by the length of the edge (to find to shortest path) or the time to travel each edge (the fastest path).\\
 
 
