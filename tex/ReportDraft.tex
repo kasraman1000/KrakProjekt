@@ -1,5 +1,7 @@
 \documentclass[a4paper,10pt,titlepage]{article}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage[english]{babel}
 \begin{document}
 	\tableofcontents
 	
@@ -52,7 +54,7 @@
 		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
 		hvorfor har vi valgt edges og road objekter istedet for at holde det samlet?\\
 		
- To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, we will list our own points of focus and use these as arguments for one or another solution in the following analyze.\\
+ To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. [original] But first, we will list our own points of focus and use these as arguments for one or another solution in the following analyze.[/orginal][Filip]But first, we will list our own points of focus and use these as arguments for which solution to chose in the following analyze.[/Filip] \\
 /*Skal der vaere en analyse her af vores fokuspunkter??*/
  We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not     try to implement unnecessary features and functionality.\\
 
@@ -92,16 +94,48 @@ We have already decided that we need more than one data structure for visualizat
 				As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and startup time, but as performance is higher priority, this is the choice that fulfills the requirements the most.
 
 \paragraph{The visualization data structure}
- 
-The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range. When
- searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
+
+
+The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
+
+\begin{figure}[H]
+%\includegraphics[width=120mm]{roadsDS.png}
+\caption{TODO - some text to describe the figure}
+\label{fig:roadsDS}
+\end{figure}
+
+ When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree(discussed later in this chapter) more shallow, and therefore faster. 
-The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Emperical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 152 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
+The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Emperical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 52 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
+
 //
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
 
-								
+\paragraph{Searching for a route}
+When we first started to discuss how we were to create an efficient way to find a route, we considered several ways how to approach this. One of our main concerns was to not let the user wait too long. To do this we figured the cost of this was to use some more memory instead. 
+
+We went through a lot of data algorithms to solve this like DFS, BFS, Union-Find, but none of these were able to tell us the shortest path from A to B – only that there could be a path from A to B. The only two algorithms that actually would fullfill our needs was Bellman-Ford’s or Dijkstra’s algorithms. These two would be able to find the shortest path from any given point to another. 
+
+Both of these uses a graph to be performed on, so this made the data structure almost self-assigned. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since there is to occur fx. a one way road or a road were no driving are allowed, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
+[original]Beside that Bellman-Ford’s were able to use negative edges, it would perform slightly slower than Dijkstra’s, because it was forced to check for negative cycles.[/original][F]The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles.[/F] Because of our performance requirements that it had to perform fast, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
+
+Another possibility was to let Dijkstra’s algorithm be run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
+
+The last problem we saw was that Dijkstra’s searches from a node to a node, but we were to search for some place at an edge to another place at another edge. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
+
+The first solution is as follows. When the user askes for a route between two addresses, the program finds the two edges which matches the addresses. Then the program selects the first node from the first edge and the first node from the second edge. The program then finds the route and if the route doesn't contain the edges that represents the addresses, then the program adds the edges to the route. After that the program calculates the right distance for the two edges that represents the two addresses.  This approach may show the wrong road because the first node to the the edge is always used in the route and there might be a shorter route that doesn't contain that node. 
+
+The second solution is as follows. Instead of always selecting the first node for route finding the program should select the node that is closest to the given address. If the shortest route then contains the edge where the address is located then the program should calculate the longest distance, otherwise it should add that road and calculate the short distance.
+
+We decided to implement the first solution, but we found out later that it could show the wrong route. \\
+
+\begin{figure}[H]
+\includegraphics[width=120mm]{routeFinding.png}
+\caption{Two different approaches to find the shortest path.}
+\label{fig:routeFinding}
+\end{figure}
+
 			\subsubsection{User Interface}
 
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
@@ -128,7 +162,13 @@ To show the roads we have the option of using plain Java Sript or to use a combi
  
 \paragraph{Scalable Map}\mbox{}\
 
-The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
+The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways (See figure \ref{fig:mapSliceMeet}). One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when dragging the window (referred as "meet" in the SVG language). This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space (referred as "slice" in the SVG language). We chose the last solution because it makes use of all of the available space in the browser window and thereby utilise the users screen optimal. The only disadvantage is that when the user use the routeplanning, some of the route might be sliced off. This however could probably be fixed writing a SVG command that specifies the route's area and tells the browser not to cut off anything in that area.
+\begin{figure}[H]
+\includegraphics[width=100mm]{mapSliceMeet.png}
+\caption{Illustration of the scale options. To the left a figure illustrating the "slice-option" which we chose and on the right a figure showing the "meet-option".}
+\label{fig:mapSliceMeet}
+\end{figure}
+
 
 \paragraph{Zoom and Panning}\mbox{}\
 
@@ -145,6 +185,12 @@ There are to different approaches of showing the route when the user zooms or pa
 			length : 0.5 - 1 side\\
 			Opsummering\\
 			Kan vi indfri vores krav/maal for programmet, ved at bruge de ting, som vi har beskrevet i det her afsnit??\\
+
+Through this anlysis and these design choises, we have chosen a way to develope a program that meets the given requirements, and follow our own guidlines for what we want to focus on.\\
+We have decided to utilize to different datastructures. The Kd-tree will support the vizualization of the map, and the graph-structure the route-finding. They will do this sufficienty fast, and as this is one of our main priorities, it outways the high memoryusage of using two data structures. It will also alow for better optimization for both tasks, insted of them dragging each other down. The vizulisation will be supported by the Kd-tree's rangesearches, and prioritizing of roads, will the Dijkstra's Shortest-Path-algorithm will utilize the directed edges of the graph.\\
+Our choice of graphical-visualization will further support these tasks and requirements. The browser will be able to show all the roads with SVG, and use the build in viewbox to zoom and pan around the map. This also gives us a map that scales well with the window size. Through our method of sending data between the server and browser, we have tried to optimize for speed even further.\\
+We will use a simple, userfreindly UI with buttons to give the user controle over these features, and input feilds to choose addresses for route-finding. The buffer data will help smoothening out the load times, and again give the feel of a fast program. \\
+With these design choices we have made a solution, that supports it self and consistently focus to overcome the same mayor obstacles in each part. Performance and simplicity of user interaction.
 			
 	\newpage		
 	\section{Implementation}
@@ -160,8 +206,12 @@ When a user of the application wants to see a part of the map, a request is send
 			UML/Klasse diagram\\
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
+		\begin{figure}[H]
+\includegraphics[width=120mm]{umlArrows.png}
+\caption{UML diagram showing the most relevant classes.}
+\label{fig:uml}
+\end{figure}
 		
-		\includegraphics[width=120mm]{umlArrows.png}
 		\newpage
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
@@ -171,8 +221,11 @@ When a user of the application wants to see a part of the map, a request is send
 			
 				\paragraph{Controller}\mbox{}\
 				
-Controller is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the request/data back and forth.  This is also the reason why it is all static. \
-Since the program, at this point, is rather simple it only contains of a few methods. All it needs to take of is the starting of the server, getting a part of the map or a part of the map also displaying a route.
+The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.\\
+Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
+If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return an array of Roads that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
+Now the Controller sents all these informations to the XML class and forward the returned String to the JSConnector.\\
+
 
 					
 			\subsubsection{Error handling}
@@ -254,7 +307,12 @@ This data class is a representation of a square region, defined by 2 two-dimensi
 				
 				\paragraph{Road}\mbox{}\
 				
-The Road class is a data object to represent a straight piece of a road. It will contain information of the roads type, width, starting point, ending point, name, and so forth(Er der andre ting, end dem du lige har nævnt her?). Compared to the KrakEdge it will carry a lot less information.
+The Road class is a data object to represent a straight piece of a road. It will contain information of the roads type, name, starting point, ending point, hashcode and priority. Beside these values, there are stored 2 static HashMaps, to set what color and width a road object shall have depending on the value of its type. 
+The top and origo for the current selection of roads are also stored in here as static fields. These are set when a route is found, so that the Controller knows which region to use when asking for a section of the map
+If the server was to take care of concurrency, this would be one of things there had to be changed, because it would be able to set an unfitting viewport to a client.
+Last but not least, the type to define a road as a part of a route is set in here. In that way all the relevant information about what color and width a certain road should have is stored at one single place.
+A final thing to notice about the Road class is that it stores only some of the information of the actual road compared to a KrakEdge. This is to spare some memory use and hopefully make the program a bit more smooth.
+
 				
 				\paragraph{RoadSelector}\mbox{}\
 				
@@ -266,18 +324,23 @@ Additional filtering - i forhold til hvad??
 				
 				\paragraph{RouteFinder}\mbox{}\
 				
-/*The RouteFinder class*/ RouteFinder is used only to get a better and more organized design: It keeps track of all the classes used to find a route, all the way from the input of two /*address strings*/ String to the output of a /*array of roads*/ Road[], which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will also /*cut the length of the first and last*/ cut of the first and last Road object to stop/start the route from where we suppose the house number will be. This is not the actual location of the house, but is computed from the total amount of house numbers at the road.
-/*RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.*/
-RouteFinder is the only class that handles data from the following classes is handling all the data from the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.
+The RouteFinder class is used only to get a better and more organized design: It keeps track of all the classes used to find a route, 	all the way from the input of two address Strings, or two PathPrefaces, to the output of an array of roads, which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will first find the corresponding PathPrefaces to the addresses. Then it instantiate DijkstraSP with our directed graph, which is weighted by edges,  and uses Dijkstra’s searching algorithm to find the shortest path from a random end of the start edge to another random end of the ending edge. This will later be checked to see that the correct starting and ending edge is found.\\
+The reason for not doing it first is, that it is impossible to know what node (end of the edge) there will help getting the shortest path.\\
+After this the first and last edge will be replaced by a new edge, that will be shortened to start or stop by, where the house number probably will be. This is determined by the amount of house numbers at the edge and what house number the search provides.\\
+RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.\\
+
 
 				
 				\paragraph{XML}\mbox{}\
 				
-/*The purpose of this class is to create a XML file  which can be converted to a String and returned to the client*/This class’s purpose is to create a XML file or String, which can be used for our GUI in JavaScript. /*The class contains code which create XML elements, as for instance */It is preset to contain certain groups, as for instance roads, route, viewport or statusCode. It will fill the groups with data taken as parameters from the method signature.  /*The class contains a method for making a file, which is mainly used for debugging.*/ The reason why it is possible to make a file is mainly for debugging.
-XML is only called from the Controller.
+The purpose of this class is to create a XML file, which can be converted to a String and returned to the client. The class contains code which creates XML elements, as for instance roads, route, viewport or statusCode, and will put these into the correct place of the XML structure. It will fill the groups with data taken as parameters from the method signature. \\
+One thing to make sure when creating a new Element is to use the same document for which it will be appended to later. Because of this a Document is created in each start of the method and send as parameter to the private methods, which is made to avoid duplicating code.\\
+The method createErrorString is used if something went wrong during the creation of the XML. In this way the server will still be able to send some kind of notification to the client and improve usability.\\
+The last method called createFile() is made for debugging, to see what actually is sent to the client.\\
+
 
 				
-			\subsubsection{Routing}\mbox{}\
+			\subsubsection{Routing}\
 			
 				\paragraph{AddressParser}\mbox{}\
 				
@@ -285,8 +348,11 @@ This class is responsible for parsing /*parsing a roadname typed by the user*/ t
 				
 				\paragraph{DijkstraSP}\mbox{}\
 				
-This class has been copied from a book/*(Sedgewick and Wayne p. ????)*/ in another course (BADS) and modified to fit our program. DijkstraSP contains Dijkstra’s algorithm, /*is the following important?*/which we have learned during the course BADS. It will be loaded with a KrakEdgeWeightedDigraph and supply you with the shortest path from a starting point to a target. At normal circumstances it would find the shortest path to each node in the graph, but we have modified the algorithm to stop computing, when the shortest path have been found to improve performance.\
-This class will use some specific versions of for instance a Stack (not the one from java.util.) /*and*/or PriorityQueue to be functioning. These /*classes*/have also been taken from the book in the course BADS, but may not be mentioned elsewhere. 
+This class has been copied from Sedgewick and Wayne \cite{sedgewickAndWayneDijkstraSP} used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
+When the route has been computed and should be returned, it will follow the computed route backwards to add it all up in a Stack to make the returned route come in the right order.\\
+Since the graph is made from a real set of roads, there can be no negative roads. This is also one of the reasons why we choose Dijkstra: It’s faster but cannot be used for negative edges. \\
+DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In\cite{sedgewickAndWayneIn}, IndexMinPQ\cite{sedgewickAndWayneIndexMinPQ} and Stack\cite{sedgewickAndWayneStack} (not the one from java.util.) to be functioning. These classes have also been taken from Sedgewick and Wayne in the course BADS, but may not be mentioned elsewhere. \\
+ 
 				
 				\paragraph{EdgeParser}\mbox{}\
 				
@@ -294,20 +360,23 @@ This class associates road names, numbers, zip codes, and city names with the co
 				
 				\paragraph{EdgesAndRoadsConverter}\mbox{}\
 				
-This class is used as a part of our route searching system. It only has two purposes: The first is /*simply*/simple to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.
-/*To make sure that the correct start and target is used the class is taking care of adding the correct KrakEdge if it is needed. The class also calculates the length of the first and last KrakEdge based on the house number.*/\
-It may be a bit tricky to find the exact place to start and end the search of a route, regarding to two nodes ids in each KrakEdge. Therefore this class makes sure the correct KrakEdge is added (if needed) and made into a smaller KrakEdge, if the start/target is for instance in the middle of the KrakEdge, depending on the house number.
+This class is used as a part of our route searching system. It only has two purposes: The first is simply to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.\\
+To make sure that the correct start and target is used in the route the class is taking care of adding the correct KrakEdge if it is needed. This is done by comparing the first and last edge to the KrakEdge it is supposed to be – if they are equal nothing will be done else the supposed edge will be added.\\
+Then the length of the first and last edge will be computed to a length that approximately correspond to where the houses are located. This is calculated on the basis of the house number the user is searching for compared to the amount of house numbers on the edge.\\
+Another important thing this class takes care off is to determent what view that will be showed to the client. When the route is found and corrected, it will be transformed to a Road[] and at the same time the class will find the minimum and maximum values for the routes coordinates. After that it will be set to the static field in Road, to be used when finding the other roads to be displayed and set in the XML sent to the client.\\
+
+
 				
 				\paragraph{KrakEdge}\mbox{}\
 				
-The KrakEdge is a data object, representing a straight piece of road and used when searching for a route./*It carries*/ It will carry a lot more information than a Road, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing /*whether*/to get a route with the shortest distance or shortest time.
-*This class has been copied from a book in another course (BADS) and modified to fit our program.
+The KrakEdge\cite{sedgewickAndWayneDirectedEdge} is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
 
 				
 				\paragraph{KrakEdgeWeightedDigraph}\mbox{}\
 				
-This class /*contains*/is one of our data structures, which is used when searching for a route. It is a directed graph, that contains information of how many KrakEdges there has a connection to a certain node. The graph is directed, so it can distinguish a one way road from a road with no driving prohibitions. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. 
-*This class has been copied from a book in another course (BADS) and modified slightly to fit our program.
+The KrakEdgeWeightedDigraph\cite{sedgewickAndWayneEdgeWeightedDigraph} contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, it will do this either by the length of the edge (to find to shortest path) or the time to travel each edge (the fastest path).\\
+
 
 
 				
@@ -348,10 +417,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\\
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. /*Do instead of "If"*/ If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
+
+		 \mbox{}\\
 		
+		\begin{figure}[H]
+\includegraphics[width=110mm]{screendump.png}
+\caption{Screendump of the browserwindow.}
+\label{fig:screendump}
+\end{figure}
 		
-		\includegraphics[width=110mm]{screendump.png}
 		
 	\newpage
 	\section{Testing}
@@ -467,6 +542,7 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 		Hvordan er samarbejdet gaet i gruppen?\
 		Hvad kunne vi goere for at faet et bedre samarbejde?\
 		Hvad/hvilke ting var gode/daarlige i gruppen?\
+		
 		Har vi brugt nogle vaerktoejer til at styrke vores samarbejde? Kunne vi have brugt nogen?\
 		
 	\newpage
@@ -474,6 +550,38 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 		length : 0.5 - 1 side\\
 		Skal bare lige runde projektet af..
 	
+	\section{Bibliography}
+	
+	\begin{thebibliography}{9}
+%\cite{sedgewickAndWayne11}
+	\bibitem{sedgewickAndWayne11}
+  	Robert Sedgewick and Kevin Wayne
+  	\emph{Algorithms, 4th Edition}.
+  	Princeton
+
+	\bibitem{sedgewickAndWayneBag}
+	http://algs4.cs.princeton.edu/13stacks/Bag.java.html
+	
+	\bibitem{sedgewickAndWayneDijkstraSP}  	
+	http://algs4.cs.princeton.edu/44sp/DijkstraSP.java.html*  	
+	
+	\bibitem{sedgewickAndWayneDirectedEdge}
+	http://algs4.cs.princeton.edu/44sp/DirectedEdge.java.html*
+	
+	\bibitem{sedgewickAndWayneEdgeWeightedDigraph}
+	http://algs4.cs.princeton.edu/44sp/EdgeWeightedDigraph.java.html
+  	
+	\bibitem{sedgewickAndWayneIn}
+	http://algs4.cs.princeton.edu/stdlib/In.java.html
+	
+	\bibitem{sedgewickAndWayneIndexMinPQ}
+	http://algs4.cs.princeton.edu/24pq/IndexMinPQ.java.html
+	
+	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
+	
+	\end{thebibliography}
+	*The class has been modified to fit the program.	
+		
 	\section{Appendix}
 		\subsection{resume}
 		
@@ -1093,7 +1201,53 @@ Jacob: Problemanalyse, requirements, indledning til thoughts toward design og ge
 
 		\paragraph{Naeste gang:} 
 		Vi retter alle de nye afsnit igennem.\
-Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og appendix og litteraturliste.  
+Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og appendix og litteraturliste. 
+
+\begin{center}
+		Date 2012-05-16
+		\end{center}
+		
+		\paragraph{Tilstede:} Anders, Lars, Mark, Filip, Jakob
+		
+		\begin{itemize}
+					\item Rapport – Hvad mangler vi?
+					\item Konklusioner og list of needs i plenum v. Mark
+					\item Test tekst i rapporten
+					\item Whitebox test
+					\item Kodegennemgang v. Lars
+		\end{itemize}
+		
+		\paragraph{Beskrivelse af dagen:}
+		Vi diskuterer hvad der skal stå under konklusionsafsnittene og i lists of needs.
+		Under produkt konklusionen vil vi gerne diskutere om vores program er hurtigt nok,
+		og om vi har gjort os nok overvejelser omkring hvilken browser vi har optimeret mod,
+		og om dette kunne være gjort bedre, også i forhold til SVG.\\
+		\\
+
+		Lars har gennemlæst koden, og vi diskuterer nogle punkter, og uddeler nogle arbejdsopgaver.\\
+		\\
+		
+		Fordeling af mangler i rapport\\
+
+		\paragraph{Faerdige ting:}
+		TTD, Requirements, "Errors, bug and list of needs", Limitations, 
+		Tecnical description, errorhandeling i index.html\\
+		
+		\paragraph{Aftaler/Beslutninger:}
+		De fordelte rapport afsnit skrives færdig til fredag, hvor fordeling af retning sker.\\
+		Der rettes over weekenden, så rapporten er færdig og printet når vi forlader skolen mandag.\\
+		Møde fredag efter forelæsning, og igen mandag.\\
+		
+		\paragraph{Hvem goer hvad:}
+		Lars: User Manual retning, UML diagram tekst retning, Java-doc\\
+		Filip: Klassebeskrivelser, Litteraturliste m.m\\
+		Mark: Product conclusion udkast, KDTree-test tekst\\
+		Kasra: Blackbox test tekst\\
+		Anders: Litteraturlist m.m, Final thoughts, Whitebox test + tekst\\
+		Jakob: Errorhandling retning, Problem analysis summary udkast, Whitebox test + tekst\\
+		
+		\paragraph{Naeste gang:}
+		Fredag: Fordeling af afsnit til rettelse.\\ 
 
 \begin{table}
 \caption{Oversigt over arbejde}
