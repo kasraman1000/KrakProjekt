@@ -98,7 +98,7 @@ We have already decided that we need more than one data structure for visualizat
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-\includegraphics[width=120mm]{roadsDS.png}
+%\includegraphics[width=120mm]{roadsDS.png}
 \caption{TODO - some text to describe the figure}
 \label{fig:roadsDS}
 \end{figure}
@@ -219,8 +219,11 @@ When a user of the application wants to see a part of the map, a request is send
 			
 				\paragraph{Controller}\mbox{}\
 				
-Controller is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the request/data back and forth.  This is also the reason why it is all static. \
-Since the program, at this point, is rather simple it only contains of a few methods. All it needs to take of is the starting of the server, getting a part of the map or a part of the map also displaying a route.
+The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.\\
+Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
+If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return an array of Roads that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
+Now the Controller sents all these informations to the XML class and forward the returned String to the JSConnector.\\
+
 
 					
 			\subsubsection{Error handling}
@@ -302,7 +305,12 @@ This data class is a representation of a square region, defined by 2 two-dimensi
 				
 				\paragraph{Road}\mbox{}\
 				
-The Road class is a data object to represent a straight piece of a road. It will contain information of the roads type, width, starting point, ending point, name, and so forth(Er der andre ting, end dem du lige har nævnt her?). Compared to the KrakEdge it will carry a lot less information.
+The Road class is a data object to represent a straight piece of a road. It will contain information of the roads type, name, starting point, ending point, hashcode and priority. Beside these values, there are stored 2 static HashMaps, to set what color and width a road object shall have depending on the value of its type. 
+The top and origo for the current selection of roads are also stored in here as static fields. These are set when a route is found, so that the Controller knows which region to use when asking for a section of the map
+If the server was to take care of concurrency, this would be one of things there had to be changed, because it would be able to set an unfitting viewport to a client.
+Last but not least, the type to define a road as a part of a route is set in here. In that way all the relevant information about what color and width a certain road should have is stored at one single place.
+A final thing to notice about the Road class is that it stores only some of the information of the actual road compared to a KrakEdge. This is to spare some memory use and hopefully make the program a bit more smooth.
+
 				
 				\paragraph{RoadSelector}\mbox{}\
 				
@@ -314,18 +322,23 @@ Additional filtering - i forhold til hvad??
 				
 				\paragraph{RouteFinder}\mbox{}\
 				
-/*The RouteFinder class*/ RouteFinder is used only to get a better and more organized design: It keeps track of all the classes used to find a route, all the way from the input of two /*address strings*/ String to the output of a /*array of roads*/ Road[], which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will also /*cut the length of the first and last*/ cut of the first and last Road object to stop/start the route from where we suppose the house number will be. This is not the actual location of the house, but is computed from the total amount of house numbers at the road.
-/*RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.*/
-RouteFinder is the only class that handles data from the following classes is handling all the data from the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.
+The RouteFinder class is used only to get a better and more organized design: It keeps track of all the classes used to find a route, 	all the way from the input of two address Strings, or two PathPrefaces, to the output of an array of roads, which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will first find the corresponding PathPrefaces to the addresses. Then it instantiate DijkstraSP with our directed graph, which is weighted by edges,  and uses Dijkstra’s searching algorithm to find the shortest path from a random end of the start edge to another random end of the ending edge. This will later be checked to see that the correct starting and ending edge is found.\\
+The reason for not doing it first is, that it is impossible to know what node (end of the edge) there will help getting the shortest path.\\
+After this the first and last edge will be replaced by a new edge, that will be shortened to start or stop by, where the house number probably will be. This is determined by the amount of house numbers at the edge and what house number the search provides.\\
+RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.\\
+
 
 				
 				\paragraph{XML}\mbox{}\
 				
-/*The purpose of this class is to create a XML file  which can be converted to a String and returned to the client*/This class’s purpose is to create a XML file or String, which can be used for our GUI in JavaScript. /*The class contains code which create XML elements, as for instance */It is preset to contain certain groups, as for instance roads, route, viewport or statusCode. It will fill the groups with data taken as parameters from the method signature.  /*The class contains a method for making a file, which is mainly used for debugging.*/ The reason why it is possible to make a file is mainly for debugging.
-XML is only called from the Controller.
+The purpose of this class is to create a XML file, which can be converted to a String and returned to the client. The class contains code which creates XML elements, as for instance roads, route, viewport or statusCode, and will put these into the correct place of the XML structure. It will fill the groups with data taken as parameters from the method signature. \\
+One thing to make sure when creating a new Element is to use the same document for which it will be appended to later. Because of this a Document is created in each start of the method and send as parameter to the private methods, which is made to avoid duplicating code.\\
+The method createErrorString is used if something went wrong during the creation of the XML. In this way the server will still be able to send some kind of notification to the client and improve usability.\\
+The last method called createFile() is made for debugging, to see what actually is sent to the client.\\
+
 
 				
-			\subsubsection{Routing}\mbox{}\
+			\subsubsection{Routing}\
 			
 				\paragraph{AddressParser}\mbox{}\
 				
@@ -333,8 +346,11 @@ This class is responsible for parsing /*parsing a roadname typed by the user*/ t
 				
 				\paragraph{DijkstraSP}\mbox{}\
 				
-This class has been copied from a book/*(Sedgewick and Wayne p. ????)*/ in another course (BADS) and modified to fit our program. DijkstraSP contains Dijkstra’s algorithm, /*is the following important?*/which we have learned during the course BADS. It will be loaded with a KrakEdgeWeightedDigraph and supply you with the shortest path from a starting point to a target. At normal circumstances it would find the shortest path to each node in the graph, but we have modified the algorithm to stop computing, when the shortest path have been found to improve performance.\
-This class will use some specific versions of for instance a Stack (not the one from java.util.) /*and*/or PriorityQueue to be functioning. These /*classes*/have also been taken from the book in the course BADS, but may not be mentioned elsewhere. 
+This class has been copied from Sedgewick and Wayne \cite{sedgewickAndWayneDijkstraSP} used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
+When the route has been computed and should be returned, it will follow the computed route backwards to add it all up in a Stack to make the returned route come in the right order.\\
+Since the graph is made from a real set of roads, there can be no negative roads. This is also one of the reasons why we choose Dijkstra: It’s faster but cannot be used for negative edges. \\
+DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In\cite{sedgewickAndWayneIn}, IndexMinPQ\cite{sedgewickAndWayneIndexMinPQ} and Stack\cite{sedgewickAndWayneStack} (not the one from java.util.) to be functioning. These classes have also been taken from Sedgewick and Wayne in the course BADS, but may not be mentioned elsewhere. \\
+ 
 				
 				\paragraph{EdgeParser}\mbox{}\
 				
@@ -342,20 +358,23 @@ This class associates road names, numbers, zip codes, and city names with the co
 				
 				\paragraph{EdgesAndRoadsConverter}\mbox{}\
 				
-This class is used as a part of our route searching system. It only has two purposes: The first is /*simply*/simple to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.
-/*To make sure that the correct start and target is used the class is taking care of adding the correct KrakEdge if it is needed. The class also calculates the length of the first and last KrakEdge based on the house number.*/\
-It may be a bit tricky to find the exact place to start and end the search of a route, regarding to two nodes ids in each KrakEdge. Therefore this class makes sure the correct KrakEdge is added (if needed) and made into a smaller KrakEdge, if the start/target is for instance in the middle of the KrakEdge, depending on the house number.
+This class is used as a part of our route searching system. It only has two purposes: The first is simply to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.\\
+To make sure that the correct start and target is used in the route the class is taking care of adding the correct KrakEdge if it is needed. This is done by comparing the first and last edge to the KrakEdge it is supposed to be – if they are equal nothing will be done else the supposed edge will be added.\\
+Then the length of the first and last edge will be computed to a length that approximately correspond to where the houses are located. This is calculated on the basis of the house number the user is searching for compared to the amount of house numbers on the edge.\\
+Another important thing this class takes care off is to determent what view that will be showed to the client. When the route is found and corrected, it will be transformed to a Road[] and at the same time the class will find the minimum and maximum values for the routes coordinates. After that it will be set to the static field in Road, to be used when finding the other roads to be displayed and set in the XML sent to the client.\\
+
+
 				
 				\paragraph{KrakEdge}\mbox{}\
 				
-The KrakEdge is a data object, representing a straight piece of road and used when searching for a route./*It carries*/ It will carry a lot more information than a Road, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing /*whether*/to get a route with the shortest distance or shortest time.
-*This class has been copied from a book in another course (BADS) and modified to fit our program.
+The KrakEdge\cite{sedgewickAndWayneDirectedEdge} is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
 
 				
 				\paragraph{KrakEdgeWeightedDigraph}\mbox{}\
 				
-This class /*contains*/is one of our data structures, which is used when searching for a route. It is a directed graph, that contains information of how many KrakEdges there has a connection to a certain node. The graph is directed, so it can distinguish a one way road from a road with no driving prohibitions. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. 
-*This class has been copied from a book in another course (BADS) and modified slightly to fit our program.
+The KrakEdgeWeightedDigraph\cite{sedgewickAndWayneEdgeWeightedDigraph} contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, it will do this either by the length of the edge (to find to shortest path) or the time to travel each edge (the fastest path).\\
+
 
 
 				
@@ -396,7 +415,9 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		If you want to zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. \mbox{}\\
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. /*Do instead of "If"*/ If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
+
+		 \mbox{}\\
 		
 		\begin{figure}[H]
 \includegraphics[width=110mm]{screendump.png}
@@ -497,7 +518,29 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
   	\emph{Algorithms, 4th Edition}.
   	Princeton
 
+	\bibitem{sedgewickAndWayneBag}
+	http://algs4.cs.princeton.edu/13stacks/Bag.java.html
+	
+	\bibitem{sedgewickAndWayneDijkstraSP}  	
+	http://algs4.cs.princeton.edu/44sp/DijkstraSP.java.html*  	
+	
+	\bibitem{sedgewickAndWayneDirectedEdge}
+	http://algs4.cs.princeton.edu/44sp/DirectedEdge.java.html*
+	
+	\bibitem{sedgewickAndWayneEdgeWeightedDigraph}
+	http://algs4.cs.princeton.edu/44sp/EdgeWeightedDigraph.java.html
+  	
+	\bibitem{sedgewickAndWayneIn}
+	http://algs4.cs.princeton.edu/stdlib/In.java.html
+	
+	\bibitem{sedgewickAndWayneIndexMinPQ}
+	http://algs4.cs.princeton.edu/24pq/IndexMinPQ.java.html
+	
+	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
+	
 	\end{thebibliography}
+	*The class has been modified to fit the program.	
+		
 	\section{Appendix}
 		\subsection{resume}
 		
