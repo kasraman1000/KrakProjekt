@@ -51,7 +51,7 @@ public class EdgeParser {
 	 *  
 	 * @param address The string array returned from AddressParser.parse()
 	 * @return A PathPreface with the corresponding KrakEdges
-	 * @exception If unable to find matching KrakEdge
+	 * @throws ClientInputException If unable to find matching KrakEdge
 	 */
 	public static PathPreface findPreface(String[] address) throws ClientInputException {
 		if (edgeMap.containsKey(address[0].toLowerCase())) {

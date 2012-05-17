@@ -245,6 +245,7 @@ public class KDTree
 		 * @param depth	Recursion level of the function calling this function.
 		 * @return	nth element from the collection.
 		 */
+		@SuppressWarnings("unused")
 		private Node medianComplex(ArrayList<Node> nodes, int nth, int depth) {
 			int dimension = depth % k;
 			ArrayList<Node> below = new ArrayList<Node>();

@@ -27,7 +27,7 @@ public class AddressParser {
      * 4: city name
      * 
      * @param s A String containing the address
-     * @exception If the address is not valid
+     * @throws If the address is not valid
      */
     public static String[] parseAddress(String s) throws AddressInputFormatException {
     	// The result array to return
@@ -59,7 +59,7 @@ public class AddressParser {
      * 
      * @param s A String containing the address
      * @param result Array where to add the result
-     * @exception If the pattern is valid
+     * @throws If the pattern is valid
      */
     private static void findRoadName(String s, String[] result) throws PatternSyntaxException{
         Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZæøåÆØÅüÜ'\\s]+\\b");
@@ -75,7 +75,7 @@ public class AddressParser {
      * 
      * @param s A String containing the address
      * @param result Array where to add the result
-     * @exception If the pattern is valid
+     * @throws If the pattern is valid
      */
     private static void findCityName(String s, String[] result) throws PatternSyntaxException{
         Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZæøåÆØÅüÜ\\s]+\\z");
@@ -106,7 +106,7 @@ public class AddressParser {
      * 
      * @param s A String containing the address
      * @param result Array where to add the result
-     * @exception If the pattern is valid
+     * @throws If the pattern is valid
      */
     private static void findZipcode(String s, String[] result) throws PatternSyntaxException{
         Pattern zipcodePattern = Pattern.compile("\\b[1-9]\\d{3}\\b");
@@ -122,7 +122,7 @@ public class AddressParser {
      * 
      * @param s A String containing the address
      * @param result Array where to add the result
-     * @exception If the pattern is valid
+     * @throws If the pattern is valid
      */
     private static void findHouseNumber(String s, String[] result) throws PatternSyntaxException{
         Pattern houseNumberPattern = Pattern.compile("\\b\\d{1,3}+.?");
@@ -154,7 +154,7 @@ public class AddressParser {
      * @param s A String containing the address
      * @param result Array where to add the result
      * @param cityNameMatcher Matcher for the city name
-     * @exception If the pattern is valid
+     * @throws If the pattern is valid
      */
     private static void findHouseLetter(String s, String[] result, Matcher cityNameMatcher) throws PatternSyntaxException{
         if (result[2] == "") {

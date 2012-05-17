@@ -10,7 +10,7 @@ import views.*;
  * @author Group 1, B-SWU, 2012E
  */
 public class Controller {
-		public static void main(String[] args) {
+	public static void main(String[] args) {
 		Controller.startServer();
 	}
 
@@ -39,7 +39,13 @@ public class Controller {
 	 * 
 	 */
 	public static void startServer(){
-		new JSConnector();
+		try {
+			new JSConnector();
+		} catch (ServerRuntimeException e) {
+			ErrorHandler.handleServerRuntimeException(e);
+		} catch (ServerStartupException e) {
+			ErrorHandler.handleServerStartupException(e);
+		}
 	}
 
 

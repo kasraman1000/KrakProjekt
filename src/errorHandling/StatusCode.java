@@ -25,18 +25,30 @@ public enum StatusCode {
 	private final String description;
 	private final int codeNumber;
 	
-	
+	/**
+	 * The Constructor
+	 * 
+	 * @param codeNumber Code number for the enum
+	 * @param description Description for the enum
+	 */
 	StatusCode(int codeNumber, String description){
 		this.codeNumber = codeNumber;
 		this.description = description;
 	}
 	
+	/**
+	 * Get the code number
+	 * @return Code number
+	 */
 	public int getCodeNumber(){
 		return codeNumber;
 	}
 	
+	/**
+	 * Get the description
+	 * @return description
+	 */
 	public String getDescription(){
 		return description;
 	}
-
 }
