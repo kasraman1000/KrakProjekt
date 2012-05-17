@@ -110,7 +110,30 @@ The most important requirement for our data structure is that it should be fast,
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
 
-								
+\paragraph{Searching for a route}
+When we first started to discuss how we were to create an efficient way to find a route, we considered several ways how to approach this. One of our main concerns was to not let the user wait too long. To do this we figured the cost of this was to use some more memory instead. 
+
+We went through a lot of data algorithms to solve this like DFS, BFS, Union-Find, but none of these were able to tell us the shortest path from A to B – only that there could be a path from A to B. The only two algorithms that actually would fullfill our needs was Bellman-Ford’s or Dijkstra’s algorithms. These two would be able to find the shortest path from any given point to another. 
+
+Both of these uses a graph to be performed on, so this made the data structure almost self-assigned. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since there is to occur fx. a one way road or a road were no driving are allowed, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
+[original]Beside that Bellman-Ford’s were able to use negative edges, it would perform slightly slower than Dijkstra’s, because it was forced to check for negative cycles.[/original][F]The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles.[/F] Because of our performance requirements that it had to perform fast, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
+
+Another possibility was to let Dijkstra’s algorithm be run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
+
+The last problem we saw was that Dijkstra’s searches from a node to a node, but we were to search for some place at an edge to another place at another edge. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
+
+The first solution is as follows. When the user askes for a route between two addresses, the program finds the two edges which matches the addresses. Then the program selects the first node from the first edge and the first node from the second edge. The program then finds the route and if the route doesn't contain the edges that represents the addresses, then the program adds the edges to the route. After that the program calculates the right distance for the two edges that represents the two addresses.  This approach may show the wrong road because the first node to the the edge is always used in the route and there might be a shorter route that doesn't contain that node. 
+
+The second solution is as follows. Instead of always selecting the first node for route finding the program should select the node that is closest to the given address. If the shortest route then contains the edge where the address is located then the program should calculate the longest distance, otherwise it should add that road and calculate the short distance.
+
+We decided to implement the first solution, but we found out later that it could show the wrong route. \\
+
+\begin{figure}[H]
+\includegraphics[width=120mm]{routeFinding.png}
+\caption{Two different approaches to find the shortest path.}
+\label{fig:routeFinding}
+\end{figure}
+
 			\subsubsection{User Interface}
 
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
