@@ -1,5 +1,7 @@
 \documentclass[a4paper,10pt,titlepage]{article}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage[english]{babel}
 \begin{document}
 	\tableofcontents
 	
@@ -52,7 +54,7 @@
 		Hvilke ting vil i have fokus paa - hastighed, hukommelse, brugervenlighed, udvidelsesmuligheder etc.?\\
 		hvorfor har vi valgt edges og road objekter istedet for at holde det samlet?\\
 		
- To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. But first, we will list our own points of focus and use these as arguments for one or another solution in the following analyze.\\
+ To get an understanding of the requirements stated in the previous section, we will walk through these, and try to         analyze what is needed to meet them, and what the different solutions could be. [original] But first, we will list our own points of focus and use these as arguments for one or another solution in the following analyze.[/orginal][Filip]But first, we will list our own points of focus and use these as arguments for which solution to chose in the following analyze.[/Filip] \\
 /*Skal der vaere en analyse her af vores fokuspunkter??*/
  We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not     try to implement unnecessary features and functionality.\\
 
@@ -95,6 +97,12 @@ We have already decided that we need more than one data structure for visualizat
 
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
 
+\begin{figure}[H]
+\includegraphics[width=120mm]{roadsDS.png}
+\caption{TODO - some text to describe the figure}
+\label{fig:roadsDS}
+\end{figure}
+
  When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree(discussed later in this chapter) more shallow, and therefore faster. 
 The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Emperical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 52 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
@@ -129,7 +137,13 @@ To show the roads we have the option of using plain Java Sript or to use a combi
  
 \paragraph{Scalable Map}\mbox{}\
 
-The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways. One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when draging the window. This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space. We chose the last solution because it make use of all of the available space in the browser window. The only disadvantage is that when the user use the routeplanning it might not be possible to show the entire route if the aspect ratio is very wide or narrow. 
+The map needs to be scalable when the user drags the window of the browser. In our case that functionality comes for free when we use SVG. The only thing we need to consider is how SVG should show the map. Basically there are to ways (See figure \ref{fig:mapSliceMeet}). One way is to always let all of the viewport be visible no matter what aspect ratio the user will create when dragging the window (referred as "meet" in the SVG language). This will create a white border in the top and down or in the left and right. Another way is to cut of the map so that the map always takes up all the space (referred as "slice" in the SVG language). We chose the last solution because it makes use of all of the available space in the browser window and thereby utilise the users screen optimal. The only disadvantage is that when the user use the routeplanning, some of the route might be sliced off. This however could probably be fixed writing a SVG command that specifies the route's area and tells the browser not to cut off anything in that area.
+\begin{figure}[H]
+\includegraphics[width=100mm]{mapSliceMeet.png}
+\caption{Illustration of the scale options. To the left a figure illustrating the "slice-option" which we chose and on the right a figure showing the "meet-option".}
+\label{fig:mapSliceMeet}
+\end{figure}
+
 
 \paragraph{Zoom and Panning}\mbox{}\
 
@@ -167,8 +181,12 @@ When a user of the application wants to see a part of the map, a request is send
 			UML/Klasse diagram\\
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
+		\begin{figure}[H]
+\includegraphics[width=120mm]{umlArrows.png}
+\caption{UML diagram showing the most relevant classes.}
+\label{fig:uml}
+\end{figure}
 		
-		\includegraphics[width=120mm]{umlArrows.png}
 		\newpage
 		\subsection{Classes and responsibility}
 			length : 0.5 - 1 side\\
@@ -362,8 +380,12 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 
 		 \mbox{}\\
 		
+		\begin{figure}[H]
+\includegraphics[width=110mm]{screendump.png}
+\caption{Screendump of the browserwindow.}
+\label{fig:screendump}
+\end{figure}
 		
-		\includegraphics[width=110mm]{screendump.png}
 		
 	\newpage
 	\section{Testing}
@@ -1141,7 +1163,6 @@ Testing &  & 20 \\
 Product conclusion & Everyone & 20\\
 Process description & A & 19\\
 Final thoughts & Everyone & 21\\
-\\
   & Program &  \\
 Controller & L & 18 \\
 AddressInputFormatException & J & 18 \\
@@ -1156,7 +1177,7 @@ StatusCode & A, J, L & 18 \\
 XMLDocumentException & L & 20 \\
 XMLTransformerException & L & 20 \\
 KDTree & K, M & 18 \\
-Loader & K, L, M & 18 \\
+Loader & K, M & 18 \\
 NodeComparator & K, M & 17 \\
 PathPreface & L, M & 18 \\
 RoadSelector & K, M & 18 \\
@@ -1164,7 +1185,7 @@ RouteFinder & L & 18 \\
 XML	& L & 17 \\
 AddressParser & K & 16 \\
 EdgeParser & M & 18 \\
-EdgesAndRoadConverter & L & 18 \\
+EdgesAndRoadConverter & L, M & 18 \\
 JSConnector & F & 18 \\
 Index.html & A, F & 18 \\
 

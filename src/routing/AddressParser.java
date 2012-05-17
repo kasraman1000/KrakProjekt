@@ -1,4 +1,4 @@
-package routing;
+﻿package routing;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -50,7 +50,7 @@ public class AddressParser {
         	throw new AddressInputFormatException();
         }
 
-        // We're done parsing, let's return the results
+	// We're done parsing, let's return the results
         return result;
     }
     
