@@ -1,4 +1,4 @@
-package routing;
+﻿package routing;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -25,6 +25,9 @@ public class AddressParser {
      * 2: letter associated with house number
      * 3: zip code
      * 4: city name
+     * 
+     * @param s A String containing the address
+     * @throws If the address is not valid
      */
     public static String[] parseAddress(String s) throws AddressInputFormatException {
     	// The result array to return
@@ -47,12 +50,16 @@ public class AddressParser {
         	throw new AddressInputFormatException();
         }
 
-        // We're done parsing, let's return the results
+	// We're done parsing, let's return the results
         return result;
     }
     
     /**
      * Searches input String for road name
+     * 
+     * @param s A String containing the address
+     * @param result Array where to add the result
+     * @throws If the pattern is valid
      */
     private static void findRoadName(String s, String[] result) throws PatternSyntaxException{
         Pattern roadNamePattern = Pattern.compile("\\A[a-zA-ZæøåÆØÅüÜ'\\s]+\\b");
@@ -65,6 +72,10 @@ public class AddressParser {
     
     /**
      * Searches input String for city name
+     * 
+     * @param s A String containing the address
+     * @param result Array where to add the result
+     * @throws If the pattern is valid
      */
     private static void findCityName(String s, String[] result) throws PatternSyntaxException{
         Pattern cityNamePattern = Pattern.compile("\\b[a-zA-ZæøåÆØÅüÜ\\s]+\\z");
@@ -92,6 +103,10 @@ public class AddressParser {
     
     /**
      * Searches input String for zipcode
+     * 
+     * @param s A String containing the address
+     * @param result Array where to add the result
+     * @throws If the pattern is valid
      */
     private static void findZipcode(String s, String[] result) throws PatternSyntaxException{
         Pattern zipcodePattern = Pattern.compile("\\b[1-9]\\d{3}\\b");
@@ -103,7 +118,11 @@ public class AddressParser {
     
     /**
      * Searches input String for house number, and if a letter is attached 
-     * to the number, it will include that as a house letter as well. 
+     * to the number, it will include that as a house letter as well.
+     * 
+     * @param s A String containing the address
+     * @param result Array where to add the result
+     * @throws If the pattern is valid
      */
     private static void findHouseNumber(String s, String[] result) throws PatternSyntaxException{
         Pattern houseNumberPattern = Pattern.compile("\\b\\d{1,3}+.?");
@@ -131,6 +150,11 @@ public class AddressParser {
      * Searches input String for house letter.
      * Uses the cityNameMatcher to compare whether the letter found isn't
      * already a part of the city name
+     * 
+     * @param s A String containing the address
+     * @param result Array where to add the result
+     * @param cityNameMatcher Matcher for the city name
+     * @throws If the pattern is valid
      */
     private static void findHouseLetter(String s, String[] result, Matcher cityNameMatcher) throws PatternSyntaxException{
         if (result[2] == "") {

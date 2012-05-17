@@ -46,16 +46,22 @@ public class DijkstraSP {
     private IndexMinPQ<Double> pq;    // priority queue of vertices
     private KrakEdgeWeightedDigraph G;
     
+    /**
+     * The Constructor
+     * @param G The graph to use Dijkstra's algorithm at
+     */
     public DijkstraSP(KrakEdgeWeightedDigraph G){
     	this.G = G;
     }
     
     
     /**
+     * Get the shortest path from Source to Target weighted by either the length or travel time
      * 
      * @param from Source
      * @param to Target
      * @param lengthWeighted True if length is weighted highest - else false to weight time the highest
+     * @return The shortest route
      */
     public Stack<KrakEdge> findRoute(int from, int to, boolean lengthWeighted) {
     	KrakEdge.setWeight(lengthWeighted);

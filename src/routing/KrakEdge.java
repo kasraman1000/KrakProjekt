@@ -40,14 +40,22 @@ public class KrakEdge {
     private final int hToHouseNumber;
     private static boolean isLengthWeighted;
     
-   /**
+    /**
      * Create a directed edge from v to w with given weight.
-	 * @param hToHouseNumber 
-	 * @param hFromHouseNumber 
-	 * @param vToHouseNumber 
-	 * @param vFromHouseNumber 
-	 * @param hPost 
-	 * @param vPost 
+     * 
+     * @param from From id
+     * @param to To id
+     * @param name Name of the edge
+     * @param length Length of the edge
+     * @param time The time it takes to travel form one end of the edge to another
+     * @param fromPoint The coordinates for the start of the edge
+     * @param toPoint The coordinates to the end of the edge
+     * @param vPost Postal code for the left side of the edge
+     * @param hPost Postal code for the right side of the edge
+     * @param vFromHouseNumber The beginning index of the left side of the house numbers
+     * @param vToHouseNumber The ending index of the left side of the house numbers
+     * @param hFromHouseNumber The beginning index of the right side of the house numbers
+     * @param hToHouseNumber The ending index of the right side of the house numbers
      */
     public KrakEdge(int from, int to, String name, double length, double time, double[] fromPoint, double[] toPoint, 
     		int vPost, int hPost, int vFromHouseNumber, int vToHouseNumber, int hFromHouseNumber, int hToHouseNumber){
@@ -69,14 +77,16 @@ public class KrakEdge {
     }
 
    /**
-     * Return the vertex where this edge begins.
+     * Return the nodes id where this edge begins.
+     * @return beginning node id
      */
     public int from() {
         return from;
     }
 
    /**
-     * Return the vertex where this edge ends.
+     * Return the nodes id where this edge ends.
+     * @return ending node id
      */
     public int to() {
         return to;
@@ -93,7 +103,7 @@ public class KrakEdge {
     
     /**
      * The length of the edge
-     * @return length
+     * @return length of the edge
      */
     public double getLength(){
     	return length;
@@ -101,7 +111,7 @@ public class KrakEdge {
     
     /**
      * The time to get from one end of the edge to the other (in minutes)
-     * @return time
+     * @return time to pass the edge
      */
     public double getTime(){
     	return time;
@@ -116,15 +126,9 @@ public class KrakEdge {
     public double weight() { 
     	if(isLengthWeighted) return length;
     	return time;
-    	}
-    
-    /**
-     * Return the time of this edge
-     */
-    public double time(){ 
-    	return time; 
     }
-
+    
+   
     /**
      * Tells whether the length or traveltime of the edges are used as weight
      * 
@@ -162,13 +166,15 @@ public class KrakEdge {
     }
     
    /**
-	 * @return the vPost
-	 */
+    * The postal code for the left side 
+	* @return the vPost
+	*/
 	public int getvPost() {
 		return vPost;
 	}
 
 	/**
+	 * The postal code for the right side
 	 * @return the hPost
 	 */
 	public int gethPost() {
@@ -176,6 +182,7 @@ public class KrakEdge {
 	}
 
 	/**
+	 * The beginning index of the house numbers at the left side of the edge
 	 * @return the vFromHouseNumber
 	 */
 	public int getvFromHouseNumber() {
@@ -183,6 +190,7 @@ public class KrakEdge {
 	}
 
 	/**
+	 * The ending index of the house numbers at the right side of the edge
 	 * @return the vToHouseNumber
 	 */
 	public int getvToHouseNumber() {
@@ -190,6 +198,7 @@ public class KrakEdge {
 	}
 
 	/**
+	 * The beginning index of the house numbers at the right side of the edge
 	 * @return the hFromHouseNumber
 	 */
 	public int gethFromHouseNumber() {
@@ -197,6 +206,7 @@ public class KrakEdge {
 	}
 
 	/**
+	 * The ending index of the house numbers at the right side of the edge
 	 * @return the hToHouseNumber
 	 */
 	public int gethToHouseNumber() {
@@ -205,6 +215,7 @@ public class KrakEdge {
 
 	/**
      * Return a string representation of this edge.
+     * @return A string representation of the edge
      */
     public String toString() {
         return name + ": " + from + "->" + to + ", " + length + " m and " + time + " minutes"
