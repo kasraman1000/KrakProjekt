@@ -1,16 +1,11 @@
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import routing.AddressParser;
-import errorHandling.AddressInputFormatException;	
+import errorHandling.AddressInputFormatException;
 
 public class TestAddressParser {
 
@@ -50,7 +45,6 @@ public class TestAddressParser {
 				System.out.println();
 			}
 		} catch (AddressInputFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
