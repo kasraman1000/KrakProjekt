@@ -91,14 +91,14 @@ We have already decided that we need more than one data structure for visualizat
 				Hvorfor har vi valgt lige netop denne datastruktur - Hvilke af vores krav indfrier de?\\
 				Alternativer - Fordele / ulemper?\\
 
-				As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and startup time, but as performance is higher priority, this is the choice that fulfills the requirements the most.
+				As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and startup time, but as performance is higher priority, this is the choice that fulfils the requirements the most.
 
 \paragraph{The visualization data structure}
 
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-%\includegraphics[width=120mm]{roadsDS.png}
+\includegraphics[width=120mm]{roadsDS.png}
 \caption{TODO - some text to describe the figure}
 \label{fig:roadsDS}
 \end{figure}
@@ -106,11 +106,35 @@ The type of data to be stored, should be considered as much as the data structur
  When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree(discussed later in this chapter) more shallow, and therefore faster. 
 The most important requirement for our data structure is that it should be fast, while memory usage and startup time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Emperical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 52 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.
+
 //
 The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.
 Construction of the kd-tree requires a median finding function, which is used balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.
 
-								
+\paragraph{Searching for a route}
+When we first started to discuss how we were to create an efficient way to find a route, we considered several ways how to approach this. One of our main concerns was to not let the user wait too long. To do this we figured the cost of this was to use some more memory instead. 
+
+We went through a lot of data algorithms to solve this like DFS, BFS, Union-Find, but none of these were able to tell us the shortest path from A to B – only that there could be a path from A to B. The only two algorithms that actually would fullfill our needs was Bellman-Ford’s or Dijkstra’s algorithms. These two would be able to find the shortest path from any given point to another. 
+
+Both of these uses a graph to be performed on, so this made the data structure almost self-assigned. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since there is to occur fx. a one way road or a road were no driving are allowed, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
+[original]Beside that Bellman-Ford’s were able to use negative edges, it would perform slightly slower than Dijkstra’s, because it was forced to check for negative cycles.[/original][F]The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles.[/F] Because of our performance requirements that it had to perform fast, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
+
+Another possibility was to let Dijkstra’s algorithm be run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
+
+The last problem we saw was that Dijkstra’s searches from a node to a node, but we were to search for some place at an edge to another place at another edge. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
+
+The first solution is as follows. When the user askes for a route between two addresses, the program finds the two edges which matches the addresses. Then the program selects the first node from the first edge and the first node from the second edge. The program then finds the route and if the route doesn't contain the edges that represents the addresses, then the program adds the edges to the route. After that the program calculates the right distance for the two edges that represents the two addresses.  This approach may show the wrong road because the first node to the the edge is always used in the route and there might be a shorter route that doesn't contain that node. 
+
+The second solution is as follows. Instead of always selecting the first node for route finding the program should select the node that is closest to the given address. If the shortest route then contains the edge where the address is located then the program should calculate the longest distance, otherwise it should add that road and calculate the short distance.
+
+We decided to implement the first solution, but we found out later that it could show the wrong route. \\
+
+\begin{figure}[H]
+\includegraphics[width=120mm]{routeFinding.png}
+\caption{Two different approaches to find the shortest path.}
+\label{fig:routeFinding}
+\end{figure}
+
 			\subsubsection{User Interface}
 
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
@@ -321,9 +345,10 @@ The last method called createFile() is made for debugging, to see what actually 
 				
 This class is responsible for parsing /*parsing a roadname typed by the user*/ the user input. It uses regular expressions to identify the road name, road number and associated letter, zip Code and city name.
 				
-				\paragraph{DijkstraSP}\mbox{}\
+				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
 				
-This class has been copied from Sedgewick and Wayne \cite{sedgewickAndWayneDijkstraSP} used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
+
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. DijkstraSP responsibility is to find the shortest path from one node to another. When the class is instantiated it takes a KrakEdgeWeightedDigraph object as a parameter, which is statically stored in Loader. When the method findRoute() is called, Dijkstra’s algorithm is performed on all nodes until it reaches the destination node. We have chosen to stop the algorithm here to get a better performance and the rest of the computing will never be used unless a new search is called – and it will start all over again, since the start node is most likely to be changed and therefore the previous data can’t be reused.\\
 When the route has been computed and should be returned, it will follow the computed route backwards to add it all up in a Stack to make the returned route come in the right order.\\
 Since the graph is made from a real set of roads, there can be no negative roads. This is also one of the reasons why we choose Dijkstra: It’s faster but cannot be used for negative edges. \\
 DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In\cite{sedgewickAndWayneIn}, IndexMinPQ\cite{sedgewickAndWayneIndexMinPQ} and Stack\cite{sedgewickAndWayneStack} (not the one from java.util.) to be functioning. These classes have also been taken from Sedgewick and Wayne in the course BADS, but may not be mentioned elsewhere. \\
@@ -342,14 +367,18 @@ Another important thing this class takes care off is to determent what view that
 
 
 				
-				\paragraph{KrakEdge}\mbox{}\
+				\paragraph{KrakEdge \cite{sedgewickAndWayneDirectedEdge}}\mbox{}\
 				
-The KrakEdge\cite{sedgewickAndWayneDirectedEdge} is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
+
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. The KrakEdge is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.\\
+
 
 				
-				\paragraph{KrakEdgeWeightedDigraph}\mbox{}\
+				\paragraph{KrakEdgeWeightedDigraph \cite{sedgewickAndWayneEdgeWeightedDigraph}}\mbox{}\
 				
-The KrakEdgeWeightedDigraph\cite{sedgewickAndWayneEdgeWeightedDigraph} contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+
+This class has been copied from Sedgewick and Wayne used in another course (BADS) and modified to fit our program. The KrakEdgeWeightedDigraph contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+
 When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, it will do this either by the length of the edge (to find to shortest path) or the time to travel each edge (the fastest path).\\
 
 
@@ -408,14 +437,61 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		length : 0.5 - 1 side\\
 		Generelle overvejelser omkring test\\
 		Har vi fokuseret på noget specielt i forbindelse med vores test?\\
+
+When building our program we have to ensure that the code we have written actually works as intended. When the program compiles without errors, that is unfortunatly not a guarantee of the program working correctly. To ensure that it is functional in the way we have intended, we need to test it in several ways to see our code in action. Ideally we would have to check every component of our program in several ways, but this can be a very time consuming process. We have chosen to focus our testing on the parts that we felt are the most critical to the entire program.\\
+
+Since our program is split up into different independant modules, getting to test different parts is a stright forward process. Most of these classes are tested after a philosophy much like a "BlackBox"-test. We test what the publicly accesible methods of the class return when given some example input. If the return values are what we expect them to be, we can somewhat assume that it is working as we expect it to. The example input can and should be all kinds of valid (and invalid) input. We do not only test situation in which we expect the class to function properly, but also situations in which we expect it to fail, so we can see how it reacts as well.\\
+
+Few sections of the program have undergone a more thorough test, in which we comb every corner of the code to see if every line of the code is acting as we want it to, if conditional statements are checking the correct things, and wether branching is done correctly, among other things. We have restricted ourselves to only "WhiteBox"-test a certain few classes that are crucial, because it really takes up a lot of time. At this point in development we would have been better of using on other parts of the project.\\
+
+If we had continued developing on this program, or if we extended the contents of our program substantially, we would have used more time on testing, and as a result, our testing methodology would be different. We could have made better use of JUnit to write and peform proper unit tests on our classes, and we would be more thorough with getting around and testing everything. It is generally recomended that you "test early, test often", and although we did test early in development, we have not been expanding the functionality of our program enough to justify testing more often. \\
+
+	
 		
 		\subsection{Whitebox}
 			length : 0.5 - 1 side\\
+			
 			Vi laver kun det her paa en del af programmet - hvorfor har vi valgt lige netop denne del?\\
 			
+			In this part there will be a description of how our whitebox test of the program has been conducted and what results we got from the test. \\
+Before writing the actual test, there a several things to take into considoration. Is it necessary to test every line of code in the whole program and at what level do we want to do the whitebox test bit. The right thing to do, would be to test the whole program and make sure that there a no lines or statements that is not executed at least one time doing runtime. Since this would be very time consuming and because it's stated in the project description that it's not necessary to perform whitebox testing of the whole program, we have choosen to limit this to one single class.  \\
+We have choosen our AddressParser class to be the target of our test. We have picked this class because of the many different scenarios that can happend when a user types an address and therefore is interessting to test and important, because of the criticalness of the address being parsed correct. One could argue for that other places in the program is equally important to test, but again, because of the limited time we have choosen only this place. \\
+When doing a whitebox test there a several different levels and thouroughness of which the test can be performed. The least thourough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thourough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. \\
+
+We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarioes which were used in an expencancy table:
+
+\begin{table}
+\caption{table}
+\centering
+\begin{tabular}{c c c c c}
+Method & Scenario & Input data & Expected output & Assertion result \\ [0.5ex] 
+\hline
+findRoadName & No valid road name & "123, 123" & "" & Success\\
+findRoadName & Valid road name & "Langvej 5a, 5. sal, 2300 Kbh S" & "Langvej" & Success \\
+findCityname & No valid city name & "123, 123" & "" & Success \\
+findCityName & City name too short & "Langvej 5a, 5. sal, 2300 S" & "" & Succes\\
+findCityName & 1 letter infront of cityname & "Langvej 5a, 5. sal, 2300 i Kbh S" & "Kbh S" & Success \\
+findCityName & Valid city name & "Langvej 5a, 5. sal, 2300 Kbh S" & "Kbh S" & Success \\
+findZipCode & No valid zipcode & "Langvej 5a, 5. sal, 123 Kbh S" & "" & Success \\
+findZipCode & Valid zipcode & "Langvej 5a, 5. sal, 2300 Kbh S" & "" & Success \\
+findHouseNumber & No valid housenumber & "Langvej" & "" & Success \\
+findHouseNumber &  Housenumber with letter & "Langvej 5a, 4. sal, 2300 Kbh S" & "5" & Success \\
+findHouseNumber & Valid housenumber & "Langvej 5 4.sal, 2300 Kbh S" & "5" & Success \\
+findHouseNumber & Housenumber too long & "Langvej 2300 Kbh S" & "" & Success \\
+findHouseLetter & Houseletter already found & "" & "a" & Success \\
+findHouseLetter & No valid houseletter & "Langvej 5, 5. sal, 2300 Kbh" & "" & Success \\
+findHouseLetter & Valid houseletter, no city name already found & "Langvej 5 a, 5. sal, 2300 Kbh" & "a" & Success \\
+findHouseLetter & Valid houseletter, different from city name letter & "Langvej 5 a, 5. sal, 2300" & "a" & Success \\
+findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. sal, 2300 Kbh S" & "" & Success
+
+
+\end{tabular}
+\end{table}
+
+Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the excpected results from our table. 
+
+
 		\subsection{Blackbox}
-			
-		\subsection{JUnit}
 			
 		\subsection{Errors, bugs and list of needs}
 			length : 1 - 2 sider\\
@@ -468,7 +544,20 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 		\paragraph{Group dynamics}\mbox{}\
 		
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
-		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester, where some of the group members had a lot more stressful project period.  
+		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
+
+In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both xml and javascript. We have spend a lot time of both reading and perfoming experimental code and at the same time finding solutions, which we believe is both simple to have and works well. \
+Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knownlegde about javascript and XML, that we hope will come in hand at some point later on. \\
+
+In a course like this a list of required skills and abilities expected from the student is always given. The list for this course contains following skillset:
+\begin{itemize}
+	\item Establish a constitution for a group
+	\item Plan, conduct and control a project process.
+	 
+	
+\end{itemize} 
+
+
 		
 		
 		Tilføjelser:
@@ -1220,7 +1309,7 @@ NodeComparator & K, M & 17 \\
 PathPreface & L, M & 18 \\
 RoadSelector & K, M & 18 \\
 RouteFinder & L & 18 \\
-XML	& L & 17 \\
+XML	& L, F & 17 \\
 AddressParser & K & 16 \\
 EdgeParser & M & 18 \\
 EdgesAndRoadConverter & L, M & 18 \\
