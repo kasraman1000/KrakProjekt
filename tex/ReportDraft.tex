@@ -98,7 +98,7 @@ We have already decided that we need more than one data structure for visualizat
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-%\includegraphics[width=120mm]{roadsDS.png}
+\includegraphics[width=120mm]{roadsDS.png}
 \caption{TODO - some text to describe the figure}
 \label{fig:roadsDS}
 \end{figure}
@@ -437,6 +437,16 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 		length : 0.5 - 1 side\\
 		Generelle overvejelser omkring test\\
 		Har vi fokuseret på noget specielt i forbindelse med vores test?\\
+
+When building our program we have to ensure that the code we have written actually works as intended. When the program compiles without errors, that is unfortunatly not a guarantee of the program working correctly. To ensure that it is functional in the way we have intended, we need to test it in several ways to see our code in action. Ideally we would have to check every component of our program in several ways, but this can be a very time consuming process. We have chosen to focus our testing on the parts that we felt are the most critical to the entire program.\\
+
+Since our program is split up into different independant modules, getting to test different parts is a stright forward process. Most of these classes are tested after a philosophy much like a "BlackBox"-test. We test what the publicly accesible methods of the class return when given some example input. If the return values are what we expect them to be, we can somewhat assume that it is working as we expect it to. The example input can and should be all kinds of valid (and invalid) input. We do not only test situation in which we expect the class to function properly, but also situations in which we expect it to fail, so we can see how it reacts as well.\\
+
+Few sections of the program have undergone a more thorough test, in which we comb every corner of the code to see if every line of the code is acting as we want it to, if conditional statements are checking the correct things, and wether branching is done correctly, among other things. We have restricted ourselves to only "WhiteBox"-test a certain few classes that are crucial, because it really takes up a lot of time. At this point in development we would have been better of using on other parts of the project.\\
+
+If we had continued developing on this program, or if we extended the contents of our program substantially, we would have used more time on testing, and as a result, our testing methodology would be different. We could have made better use of JUnit to write and peform proper unit tests on our classes, and we would be more thorough with getting around and testing everything. It is generally recomended that you "test early, test often", and although we did test early in development, we have not been expanding the functionality of our program enough to justify testing more often. \\
+
+	
 		
 		\subsection{Whitebox}
 			length : 0.5 - 1 side\\
@@ -454,7 +464,7 @@ We started out by looking at all the methods and if-statements in the AddressPar
 \caption{table}
 \centering
 \begin{tabular}{c c c c c}
-Method & Scenario & Input data & Expected output & Assertion result \\ [1.5ex] 
+Method & Scenario & Input data & Expected output & Assertion result \\ [0.5ex] 
 \hline
 findRoadName & No valid road name & "123, 123" & "" & Success\\
 findRoadName & Valid road name & "Langvej 5a, 5. sal, 2300 Kbh S" & "Langvej" & Success \\
@@ -482,8 +492,6 @@ Then we used the JUnit test tool, to write tests to see if all our if-statements
 
 
 		\subsection{Blackbox}
-			
-		\subsection{JUnit}
 			
 		\subsection{Errors, bugs and list of needs}
 			length : 1 - 2 sider\\
@@ -536,7 +544,20 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 		\paragraph{Group dynamics}\mbox{}\
 		
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
-		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester, where some of the group members had a lot more stressful project period.  
+		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
+
+In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both xml and javascript. We have spend a lot time of both reading and perfoming experimental code and at the same time finding solutions, which we believe is both simple to have and works well. \
+Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knownlegde about javascript and XML, that we hope will come in hand at some point later on. \\
+
+In a course like this a list of required skills and abilities expected from the student is always given. The list for this course contains following skillset:
+\begin{itemize}
+	\item Establish a constitution for a group
+	\item Plan, conduct and control a project process.
+	 
+	
+\end{itemize} 
+
+
 		
 		
 		Tilføjelser:
