@@ -14,6 +14,9 @@ public class Controller {
 		Controller.startServer();
 	}
 
+	/**
+	 * Will load the data into the server from the three different files needed.
+	 */
 	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
