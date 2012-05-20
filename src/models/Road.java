@@ -26,6 +26,9 @@ public class Road {
 	private static double[] origo;
 	private static final int routeType;
 	
+	/**
+	 * Will load the predefined data into color map and width map - and set the type for a road to be a route to 50.
+	 */
 	static{
 		loadRoadColors();
 		loadRoadWidths();
