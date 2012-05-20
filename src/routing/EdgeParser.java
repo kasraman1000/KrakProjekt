@@ -94,7 +94,7 @@ public class EdgeParser {
 
 				if (((houseNumber >= fromHHN && houseNumber <= toHHN) ||
 						(houseNumber >= fromVHN && houseNumber <= toVHN)) &&
-						(zipcode == 0 || (Integer.parseInt(address[3]) == ke.getvPost() || Integer.parseInt(address[3]) == ke.gethPost())))
+						(zipcode == 0 || zipcode == ke.getvPost() || zipcode == ke.gethPost()))
 					results.add(ke);
 			}
 

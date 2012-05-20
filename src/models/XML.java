@@ -166,6 +166,7 @@ public class XML{
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		String xmlString = "";
@@ -233,6 +234,7 @@ public class XML{
 		//Add the StatusCode Element to the RootElement
 		Element statusCodeElement = document.createElement(STATUSCODE_ELEMENT_NAME);
 		statusCodeElement.setAttribute("code", statusCode.getCodeNumber() +"");
+		statusCodeElement.setAttribute("description", statusCode.getDescription());
 		rootElement.appendChild(statusCodeElement);
 		
 		//Add the ViewPortElement to the RootElement

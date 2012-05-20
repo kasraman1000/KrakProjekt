@@ -27,9 +27,11 @@
 				clearTimeout(t);
 				hideErrorMessage();
 				var responseXML = xmlhttp.responseXML;
-				var statusCode = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
-				var statusCodeString = statusCode.iterateNext().getAttribute("code");
-				handleStatusCode(statusCodeString);
+				var statusCodeXPath = responseXML.evaluate("/root/statusCode", responseXML, null, XPathResult.ANY_TYPE, null);
+				var statusCode = statusCodeXPath.iterateNext();
+				var statusCodeString = statusCode.getAttribute("code");
+				var statusDescriptionString = statusCode.getAttribute("description");
+				handleStatusCode(statusCodeString,statusDescriptionString);
 				if(errorHasBeenSend){
 					errorHasBeenSend = false;
 					return;
@@ -62,7 +64,14 @@
 	server is sending an error the method will show a propriate message to the user.
 	The format should follow this pattern: "Error [number]" eg. Error 4
 	 */
-	function handleStatusCode(statusCode) {
+	function handleStatusCode(statusCode,description) {
+		if(statusCode!=0){
+			showError(description);
+			errorHasBeenSend = true;
+		}
+		//following code is used if the program should display its own formulation
+		//of each error code e.g. if the errors should be shown in another language
+	/*
 		switch (statusCode) {
 		case "0":
 			//everything is normal - no error should be shown
@@ -75,6 +84,7 @@
 			showError("An error has occured");
 			errorHasBeenSend = true;
 		}
+		*/
 	}
 	function showError(text) {
 		document.getElementById("errorText").innerHTML = text;

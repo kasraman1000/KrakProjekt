@@ -13,7 +13,7 @@ public class ErrorHandler {
 	 * @return The status code for this exception
 	 */
 	public static StatusCode handleClientInputException(ClientInputException e){
-		System.err.println("Illigal input " + e.getMessage());
+		System.err.println("Illigal input: " + e.getStatusCode().getDescription());
 		return e.getStatusCode();
 	}
 	
