@@ -14,18 +14,16 @@ public class Controller {
 		Controller.startServer();
 	}
 
+	/**
+	 * Will load the data into the server from the three different files needed.
+	 */
 	static{
 		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
 		try {
-			String dataMap = "";//dataMap\\";
-			/*
-			Loader.load("zealand_node.txt","zealand_edge.txt", "zip_codes.txt");
-			/*/
-			Loader.load(dataMap + "kdv_node_unload.txt", dataMap + "kdv_unload.txt", dataMap + "zip_codes.txt");
-			//*/
-			//			Loader.load("src\\kdv_node_unload.txt","src\\kdv_unload.txt", "zip_codes.txt");
-
+			String mapForTheData = "mapData\\";
+			Loader.load(mapForTheData + "kdv_node_unload.txt", mapForTheData + "kdv_unload.txt", mapForTheData + "zip_codes.txt");
+			
 			RoadSelector.initialize(Loader.getNodesForKDTree());
 			routing.EdgeParser.build(Loader.getEdgesForTranslator());
 		} catch (ServerStartupException e) {

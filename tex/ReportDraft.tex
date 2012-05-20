@@ -458,7 +458,7 @@ Before writing the actual test, there a several things to take into considoratio
 We have choosen our AddressParser class to be the target of our test. We have picked this class because of the many different scenarios that can happend when a user types an address and therefore is interessting to test and important, because of the criticalness of the address being parsed correct. One could argue for that other places in the program is equally important to test, but again, because of the limited time we have choosen only this place. \\
 When doing a whitebox test there a several different levels and thouroughness of which the test can be performed. The least thourough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thourough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. \\
 
-We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarioes which were used in an expencancy table:
+We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
 
 \begin{table}
 \caption{table}
@@ -488,7 +488,7 @@ findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. 
 \end{tabular}
 \end{table}
 
-Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the excpected results from our table. 
+Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results match in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions, as the result output would not have come out as it did, if the call had not turned the if-statements the right way to true or false.
 
 
 		\subsection{Blackbox}
