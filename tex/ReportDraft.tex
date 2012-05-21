@@ -40,42 +40,23 @@ manner with the user interface;
 
 	\section{Problemanalysis}
 		\subsection{Requirements}
-To get an understanding of the requirements stated in the previous section, we will walk through these, and try to analysis what is needed to meet them, and what the different solutions could be. But first, we will list our three points of focus and use these as arguments for which solution to chose in the following analysis.\\
+To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.\\
 We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
 
 Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
 
 The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
-\\
 
-Let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. Because we are going to use map data that uses coordinates, it would be obvious to use this in the data structure.\\
+The following analysis have been divided into three areas: "Design patterns", "Data structures and algorithms" and "User interface". During the analysis we are taking the points of focus and the project requirement into account.
 
-We need to settle on a way to show the roads graphically. There have been some guidelines for us to either use a solution programmed completely in Java, or write something for visualizing the map in a web-browser. The Java-solution is more uniform, and would be somewhat easier, as you don't need to worry about the communication between multiple programming languages. This would allow us to focus on implementing extra features, and polishing the program. With a web solution, we would cut of the graphical part of the program, and let the browser handle it. This would force some task on us, like connection and getting the encoding between the browser-client and the java-server right. But it also speaks to some of our own priorities. It will push the heavy data processing to the server. If this was a server for a web-application, space wouldn't be a big problem, and you could optimize towards speed and making the client quicker. We have chosen to go a with a browser solution\\
 
-To visualize the map in Java, we would use the Swing-libraries. In the browser we could use different solutions. With the new HTML-5 standards, the “canvas”-element in javascript, could be used for the task. This would integrate well with the other features we would implement with javascript. The other possible solution is SVG, Scalable Vector Graphics. These would easily help us with the requirement that our program should scale when resizing the window. We will use SVG, because it is somewhat simpler, and goes well with XML, which we will use to send the map data from the server to the browser. This choice will help us with navigating around the visualization.\\
-
-Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include dragging the map around using the mouse or rotating the map. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data to zoom in SVG, because it consists of vectors.\\
-
-We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. We can simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would therefore look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind that you need to show all roads of the same type, you should be able to avoid most of the trouble.\\
-
-We also need to be able to find the shortest path between points. If this needs to be done quickly, we could do it with a graph data structure, and build a Shortest Path Tree with it, from the first point until we find the second. The problem with this is that it is a different data structure that the one we use for the visualization. But if we argue that this is a web-server, and we prioritize speed over space, this would be the best choice, to have two separate data structures. We then need to build the SPT. There are multiple algorithms for doing this, we looked at the Bellman-Ford-algorithm and Dijkstra's.\\
-
-The last requirement we were given was about making the user interface logical, consistent and reasonably fast. This fit well with our own priorities, and some of the choices connected to this have already been pointed out in the above and will be specified later.\\
-\\
-
-		
-		\subsection{Thoughts toward design}
-			In the former section we analysed the requirements more deeply and we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices given in the analysis.\\
-
-We have already decided that we need more than one data structure for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data in a XML format. We also need to think about the user interface design, and how it should support the features of the program.\\
-
-			\subsubsection{Design Patterns}
+			\subsection{Design Patterns}
 			When we thought about how we should design the internal structure, we first took a look at the Model-View-Controller design, which we had used earlier and were quite familiar with. It seemed reasonable to use this design pattern as inspiration, because the client would use some kind of graphical interface and it would be an advantage if the server would be used by multiple users at different graphical interfaces. We knew we were going to use some heavy data structures for containing all the roads and searching for a route through the roads. This could be used nicely as some of the models while the controller ensures that the correct models is called and manipulated. In this way we could make a loose coupling and therefore have a system that could be easy to maintain.
 To avoid computing the same data twice we wanted to let the view part store the information for the route. This would lead to the view, not only being a passive player, but actually having some responsibility, which would be strictly against the MVC structure. Therefore we decided to go as far as possible with the MVC structure and divert a bit if necessary.\
 Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
 
 
-			\subsubsection{Data structure and algorithms}
+			\subsection{Data structure and algorithms}
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
 
 \paragraph{The data structure for visualization}
@@ -120,7 +101,7 @@ We decided to implement the first solution, but we found out later that it could
 \label{fig:routeFinding}
 \end{figure}
 
-			\subsubsection{User Interface}
+			\subsection{User Interface}
 
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
 
