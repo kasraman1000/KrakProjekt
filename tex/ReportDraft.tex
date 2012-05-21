@@ -7,7 +7,6 @@
 \begin{document}
 	\tableofcontents
 	
-	
 	\newpage
 	\section{Preface}
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
@@ -84,7 +83,6 @@ Another design pattern we thought of using is the decorator design pattern. This
 
 			\subsubsection{Data structure and algorithms}
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
-
 
 \paragraph{The data structure for visualization}
 
@@ -189,7 +187,6 @@ With these design choices we have made a solution, that consistently focus to ov
 
 		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
 When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an XML in String form to the client. 
-
 
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
@@ -432,7 +429,9 @@ When doing a whitebox test there a several different levels and thouroughness of
 
 We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
 
-\begin{landscape}
+
+\begin{table}
+\caption{table}
 \centering
 \begin{tabular}{c c c c c}
 Method & Scenario & Input data & Expected output & Assertion result \\ [0.5ex] 
@@ -454,7 +453,11 @@ findHouseLetter & No valid houseletter & "Langvej 5, 5. sal, 2300 Kbh" & "" & Su
 findHouseLetter & Valid houseletter, no city name already found & "Langvej 5 a, 5. sal, 2300 Kbh" & "a" & Success \\
 findHouseLetter & Valid houseletter, different from city name letter & "Langvej 5 a, 5. sal, 2300" & "a" & Success \\
 findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. sal, 2300 Kbh S" & "" & Success
-\end{landscape}
+
+
+
+\end{tabular}
+\end{table}
 
 Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results match in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions, as the result output would not have come out as it did, if the call had not turned the if-statements the right way to true or false.
 
@@ -516,7 +519,8 @@ A text instruction explaining the route to the user would significantly increase
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \\
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
-In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both XML and javascript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
+
+In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both xml and javascript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
 
 Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knowledge about javascript and XML, that we hope will come in hand at some point later on.\\
 
