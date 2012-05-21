@@ -1,6 +1,8 @@
 \documentclass[a4paper,10pt,titlepage]{article}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{rotFloat}
+\usepackage{rotating}
 \usepackage[english]{babel}
 \begin{document}
 	\tableofcontents
@@ -394,19 +396,20 @@ When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, 
 				
 				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 
 		\newpage	
-		\subsection{Errorhandling}
-			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined errorhandling
-			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
-			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
-			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
-			the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
-			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
-			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
-			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
-			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
-			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.
+		\subsection{Error handling}
+			A good idea to handle exceptional conditions and errors in a program is to form some kind of strategy or policy. This helps to a more streamlined error handling when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide to utilize, is to simply handle the exception exactly where it's thrown. This would be easy to implement and since this is the most standard way of dealing with exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\\
+
+	An idea could be to form a more centralized policy, to make it more transparent what happens with the exceptions. You could propagate all thrown exceptions as far as possible, and handle them in the main classes. But then you might end up with quite a big number of exceptions to handle, even when alot of them needs to be handled in the same way. And what about the places where the program does not use a standard Java-library, that throws any exceptions? We would have to make our own exceptions here and throw and propagate them from here, if we want to centralize matters. We will try to design the middle way.\\
+
+			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \\
+
+			To overcome this we will make hierarchies of exception-classes, one for each of the three types of errors. The idea with our own exceptions classes is that we will 'wrap' the original exception and pass one of the above mentioned exception to a central error handling class, which will hold the responsibility of dealing which all exceptions. This will remove error handling responsibility from both the actual classes, where the exceptions are thrown and from the controller class, which only passes the exceptions to the error handling class.\\
+
+			In the error handling class will be three methods, one for each of our exception super-types, and a reference to an enum class called 'StatusCode'. Since we need to handle the three types of errors different, we decided to do so, by having three different methods. No matter what kind of server-runtime exception the error handler class receives, it will always deal with it the same way, since the controller will always call the same method for handling server-runtime exceptions. The same goes for the two other exceptions classes.\\
+
+			The advantages of doing it this way, is the overview and transparency that it gives, but also how the centralized policy will help with and make it clear how expansion is possible. This is because all exceptions will be related with a StatusCode enum and inside the error handler class it is possible to see how each type of exception is handled. Furthermore since every exception has to be wrapped by our own exception classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will only need to make a new StatusCode for this new error and the controller and error handler class take care of the rest.\\
 			
-			/* maaske noget med de negative sider af vores system??*/ 	
+			There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
 	\newpage		
 	\section{Technical Description}
 		length : 0.5 - 1 side\\
@@ -418,10 +421,20 @@ Searching in the tree is done from a region input. When visiting a node, a regio
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
 
-		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
+		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can run the jar file from the command line by typing java -jar krax.jar. The output messages will tell you when the server is ready and you can then open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. /*Do instead of "If"*/ If you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. Do you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button. To find a route you need to type two addresses which both needs to exist and have the right format. The following addresses are examples of valid addresses. For more information please see the section "Specifications for Address Parsing" in the appendix.
+\\
+\\
+Amagerbrogade 1, 2300 København
+\\
+Amagerbrogade 1 2300
+\\
+Amagerbrogade 1* 
+\\
+\\
+(*provided that there is only one road called "Amagerbrogade")
 
 		 \mbox{}\\
 		
@@ -459,10 +472,11 @@ We have choosen our AddressParser class to be the target of our test. We have pi
 When doing a whitebox test there a several different levels and thouroughness of which the test can be performed. The least thourough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thourough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. \\
 
 We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
+\begin{sidewaystable}[H]
+%\begin{table}
+%\caption{table}
+%\centering
 
-\begin{table}
-\caption{table}
-\centering
 \begin{tabular}{c c c c c}
 Method & Scenario & Input data & Expected output & Assertion result \\ [0.5ex] 
 \hline
@@ -486,7 +500,9 @@ findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. 
 
 
 \end{tabular}
-\end{table}
+
+%\end{table}
+\end{sidewaystable}
 
 Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results match in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions, as the result output would not have come out as it did, if the call had not turned the if-statements the right way to true or false.
 
@@ -620,7 +636,9 @@ In a course like this a list of required skills and abilities expected from the 
 	*The class has been modified to fit the program.	
 		
 	\section{Appendix}
-		\subsection{resume}
+		\subsection{Specifications for Address Parsing}
+		TODO - can anyone please copy the text from "Specifikation af AddressParser.docx"
+		\subsection{Resume}
 		
 		\begin{center}
 		06-02-12
