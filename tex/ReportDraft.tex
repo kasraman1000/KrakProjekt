@@ -1,4 +1,5 @@
 \documentclass[a4paper,10pt,titlepage]{article}
+
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{pdflscape}
@@ -9,8 +10,8 @@
 	
 	\newpage
 	\section{Preface}
-		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
-		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
+		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal S\o rensen og
+		Anders Brorup J\o rgensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
 		
@@ -39,48 +40,38 @@ manner with the user interface;
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two adresses, and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 		 
 	\newpage
+	\section{Limitations}
+		
+		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
+
 
 	\section{Problemanalysis}
-		\subsection{Requirements}
-To get an understanding of the requirements stated in the previous section, we will walk through these, and try to analysis what is needed to meet them, and what the different solutions could be. But first, we will list our three points of focus and use these as arguments for which solution to chose in the following analysis.\\
+To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.
+\\
 We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
 
 Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
 
 The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
-\\
 
-Let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. Because we are going to use map data that uses coordinates, it would be obvious to use this in the data structure.\\
+The following analysis have been divided into three areas: "Design patterns", "Data structures and algorithms" and "User interface". During the analysis we are taking the points of focus and the project requirement into account.
 
-We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. We can simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would therefore look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind that you need to show all roads of the same type, you should be able to avoid most of the trouble.\\
-
-We also need to be able to find the shortest path between points. If this needs to be done quickly, we could do it with a graph data structure, and build a Shortest Path Tree with it, from the first point until we find the second. The problem with this is that it is a different data structure that the one we use for the visualization. But if we argue that this is a web-server, and we prioritize speed over space, this would be the best choice, to have two separate data structures. We then need to build the SPT. There are multiple algorithms for doing this, we looked at the Bellman-Ford-algorithm and Dijkstra's.\\
-
-The last requirement we were given was about making the user interface logical, consistent and reasonably fast. This fit well with our own priorities, and some of the choices connected to this have already been pointed out in the above and will be specified later.\\
-\\
-
-		
-		\subsection{Thoughts toward design}
-			In the former section we analysed the requirements more deeply and we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices given in the analysis.\\
-
-We have already decided that we need more than one data structure for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data in a XML format. We also need to think about the user interface design, and how it should support the features of the program.\\
-
-			\subsubsection{Design Patterns}
+			\subsection{Design Patterns}
 			When we thought about how we should design the internal structure, we first took a look at the Model-View-Controller design, which we had used earlier and were quite familiar with. It seemed reasonable to use this design pattern as inspiration, because the client would use some kind of graphical interface and it would be an advantage if the server would be used by multiple users at different graphical interfaces. We knew we were going to use some heavy data structures for containing all the roads and searching for a route through the roads. This could be used nicely as some of the models while the controller ensures that the correct models is called and manipulated. In this way we could make a loose coupling and therefore have a system that could be easy to maintain.
 To avoid computing the same data twice we wanted to let the view part store the information for the route. This would lead to the view, not only being a passive player, but actually having some responsibility, which would be strictly against the MVC structure. Therefore we decided to go as far as possible with the MVC structure and divert a bit if necessary.\
 Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
 
 
-			\subsubsection{Data structure and algorithms}
+			\subsection{Data structures and algorithms}
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
 
-\paragraph{The data structure for visualization}
+\paragraph{The data structures for visualization}
 
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to the road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. When working with approximately one million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem.\\
 The illustration below shows roads, which are stored as points (the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-\includegraphics[width=120mm]{roadsRef.png}
+%\includegraphics[width=120mm]{roadsRef.png}
 \caption{Roads referenced by different points}
 \label{fig:roads}
 \end{figure}
@@ -100,7 +91,7 @@ We considered several algorithms like DFS, BFS, Union-Find, but none of these we
 Both of these uses a graph. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since a one way road or a road were no driving are allowed could occur, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
 The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles. Because of our performance requirements, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
 
-Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path, since this would double the memory usage. 
+Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
 
 Dijkstra's algorithm finds the shortest path, from one node to another, which does not solve the problem alone. To search from a arbitrary point on an edge, additional functionality has to be applied. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
 
@@ -116,7 +107,7 @@ We decided to implement the first solution, but we found out later that it could
 \label{fig:routeFinding}
 \end{figure}
 
-			\subsubsection{User Interface}
+			\subsection{User Interface}
 
 				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
 
@@ -124,17 +115,17 @@ The requirement for the user interface is formulated in the project description 
 
 \paragraph{Swing Solution}\mbox{}\
 
-We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us type safety, a comprehensive standard library, chance for error handling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have some disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
+We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
 \paragraph{Browser solution}\mbox{}\
 
-For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experience this startuptime. That gives us the possibility to favor performance over memory usage. The second advantage is that we will acquire knowledge about Javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited access to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
+For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
-Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memory usage, that the browser solution is more user friendly and that we get the chance to learn new technologies leads us to that decision.
+Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
 
 \paragraph{Features}\mbox{}\
 
-The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent user interface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
+The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
 
 \paragraph{Road displaying}\mbox{}\
 
@@ -159,9 +150,7 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
-		\subsection{Limitation}	
-		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
-					
+				
 				
 		\subsection{Summary}
 Through this analysis and these design choices, we have chosen a way to develop a program that meets the given requirements, and follow our own guidelines for what we want to focus on.\\
@@ -173,16 +162,14 @@ With these design choices we have made a solution, that consistently focus to ov
 	\newpage		
 	\section{Technical description}
 		In the following section contains a technical presentation of the program. This will compliment our analysis in the former sections with a description of the solution to the problem.
-		
-		\subsection{Flow description}
 
+	\subsection{Flow description}
 		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
 When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as a XML in String form to the client. 
 
 		\subsection{UML Diagram}
-		The following UML diagram is a selection of the most important classes. We have left out three groups of classes for better readability. It concerns the exception classes, the data classes and the classes which we have borrowed from Sedgewick and Wayne (see bibliography). Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn.
-		
-\begin{figure}[H]
+		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
+		\begin{figure}[H]
 \includegraphics[width=120mm]{umlArrows.png}
 \caption{UML diagram showing the most relevant classes.}
 \label{fig:uml}
@@ -316,7 +303,7 @@ The last method called createFile is made for debugging, to see what actually is
 			
 				\paragraph{AddressParser}\mbox{}\
 				
-This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name.
+This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name. A specification of the format for the address, can be found in the appendix.
 				
 				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
 				
@@ -383,10 +370,10 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
-		The program is divided into two parts - a server and a client. To start the server you need to have installed the Java Virtual Machine version 6. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
+		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. Do you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. When finding a route you can chose whether it should be the the shortest route measured in time or in distance, by clicking one of the two radio buttons. If you want to clear the route you press the clear button.
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. Do you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
 
 		 \mbox{}\\
 		
@@ -412,19 +399,15 @@ We have chosen not to include usability test in our testing, because the client 
 	
 	
 		
-		\subsection{Whitebox}
-			length : 0.5 - 1 side\\
-			
-			Vi laver kun det her paa en del af programmet - hvorfor har vi valgt lige netop denne del?\\
-			
+		\subsection{Whitebox}		
 			In this part there will be a description of how our whitebox test of the program has been conducted and what results we got from the test. \\
 Before writing the actual test, there a several things to take into considoration. Is it necessary to test every line of code in the whole program and at what level do we want to do the whitebox test bit. The right thing to do, would be to test the whole program and make sure that there a no lines or statements that is not executed at least one time doing runtime. Since this would be very time consuming and because it's stated in the project description that it's not necessary to perform whitebox testing of the whole program, we have choosen to limit this to one single class.  \\
 We have choosen our AddressParser class to be the target of our test. We have picked this class because of the many different scenarios that can happend when a user types an address and therefore is interessting to test and important, because of the criticalness of the address being parsed correct. One could argue for that other places in the program is equally important to test, but again, because of the limited time we have choosen only this place. \\
 When doing a whitebox test there a several different levels and thouroughness of which the test can be performed. The least thourough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thourough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. \\
 
-We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
+We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. We did this to make sure that we all if-statements both had a scenario that would turn the statement true and one turning it false. We chose input for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
 
-
+\begin{landscape}
 \begin{table}
 \caption{table}
 \centering
@@ -453,8 +436,8 @@ findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. 
 
 \end{tabular}
 \end{table}
-
-Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results match in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions, as the result output would not have come out as it did, if the call had not turned the if-statements the right way to true or false.
+\end{landscape}
+Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results matched in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions.
 
 
 		\subsection{Blackbox}
@@ -465,13 +448,16 @@ The support functions, intersecting and fullyContained are also tested on border
 
 			
 		\subsection{Errors, bugs and list of needs}
+<<<<<<< HEAD
+		
+
 When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
 \\
 We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
 \\
 When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
 \\
-When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+When searching for an address, the city name to zip code translator may make the request fail because one city district (K\o benhavn K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
 \\
 If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
 \\
@@ -483,8 +469,25 @@ It is not possible for the user to navigate with the keyboard. This is a result 
 \\
 The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
 \\
+\begin{itemize}
+\item When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
 
-			
+\item When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
+
+\item If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
+		\end{itemize}
+\paragraph{Needs}
+\begin{itemize}
+\item We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
+
+\item When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
+
+\item The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+
+\item It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
+
+\item The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
+		\end{itemize}
 			
 		\subsection{Results}
 		Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\
@@ -519,13 +522,7 @@ In the start of the project, we decided to use an server/klient solution, which 
 
 Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knowledge about javascript and XML, that we hope will come in hand at some point later on.\\
 
-In a course like this a list of required skills and abilities expected from the student is always given. The list for this course contains following skillset:
-\begin{itemize}
-	\item Establish a constitution for a group
-	\item Plan, conduct and control a project process.
-	 
-	
-\end{itemize} 
+In a course like this a list of required skills and abilities expected from the student is always given. The list includes both group work and problem analysis skills. By analysing and assessing different solutions and their effect on the product we have acquired the problem-oriented skills, and by discussing and dividing work we have acquired group skills.
 
 	\newpage
 	
@@ -603,20 +600,20 @@ The structural patterns of addresses from Greenland or The Faroe Islands have no
 				\paragraph{Tilstede: Alle}
 				\paragraph{Dagsorden:}
 				\begin{itemize}
-					\item Loesninger
+					\item L\o sninger
 					\item Versionsstyring
 				\end{itemize}	
 			\paragraph{Beskrivelse af dagen:}
-			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
-			\paragraph{Faerdige ting:}
+			Diskussion af begr\ae sninger og l\o sningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt p\aa  AddressParser.java.
+			\paragraph{F\ae rdige ting:}
 			
 			\paragraph{Aftaler/Beslutninger:}
 			
-			\paragraph{Hvem goer hvad:}
-			Klasserne skrives faerdig til naeste gang.\
+			\paragraph{Hvem g\o r hvad:}
+			Klasserne skrives f\ae rdig til n\ae ste gang.\
 			
-			\paragraph{Naeste gang:}
-			Vi moedes naeste gang onsdag kl 10.\mbox{}\\
+			\paragraph{N\ae ste gang:}
+			Vi m\o des n\ae ste gang onsdag kl 10.\mbox{}\\
 			
 			\begin{center}
 		13-02-12
@@ -632,16 +629,16 @@ The structural patterns of addresses from Greenland or The Faroe Islands have no
 				
 			\paragraph{Beskrivelse af dagen:}
 			
-			\paragraph{Faerdige ting:}
+			\paragraph{F\ae rdige ting:}
 			Vi har oprettet et projekt i kursusbasen.\
-			Specifikationen er skrevet faerdig
+			Specifikationen er skrevet f\ae rdig
 			
 			\paragraph{Aftaler/Beslutninger:}
-			Vi har besluttet at vente med versionsstyring indtil vi har forelaesning i det. Vi har ogsaa besluttet at droppe etage delen i rutesoegning. 
+			Vi har besluttet at vente med versionsstyring indtil vi har forel\ae sning i det. Vi har ogs\aa  besluttet at droppe etage delen i rutes\o gning. 
 			
-			\paragraph{Hvem goer hvad:}
-			Lars og Jacob arbejder på blackbox til onsdag. Kasra vil skrive metoden om og rydde op i den, samt supplere med et flowchart over metoden.
-			\paragraph{Naeste gang:}\mbox{}\\
+			\paragraph{Hvem g\o r hvad:}
+			Lars og Jacob arbejder p\aa  blackbox til onsdag. Kasra vil skrive metoden om og rydde op i den, samt supplere med et flowchart over metoden.
+			\paragraph{N\ae ste gang:}\mbox{}\\
 			
 			\begin{center}
 		15-02-12
@@ -657,19 +654,19 @@ The structural patterns of addresses from Greenland or The Faroe Islands have no
 				\end{itemize}
 				
 			\paragraph{Beskrivelse af dagen:}
-			Vi har idag gennemgaet koden og faaet rettet en smule i den og kigget på black box testen.
+			Vi har idag gennemg\aa t koden og f\aa et rettet en smule i den og kigget p\aa  black box testen.
 			
-			\paragraph{Faerdige ting:}
+			\paragraph{F\ae rdige ting:}
 			
 			\paragraph{Aftaler/Beslutninger}
 			
-			\paragraph{Hvem goer hvad:}
-			Til fredag, vil Jakob refaktorere AddressParser og især dele den primære metode ind i flere små – dels for at skabe overblik men også for at kunne White Box teste på en bedre måde.
+			\paragraph{Hvem g\o r hvad:}
+			Til fredag, vil Jakob refaktorere AddressParser og is\ae  r dele den prim\ae re metode ind i flere sm\aa  – dels for at skabe overblik men ogs\aa  for at kunne White Box teste p\aa  en bedre m\aa de.
 Anders vil knytte en kommentar til Black box testen, hvor der bliver fortalt om resultaterne.
-Fredag efter sidste forelæsning vil vi mødes og aftale hvad vi hver især skal lave. Det skal fx aftales hvem der white box tester de forskellige metoder og så vil vi inden mandag (eller mandag formiddag) samle hele afleveringen.
+Fredag efter sidste forel\ae sning vil vi m\o des og aftale hvad vi hver is\ae r skal lave. Det skal fx aftales hvem der white box tester de forskellige metoder og s\aa  vil vi inden mandag (eller mandag formiddag) samle hele afleveringen.
 Dem der arbejder med white box testene skal hver lave en forventningstabel til den de aktuelle tests.
 
-			\paragraph{Naeste gang:}\mbox{}\\
+			\paragraph{N\ae ste gang:}\mbox{}\\
 			
 			\begin{center}
 		20-02-2012
@@ -679,21 +676,21 @@ Dem der arbejder med white box testene skal hver lave en forventningstabel til d
 		\begin{itemize}
 					\item Vi skal lave regex 
 					\item Der skal ryddes op i koden
-					\item Laese opgaven igennem
+					\item L\ae se opgaven igennem
 					 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Vi har planlagt hvordan ovenstående punkter skal løses, gennemgået opgaven der skal afleveres onsdag d. 29/2 og kommet med gode, konkrete forslag til hvordan vi vil læse opgaven.
-Dem der har påtaget sig nogen af ovenstående opgaver, skal have disse klar til onsdag.
+		Vi har planlagt hvordan ovenst\aa ende punkter skal l\o ses, gennemg\aa et opgaven der skal afleveres onsdag d. 29/2 og kommet med gode, konkrete forslag til hvordan vi vil l\ae se opgaven.
+Dem der har p\aa taget sig nogen af ovenst\aa ende opgaver, skal have disse klar til onsdag.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
-		Det er fastsat at vi onsdag d. 7/3 at vi har læst vores kapitler igennem og gør klar til at fremlægge disse for klassen.
-		\paragraph{Hvor goer hvad:}
+		Det er fastsat at vi onsdag d. 7/3 at vi har l\ae st vores kapitler igennem og g\o r klar til at freml\ae gge disse for klassen.
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		19-03-12
@@ -707,13 +704,13 @@ Dem der har påtaget sig nogen af ovenstående opgaver, skal have disse klar til
 		
 		\paragraph{Beskrivelse af dagen:}
 		Vi har udarbejdet et UML diagram
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
-		Vi aftaler at vi som udgangspunkt fremover mødes mandage og onsdage klokken 10 for at arbejde på projektet.
-		\paragraph{Hvor goer hvad:}
+		Vi aftaler at vi som udgangspunkt fremover m\o des mandage og onsdage klokken 10 for at arbejde p\aa  projektet.
+		\paragraph{Hvor g\o r hvad:}
 		onsdag 21/3
-Git opsætning + foredrag (Kasra)
+Git ops\ae tning + foredrag (Kasra)
 Google calendar (Jakob)
 
 mandag 26/3
@@ -723,7 +720,7 @@ NodeTree + Road (Kasra + Mark)
 onsdag 28/3
 Js+ Html + svg (Filip + Jakob + Anders)
 Test
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 			
 			
 			\begin{center}
@@ -738,17 +735,17 @@ Test
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Efter vi sidste gang fik delt arbejdsopgaverne op mellem os, så har vi arbejdet i smågrupper hele dagen. 
-Kasra og Mark arbejder på datastrukturen, Lars har arbejdet på XML-creator klassen(som har ansvaret for at lave en XML fil) og Filip, Jacob og Anders har arbejdet på HTML/Javascript.
-Efter mange snedige overvejelser omkring kd-træer og generelt omkring datastrukturen, er Kasra og Mark, så småt efter dagens arbejde,  i stand til at bevæge sig over i selve ”implementeringsfasen”.  Lars er færdig med XML-creator og skal påbegynde en ny arbejdsopgave fra næste møde. Tremandsgruppen som har arbejdet med HTML/Javascript er nået et pænt stykke i dag og skal næste gang begynde at se på kommunikationen mellem browser og java(server).
+		Efter vi sidste gang fik delt arbejdsopgaverne op mellem os, s\aa  har vi arbejdet i sm\aa grupper hele dagen. 
+Kasra og Mark arbejder p\aa  datastrukturen, Lars har arbejdet p\aa  XML-creator klassen(som har ansvaret for at lave en XML fil) og Filip, Jacob og Anders har arbejdet p\aa  HTML/Javascript.
+Efter mange snedige overvejelser omkring kd-tr\ae er og generelt omkring datastrukturen, er Kasra og Mark, s\aa  sm\aa t efter dagens arbejde,  i stand til at bev\ae ge sig over i selve ”implementeringsfasen”.  Lars er f\ae rdig med XML-creator og skal p\aa begynde en ny arbejdsopgave fra n\ae ste m\o de. Tremandsgruppen som har arbejdet med HTML/Javascript er n\aa et et p\ae nt stykke i dag og skal n\ae ste gang begynde at se p\aa  kommunikationen mellem browser og java(server).
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		26-03-12
@@ -762,16 +759,16 @@ Efter mange snedige overvejelser omkring kd-træer og generelt omkring datastruk
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Ved dagens afslutning har Anders og Filip fået set rigtig meget på kommunikationen mellem Java og JavaScript. Vi er blevet enige om at vi prøver at implementere systemet så der skrives en xml-fil til harddisken for hver gang der skal zoomes, ændres view, osv. Anders og Filip er kommet så langt at de kan få ”hul igennem” fra JS til Java, men kun én gang fra Java til JS. Det er derfra de vil arbejde videre næste gang.Lars har finpudset XML-klassen samt prøvet at hjælpe Anders og Filip, så godt det nu kunne lade sig gøre.
-Kasra og Anders har fået godt styr på KD-træ-strukturen og har i dag arbejdet meget med selve søgningen i KD-træet. De føler det er meget tæt på og er på nuværende tidspunkt i gang med sidste del af debuging’en.
+		Ved dagens afslutning har Anders og Filip f\aa et set rigtig meget p\aa  kommunikationen mellem Java og JavaScript. Vi er blevet enige om at vi pr\o ver at implementere systemet s\aa  der skrives en xml-fil til harddisken for hver gang der skal zoomes, \ae ndres view, osv. Anders og Filip er kommet s\aa  langt at de kan f\aa  ”hul igennem” fra JS til Java, men kun én gang fra Java til JS. Det er derfra de vil arbejde videre n\ae ste gang.Lars har finpudset XML-klassen samt pr\o vet at hj\ae lpe Anders og Filip, s\aa  godt det nu kunne lade sig g\o re.
+Kasra og Anders har f\aa et godt styr p\aa  KD-tr\ae -strukturen og har i dag arbejdet meget med selve s\o gningen i KD-tr\ae et. De f\o ler det er meget t\ae t p\aa  og er p\aa  nuv\ae rende tidspunkt i gang med sidste del af debuging’en.
 
-		\paragraph{Faerdige ting:}
-		Anders, Filip og Lars ser til at vi bliver mere færdige med JS-delen.
+		\paragraph{F\ae rdige ting:}
+		Anders, Filip og Lars ser til at vi bliver mere f\ae rdige med JS-delen.
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		28-03-12
@@ -785,17 +782,17 @@ Kasra og Anders har fået godt styr på KD-træ-strukturen og har i dag arbejdet
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Lars har refaktorereret koden og lavet et backup java gui, som vi kan bruge i tilfælde af at browserens gui ikke virker og sammensat søgings-algorithmen med xml-creatoren.
-Mark har arbejdet på at teste og debugge søgningsalgorithmen samt at optimere den. Kasra har arbejdet på en simplere udgave af søgningsalgorithmen, i tilfælde af at den anden ikke virkede.
-Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt via fil(gemme en fil også læse den), mens Fillip har prøvet at få hovedløsningen til at virke.
+		Lars har refaktorereret koden og lavet et backup java gui, som vi kan bruge i tilf\ae lde af at browserens gui ikke virker og sammensat s\o gings-algorithmen med xml-creatoren.
+Mark har arbejdet p\aa  at teste og debugge s\o gningsalgorithmen samt at optimere den. Kasra har arbejdet p\aa  en simplere udgave af s\o gningsalgorithmen, i tilf\ae lde af at den anden ikke virkede.
+Anders har kigget p\aa  overf\o ringsmuligheder fra java til javascript, eventuelt via fil(gemme en fil ogs\aa  l\ae se den), mens Fillip har pr\o vet at f\aa  hovedl\o sningen til at virke.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
-		Vores næste møde er tirsdag d 3. april, hvor de individuelle moduler skal være færdige hvis muligt. Her er det planen at vi sætter programmet sammen.
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{Hvor g\o r hvad:}
+		Vores n\ae ste m\o de er tirsdag d 3. april, hvor de individuelle moduler skal v\ae re f\ae rdige hvis muligt. Her er det planen at vi s\ae tter programmet sammen.
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		04-04-12
@@ -809,14 +806,15 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar String, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
-		\paragraph{Faerdige ting:}
+		Da vi kun var tre til dette m\o de, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op p\aa  det vi kunne og s\aa  ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere f\aa et klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at f\aa  igennem. I l\o bet af dagen fik vi dog l\o st dette ved at tilf\o je noget ekstra information i den XML-svar string, som serveren sender. Det var prim\ae rt det, som Anders og Filip fik dagen til at g\aa  med, hvor Lars han fik tilf\o jet nogle sm\aa ting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til n\ae ste m\o de alle skulle have skrevet om hver vores komponent, som skal indg\aa  i rapporten. 
+
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		09-04-12
@@ -830,15 +828,15 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Efter sidste møde, hvor vi fik kommunikationen mellem server og klient til at kører, skulle vi nu tilføje funktionalitet til at vores kort. Det vil sige, at vi i dag skulle arbejde på at kunne zoome ind og ud, samt bevæge viewboxen(”synsfeltet”) rundt. Tidligere havde Anders legede en lille smule med det, men til trods for det, så skulle det vise sig, at blive en ganske stor udfordring. Først og fremmest havde vores veje beholdt deres oprindelige koordinater fra Krak-dataen, hvilket betød, at området vores de lå var omkring 450000-900000 for x og 6050000-6400000 for y. Derfor skulle disse nu laves om, så de kom ned på et et ordenligt niveau. Derefter skulle de nye informationer nu tilføjes i Javascriptet, så det kom til at vise det rigtigt. Dernæst skulle vi finde et passende zoom niveau og sørger for at der hele tiden blev sendt de rigtige koordinater over til serveren. Men tiltrods for at vi havde mange småting, som ikke ville gå vores vej i dag, så fik vi løst det og fik mere eller mindre nået de ting vi skulle. 
-		\paragraph{Faerdige ting:}
+		Efter sidste m\o de, hvor vi fik kommunikationen mellem server og klient til at k\o rer, skulle vi nu tilf\o je funktionalitet til at vores kort. Det vil sige, at vi i dag skulle arbejde p\aa  at kunne zoome ind og ud, samt bev\ae ge viewboxen(”synsfeltet”) rundt. Tidligere havde Anders legede en lille smule med det, men til trods for det, s\aa  skulle det vise sig, at blive en ganske stor udfordring. F\o rst og fremmest havde vores veje beholdt deres oprindelige koordinater fra Krak-dataen, hvilket bet\o d, at omr\aa det vores de l\aa  var omkring 450000-900000 for x og 6050000-6400000 for y. Derfor skulle disse nu laves om, s\aa  de kom ned p\aa  et et ordenligt niveau. Derefter skulle de nye informationer nu tilf\o jes i Javascriptet, s\aa  det kom til at vise det rigtigt. Dern\ae st skulle vi finde et passende zoom niveau og s\o rger for at der hele tiden blev sendt de rigtige koordinater over til serveren. Men tiltrods for at vi havde mange sm\aa ting, som ikke ville g\aa  vores vej i dag, s\aa  fik vi l\o st det og fik mere eller mindre n\aa et de ting vi skulle. 
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}
-		Næste møde bliver tirsdag 10-04-12, hvor de sidste ting skal laves og sidste hånd skal ligges på rapporten. \mbox{}\\ 
+		\paragraph{N\ae ste gang:}
+		N\ae ste m\o de bliver tirsdag 10-04-12, hvor de sidste ting skal laves og sidste h\aa nd skal ligges p\aa  rapporten. \mbox{}\\ 
 		
 		\begin{center}
 		10-04-12
@@ -852,16 +850,16 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		I dag var sidste dag inden afleveringen af første del af det samlede projekt. Vi skulle få vores zoom funktioner til at fungere 100%, få samlet op på en masse småting og så selvfølgelig få skrevet det sidste på vores rapport.
-Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny SVG fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
+		I dag var sidste dag inden afleveringen af f\o rste del af det samlede projekt. Vi skulle f\aa  vores zoom funktioner til at fungere 100, f\aa  samlet op p\aa  en masse sm\aa ting og s\aa  selvf\o lgelig f\aa  skrevet det sidste p\aa  vores rapport.
+Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis n\aa ede vi det vi skulle. Vi fik zoom til at virke korrekt og s\o rgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi ogs\aa  f\aa  fjernet alt gammelt SVG, n\aa r der blev requested ny svg fra serveren. Dette fik Filip styr p\aa  og det spiller nu. Sidst p\aa  dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem f\ae rdige og gjort alt klar til aflevering. Filip st\aa r for at det bliver afleveret og de ikke-tilstedev\ae rende personer skal s\aa  kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		16-04-12
@@ -875,16 +873,16 @@ Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Skal der være tidspunkter hvor vi ikke koder og kun snakker design?\
-Vi skal være fælles om at diskutere de overordnede beslutninger og derefter dele opgaver ud.\
+		Skal der v\ae re tidspunkter hvor vi ikke koder og kun snakker design?\
+Vi skal v\ae re f\ae lles om at diskutere de overordnede beslutninger og derefter dele opgaver ud.\
 
-Vi læser opgavebeskrivelsen igennem.
+Vi l\ae ser opgavebeskrivelsen igennem.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
-		Vi fortsætter med at arbejde mandag og onsdag fra kl. 10 til 18 som udgangspunkt. Når bosk slutter indrager vi torsdagen også.\
-		Lav analysen færdig inden for de første 2 uger. Der er enighed om at dette er en god ide.\
+		Vi forts\ae tter med at arbejde mandag og onsdag fra kl. 10 til 18 som udgangspunkt. N\aa r bosk slutter indrager vi torsdagen ogs\aa .\
+		Lav analysen f\ae rdig inden for de f\o rste 2 uger. Der er enighed om at dette er en god ide.\
 		Overordnede principper:
 		\begin{itemize}
 		\item - startuptime
@@ -893,12 +891,12 @@ Vi læser opgavebeskrivelsen igennem.
 		\item + fast and reactive navigation
 		\end{itemize}
 			
-		\paragraph{Hvor goer hvad:}
-		Gennemgå hinandens kode. + læs om Dijkstra 
+		\paragraph{Hvor g\o r hvad:}
+		Gennemg\aa  hinandens kode. + l\ae s om Dijkstra 
 		
-		\paragraph{Naeste gang:}
-		Snak om ansvarsomraader + oprydning i koden.
-		Rutesoegning\mbox{}\\
+		\paragraph{N\ae ste gang:}
+		Snak om ansvarsomr\aa der + oprydning i koden.
+		Rutes\o gning\mbox{}\\
 		
 		\begin{center}
 		18-04-12
@@ -909,41 +907,41 @@ Vi læser opgavebeskrivelsen igennem.
 		\begin{itemize}
 					\item Kode oprydning
 					\item Kd-tree
-					\item rutesoegning
+					\item rutes\o gning
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
 		Design choices:
 	Der skrives en RoadSelection-klasse, med ansvar for at hente de rigtige Road-objekter ud fra KdTree, beregne zoom-niveau(Hvilken prioritet af veje skal med)
-Der skrives en static RoadStatus-klasse der står for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.\\
-Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal være, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som så kalder videre til RoadStatus. På denne måde skal XML-klassen heller ikke holde styr på vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber også modularitet.\\
-Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud på alle veje.\\
+Der skrives en static RoadStatus-klasse der st\aa r for at beregne en scale-factor for vejtypernes bredde, og holde et static HashMap over disse og vejtypernes farver.\\
+Ingen funktionalitet i XML-klassen, ingen beregninger. Road[] ved selv hvor bredde vejene skal v\ae re, og hvilken farve. Dette sker ved kald til det enkelte Road-objekt, som s\aa  kalder videre til RoadStatus. P\aa  denne m\aa de skal XML-klassen heller ikke holde styr p\aa  vejenes type, og vejbredder og farver bliver administreret under en klasse. Det skaber ogs\aa  modularitet.\\
+Road objekter kender sin egen type. Herefter henter de en bredde og farve fra et final static HashMap hos RoadStatus. Dette er valgt i forhold til at have HashMappet liggende i en anden klasse, eller ligge farve og bredde ud p\aa  alle veje.\\
 Krakloader skal kun kendes af KdTree, det er kun den der bruger den.\\
-KD-træ:
-Udskydt, da rutesøgning blev opprioriteret.
-Rutesøgning:
+KD-tr\ae :
+Udskydt, da rutes\o gning blev opprioriteret.
+Rutes\o gning:
 •	Vi skal have opbygget en ny datastruktur, nok en form for graf. Vi vil ikke som udgangspunkt arbejde med rettede grafer.
-•	Denne datastruktur skal sendes til en algoritme, der ud fra den opbygger et shortest-path-tree omkring en node eller road. Dette bliver nok en udgave af Dijkstra’s algoritme. Desuden skal denne stoppe, når den har fundet den korteste rute til en given node eller road. Derefter skal ruten returneres som et Road[].
-•	Vi vil til start ikke forkorte vores graf inden rutesøgning, da vi forudser problemer med dette.
-•	De gamle klasser skal udbygges til at håndtere rutesøgning, bl.a. requests i Javascript og opbygning af XML. Ruteplanen skal have sin egen farve og tegnes over de andre veje.
-•	Der skal være en metode til at vælge start og slutpunkt. Vi vil fokusere på adresser frem for musse-klik. Vi mener at det er en mere brugervenlig tilgang, med mere teknisk udfordring for os. Vi vil arbejde videre med den adressParser vi skrev tidligt i projektet.
+•	Denne datastruktur skal sendes til en algoritme, der ud fra den opbygger et shortest-path-tree omkring en node eller road. Dette bliver nok en udgave af Dijkstra’s algoritme. Desuden skal denne stoppe, n\aa r den har fundet den korteste rute til en given node eller road. Derefter skal ruten returneres som et Road[].
+•	Vi vil til start ikke forkorte vores graf inden rutes\o gning, da vi forudser problemer med dette.
+•	De gamle klasser skal udbygges til at h\aa ndtere rutes\o gning, bl.a. requests i Javascript og opbygning af XML. Ruteplanen skal have sin egen farve og tegnes over de andre veje.
+•	Der skal v\ae re en metode til at v\ae lge start og slutpunkt. Vi vil fokusere p\aa  adresser frem for musse-klik. Vi mener at det er en mere brugervenlig tilgang, med mere teknisk udfordring for os. Vi vil arbejde videre med den adressParser vi skrev tidligt i projektet.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		•	Ryd ud i egen kode - kommenter ordentligt, slet udkommenteret kode og ubrugte metoder\
-•	Kasra laver et branch/tag på Git, der indeholder de filer der er i brug lige nu. Desuden opstiller han lidt guidelines for hvordan og hvornår folk selv brancher ud.\
+•	Kasra laver et branch/tag p\aa  Git, der indeholder de filer der er i brug lige nu. Desuden opstiller han lidt guidelines for hvordan og hvorn\aa r folk selv brancher ud.\
 •	Anders laver en skabelon for referater, som skal bruges fremover\
 •	Filip skriver liste ofr hvem der er referent fremover.
 
 
-		\paragraph{Naeste gang:}
-På mandag d. 23/4 2012:\
-•	I HTML, Javascript og SVG skal der kigges på skalering, buffer og hvidebjælker.\
-•	KdTree skal refaktoreres, så dette kun er en datastruktur, og RoadSelection skal skrives så den indeholder de funktioner der er beskrevet i dette referat.\
-•	RoadStatus skal skrives så den står for de funktioner der beskrevet i dette referat.\mbox{}\\
+		\paragraph{N\ae ste gang:}
+P\aa  mandag d. 23/4 2012:\
+•	I HTML, Javascript og SVG skal der kigges p\aa  skalering, buffer og hvidebj\ae lker.\
+•	KdTree skal refaktoreres, s\aa  dette kun er en datastruktur, og RoadSelection skal skrives s\aa  den indeholder de funktioner der er beskrevet i dette referat.\
+•	RoadStatus skal skrives s\aa  den st\aa r for de funktioner der beskrevet i dette referat.\mbox{}\\
 
 \begin{center}
 		23-04-12
@@ -952,32 +950,32 @@ På mandag d. 23/4 2012:\
 		\paragraph{Tilstede: Alle, undtagen Kasra}
 		\paragraph{Dagsorden:}
 		\begin{itemize}
-					\item Rutesoegning - hvordan goer vi?
+					\item Rutes\o gning - hvordan g\o r vi?
 					\item Fordeling af arbejdsopgaver
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Hvordan skal rutesøgningen udføres?; Skal vi kunne markere to punkter på  kortet eller kunne søge efter en adresse via to strenge? \
-Hvor skal vi gemme resultatet af rutesøgningen? For den skal jo gemmes et sted, da vi jo skal kunne zoome ind og ud OG beholde søgeresultatet.  
+		Hvordan skal rutes\o gningen udf\o res?; Skal vi kunne markere to punkter p\aa   kortet eller kunne s\o ge efter en adresse via to strenge? \
+Hvor skal vi gemme resultatet af rutes\o gningen? For den skal jo gemmes et sted, da vi jo skal kunne zoome ind og ud OG beholde s\o geresultatet.  
 
-		\paragraph{Faerdige ting:}
-		Anders og Filip har fixet bufferen i index.html samt de hvide bjælker i svg’en. \
-Lars har lavet roadStatus og omdøbt KrakLoader til Loader og flyttet den fra KdTree til Controlleren. 
+		\paragraph{F\ae rdige ting:}
+		Anders og Filip har fixet bufferen i index.html samt de hvide bj\ae lker i svg’en. \
+Lars har lavet roadStatus og omd\o bt KrakLoader til Loader og flyttet den fra KdTree til Controlleren. 
 
 		\paragraph{Aftaler/Beslutninger:}
 		\begin{itemize}
-		\item Alle klasser er ”lukket” og mere eller mindre færdiggjorte til mandag den 7.
-\item Onsdag den 25 er der to mand, som sætter sig og begynder at snakke rapport og får sat nogle punkter og overskrifter på de enkelte dele.
-\item Man skal kunne søge efter en rute efter de bestemmelser, som tidligere er bestemt i adressesøgningen opgaven.  
+		\item Alle klasser er ”lukket” og mere eller mindre f\ae rdiggjorte til mandag den 7.
+\item Onsdag den 25 er der to mand, som s\ae tter sig og begynder at snakke rapport og f\aa r sat nogle punkter og overskrifter p\aa  de enkelte dele.
+\item Man skal kunne s\o ge efter en rute efter de bestemmelser, som tidligere er bestemt i adresses\o gningen opgaven.  
 		\end{itemize}
-		\paragraph{Hvor goer hvad:}
-		Mark laver en ’translater’ som kan læse vejnavne og 4200.\
+		\paragraph{Hvor g\o r hvad:}
+		Mark laver en ’translater’ som kan l\ae se vejnavne og 4200.\
 Filip og Anders laver noget GUI.
 
-		\paragraph{Naeste gang:}
-Vi skal snakke fejlhåndtering og beslutte os for, hvad vi gør vi de fejl.\
- Mark vil gerne stå for at skrive nogle test.\
-Anders og Jacob kigger på rapport.\mbox{}\\
+		\paragraph{N\ae ste gang:}
+Vi skal snakke fejlh\aa ndtering og beslutte os for, hvad vi g\o r vi de fejl.\
+ Mark vil gerne st\aa  for at skrive nogle test.\
+Anders og Jacob kigger p\aa  rapport.\mbox{}\\
 
 \begin{center}
 		25-04-12
@@ -988,8 +986,8 @@ Anders og Jacob kigger på rapport.\mbox{}\\
 		\begin{itemize}
 					\item Git - Vi arbejder i branches 
 					\item RoadSelector
-					\item Rutesoegning
-					\item Fejlhaantering
+					\item Rutes\o gning
+					\item Fejlh\aa ntering
 					\item Test
 					\item Testdata
 					\item Rapport
@@ -999,37 +997,37 @@ Anders og Jacob kigger på rapport.\mbox{}\\
 		\paragraph{Beskrivelse af dagen:}
 		
 		Generelt:
-•	Vi skriver vores egne exceptions, for at gruppere de exceptions som fanges af de forskellige metoder i de forskellige klasser. Disse exception-klasser indeholder så information om den oprindelige exception, og i hvilken klasse om metode den blev kastet. 
-o	Ulempen ved at lave vores egne exceptions, kan være at noget information går tabt
-o	Fordelen er at mindske den sortering Controleren skal foretage, og at der ligger en strategi for fejlhåndtering til brug ved udvidelse.
-•	Exception gribes så af Controlleren, som sender dem med et kald til vores fejlhåndterings klasse.
+•	Vi skriver vores egne exceptions, for at gruppere de exceptions som fanges af de forskellige metoder i de forskellige klasser. Disse exception-klasser indeholder s\aa  information om den oprindelige exception, og i hvilken klasse om metode den blev kastet. 
+o	Ulempen ved at lave vores egne exceptions, kan v\ae re at noget information g\aa r tabt
+o	Fordelen er at mindske den sortering Controleren skal foretage, og at der ligger en strategi for fejlh\aa ndtering til brug ved udvidelse.
+•	Exception gribes s\aa  af Controlleren, som sender dem med et kald til vores fejlh\aa ndterings klasse.
 o	Vi bevare at Controleren skal have minimal funktionalitet, og bare styrer de kald der sendes rundt.
-•	Vi skriver en fejlhåndteringsklasse, som tolker de exceptions der sendes fra Controleren.
-o	Vi for samlet fejlhåndtering i en klasse, og alle ændringer af hvordan dette skal håndteres sker her, og det er let at udvide.
-•	Fejlhåndterings-klassen sender en passende fejl/status-kode tilbage til Controleren, som sender denne med til et kald til Xml-creator, som skriver det ind i en Xml-fil, der sendes til klienten
-•	Javascript står for at tolke denne fejl/status-kode, og udskrive en fejlmeddelelse til brugeren.
+•	Vi skriver en fejlh\aa ndteringsklasse, som tolker de exceptions der sendes fra Controleren.
+o	Vi for samlet fejlh\aa ndtering i en klasse, og alle \ae ndringer af hvordan dette skal h\aa ndteres sker her, og det er let at udvide.
+•	Fejlh\aa ndterings-klassen sender en passende fejl/status-kode tilbage til Controleren, som sender denne med til et kald til Xml-creator, som skriver det ind i en Xml-fil, der sendes til klienten
+•	Javascript st\aa r for at tolke denne fejl/status-kode, og udskrive en fejlmeddelelse til brugeren.
 o	Javascript kan selv gruppere fejlkoder
-o	Hvis vi skiftede klient, system eller brugergrænseflade, ville denne kunne gruppere fejlkoderne anderledes, og udskrive andre feljmeddelelser som passer til klient og system 
+o	Hvis vi skiftede klient, system eller brugergr\ae nseflade, ville denne kunne gruppere fejlkoderne anderledes, og udskrive andre feljmeddelelser som passer til klient og system 
 •	Fejl-typer:
 o	Fejl som server rapporterer til klient
-•	Følger strukturen ovenfor
+•	F\o lger strukturen ovenfor
 o	Fejl i klienten	
-•	Håndteres i Javascript
+•	H\aa ndteres i Javascript
 o	Fejl i serveren som den ikke selv kan rapportere til klienten:
-•	Javascript: Under http-request, on-ready-state sættes en timeout, som giver fejl hvis serveren ikke svare.
+•	Javascript: Under http-request, on-ready-state s\ae ttes en timeout, som giver fejl hvis serveren ikke svare.
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
 		
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		EdgeTranslator, Mark Kasra\
-Fejlhåndtering, Filip\
+Fejlh\aa ndtering, Filip\
 Rapport, Lars Jacob\
 Dijkstra, Lars\
-Generelt: Folk kigger på deres kode og finder ud af hvad der skal testes.
+Generelt: Folk kigger p\aa  deres kode og finder ud af hvad der skal testes.
 
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		30-04-12
@@ -1039,24 +1037,24 @@ Generelt: Folk kigger på deres kode og finder ud af hvad der skal testes.
 		\paragraph{Dagsorden:}
 		\begin{itemize}
 					\item KdTree v. Mark
-					\item Fejlhaandtering
+					\item Fejlh\aa ndtering
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
 		
-		\paragraph{Faerdige ting:}
-		•	Lars har skrevet til Taus omkring møde onsdag. Gerne kl 11, så vi har en time til at forberede os i.
+		\paragraph{F\ae rdige ting:}
+		•	Lars har skrevet til Taus omkring m\o de onsdag. Gerne kl 11, s\aa  vi har en time til at forberede os i.
 		\paragraph{Aftaler/Beslutninger:}
-		Onsdag d. 2: Rutesøgning funktionelt færdig\
-Torsdag d. 3: Fejlhåndterings funktioner implementeret.\
+		Onsdag d. 2: Rutes\o gning funktionelt f\ae rdig\
+Torsdag d. 3: Fejlh\aa ndterings funktioner implementeret.\
 Mandag d. 6: Folk installerer LaTeX
 
-		\paragraph{Hvor goer hvad:}
-		De forskellige dele af rutesøgning gøres færdige.
-		\paragraph{Naeste gang:}
-Vi snakker med Taus om fejlhåndtering\
-Implantation af Fejlhåndtering\
-Rutesøgning sammensættes\mbox{}\\
+		\paragraph{Hvor g\o r hvad:}
+		De forskellige dele af rutes\o gning g\o res f\ae rdige.
+		\paragraph{N\ae ste gang:}
+Vi snakker med Taus om fejlh\aa ndtering\
+Implantation af Fejlh\aa ndtering\
+Rutes\o gning sammens\ae ttes\mbox{}\\
 
 \begin{center}
 		02-05-12
@@ -1067,23 +1065,23 @@ Rutesøgning sammensættes\mbox{}\\
 		\begin{itemize}
 					\item UML
 					\item Rapportudkast
-					\item Fejlhaandtering
-					\item rutesoegning
+					\item Fejlh\aa ndtering
+					\item rutes\o gning
 					\item Debugging
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Taus var syg, så vi kunne ikke holde det aftalte møde med ham, i stedet vil vi forsøge et møde med Pagh senere.\
-		I sammenhæng med rutesøgning: vi antager at hvis to directed edges’ from/to ID’er ikke er identiske, men indeholder samme husnummer og vejnavn, er de ikke relateret til hinanden, og skal ikke betragtes som samme vej. Dette opstår som oftest hvis der ikke specificeres et postnummer med til søgningen.
-		\paragraph{Faerdige ting:}
+		Taus var syg, s\aa  vi kunne ikke holde det aftalte m\o de med ham, i stedet vil vi fors\o ge et m\o de med Pagh senere.\
+		I sammenh\ae ng med rutes\o gning: vi antager at hvis to directed edges’ from/to ID’er ikke er identiske, men indeholder samme husnummer og vejnavn, er de ikke relateret til hinanden, og skal ikke betragtes som samme vej. Dette opst\aa r som oftest hvis der ikke specificeres et postnummer med til s\o gningen.
+		\paragraph{F\ae rdige ting:}
 		EdgeParser\
 		ZipCodeMap
 		\paragraph{Aftaler/Beslutninger:}
-		Vi vil holde et møde med Pagh på Mandag, hvis muligt
-		\paragraph{Hvor goer hvad:}
-		Lars prøver at samle alle delene sammen til rutesøgningen.
-		\paragraph{Naeste gang:}
-Fortsættelse af i dags arbejde\mbox{}\\
+		Vi vil holde et m\o de med Pagh p\aa  Mandag, hvis muligt
+		\paragraph{Hvor g\o r hvad:}
+		Lars pr\o ver at samle alle delene sammen til rutes\o gningen.
+		\paragraph{N\ae ste gang:}
+Forts\ae ttelse af i dags arbejde\mbox{}\\
 
 
 \begin{center}
@@ -1093,28 +1091,28 @@ Fortsættelse af i dags arbejde\mbox{}\\
 		\paragraph{Tilstede: Alle}
 		\paragraph{Dagsorden:}
 		\begin{itemize}
-					\item Filip ser på tekststrenge fra JS til Java
-					\item Mark og Lars ser på merge hele projektet
+					\item Filip ser p\aa  tekststrenge fra JS til Java
+					\item Mark og Lars ser p\aa  merge hele projektet
 					\item UML-diagram
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
 		
-		\paragraph{Faerdige ting:}
-		Mark har fundet en ”fejl” i sin test til KD-træet og nu slået fast at der ikke er nogle (kendte) bugs i KD-træet! ☺ 
+		\paragraph{F\ae rdige ting:}
+		Mark har fundet en ”fejl” i sin test til KD-tr\ae et og nu sl\aa et fast at der ikke er nogle (kendte) bugs i KD-tr\ae et! ☺ 
 		\paragraph{Aftaler/Beslutninger:}
-		-	Vi er blevet enige om en endelig struktur for vores fejlhåndtering – den virker umiddelbart lidt voldsom, men er særdeles velegnet med henblik på udbygning af programmet senere.
-		\paragraph{Hvor goer hvad:}
-		-	Mark ser på KD-træet\
-Filip prøver at få sin computer til at samarbejde med Git.\
-Anders ser på rapport\
-Jakob vil prøve at se mere på fejlhåndteringer, hvis programmet bliver samlet inden.\
-Lars prøver at få samlet programmet helt sammen\
-Kasra læser Jakob og Anders’s preface til rapporten
+		-	Vi er blevet enige om en endelig struktur for vores fejlh\aa ndtering – den virker umiddelbart lidt voldsom, men er s\ae rdeles velegnet med henblik p\aa  udbygning af programmet senere.
+		\paragraph{Hvor g\o r hvad:}
+		-	Mark ser p\aa  KD-tr\ae et\
+Filip pr\o ver at f\aa  sin computer til at samarbejde med Git.\
+Anders ser p\aa  rapport\
+Jakob vil pr\o ve at se mere p\aa  fejlh\aa ndteringer, hvis programmet bliver samlet inden.\
+Lars pr\o ver at f\aa  samlet programmet helt sammen\
+Kasra l\ae ser Jakob og Anders’s preface til rapporten
 
-		\paragraph{Naeste gang:}
-		Møde med Rasmus Pagh, hvor vi bl.a. vil spørge ind til hvad han synes om fejlhåndteringen\
-Er det (igen) planen at vi skal blive helt færdig med selve programmeringen!\mbox{}\\
+		\paragraph{N\ae ste gang:}
+		M\o de med Rasmus Pagh, hvor vi bl.a. vil sp\o rge ind til hvad han synes om fejlh\aa ndteringen\
+Er det (igen) planen at vi skal blive helt f\ae rdig med selve programmeringen!\mbox{}\\
 
 \begin{center}
 		07-05-12
@@ -1125,30 +1123,30 @@ Er det (igen) planen at vi skal blive helt færdig med selve programmeringen!\mb
 		\begin{itemize}
 					\item Snak med Rasmus Pagh
 					\item Opdel arbejdsopgaver
-					\item Implementer fejlhaandtering i programmet
+					\item Implementer fejlh\aa ndtering i programmet
 					\item Fordel rapportafsnit
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Der er blevet diskuteret hvorvidt klienten skulle kunne gemme en rutevejledning for at serveren ikke skal finde ruten igen hver gang der navigeres på kortet. Desuden er der blevet diskuteret hvordan dette skulle implementeres, og hvordan klienten skulle vide hvor bred linjen der repræsenterer rutesøgningen skulle være, ved navigering efter rutesøgning. 
-Taus rådede os til at gemme noderne i kd-træet i collections som indeholder 10 til 100 noder. Det har vi valgt at lade være med eftersom det kun giver hukommelses optimering og næsten ingen performance optimering. 
+		Der er blevet diskuteret hvorvidt klienten skulle kunne gemme en rutevejledning for at serveren ikke skal finde ruten igen hver gang der navigeres p\aa  kortet. Desuden er der blevet diskuteret hvordan dette skulle implementeres, og hvordan klienten skulle vide hvor bred linjen der repr\ae senterer rutes\o gningen skulle v\ae re, ved navigering efter rutes\o gning. 
+Taus r\aa dede os til at gemme noderne i kd-tr\ae et i collections som indeholder 10 til 100 noder. Det har vi valgt at lade v\ae re med eftersom det kun giver hukommelses optimering og n\ae sten ingen performance optimering. 
 
-		\paragraph{Faerdige ting:}
-		Vi har ikke fået lavet code-freeze, så der er intet der er helt færdigt endnu.
+		\paragraph{F\ae rdige ting:}
+		Vi har ikke f\aa et lavet code-freeze, s\aa  der er intet der er helt f\ae rdigt endnu.
 		\paragraph{Aftaler/Beslutninger:}
-		Vi har besluttet at få klienten til at huske ruten og selv forlænge XML dokumentet med ruten når der navigeres. Desuden skal XML dokumentet have en attribut der angiver vejenes tykkelse på zoomniveauet. Alternativt har vi tænkt på at bruge svg keywordet non-scalable, der vil gøre roadStatus og alt andet, der har med skalering af vejenes tykkelse at gøre, overflødigt. 
-Efter en snak med Rasmus Pagh om vores måde at håndtere fejl, er vi blevet enige om at holde os til den overordnede fejlhånderingsklasse og dens tilhørende klassehierarki. 
-Vi har besluttet at lave en klasse der indeholder addressParser, edgeParser og DijstraSP, da dette indkapsler vores ruteplanlægningssystem og gør controlleren mere ansvarsløs.
+		Vi har besluttet at f\aa  klienten til at huske ruten og selv forl\ae nge XML dokumentet med ruten n\aa r der navigeres. Desuden skal XML dokumentet have en attribut der angiver vejenes tykkelse p\aa  zoomniveauet. Alternativt har vi t\ae nkt p\aa  at bruge svg keywordet non-scalable, der vil g\o re roadStatus og alt andet, der har med skalering af vejenes tykkelse at g\o re, overfl\o digt. 
+Efter en snak med Rasmus Pagh om vores m\aa de at h\aa ndtere fejl, er vi blevet enige om at holde os til den overordnede fejlh\aa nderingsklasse og dens tilh\o rende klassehierarki. 
+Vi har besluttet at lave en klasse der indeholder addressParser, edgeParser og DijstraSP, da dette indkapsler vores ruteplanl\ae gningssystem og g\o r controlleren mere ansvarsl\o s.
  
 
-		\paragraph{Hvor goer hvad:}
-		Mark lærer hvordan man sætter et billede ind i git. Skriver datastrukturafsnit(mht visualisering, dvs ikke ruteplanlægning) og hvorfor vi har to datastrukturer.
+		\paragraph{Hvor g\o r hvad:}
+		Mark l\ae rer hvordan man s\ae tter et billede ind i git. Skriver datastrukturafsnit(mht visualisering, dvs ikke ruteplanl\ae gning) og hvorfor vi har to datastrukturer.
 
 Filip skriver teknisk beskrivelse af JavaScript og JsConnector.
 
-Lars skriver teknisk beskrivelse af XML og hvorfor vi har valgt den opbygning af XML, som vi har. Derudover skriver han om vores valg af ruteplanlægnings datastrukturen under datastrukturafsnittet.
+Lars skriver teknisk beskrivelse af XML og hvorfor vi har valgt den opbygning af XML, som vi har. Derudover skriver han om vores valg af ruteplanl\ae gnings datastrukturen under datastrukturafsnittet.
 
-		\paragraph{Naeste gang:}\mbox{}\\
+		\paragraph{N\ae ste gang:}\mbox{}\\
 		
 		\begin{center}
 		09-05-12
@@ -1161,26 +1159,26 @@ Lars skriver teknisk beskrivelse af XML og hvorfor vi har valgt den opbygning af
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Vi diskuterede hvordan problemanalysen skulle bygges op.  Vi blev enige om, at der skulle i starten af analysen være en generel fortolkning af rapportkravene og der skulle så her slåes fast, hvilke ting/komponenter, der er nødvendige for at vi kan indfri projektets overordnede krav. 
-Vi laver en oversigt over hvem der skal skrive hvad til mandag. Filen hedder: HvemskriverHvad og ligger i drop’eren. Dette betød en længere diskussion, samt præcision, af hvad der skal stå under hvert punkt. 
+		Vi diskuterede hvordan problemanalysen skulle bygges op.  Vi blev enige om, at der skulle i starten af analysen v\ae re en generel fortolkning af rapportkravene og der skulle s\aa  her sl\aa es fast, hvilke ting/komponenter, der er n\o dvendige for at vi kan indfri projektets overordnede krav. 
+Vi laver en oversigt over hvem der skal skrive hvad til mandag. Filen hedder: HvemskriverHvad og ligger i drop’eren. Dette bet\o d en l\ae ngere diskussion, samt pr\ae cision, af hvad der skal st\aa  under hvert punkt. 
 
-		\paragraph{Faerdige ting:}
-		Programmet er (næsten ☺ ) færdigt. 
+		\paragraph{F\ae rdige ting:}
+		Programmet er (n\ae sten ☺ ) f\ae rdigt. 
 		\paragraph{Aftaler/Beslutninger:}
-		I HvemSkriverHvad ligger i dropperen, hvor der står hvem der skal skrive hvad og til hvornår.\  
-Vi tester følgende:\
+		I HvemSkriverHvad ligger i dropperen, hvor der st\aa r hvem der skal skrive hvad og til hvorn\aa r.\  
+Vi tester f\o lgende:\
 Whitebox af AddressParser\
 Test af KdTree\
 Blackbox af addressParser\
-Vi vil være færdige og klar til at afleverer mandag den 20/5. 
+Vi vil v\ae re f\ae rdige og klar til at afleverer mandag den 20/5. 
 
-		\paragraph{Hvor goer hvad:}
+		\paragraph{Hvor g\o r hvad:}
 		Rapportskrivning \
 Kasra laver Blackbox af EdgeParser+AddressParser\
-Alle skriver noget i rapporten. Der står beskrevet i ’HvemSkriverHvad’ filen, hvem der skriver hvad. 
+Alle skriver noget i rapporten. Der st\aa r beskrevet i ’HvemSkriverHvad’ filen, hvem der skriver hvad. 
 
-		\paragraph{Naeste gang:}
-Vi samler op på alle de dele der er skrevet i rapporten og så fordeler vi de sidste afsnit  OG faar fordelt de tests, som der også skal laves.\mbox{}\\
+		\paragraph{N\ae ste gang:}
+Vi samler op p\aa  alle de dele der er skrevet i rapporten og s\aa  fordeler vi de sidste afsnit  OG f\aa r fordelt de tests, som der ogs\aa  skal laves.\mbox{}\\
 
 \begin{center}
 		14-05-12
@@ -1195,22 +1193,22 @@ Vi samler op på alle de dele der er skrevet i rapporten og så fordeler vi de s
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Vi startede ud med at få lavet en fordeling af ting, der skulle rettes og hvem der retter hvad. Herefter har vi diskuteret lidt småting om blandt andet test og forskellige rapportdele. Tilsidst har vi fordelt de resterende punkter og aftalt af mødes igen på onsdag, hvor folk har skrevet deres ting færdig.
-		\paragraph{Faerdige ting:}
+		Vi startede ud med at f\aa  lavet en fordeling af ting, der skulle rettes og hvem der retter hvad. Herefter har vi diskuteret lidt sm\aa ting om blandt andet test og forskellige rapportdele. Tilsidst har vi fordelt de resterende punkter og aftalt af m\o des igen p\aa  onsdag, hvor folk har skrevet deres ting f\ae rdig.
+		\paragraph{F\ae rdige ting:}
 		Preface
 Background and Data
 
 		\paragraph{Aftaler/Beslutninger:}
-		Vi har rapporten færdig fredag og så retter folk frem til mandag, hvor der bliver skrevet ud. 
-		\paragraph{Hvor goer hvad:}
-		Mark: Retter proces beskrivelsen, skriver summary af analysen, skriver udkast til produkt konklusion og ’errors, bugs and list of needs’ og skriver lidt mere på sine egne klasser(mere teknisk)\\
-Lars: Skriver javadoc + retter kode og skriver lidt mere på sine klasse beskrivelser (mere teknisk).\\
-Kasra: Skriver ’Testing’ afsnittet og blackbox afsnittet og skriver lidt mere på sine egne klasse beskrivelser(mere teknisk).\\
-Filip: Læser og retter Preface og Background and data afsnittene. Skriver ’brugervejledning’, ’Loader’ class og ’error, bugs and list of needs’.\\
-Anders: Færdiggør Errorhandling og Procesbeskrivelsen. Laver alle referater om til .tex format. Få styr på whitebox test delen.  Skema over hvem har lavet hvad.\\
+		Vi har rapporten f\ae rdig fredag og s\aa  retter folk frem til mandag, hvor der bliver skrevet ud. 
+		\paragraph{Hvor g\o r hvad:}
+		Mark: Retter proces beskrivelsen, skriver summary af analysen, skriver udkast til produkt konklusion og ’errors, bugs and list of needs’ og skriver lidt mere p\aa  sine egne klasser(mere teknisk)\\
+Lars: Skriver javadoc + retter kode og skriver lidt mere p\aa  sine klasse beskrivelser (mere teknisk).\\
+Kasra: Skriver ’Testing’ afsnittet og blackbox afsnittet og skriver lidt mere p\aa  sine egne klasse beskrivelser(mere teknisk).\\
+Filip: L\ae ser og retter Preface og Background and data afsnittene. Skriver ’brugervejledning’, ’Loader’ class og ’error, bugs and list of needs’.\\
+Anders: F\ae rdigg\o r Errorhandling og Procesbeskrivelsen. Laver alle referater om til .tex format. F\aa  styr p\aa  whitebox test delen.  Skema over hvem har lavet hvad.\\
 Jacob: Problemanalyse, requirements, indledning til thoughts toward design og gerne summary af problemanalysen. 
 
-		\paragraph{Naeste gang:} 
+		\paragraph{N\ae ste gang:} 
 		Vi retter alle de nye afsnit igennem.\
 Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og appendix og litteraturliste. 
 
@@ -1229,27 +1227,27 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Vi diskuterer hvad der skal stå under konklusionsafsnittene og i lists of needs.
+		Vi diskuterer hvad der skal st\aa  under konklusionsafsnittene og i lists of needs.
 		Under produkt konklusionen vil vi gerne diskutere om vores program er hurtigt nok,
 		og om vi har gjort os nok overvejelser omkring hvilken browser vi har optimeret mod,
-		og om dette kunne være gjort bedre, også i forhold til SVG.\\
+		og om dette kunne v\ae re gjort bedre, ogs\aa  i forhold til SVG.\\
 		\\
 
-		Lars har gennemlæst koden, og vi diskuterer nogle punkter, og uddeler nogle arbejdsopgaver.\\
+		Lars har genneml\ae st koden, og vi diskuterer nogle punkter, og uddeler nogle arbejdsopgaver.\\
 		\\
 		
 		Fordeling af mangler i rapport\\
 
-		\paragraph{Faerdige ting:}
+		\paragraph{F\ae rdige ting:}
 		TTD, Requirements, "Errors, bug and list of needs", Limitations, 
 		Tecnical description, errorhandeling i index.html\\
 		
 		\paragraph{Aftaler/Beslutninger:}
-		De fordelte rapport afsnit skrives færdig til fredag, hvor fordeling af retning sker.\\
-		Der rettes over weekenden, så rapporten er færdig og printet når vi forlader skolen mandag.\\
-		Møde fredag efter forelæsning, og igen mandag.\\
+		De fordelte rapport afsnit skrives f\ae rdig til fredag, hvor fordeling af retning sker.\\
+		Der rettes over weekenden, s\aa  rapporten er f\ae rdig og printet n\aa r vi forlader skolen mandag.\\
+		M\o de fredag efter forel\ae sning, og igen mandag.\\
 		
-		\paragraph{Hvem goer hvad:}
+		\paragraph{Hvem g\o r hvad:}
 		Lars: User Manual retning, UML diagram tekst retning, Java-doc\\
 		Filip: Klassebeskrivelser, Litteraturliste m.m\\
 		Mark: Product conclusion udkast, KDTree-test tekst\\
@@ -1257,7 +1255,7 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 		Anders: Litteraturlist m.m, Final thoughts, Whitebox test + tekst\\
 		Jakob: Errorhandling retning, Problem analysis summary udkast, Whitebox test + tekst\\
 		
-		\paragraph{Naeste gang:}
+		\paragraph{N\ae ste gang:}
 		Fredag: Fordeling af afsnit til rettelse.\\ 
 
 \begin{table}
@@ -1267,6 +1265,7 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 Arbejdsopgave & Navn & Uge \\ [1.5ex] 
 \hline
    & Report &  \\
+   \\
 Preface & A, J & 19 \\
 Background And Data & A, J & 19 \\
 Problemanalysis & Everyone & 20\\
@@ -1279,6 +1278,7 @@ Final thoughts & Everyone & 21\\
 \\
 \\
   & Program &  \\
+ \\
 Controller & L & 18 \\
 AddressInputFormatException & J & 18 \\
 ClientInputException & J & 18 \\
@@ -1292,7 +1292,7 @@ StatusCode & A, J, L & 18 \\
 XMLDocumentException & L & 20 \\
 XMLTransformerException & L & 20 \\
 KDTree & K, M & 18 \\
-Loader & K, M & 18 \\
+Loader & M, L & 18 \\
 NodeComparator & K, M & 17 \\
 PathPreface & L, M & 18 \\
 RoadSelector & K, M & 18 \\
