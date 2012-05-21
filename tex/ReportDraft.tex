@@ -115,17 +115,17 @@ Another possibility was to let Dijkstra’s algorithm run from every node in the
 
 Dijkstra's algorithm finds the shortest path, from one node to another, which does not solve the problem alone. To search from a arbitrary point on an edge, additional functionality has to be applied. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
 
-The first solution is as follows. When the user asks for a route between two addresses, the program finds the two edges which matches the addresses. Then the program selects the first node from the first edge and the first node from the second edge. The program then finds the route and if the route doesn't contain the edges that represents the addresses, the program then adds the edges to the route. After that the program calculates the right distance for the two edges that represents the two addresses.  This approach may show the wrong road because the first node to the the edge is always used in the route and there might be a shorter route that doesn't contain that node. 
-
-The second solution is as follows. Instead of always selecting the first node for route finding the program should select the node that is closest to the given address. If the shortest route then contains the edge where the address is located the program should calculate the longest distance, otherwise it should add that road and calculate the short distance.
-
-We decided to implement the first solution, but we found out later that it could show the wrong route. \\
-
 \begin{figure}[H]
 \includegraphics[width=120mm]{routeFinding.png}
 \caption{Two different approaches to find the shortest path.}
 \label{fig:routeFinding}
 \end{figure}
+
+The first solution is as follows. When the user asks for a route between two addresses, the program finds the two edges which matches the addresses. Then the program selects the first node from the first edge and the first node from the second edge. The program then finds the route and if the route doesn't contain the edges that represents the addresses, the program then adds the edges to the route. After that the program calculates the right distance for the two edges that represents the two addresses.  This approach may show the wrong road because the first node to the the edge is always used in the route and there might be a shorter route that doesn't contain that node. 
+
+The second solution is as follows. Instead of always selecting the first node for route finding the program should select the node that is closest to the given address. If the shortest route then contains the edge where the address is located the program should calculate the longest distance, otherwise it should add that road and calculate the short distance.
+
+We decided to implement the first solution, but we found out later that it could show the wrong route. \\
 
 			\subsubsection{User Interface}
 
@@ -574,11 +574,13 @@ To conclude we feel that our project have succeeded in living up to both the req
 
 	\subsection{Specifications for Address Parsing - parseAddress(String)}
 The method will receive a String, which may contain the following:\\
+\\
 -	Road name\\
 -	House number\\
 -	House letter\\
 -	Postal code\\
 -	City name\\
+\\
 Other than road name, none of these are required to be there, but if they are in the String, they must be in that order.\\
 A String must at least contain a road name. A road name is considered to be a collection of letters and spaces. Dots, dashes and apostrophes are all right too. It may only contain a number if it is followed by a dot and the letter ‘s’ (for instance as “Christian den 10.s vej”).\\
 The house number is considered to be a number higher than 1 and consisting of 3 digits at most.\\
@@ -587,12 +589,15 @@ The postal code must always be 4 digits long and minimum be 1000.\\
 The city name must be a collection of letters and spaces. The city names cannot start with a single letter.\\
 Any information left between the house letter and postal code will not be considered.\\
 A comma can be placed to separate road name, house number and house letter from postal code and city name – even if some of the fields are not included.\\
+\\
 The method will return an array of Strings, containing:\\
--	Road name\\
--	House number\\
--	House letter\\
--	Postal code\\
--	City name\\
+\\
+0	Road name\\
+1	House number\\
+2	House letter\\
+3	Postal code\\
+4	City name\\
+\\
 The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
 
 
