@@ -39,10 +39,6 @@ manner with the user interface;
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two adresses, and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 		 
 	\newpage
-	\section{Limitations}
-		
-		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
-
 
 	\section{Problemanalysis}
 		\subsection{Requirements}
@@ -169,7 +165,9 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
-				
+		\subsection{Limitation}	
+		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
+					
 				
 		\subsection{Summary}
 Through this analysis and these design choices, we have chosen a way to develop a program that meets the given requirements, and follow our own guidelines for what we want to focus on.\\
