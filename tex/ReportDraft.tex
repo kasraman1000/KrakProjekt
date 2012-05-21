@@ -110,7 +110,7 @@ We considered several algorithms like DFS, BFS, Union-Find, but none of these we
 Both of these uses a graph. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since a one way road or a road were no driving are allowed could occur, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
 The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles. Because of our performance requirements, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
 
-Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
+Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path, since this would double the memory usage. 
 
 Dijkstra's algorithm finds the shortest path, from one node to another, which does not solve the problem alone. To search from a arbitrary point on an edge, additional functionality has to be applied. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
 
@@ -183,8 +183,9 @@ With these design choices we have made a solution, that consistently focus to ov
 		In the following section a technical presentation of the program is. This will be compliment our analasys and descriptions in the former sections.  
 		
 		\subsection{Flow description}
-		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from the model part of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
+
+		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as a XML in String form to the client. 
 
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
@@ -468,29 +469,26 @@ The support functions, intersecting and fullyContained are also tested on border
 
 			
 		\subsection{Errors, bugs and list of needs}
-		This is a compilation of known errors and obvious needs.
-\paragraph{Errors}
-		\begin{itemize}
-\item When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
+When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
+\\
+We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
+\\
+When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
+\\
+When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+\\
+If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
+\\
+The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+\\
+When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
+\\
+It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
+\\
+The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
+\\
 
-\item When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
-
-\item When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
-
-\item If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
-		\end{itemize}
-\paragraph{Needs}
-\begin{itemize}
-\item We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
-
-\item When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
-
-\item The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
-
-\item It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
-
-\item The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
-		\end{itemize}
+			
 			
 		\subsection{Results}
 		Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\
