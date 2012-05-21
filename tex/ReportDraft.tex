@@ -52,12 +52,6 @@ The last priority of ours is more code minded, and is about designing a program 
 
 Let us now focus on the requirements that we have been given. The first one is about drawing all roads in the dataset. This is one of the more abstract requirements, as there are quite a lot of possibilities on how to solve this. But it does set the framework for what we need to work on. We need to be able to read the dataset probably, and store the data structured and efficiently, so it is easy to access and use for the visualization of the roads. This structure needs to be able to pull out big portions of the dataset quite fast. Because we are going to use map data that uses coordinates, it would be obvious to use this in the data structure.\\
 
-We need to settle on a way to show the roads graphically. There have been some guidelines for us to either use a solution programmed completely in Java, or write something for visualizing the map in a web-browser. The Java-solution is more uniform, and would be somewhat easier, as you don't need to worry about the communication between multiple programming languages. This would allow us to focus on implementing extra features, and polishing the program. With a web solution, we would cut of the graphical part of the program, and let the browser handle it. This would force some task on us, like connection and getting the encoding between the browser-client and the java-server right. But it also speaks to some of our own priorities. It will push the heavy data processing to the server. If this was a server for a web-application, space wouldn't be a big problem, and you could optimize towards speed and making the client quicker. We have chosen to go a with a browser solution\\
-
-To visualize the map in Java, we would use the Swing-libraries. In the browser we could use different solutions. With the new HTML-5 standards, the “canvas”-element in javascript, could be used for the task. This would integrate well with the other features we would implement with javascript. The other possible solution is SVG, Scalable Vector Graphics. These would easily help us with the requirement that our program should scale when resizing the window. We will use SVG, because it is somewhat simpler, and goes well with XML, which we will use to send the map data from the server to the browser. This choice will help us with navigating around the visualization.\\
-
-Navigating the visualization can mean many things. The basic would be moving on the three main axes, up and down, left and right, zooming in and zooming out. More features could include dragging the map around using the mouse or rotating the map. The user should feel that this is done smooth. This could be done by not loading new map data every time the user moves around the map, but keeping a buffer of loaded map around the part shown. In SVG this can be done with the “viewbox”-attribute. Then we can move this box around by changing its coordinates, and loading in more of the map, when it gets too close to the edge of the buffered zone. You don’t need new data to zoom in SVG, because it consists of vectors.\\
-
 We eventually need to load in new map data when we zoom, because of the requirement for our program to only show the most prioritized roads. Here we have some different possibilities. We can simply determine at which level of zoom each type of road (highway, paths ect) is shown, or decide how many roads we want to see at any given time, and only take the highest prioritized of these. The problem with the first solution is that some areas are not very cluttered with roads, and would therefore look empty at a high zoom level. The other solution could have a problem with cutting roads in half, if it is not implemented a bit more dynamically. If you combine the best of the two solutions, so that you only show a decided amount of roads, but also keep in mind that you need to show all roads of the same type, you should be able to avoid most of the trouble.\\
 
 We also need to be able to find the shortest path between points. If this needs to be done quickly, we could do it with a graph data structure, and build a Shortest Path Tree with it, from the first point until we find the second. The problem with this is that it is a different data structure that the one we use for the visualization. But if we argue that this is a web-server, and we prioritize speed over space, this would be the best choice, to have two separate data structures. We then need to build the SPT. There are multiple algorithms for doing this, we looked at the Bellman-Ford-algorithm and Dijkstra's.\\
@@ -86,7 +80,7 @@ The type of data to be stored, should be considered as much as the data structur
 The illustration below shows roads, which are stored as points (the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-%\includegraphics[width=120mm]{roadsRef.png}
+\includegraphics[width=120mm]{roadsRef.png}
 \caption{Roads referenced by different points}
 \label{fig:roads}
 \end{figure}
@@ -106,7 +100,7 @@ We considered several algorithms like DFS, BFS, Union-Find, but none of these we
 Both of these uses a graph. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since a one way road or a road were no driving are allowed could occur, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
 The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles. Because of our performance requirements, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
 
-Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path.
+Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path, since this would double the memory usage. 
 
 Dijkstra's algorithm finds the shortest path, from one node to another, which does not solve the problem alone. To search from a arbitrary point on an edge, additional functionality has to be applied. We have thought of two solutions (see figure \ref{fig:routeFinding}). 
 
@@ -130,17 +124,17 @@ The requirement for the user interface is formulated in the project description 
 
 \paragraph{Swing Solution}\mbox{}\
 
-We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
+We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us type safety, a comprehensive standard library, chance for error handling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have some disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
 \paragraph{Browser solution}\mbox{}\
 
-For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
+For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experience this startuptime. That gives us the possibility to favor performance over memory usage. The second advantage is that we will acquire knowledge about Javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited access to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
-Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
+Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memory usage, that the browser solution is more user friendly and that we get the chance to learn new technologies leads us to that decision.
 
 \paragraph{Features}\mbox{}\
 
-The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
+The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent user interface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
 
 \paragraph{Road displaying}\mbox{}\
 
@@ -181,12 +175,14 @@ With these design choices we have made a solution, that consistently focus to ov
 		In the following section contains a technical presentation of the program. This will compliment our analysis in the former sections with a description of the solution to the problem.
 		
 		\subsection{Flow description}
-		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from the model part of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
+
+		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as a XML in String form to the client. 
 
 		\subsection{UML Diagram}
-		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
-		\begin{figure}[H]
+		The following UML diagram is a selection of the most important classes. We have left out three groups of classes for better readability. It concerns the exception classes, the data classes and the classes which we have borrowed from Sedgewick and Wayne (see bibliography). Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn.
+		
+\begin{figure}[H]
 \includegraphics[width=120mm]{umlArrows.png}
 \caption{UML diagram showing the most relevant classes.}
 \label{fig:uml}
@@ -385,10 +381,10 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
-		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
+		The program is divided into two parts - a server and a client. To start the server you need to have installed the Java Virtual Machine version 6. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. Do you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. If you want to clear the route you press the clear button.
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. Do you want to find a route from one address to another you can type the first address in the first text field and the second address in the second text field and press the find route button. When finding a route you can chose whether it should be the the shortest route measured in time or in distance, by clicking one of the two radio buttons. If you want to clear the route you press the clear button.
 
 		 \mbox{}\\
 		
@@ -466,29 +462,26 @@ The support functions, intersecting and fullyContained are also tested on border
 
 			
 		\subsection{Errors, bugs and list of needs}
-		This is a compilation of known errors and obvious needs.
-\paragraph{Errors}
-		\begin{itemize}
-\item When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
+When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
+\\
+We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
+\\
+When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
+\\
+When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+\\
+If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
+\\
+The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+\\
+When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
+\\
+It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
+\\
+The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
+\\
 
-\item When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
-
-\item When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
-
-\item If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
-		\end{itemize}
-\paragraph{Needs}
-\begin{itemize}
-\item We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
-
-\item When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
-
-\item The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
-
-\item It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
-
-\item The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
-		\end{itemize}
+			
 			
 		\subsection{Results}
 		Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\
