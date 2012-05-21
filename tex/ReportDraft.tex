@@ -187,7 +187,7 @@ When a user of the application wants to see a part of the map, a request is send
 		
 		\newpage
 		\subsection{Classes and responsibility}
-		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfils this. 
+		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfills this. 
 			
 			\subsubsection{Controllers}
 			
@@ -196,7 +196,7 @@ When a user of the application wants to see a part of the map, a request is send
 The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.\\
 Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
 If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return an array of Roads that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
-Now the Controller sents all these informations to the XML class and forward the returned String to the JSConnector.\\
+Now the Controller sends all these informations to the XML class and forward the returned String to the JSConnector.\\
 
 
 					
@@ -204,7 +204,7 @@ Now the Controller sents all these informations to the XML class and forward the
 				
 				\paragraph{ErrorHandler}\mbox{}\
 
-This is the main class of the system responsible for errorhandling. When the Controller gets a propagated Exception, it calls one of the three main methods in this class; handleServerRuntimeException, handleServerStartupException or handleClientInputException. The first two methods will print out the StatusCode relating to the current Exception, by calling getDescription from the getStatusCode method in the exception. Furthermore the handleServerStartupException will try to make sure that the Java virtuelmachine is terminated properbly.\\
+This is the main class of the system responsible for errorhandling. When the Controller gets a propagated Exception, it calls one of the three main methods in this class; handleServerRuntimeException, handleServerStartupException or handleClientInputException. The first two methods will print out the StatusCode relating to the current Exception, by calling getDescription from the getStatusCode method in the exception. Furthermore the handleServerStartupException will try to make sure that the Java Virtual Machine is terminated properly.\\
 The handleClientInputException will not make a print out of the description of the StatusCode, but return it to the Controller, for sending information to the client.
 
 				\paragraph{StatusCode}\mbox{}\
@@ -520,7 +520,7 @@ To conclude we feel that our project have succeeded in living up to both the req
 	\section{Bibliography}
 	
 	\begin{thebibliography}{9}
-%\cite{sedgewickAndWayne11}
+
 	\bibitem{sedgewickAndWayne11}
   	Robert Sedgewick and Kevin Wayne
   	\emph{Algorithms, 4th Edition}.
