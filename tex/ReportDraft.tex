@@ -313,7 +313,9 @@ DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In
 				
 				\paragraph{EdgeParser}\mbox{}\
 				
-This class associates road names, numbers, postal codes, and city names with the correct directed edges in the graph. This is used to find a specific object based on the user search input.
+This class associates road names, numbers, postal codes, and city names with the correct directed edges in the graph. This is used to find a specific object based on the user search input. It takes an array of strings from the AddressParser (the parsed user search string), and based on these strings it tries to find the corresponding KrakEdges and pack them into a PathPreface object.\\
+First, it looks for the road name as a key in a HashMap. If the road name exists, the HashMap will contain a Bag filled with all KrakEdges associated with that road name. Then it will filter through these objects based on a road number. If no road number is specified in the array of strings, it will default to a road number of 1. If a zip code was specified, it will also filter based on zip code. If no zip code was specified, but a city name instead, it will look up the city name in another HashMap to see if there is a zip code associated with the city name. If neither zip code or city name was specified, it will simply ignore those.\\
+Finally, it picks the first two remaining KrakEdge objects (or only one, if the road is one-way only) and packs them into a PathPreface object and returns it.\\ 
 				
 				\paragraph{EdgesAndRoadsConverter}\mbox{}\
 				
