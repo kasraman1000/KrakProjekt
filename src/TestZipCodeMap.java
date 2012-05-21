@@ -32,8 +32,8 @@ public class TestZipCodeMap {
 		assertTrue(zipCodeMap.get("Herlev").equals(new Integer(2730)));
 		assertTrue(zipCodeMap.get("Almind").equals(new Integer(6051)));
 		assertTrue(zipCodeMap.get("Gentofte").equals(new Integer(2820)));
-		assertTrue(zipCodeMap.get("København N").equals(new Integer(2200)));
+		assertTrue(zipCodeMap.get("Kï¿½benhavn N").equals(new Integer(2200)));
 		assertTrue(zipCodeMap.get("Lundby").equals(new Integer(4750)));
-		assertTrue(zipCodeMap.get("Sjællands Odde").equals(new Integer(4583)));
+		assertTrue(zipCodeMap.get("Sjï¿½llands Odde").equals(new Integer(4583)));
 	}
 }
