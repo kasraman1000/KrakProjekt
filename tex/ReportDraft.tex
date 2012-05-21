@@ -41,6 +41,7 @@ manner with the user interface;
 	\section{Problemanalysis}
 		\subsection{Requirements}
 To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.\\
+
 We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
 
 Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
@@ -59,7 +60,7 @@ Another design pattern we thought of using is the decorator design pattern. This
 			\subsection{Data Structure And Algorithms}
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
 
-\paragraph{The data structure for visualization}
+\paragraph{The Data Structure For Visualization}
 
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to the road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. When working with approximately one million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem.\\
 The illustration below shows roads, which are stored as points (the circles at the end of the line) and a range.
@@ -77,7 +78,7 @@ The most important requirement for our data structure is that it should be fast,
 The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.\\
 Construction of the kd-tree requires a median finding function, which is used for balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.\\
 
-\paragraph{Searching for a route}
+\paragraph{Searching For A Route}
 When we first started to discuss how we were to create an efficient way to find a route, we considered several ways of approaching this. One of our main concerns was not to let the user wait too long. To ensure this we figured the cost of this was to use some more memory instead. 
 
 We considered several algorithms like DFS, BFS, Union-Find, but none of these were able to tell us the shortest path from A to B – only that there could be a path from A to B. The only two algorithms that actually would fulfil our needs was Bellman-Ford’s or Dijkstra’s algorithms. These two would be able to find the shortest path from any given point to another. 
@@ -111,7 +112,7 @@ The requirement for the user interface is formulated in the project description 
 
 We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have some disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program the user can experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
-\paragraph{Browser solution}\mbox{}\
+\paragraph{Browser Solution}\mbox{}\
 
 For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
@@ -121,7 +122,7 @@ Based on the different advantages and disadvantages we have chosen the browser s
 
 The second step in fulfilling the above mentioned requirement is to analyze how we, by using a browser, can make a coherent userinterface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
 
-\paragraph{Road displaying}\mbox{}\
+\paragraph{Road Displaying}\mbox{}\
 
 To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and SVG. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
  
@@ -135,7 +136,7 @@ The map needs to be scalable when the user drags the window of the browser. In o
 \end{figure}
 
 
-\paragraph{Zoom and Panning}\mbox{}\
+\paragraph{Zoom And Panning}\mbox{}\
 
 When discussing zoom and panning there are two aspects. The first one is to consider how much extra data should be passed from the server to the browser. We have chosen to call that extra data for buffer data. When choosing the amount of buffer data there are two extremes. The first one is to let the browser request exactly that amount of data that the user is requesting. This way of doing it would make sure that it would be easy to develop a new view, e.g. a smartphone app, because most of the functionality is located at the server. On the other hand the user might experience the program as slow if the user has a slow internet connection. The other extreme is to let the browser request all data in one call and only show what the user is asking for. This would require a lot of functionality in the view, but it might result in a good experience for the user if the internet connection is slow. We have chosen a compromise where the browser request buffer data for panning and not for zooming.
 The other aspect is to decide in what way the user should be able to zoom and pan. Since we know that it takes a long time to get the Java Script, HTML, SVG and XPath to work together we have chosen to settle for buttons in the browser as the only way for the user to navigate in the map. One could consider to make it possible for the user to use keyboard shortcuts and mouseevents for zooming and panning. 
@@ -145,17 +146,19 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 There are two different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
 \subsection{Errorhandling}
-			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined error handling
-			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
-			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
-			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
-			the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
-			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
-			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
-			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
-			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
-			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.\\
-		There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
+	A good idea to handle exceptional conditions and errors in a program is to form some kind of strategy or policy. This helps to a more streamlined error handling when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide to utilize, is to simply handle the exception exactly where it's thrown. This would be easy to implement and since this is the most standard way of dealing with exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\\
+
+	An idea could be to form a more centralized policy, to make it more transparent what happens with the exceptions. You could propagate all thrown exceptions as far as possible, and handle them in the main classes. But then you might end up with quite a big number of exceptions to handle, even when a lot of them needs to be handled in the same way. And what about the places where the program does not use a standard Java-library, that throws any exceptions? We would have to make our own exceptions here and throw and propagate them from here, if we want to centralize matters. We will try to design the middle way.\\
+
+	 When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \\
+
+	 To overcome this we will make hierarchies of exception-classes, one for each of the three types of errors. The idea with our own exceptions classes is that we will 'wrap' the original exception and pass one of the above mentioned exception to a central error handling class, which will hold the responsibility of dealing which all exceptions. This will remove error handling responsibility from both the actual classes, where the exceptions are thrown and from the controller class, which only passes the exceptions to the error handling class.\\
+
+	 In the error handling class will be three methods, one for each of our exception super-types, and a reference to an enum class called 'StatusCode'. Since we need to handle the three types of errors different, we decided to do so, by having three different methods. No matter what kind of server-runtime exception the error handler class receives, it will always deal with it the same way, since the controller will always call the same method for handling server-runtime exceptions. The same goes for the two other exceptions classes.\\
+
+	The advantages of doing it this way, is the overview and transparency that it gives, but also how the centralized policy will help with and make it clear how expansion is possible. This is because all exceptions will be related with a StatusCode enum and inside the error handler class it is possible to see how each type of exception is handled. Furthermore since every exception has to be wrapped by our own exception classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will only need to make a new StatusCode for this new error and the controller and error handler class take care of the rest.\\
+
+	There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
 
 		\newpage
 		\subsection{Limitations}
@@ -169,10 +172,10 @@ We will use a simple, user friendly UI with buttons to give the user control ove
 With these design choices we have made a solution, that consistently focus to overcome the same major obstacles in each part - performance and simplicity of user interaction.
 			
 	\newpage		
-	\section{Technical description}
+	\section{Technical Description}
 		In the following section a technical presentation of the program is. This will be compliment our analasys and descriptions in the former sections.  
 		
-		\subsection{Flow description}
+		\subsection{Flow Description}
 
 		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
 When a user of the application wants to see a part of the map, a request is send to the java server, which is first handled by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is sent as a XML in String form to the client. 
@@ -187,7 +190,8 @@ When a user of the application wants to see a part of the map, a request is send
 		
 		\newpage
 		\subsection{Classes and responsibility}
-		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfils this. 
+		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfills this. 
+
 			
 			\subsubsection{Controllers}
 			
@@ -196,15 +200,15 @@ When a user of the application wants to see a part of the map, a request is send
 The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.\\
 Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
 If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return an array of Roads that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
-Now the Controller sents all these informations to the XML class and forward the returned String to the JSConnector.\\
+Now the Controller sends all these informations to the XML class and forward the returned String to the JSConnector.\\
 
 
 					
-			\subsubsection{Error handling}
+			\subsubsection{Errorhandling}
 				
 				\paragraph{ErrorHandler}\mbox{}\
 
-This is the main class of the system responsible for errorhandling. When the Controller gets a propagated Exception, it calls one of the three main methods in this class; handleServerRuntimeException, handleServerStartupException or handleClientInputException. The first two methods will print out the StatusCode relating to the current Exception, by calling getDescription from the getStatusCode method in the exception. Furthermore the handleServerStartupException will try to make sure that the Java virtuelmachine is terminated properbly.\\
+This is the main class of the system responsible for errorhandling. When the Controller gets a propagated Exception, it calls one of the three main methods in this class; handleServerRuntimeException, handleServerStartupException or handleClientInputException. The first two methods will print out the StatusCode relating to the current Exception, by calling getDescription from the getStatusCode method in the exception. Furthermore the handleServerStartupException will try to make sure that the Java Virtual Machine is terminated properly.\\
 The handleClientInputException will not make a print out of the description of the StatusCode, but return it to the Controller, for sending information to the client.
 
 				\paragraph{StatusCode}\mbox{}\
@@ -288,7 +292,7 @@ A final thing to notice about the Road class is that it stores only some of the 
 				
 This class is a result of keeping the KD-Tree as a purely data structure class. It adds additional functionality when it comes to determining what Road objects to show to the user, based on a given Region. It offers additional filtering based on prioritising different Road types.\\
 
-The RoadSelector class gets a collection of nodes as output from the KDTree. To get a collection of roads, it iterates trough every node object and collects the roads, which the node has references to. With this technique, a lot of duplicate road objects exist. To solve this, we collect the roads in a HashSet, which only allows one instance of every object. As the HashSet handles up to a half million roads, it has been subject to optimization. Different load factors (The percentage amount of the collect that is filled, before it is resized and rehashed) and initial capacities have been empirically tested (included in appendix 1).\\
+The RoadSelector class gets a collection of nodes as output from the KDTree. To get a collection of roads, it iterates trough every node object and collects the roads, which the node has references to. With this technique, a lot of duplicate road objects exist. To solve this, we collect the roads in a HashSet, which only allows one instance of every object. As the HashSet handles up to a half million roads, it has been subject to optimization. Different load factors (The percentage amount of the collect that is filled, before it is resized and rehashed) and initial capacities have been empirically tested (can be found in appendix 11.3).\\
 
 The hashCode function of the Road class has been automatically generated by eclipse, and are calculated when the road is made. This is to save operations when the road is filtered by a HashSet and it is correct because the Road objects never are changed after they are made.
 				
@@ -313,7 +317,7 @@ The last method called createFile is made for debugging, to see what actually is
 			
 				\paragraph{AddressParser}\mbox{}\
 				
-This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name. A specification of the format for the address, can be found in the appendix.
+This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name. A specification of the format for the address, can be found in appendix 11.1.
 				
 				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
 				
@@ -367,7 +371,7 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 
 	\newpage
 	\section{User Manual}
-		\paragraph{Starting the Program}\mbox{}\
+		\paragraph{Starting The Program}\mbox{}\
 		
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine (minimum 1.6 version) installed on your computer. You can run the file using the command line by typing "java -jar Krax.jar". When you run it from the command line the program will tell you when it is ready. It is recommended to have at least 4 GB of ram available and to dedicate 2 GB ram to the JVM, by instead typing "java -Xmx2048M -jar Krax.jar". When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
@@ -445,10 +449,10 @@ As the input from the kd-tree is a region, there is an infinite amount of combin
 The support functions, intersecting and fullyContained are also tested on borderline cases, even though we haven’t spent as much time thinking for this part of the testing, because a failure in the part most likely would lead to failure in the kd-tree output.\\
 
 			
-		\subsection{Errors, bugs and list of needs}
+		\subsection{Errors, Bugs And List Of Needs}
 
 		In the following there will be a list of different errors and bugs and a list with all the things, that could and have been good to have in the program.
-		\paragraph{Errors and bugs}\mbox{}\\
+		\paragraph{Errors And Bugs}\mbox{}\\
 		
 When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.\\
 
@@ -458,7 +462,7 @@ When panning the map 8 times in one direction, a white border may appear. This d
 
 The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
 
-		\paragraph{List of needs}\mbox{}\\
+		\paragraph{List Of Needs}\mbox{}\\
 		
 When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.\\
 
@@ -476,7 +480,7 @@ If a road is included in a region, but both of its reference points are outside 
 
 			
 	\newpage
-	\section{Product conclusion}
+	\section{Product Conclusion}
 	To review how the product meets both the project and specific requirements, it is assessed and compared from different perspectives. The product is able to navigate around the map and draw the roads in the viewport and filter them depended on cluttering and priority. It can find the shortest path from one address to another, but it does not guarantee that the path reflects a legally drivable route. The user interface is fairly simple, intuitive and easy to use. Whether the user interface is responsive, is very depended on witch part of the map the user is looking at. As the client is another thread than the server, the user interface itself is responsive. The program is not responsive when exploring regions that are greater than half of the map, but when zoomed in it runs with sufficient speed. It can take a second for the server to complete a request for the entire map. Requests for small parts of the map are completed almost instant(less than one hundredth of a second). There are many factors which contribute to this variation in performance, the primary being the data structure solution that involves a HashSet. Drawing roads with SVG has also shown to be much slower that other solutions such as Java Swing, making the browser another limitation in performance.\\
 The specific requirements for the project, discussed in the problem analysis, have partially been reached. One of the requirements was making the basic functions work well and fast, which has been done, apart from navigating big parts of the map. The shortest path algorithm runs with sufficient speed, and by making the client save the route, subsequent navigation is done without any need for recalculating the route. To make the routing function work better, it would be obvious to implement turn restrictions and routing guides shown as text. This would make the route understandable for the user and legally drivable, presuming the dataset is up to date.\\
 Another requirement was to make the program expandable. To ensure this, the program parts have been divided into components roughly as the MVC design pattern, but also more carefully in the model as the routing component and visualization component. For instance if another data structure for visualization was to replace the current, the only class that should be changed is RoadSelector. The principle of loose coupling that we have tried to design for, have resulted in some classes being reusable, such as the KDTree.\\
@@ -486,15 +490,15 @@ A text instruction explaining the route to the user would significantly increase
  		
 		\newpage
 
-	\section{Process description}
+	\section{Process Description}
 	This part of the report is a reflection of the internal work process in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
 	
-	\paragraph{Collaboration tools}\mbox{}\
-	For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam.\\ The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a special feature or not. All of this due to our collaboration agreement and discussion about ambitions.\\
+	\paragraph{Collaboration Tools}\mbox{}\
+	For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam.\\ The result of this meeting was a collaboration agreement, which can be viewed in the appendix 11.4. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a special feature or not. All of this due to our collaboration agreement and discussion about ambitions.\\
 		We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, since we were told that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time.\\
 		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.\\
 		
-		\paragraph{Group dynamics}\mbox{}\
+		\paragraph{Group Dynamics}\mbox{}\
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \\
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program (A list of who have done what, can be found  in the appendix 11.2). The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
@@ -508,7 +512,7 @@ In a course like this a list of required skills and abilities expected from the 
 	 
 	\newpage
 	
-	\section{Final thoughts}
+	\section{Final Thoughts}
 	This project have been along time under way, and it has challenged us all in some way, whether it be in programming, group work or written work. Through the months we have had a lot of interesting and entertaining discussions, and it has given us a better understanding of how programming in a group is, and what you need to have in mind going in to a task like this, but also when you are in the middle of the process.\\
 
 Non of us have ever been part of such a big programming project, and most of us have in this worked with technologies totally new to us. It has, along with some of our other courses, opened up new areas of programming for us, like more advanced algorithm use and working with data structures containing larger amounts of data.\\
@@ -520,7 +524,7 @@ To conclude we feel that our project have succeeded in living up to both the req
 	\section{Bibliography}
 	
 	\begin{thebibliography}{9}
-%\cite{sedgewickAndWayne11}
+
 	\bibitem{sedgewickAndWayne11}
   	Robert Sedgewick and Kevin Wayne
   	\emph{Algorithms, 4th Edition}.
@@ -632,6 +636,8 @@ Index.html & A, F & 18 \\
 \end{tabular}
 \end{table}
 
+(A = Anders, F = Filip J = Jakob, K = Kasra, L = Lars, M = Mark)
+
 	\newpage
 
 	\subsection{Timemeasurings}
@@ -648,6 +654,25 @@ Load factor & Average time to add all roads & Number of tries \\ [1.5ex]
 \end{tabular}
 \end{table}
 
+	\newpage
+	\subsection{Collaboration agreement}
+
+\paragraph{M\o de} 
+\begin{itemize}
+\item Mød til tiden. Overhold aftalt møde tidspunkt. Meld klart ud hvis du bliver forhindret
+\item Alle møder begyndes med at der snakkes om dagens program, og der ligges en møde-dagsorden
+\item Efter hvert møde samles der op. Har vi nået det vi skulle, og kan der evt. lægges en plan for næste uge og møde?
+\item Som udgangspunkt er der møde om mandagen efter forelæsningen, med mindre der vurderes at det ikke er nødvendigt. Hvis der er brug for mere tid bruges onsdag. Disse dage skal som udgangspunkt holdes frie, og det skal meldes i ordentlig tid, hvis man gerne vil have mødet ligger anderledes.
+\item Der er lukkede computere og ingen telefoner under åbne diskussioner. Ved kodning og andet arbejde er det ens egen vurdering.
+\end{itemize}
+
+\paragraph{Ambitioner}
+\begin{itemize}
+\item Proces og forståelse frem for endemål. Alle skal være med og kunne stå inde for det der bliver lavet
+\item Hellere være på forkant og lave mere i starten af projektet, end at sidde med det hele til sidst.
+\item Vi vil gerne lægge meget vægt på analyse- og design-processerne, og have det forholdsvist færdigt inden vi går til implantation.
+\item 5/3 er der revideret forventnings afstemning.
+\end{itemize}
 	\newpage
 
 	\subsection{Journals}		
