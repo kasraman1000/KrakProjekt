@@ -8,28 +8,26 @@
 	\tableofcontents
 	
 	\newpage
-	\section{Preface}
+	\section{Preface}\mbox{}
+ 
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal S\o rensen og
 		Anders Brorup J\o rgensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
 		
 	\newpage
-	\section{Background and Data}
-	
-		For this project we have been given the task of designing and creating a java-written program 
-		for the exam in the course 'First-Year-Project' on 2nd semester in the bachelorprogram. The basic idea of the 
-		program is, that it should use some existing mapdata of Denmark to visualize a map of Denmark and let the user search for and see a route. 
-
-		This dataset is from the danish mapprovider Krak.dk and it consists of two text files. A file with all the points 
-		and a file with all connections between those points.\\
+	\section{Background and Data}\mbox{}
+ 	
+		For this project we have been given the task of designing and creating a java-written program for the exam in the course 'First-Year-Project' on 2nd semester in the bachelorprogram. The basic idea of the program is, that it should use some existing mapdata of Denmark to visualize a map of Denmark and let the user search for and see a route.
+		
+		This dataset is from the danish mapprovider Krak.dk and it consists of two text files. A file with all the points and a file with all connections between those points.\\
  
 		The application should meet the following requirements:
 		\begin{itemize}
 		\item draw all roads from a given rectangular segment of the map, using different colors to indicate types of road;
 \item the drawing should be adjusted when the size of the window changes;
 \item it should be possible to “explore” the map by changing the portion of the map viewed;
-\item to get a responsive application that shows maps with a minimum of clutter, your application should show only the “highest priority” road segments.
+\item to get a responsive application that shows maps with a minimum of clutter, your application should show only the "highest priority” road segments.
 \item be able to compute a shortest path on the map between two points specified by the user (e.g. by typing addresses or clicking on the map); we suggest that you (initially) implement Dijkstra’s algorithm as taught in BADS;
 \item design a coherent user interface, which includes the map, but probably also other components;
 \item decide how the mouse and keyboard is used to interact in a user-friendly and consistent
@@ -41,9 +39,11 @@ manner with the user interface;
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two addresses, and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 
 	\newpage
-	\section{Problemanalysis}
+	\section{Problemanalysis}\mbox{}
+ 
 The following section will be an analysis of the requirements for the project and the possible solutions.
-		\subsection{Requirements}
+		\subsection{Requirements}\mbox{}
+ 
 To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.\\
 
 We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
@@ -55,7 +55,8 @@ The last priority of ours is more code minded, and is about designing a program 
 The following analysis have been divided into four areas: "Design patterns", "Data structures and algorithms", "User interface" and "Errorhandling". During the analysis we are taking the points of focus and the project requirement into account.
 
 
-			\subsection{Design Patterns}
+			\subsection{Design Patterns}\mbox{}
+ 
 			When we thought about how we should design the internal structure, we first took a look at the Model-View-Controller design, which we had used earlier and were quite familiar with. It seemed reasonable to use this design pattern as inspiration, because the client would use some kind of graphical interface and it would be an advantage if the server would be used by multiple users at different graphical interfaces. We knew we were going to use some heavy data structures for containing all the roads and searching for a route through the roads. This could be used nicely as some of the models while the controller ensures that the correct models is called and manipulated. In this way we could make a loose coupling and therefore have a system that could be easy to maintain.
 
 To avoid computing the same data twice we wanted to let the view part store the information for the route. This would lead to the view, not only being a passive player, but actually having some responsibility, which would be strictly against the MVC structure. Therefore we decided to go as far as possible with the MVC structure and divert a bit if necessary.
@@ -63,13 +64,14 @@ To avoid computing the same data twice we wanted to let the view part store the 
 Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
 
 
-			\subsection{Data Structure And Algorithms}
+			\subsection{Data Structure And Algorithms}\mbox{}
+ 
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges.
 
  To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
 
-\paragraph{The Data Structure For Visualization}\mbox{}\\
-The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to the road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. When working with approximately one million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem.
+	\paragraph{The Data Structure For Visualization}\mbox{}\\
+The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to the road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them (a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. When working with approximately one million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem.
 
 The illustration below shows roads, which are stored as points (the circles at the end of the line) and a range.
 
@@ -114,9 +116,9 @@ We decided to implement the first solution, but we found out later that it could
 
 
 			\newpage
-			\subsection{User Interface}
-
-				In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
+			\subsection{User Interface}\mbox{}
+ 
+			In this section we will discuss different ways that the user interface could be implemented. We will start off by discussing the overall decisions such as which technology we should use to show the data graphically. After that we will move towards a discussion of the features we will implement and how it should be done.  
 
 The requirement for the user interface is formulated in the project description as follows: "Design a coherent user interface, which includes the map, but probably also other components". To fulfill this requirement we have to first of all select a technology to show graphical data for the user. In our case there are two obvious options. The first one is to use Swing and the other one is to make a browser based solution. In the following we will discuss both solutions.
 
@@ -162,7 +164,7 @@ When starting to form such a policy, one very central thing, is the ability to p
 
 To overcome this we will make hierarchies of exception-classes, one for each of the three types of errors. The idea with our own exceptions classes is that we will 'wrap' the original exception and pass one of the above mentioned exception to a central error handling class, which will hold the responsibility of dealing which all exceptions. This will remove error handling responsibility from both the actual classes, where the exceptions are thrown and from the controller class, which only passes the exceptions to the error handling class.
 
- In the error handling class will be three methods, one for each of our exception super-types, and a reference to an enum class called 'StatusCode'. Since we need to handle the three types of errors different, we decided to do so, by having three different methods. No matter what kind of server-runtime exception the error handler class receives, it will always deal with it the same way, since the controller will always call the same method for handling server-runtime exceptions. The same goes for the two other exceptions classes.
+In the error handling class will be three methods, one for each of our exception super-types, and a reference to an enum class called 'StatusCode'. Since we need to handle the three types of errors different, we decided to do so, by having three different methods. No matter what kind of server-runtime exception the error handler class receives, it will always deal with it the same way, since the controller will always call the same method for handling server-runtime exceptions. The same goes for the two other exceptions classes.
 
 The advantages of doing it this way, is the overview and transparency that it gives, but also how the centralized policy will help with and make it clear how expansion is possible. This is because all exceptions will be related with a StatusCode enum and inside the error handler class it is possible to see how each type of exception is handled. Furthermore since every exception has to be wrapped by our own exception classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will only need to make a new StatusCode for this new error and the controller and error handler class take care of the rest.
 
@@ -184,16 +186,18 @@ We will use a simple, user friendly UI with buttons to give the user control ove
 With these design choices we have made a solution, that consistently focus to overcome the same major obstacles in each part - performance and simplicity of user interaction.
 			
 	\newpage		
-	\section{Technical Description}
+	\section{Technical Description}\mbox{}
+ 
 		In the following section a technical presentation of the program is. This will be compliment our analysis and descriptions in the former sections.  
 		
-		\subsection{Flow Description}
-
+		\subsection{Flow Description}\mbox{}
+ 
 		When the Java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark's infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.
 
 When a user of the application wants to see a part of the map, a request is send to the java server, which is first handled by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is sent as a XML in String form to the client. 
 
-		\subsection{UML Diagram}
+		\subsection{UML Diagram}\mbox{}
+ 
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
 		\begin{figure}[H]
 \includegraphics[width=120mm]{umlArrows.png}
@@ -202,7 +206,8 @@ When a user of the application wants to see a part of the map, a request is send
 \end{figure}
 		
 		\newpage
-		\subsection{Classes and responsibility}
+		\subsection{Classes and responsibility}\mbox{}
+ 
 		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfills this. 
 
 			
@@ -210,8 +215,10 @@ When a user of the application wants to see a part of the map, a request is send
 			
 				\paragraph{Controller}\mbox{}\
 				
-The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.\\
+The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.
+
 Since the program, at this point, is rather simple it only contains a few methods. All it needs to take care of is the starting of the server, getting a part of the map or getting both a part of the map and a route. When the class starts up the server, it specifies what files to be loaded into the Loader, and after this is done, the rest of the classes which also at some point need to be initialized is done. Hereafter the RoadSelector and the EdgeParser are initialized.\\
+
 If the Controller is asked for a XML request containing a route, it will use the RouteFinder to return an array of Roads that represents the route. After this, the region to be shown on the map is chosen by a getter in the Road class that tells in what region the route is in. This will be used to select the appropriate region of roads by the RoadSelector.\\
 Now the Controller sends all these informations to the XML class and forward the returned String to the JSConnector.\\
 
