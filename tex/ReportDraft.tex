@@ -40,6 +40,10 @@ manner with the user interface;
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two adresses, and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 		 
 	\newpage
+	\section{Limitations}
+		
+		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
+
 
 	\section{Problemanalysis}
 		\subsection{Requirements}
@@ -160,9 +164,7 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
-		\subsection{Limitation}	
-		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
-					
+				
 				
 		\subsection{Summary}
 Through this analysis and these design choices, we have chosen a way to develop a program that meets the given requirements, and follow our own guidelines for what we want to focus on.\\
@@ -316,7 +318,7 @@ The last method called createFile is made for debugging, to see what actually is
 			
 				\paragraph{AddressParser}\mbox{}\
 				
-This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name.
+This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name. A specification of the format for the address, can be found in the appendix.
 				
 				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
 				
@@ -527,11 +529,11 @@ In a course like this a list of required skills and abilities expected from the 
 	\newpage
 	
 	\section{Final thoughts}
-	This project have been along time under way, and it has challenged us all in some way, whether it be in programming, group work or written work. Through the months we have had a lot of interesting and entertaining discussions, and it has given us a better understanding of how programming in a group is, and what you need to have in mind going in to a task like this, but also when you are in the middle of the process.\\
+	This project have been under way for a long time, and it has challenged us all in both programming, group work and written work. Through the months we have had a lot of interesting and challenging discussions, and it has given us a better understanding of how programming in a group is, and what you need to have in mind going in to a project like this, but also when you are in the middle of the process.\\
 
-Non of us have ever been part of such a big programming project, and most of us have in this worked with technologies totally new to us. It has, along with some of our other courses, opened up new areas of programming for us, like more advanced algorithm use and working with data structures containing larger amounts of data.\\
+None of us has ever been part of such a big programming project, and most of us have in this worked with technologies totally new, such as SVG, XML, JavaScript and revision control. It has, along with some of our other courses, opened up new areas of programming, like more advanced algorithms and data structures containing larger amounts of data.\\
 
-To conclude we feel that our project have succeeded in living up to both the requirements set for this project and our own goals, and we hope that this report will give sufficient inside and knowledge of our work and process to support this statement.\\
+We feel that our project have succeeded in living up to both the requirements for this project and our own goals, and we hope that this report will give sufficient insight and knowledge of our work and process to support this statement.\\
 	
 	\newpage	
 	
