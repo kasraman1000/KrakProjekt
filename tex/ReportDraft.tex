@@ -1,15 +1,15 @@
 \documentclass[a4paper,10pt,titlepage]{article}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{rotFloat}
-\usepackage{rotating}
+\usepackage{pdflscape}
 \usepackage[english]{babel}
 \begin{document}
 	\tableofcontents
 	
+	
 	\newpage
 	\section{Preface}
-		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Soerensen og
+		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
 		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
@@ -23,22 +23,22 @@
 		able to search and see a given route. 
 		\\This dataset is from the danish mapprovider Krak.dk and it consists of two text files. A file with all the points 
 		and a file with all connections between these points.  
-		\\The application should meet the following requirements:
+		\\The application should meet the following requirements(copied from the offical project description):
 		\begin{itemize}
-		\item Draw all roads in the dataset
-		\item The map-visualization should adjust acordingly to changes of the windows size
-		\item The user should be able to navigate in the visualization
-		\item The application should have a minimum of clutter and therefore be able to set a priority of the roads
-		\item Be able to compute and show the shortest path between two points given by the user
-		\item The application should have a logical, consistent and reasonable fast and responsive user interface\\
+		\item draw all roads from a given rectangular segment of the map, using different colors to indicate types of road;
+\item the drawing should be adjusted when the size of the window changes;
+\item it should be possible to “explore” the map by changing the portion of the map viewed;
+\item to get a responsive application that shows maps with a minimum of clutter, your application should show only the “highest priority” road segments.
+\item be able to compute a shortest path on the map between two points specified by the user (e.g. by typing addresses or clicking on the map); we suggest that you (initially) implement Dijkstra’s algorithm as taught in BADS;
+\item design a coherent user interface, which includes the map, but probably also other components;
+\item decide how the mouse and keyboard is used to interact in a user-friendly and consistent
+manner with the user interface;
+\item decide which additional functionality your product should have and implement that — see the list below for some ideas;
+\item make the user interface fast enough that it is convenient to use, also when working with the whole data set for all of Denmark. The start-up time can be hard to improve as long as the data is stored in text files, but after the start-up the user interface should react reasonably quickly.
 		\end{itemize}
 		
-		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore
-
-		 this map by zooming in and out and navigating around. A user should also be able to select two adresses,
-
-		 and get the shortest route between these two points calculated and shown on the map, with the map cut out to a
-		 fitting view of the route.
+		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two adresses,
+and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 		 
 	\newpage
 	\section{Limitations}
@@ -156,7 +156,7 @@ We will mention two advantages of using the Swing API. First advantage is that w
 
 \paragraph{Browser solution}\mbox{}\
 
-For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, xml and svg, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different svg commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
+For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
 Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
 
@@ -166,7 +166,7 @@ The second step in fulfilling the above mentioned requirement is to analyze how 
 
 \paragraph{Road displaying}\mbox{}\
 
-To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and svg. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
+To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and SVG. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
  
 \paragraph{Scalable Map}\mbox{}\
 
@@ -208,8 +208,8 @@ With these design choices we have made a solution, that supports it self and con
 		\subsection{Flow description}
 			length : 0.5 - 1 side\\
 			Beskrivelse af flowet gennem programmet\\
-			When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
+			When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an XML in String form to the client. 
 
 			UML/Klasse diagram\\
 		\subsection{UML Diagram}
@@ -265,7 +265,7 @@ A class extending ServerStartupException responsible for wrapping Java's FileNot
 
 				\paragraph{XMLTransformertException}\mbox{}\
 
-A class extending ServerRuntimeException responsible for wrapping Java's TransformerException in the XML class. Thrown when the Document could not be properbly transformed to either an XML-string or to a file.
+A class extending ServerRuntimeException responsible for wrapping Java's TransformerException in the XML class. Thrown when the Document could not be properbly transformed to either an XML-String or to a file.
 
 				\paragraph{XMLDocumentException}\mbox{}\
 
@@ -397,7 +397,7 @@ When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, 
 			
 				\paragraph{JSConnector}\mbox{}\
 				
-				This class is responsible of listening for requests from the browser. When the class receives a request it parses the url string. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both mapdata and route. The class then returns the resulting xml string to the browser. 
+				This class is responsible of listening for requests from the browser. When the class receives a request it parses the url String. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both mapdata and route. The class then returns the resulting XML String to the browser. 
 						
 				\paragraph{index.html}\mbox{}\
 				
@@ -472,7 +472,7 @@ We have choosen our AddressParser class to be the target of our test. We have pi
 When doing a whitebox test there a several different levels and thouroughness of which the test can be performed. The least thourough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thourough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. \\
 
 We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
-\begin{sidewaystable}[H]
+\begin{landscape}
 %\begin{table}
 %\caption{table}
 %\centering
@@ -502,7 +502,7 @@ findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. 
 \end{tabular}
 
 %\end{table}
-\end{sidewaystable}
+\end{landscape}
 
 Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results match in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions, as the result output would not have come out as it did, if the call had not turned the if-statements the right way to true or false.
 
@@ -575,7 +575,7 @@ If the program was to be expanded and used on a larger data set, the first thing
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
-In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both xml and javascript. We have spend a lot time of both reading and perfoming experimental code and at the same time finding solutions, which we believe is both simple to have and works well. \
+In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both XML and javascript. We have spend a lot time of both reading and perfoming experimental code and at the same time finding solutions, which we believe is both simple to have and works well. \
 Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knownlegde about javascript and XML, that we hope will come in hand at some point later on. \\
 
 In a course like this a list of required skills and abilities expected from the student is always given. The list for this course contains following skillset:
@@ -874,7 +874,7 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar string, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
+		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar String, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
 		\paragraph{Faerdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
@@ -918,7 +918,7 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		
 		\paragraph{Beskrivelse af dagen:}
 		I dag var sidste dag inden afleveringen af første del af det samlede projekt. Vi skulle få vores zoom funktioner til at fungere 100%, få samlet op på en masse småting og så selvfølgelig få skrevet det sidste på vores rapport.
-Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny svg fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
+Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny SVG fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
 
 		\paragraph{Faerdige ting:}
 		
