@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.File;
+
 import errorHandling.*;
 import models.*;
 import views.*;
@@ -18,11 +20,30 @@ public class Controller {
 	 * Will load the data into the server from the three different files needed.
 	 */
 	static{
-		double start = System.nanoTime();
 		System.out.println("System startup - please wait...");
+		double start = System.nanoTime();
+		
+		//Path and names of data files to use
+		String mapForTheData = "mapData/";
+		String macFolderSeperator = "/";
+		String windowsFolderSeperator = "\\";
+		String nodeFile = "kdv_node_unload.txt";
+		String edgeFile = "kdv_unload.txt";
+		String zipCodeFile = "zip_codes.txt";
+		
+		//First try to locate the files accordingly to the windows standards
+		//if this fails - try for the mac standards
 		try {
-			String mapForTheData = "mapData\\";
-			Loader.load(mapForTheData + "kdv_node_unload.txt", mapForTheData + "kdv_unload.txt", mapForTheData + "zip_codes.txt");
+			try{
+				Loader.load(mapForTheData + windowsFolderSeperator + nodeFile, 
+					mapForTheData + windowsFolderSeperator + edgeFile, 
+					mapForTheData + windowsFolderSeperator + zipCodeFile);
+			
+			} catch (ServerStartupException e){
+				Loader.load(mapForTheData + macFolderSeperator + nodeFile, 
+					mapForTheData + macFolderSeperator + edgeFile, 
+					mapForTheData + macFolderSeperator + zipCodeFile);
+			}
 			
 			RoadSelector.initialize(Loader.getNodesForKDTree());
 			routing.EdgeParser.build(Loader.getEdgesForTranslator());
