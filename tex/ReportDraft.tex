@@ -47,7 +47,7 @@ Our next priority is speed over space. We want our program to perform fast, and 
 
 The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
 
-The following analysis have been divided into three areas: "Design patterns", "Data structures and algorithms" and "User interface". During the analysis we are taking the points of focus and the project requirement into account.
+The following analysis have been divided into four areas: "Design patterns", "Data structures and algorithms", "User interface" and "Errorhandling". During the analysis we are taking the points of focus and the project requirement into account.
 
 
 			\subsection{Design Patterns}
@@ -56,7 +56,7 @@ To avoid computing the same data twice we wanted to let the view part store the 
 Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
 
 
-			\subsection{Data structure and algorithms}
+			\subsection{Data Structure And Algorithms}
 			As the application should be able to visualize regions of a map, and calculate the shortest path between two points, it is viable to have both one and two data structures. Both functions require vertices and edges, but the requirements for the objects are different for the two. The shortest path function is fastest with shortened and directed roads, while visualization needs the original data to display the curves of the roads and does not need direction on the edges. To avoid any compromises to the performance of the functions and to allow further development of both functions in different directions, two data structures are made, one for each algorithm. This will greatly increase memory usage and start up time, but as performance is higher priority, this is the choice that fulfils the requirements the best.
 
 \paragraph{The data structure for visualization}
@@ -78,11 +78,11 @@ The data structure has an associated algorithm, which runs in logarithmic time m
 Construction of the kd-tree requires a median finding function, which is used for balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.\\
 
 \paragraph{Searching for a route}
-When we first started to discuss how we were to create an efficient way to find a route, we considered several ways how to approach this. One of our main concerns was to not let the user wait too long. To ensure this we figured the cost of this was to use some more memory instead. 
+When we first started to discuss how we were to create an efficient way to find a route, we considered several ways of approaching this. One of our main concerns was not to let the user wait too long. To ensure this we figured the cost of this was to use some more memory instead. 
 
 We considered several algorithms like DFS, BFS, Union-Find, but none of these were able to tell us the shortest path from A to B – only that there could be a path from A to B. The only two algorithms that actually would fulfil our needs was Bellman-Ford’s or Dijkstra’s algorithms. These two would be able to find the shortest path from any given point to another. 
 
-Both of these uses a graph. As far as we were concerned there was two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since a one way road or a road were no driving are allowed could occur, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
+Both of these uses a graph. As far as we know there is two possible graphs we could use: An edge-weighted-graph or an edge-weighted-directed-graph. But since a one way road or a road were no driving are allowed could occur, we naturally chose the directed version, instead of adding a flag at the undirected graph to tell the driving prohibitions. Now we just had to decide whether to go with Dijkstra’s or Bellman-Ford’s algorithm.
 The Bellman-Ford algorithm is able of using edges with a negative weight, but it performs slightly slower than the  Dijkstra algorithm, because it is forced to check for negative cycles. Because of our performance requirements, it was a problem that Dijkstra (as well as Bellman-Ford) would search the entire graph to find the distance from the starting point to every single node. Unless the user would search for the longest path possible every time, we had to be able to stop the algorithm when the destination had been reached. This would be quite easy to implement in Dijkstra’s – and considering the above, we decided to go with Dijkstra’s algorithm.
 
 Another possibility was to let Dijkstra’s algorithm run from every node in the graph without stopping it. Then all these could be stored in an array, so we quickly could tell the user the fastest route. This would require an insanely amount of memory! Especially if the user had to choose between the fastest or shortest path, since this would double the memory usage. 
@@ -109,13 +109,13 @@ The requirement for the user interface is formulated in the project description 
 
 \paragraph{Swing Solution}\mbox{}\
 
-We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have som disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program then the user will experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
+We will mention two advantages of using the Swing API. First advantage is that we will be able to use an advanced programming language. Using Java rather than Java Script will i.a. give us typesafty, a comprehensive standard library, chance for errorhandling and inheritance just to mention a few. The second advantage is that it will be easier to implement extra features because we already know the Java language and the Swing API. Using Swing also have some disadvantages and we will mention two. The first disadvantage is that the user will need a JVM to run the program. It is not difficult to download and install the JVM, but it is more convenient for the standard user to use a browser. The second disadvantage is that if the entire functionality is located in one program the user can experience a long waitingtime every time the program starts up. Contrary there will be no startuptime for the user when using the browser solution. 
 
 \paragraph{Browser solution}\mbox{}\
 
 For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memoryusage. The second advantage is that we will acquire knowledge about javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited acces to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
-Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
+Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies lead us to that descision.
 
 \paragraph{Features}\mbox{}\
 
@@ -142,7 +142,7 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 \paragraph{Route Displaying}\mbox{}\
 
-There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
+There are two different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
 \subsection{Errorhandling}
 			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined error handling
@@ -175,7 +175,7 @@ With these design choices we have made a solution, that consistently focus to ov
 		\subsection{Flow description}
 
 		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning XML files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as a XML in String form to the client. 
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first handled by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is sent as a XML in String form to the client. 
 
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
@@ -209,7 +209,7 @@ The handleClientInputException will not make a print out of the description of t
 
 				\paragraph{StatusCode}\mbox{}\
 
-An Enum-class. Responsible for converting a Enum of a given Exception into a StatusCode-number, and a description of what error this number relates to.
+This is an Enum-class. It is responsible for converting an Enum of a given Exception into a StatusCode-number, and a description of what error this number relates to.
 				
 				\paragraph{ServerRuntimeException}\mbox{}\
 
@@ -281,7 +281,7 @@ The Road class is a data object to represent a straight piece of a road. It will
 The top and origo for the current selection of roads are also stored in here as static fields. These are set when a route is found, so that the Controller knows which region to use when asking for a section of the map
 If the server was to take care of concurrency, this would be one of things there had to be changed, because it would be able to set an unfitting viewport to a client.\\
 Last but not least, the type to define a road as a part of a route is set in here. In that way all the relevant information about what color and width a certain road should have is stored at one single place.\\
-A final thing to notice about the Road class is that it stores only some of the information of the actual road compared to a KrakEdge. This is to spare some memory use and hopefully make the program a bit more smooth.\\
+A final thing to notice about the Road class is that it stores only some of the information of the actual road compared to a KrakEdge. This is to spare some memory use and make the program a bit more smooth.\\
 
 				
 				\paragraph{RoadSelector}\mbox{}\
@@ -294,7 +294,7 @@ The hashCode function of the Road class has been automatically generated by ecli
 				
 				\paragraph{RouteFinder}\mbox{}\
 				
-The RouteFinder class is used only to get a better and more organized design: It keeps track of all the classes used to find a route, all the way from the input of two address Strings, or two PathPrefaces, to the output of an array of roads, which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will first find the corresponding PathPrefaces to the addresses. Then it instantiate DijkstraSP with our directed graph, which is weighted by edges, and uses Dijkstra’s searching algorithm to find the shortest path from a random end of the start edge to a random end of the ending edge in the route. This will later be checked to see that the correct starting and ending edge is found.\\
+The RouteFinder class is used only to get a better and more organized design: It keeps track of all the classes used to find a route, all the way from the input of two address Strings, or two PathPrefaces, to the output of an array of roads, which contains all the Road objects representing the route. During the computing of the route, the RouteFinder will first find the corresponding PathPrefaces to the addresses. Then instantiate DijkstraSP with our directed graph, which is weighted by edges, and uses Dijkstra’s searching algorithm to find the shortest path from a random end of the start edge to a random end of the ending edge in the route. This will later be checked to see that the correct starting and ending edge is found.\\
 After this the first and last edge will be replaced by a new edge, that will be shortened to start or stop by, where the house number probably will be. This is determined by the amount of house numbers at the edge and what house number the search provides.\\
 RouteFinder is the only class that uses the following classes: AddressParser,  EdgeParser, DijkstraSP and EdgesAndRoadsConverter.\\
 
@@ -303,7 +303,7 @@ RouteFinder is the only class that uses the following classes: AddressParser,  E
 				\paragraph{XML}\mbox{}\
 				
 The purpose of this class is to create a XML file, which can be converted to a String and returned to the client. The class contains code which creates XML elements, as for instance roads, route, viewport or statusCode, and will put these into the correct place of the XML structure. It will fill the groups with data taken as parameters from the method signature. \\
-One thing to make sure when creating a new Element is to use the same document for which it will be appended to later. Because of this a Document is created in each start of the method and send as parameter to the private methods, which is made to avoid duplicating code.\\
+One thing to make sure when creating a new element is to use the same document for which it will be appended to later. Because of this a Document is created in each start of the method and send as parameter to the private methods, which is made to avoid duplicating code.\\
 The method createErrorString is used if something go wrong during the creation of the XML. In this way the server will still be able to send some kind of notification to the client and improve usability.\\
 The last method called createFile is made for debugging, to see what actually is sent to the client.\\
 
@@ -334,7 +334,7 @@ This class associates road names, numbers, postal codes, and city names with the
 This class is used as a part of our route searching system. It only has two purposes: The first is simply to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.\\
 To make sure that the correct start and target is used in the route the class is taking care of adding the correct KrakEdge if it is needed. This is done by comparing the first and last edge to the KrakEdge it is supposed to be – if they are equal nothing will be done else the supposed edge will be added.\\
 Then the length of the first and last edge will be computed to a length that approximately correspond to where the houses are located. This is calculated on the basis of the house number the user is searching for compared to the amount of house numbers on the edge.\\
-Another important thing this class takes care off is to determine what view that will be showed to the client. When the route is found and corrected, it will be transformed to a Road[] and at the same time the class will find the minimum and maximum values for the routes coordinates. After that it will be set to the static field in Road, to be used when finding the other roads to be displayed and set in the XML sent to the client.\\
+Another important thing this class takes care off is to determine what view that will be showed to the client. When the route is found and corrected, it will be transformed to an array of Roads and at the same time the class will find the minimum and maximum values for the routes coordinates. After that it will be set to the static field in Road, to be used when finding the other roads to be displayed and set in the XML, which is sent to the client.\\
 
 
 				
@@ -348,7 +348,7 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 				\paragraph{KrakEdgeWeightedDigraph \cite{sedgewickAndWayneEdgeWeightedDigraph}}\mbox{}\
 				
 
-This class has been copied from Sedgewick and Wayne and modified to fit our program. The KrakEdgeWeightedDigraph contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are bases on numerical id’s which fits our program perfectly since the edges from the data files also are based on numerical id’s. \\
+This class has been copied from Sedgewick and Wayne and modified to fit our program. The KrakEdgeWeightedDigraph contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are based on numerical id’s which fits well in our program since the edges from the data files also are based on numerical id’s. \\
 
 				
 			\subsubsection{View}
@@ -449,7 +449,7 @@ We do not take turn restrictions into consideration when finding the shortest pa
 \\
 When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
 \\
-When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+When searching for an address, the city name to zip code translator may make the request fail because one city district (K\o benhavn K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
 \\
 If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
 \\
