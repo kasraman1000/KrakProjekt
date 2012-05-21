@@ -40,14 +40,6 @@
       <operations public="true" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="6" corner="BOTTOM_RIGHT" language="java" name="models.Node" project="kf04" 
-    file="/kf04/src/models/Node.java" binary="false">    
-    <position height="-1" width="-1" x="182" y="637"/>    
-    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
-    </display>  
-  </class>  
   <class id="7" corner="BOTTOM_RIGHT" language="java" name="models.PathPreface" project="kf04" 
     file="/kf04/src/models/PathPreface.java" binary="false">    
     <position height="-1" width="-1" x="176" y="491"/>    
@@ -62,14 +54,6 @@
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="true" package="false" protected="false" private="false"/>    
-    </display>  
-  </class>  
-  <class id="9" corner="BOTTOM_RIGHT" language="java" name="models.Road" project="kf04" 
-    file="/kf04/src/models/Road.java" binary="false">    
-    <position height="-1" width="-1" x="300" y="638"/>    
-    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
   <class id="10" corner="BOTTOM_RIGHT" language="java" name="models.RoadSelector" project="kf04" 
@@ -126,14 +110,6 @@
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="true" package="false" protected="false" private="false"/>    
-    </display>  
-  </class>  
-  <class id="17" corner="BOTTOM_RIGHT" language="java" name="routing.KrakEdge" project="kf04" 
-    file="/kf04/src/routing/KrakEdge.java" binary="false">    
-    <position height="-1" width="-1" x="57" y="635"/>    
-    <display autosize="true" package="false" initial-value="false" signature="false" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
   <class id="18" corner="BOTTOM_RIGHT" language="java" name="routing.DijkstraSP" project="kf04" 
