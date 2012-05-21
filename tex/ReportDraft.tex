@@ -621,11 +621,32 @@ In a course like this a list of required skills and abilities expected from the 
 	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
 	
 	\end{thebibliography}
-	*The class has been modified to fit the program.	
-		
+	*The class has been modified to fit the program.
 	\section{Appendix}
-		\subsection{Specifications for Address Parsing}
-		TODO - can anyone please copy the text from "Specifikation af AddressParser.docx"
+		\subsection{Specifications for Address Parsing - parseAddress(String)}
+The method will receive a String, which may contain the following:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+Other than road name, none of these are required to be there, but if they are in the String, they must be in that order.\\
+A String must at least contain a road name. A road name is considered to be a collection of letters and spaces. Dots, dashes and apostrophes are all right too. It may only contain a number if it is followed by a dot and the letter ‘s’ (for instance as “Christian den 10.s vej”).\\
+The house number is considered to be a number higher than 1 and consisting of 3 digits at most.\\
+The house letter is to be one single letter, which is placed right after the house number – space between the house letter and house number is free of choice.\\
+The postal code must always be 4 digits long and minimum be 1000.\\
+The city name must be a collection of letters and spaces. The city names cannot start with a single letter.\\
+Any information left between the house letter and postal code will not be considered.\\
+A comma can be placed to separate road name, house number and house letter from postal code and city name – even if some of the fields are not included.\\
+The method will return an array of Strings, containing:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
+
+
 		\subsection{Resume}
 		
 		\begin{center}
@@ -636,8 +657,7 @@ In a course like this a list of required skills and abilities expected from the 
 				\begin{itemize}
 					\item Loesninger
 					\item Versionsstyring
-				\end{itemize}
-				
+				\end{itemize}	
 			\paragraph{Beskrivelse af dagen:}
 			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
 			\paragraph{Faerdige ting:}
