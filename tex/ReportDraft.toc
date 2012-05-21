@@ -1,0 +1,228 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Preface}{2}
+\contentsline {section}{\numberline {2}Background and Data}{3}
+\contentsline {section}{\numberline {3}Problemanalysis}{3}
+\contentsline {subsection}{\numberline {3.1}Requirements}{3}
+\contentsline {subsection}{\numberline {3.2}Design Patterns}{4}
+\contentsline {subsection}{\numberline {3.3}Data structure and algorithms}{4}
+\contentsline {paragraph}{The data structure for visualization}{5}
+\contentsline {paragraph}{Searching for a route}{6}
+\contentsline {subsection}{\numberline {3.4}User Interface}{8}
+\contentsline {paragraph}{Swing Solution}{8}
+\contentsline {paragraph}{Browser solution}{8}
+\contentsline {paragraph}{Features}{9}
+\contentsline {paragraph}{Road displaying}{9}
+\contentsline {paragraph}{Scalable Map}{9}
+\contentsline {paragraph}{Zoom and Panning}{10}
+\contentsline {paragraph}{Route Displaying}{10}
+\contentsline {subsection}{\numberline {3.5}Limitations}{11}
+\contentsline {subsection}{\numberline {3.6}Summary}{11}
+\contentsline {section}{\numberline {4}Technical description}{12}
+\contentsline {subsection}{\numberline {4.1}Flow description}{12}
+\contentsline {subsection}{\numberline {4.2}UML Diagram}{12}
+\contentsline {subsection}{\numberline {4.3}Classes and responsibility}{14}
+\contentsline {subsubsection}{\numberline {4.3.1}Controllers}{14}
+\contentsline {paragraph}{Controller}{14}
+\contentsline {subsubsection}{\numberline {4.3.2}Error handling}{14}
+\contentsline {paragraph}{ErrorHandler}{14}
+\contentsline {paragraph}{StatusCode}{14}
+\contentsline {paragraph}{ServerRuntimeException}{14}
+\contentsline {paragraph}{ServerStartupException}{15}
+\contentsline {paragraph}{ClientInputException}{15}
+\contentsline {paragraph}{LoaderFileNotFoundException}{15}
+\contentsline {paragraph}{XMLTransformertException}{15}
+\contentsline {paragraph}{XMLDocumentException}{15}
+\contentsline {paragraph}{AddressInputFormatException}{15}
+\contentsline {paragraph}{NoSuchRoadnametException}{15}
+\contentsline {subsubsection}{\numberline {4.3.3}Models}{15}
+\contentsline {paragraph}{KDTree}{15}
+\contentsline {paragraph}{Loader}{16}
+\contentsline {paragraph}{Node}{16}
+\contentsline {paragraph}{NodeComparator}{16}
+\contentsline {paragraph}{PathPreface}{17}
+\contentsline {paragraph}{Region}{17}
+\contentsline {paragraph}{Road}{17}
+\contentsline {paragraph}{RoadSelector}{17}
+\contentsline {paragraph}{RouteFinder}{18}
+\contentsline {paragraph}{XML}{18}
+\contentsline {subsubsection}{\numberline {4.3.4}Routing}{18}
+\contentsline {paragraph}{AddressParser}{18}
+\contentsline {paragraph}{DijkstraSP \cite {sedgewickAndWayneDijkstraSP}}{19}
+\contentsline {paragraph}{EdgeParser}{19}
+\contentsline {paragraph}{EdgesAndRoadsConverter}{19}
+\contentsline {paragraph}{KrakEdge \cite {sedgewickAndWayneDirectedEdge}}{19}
+\contentsline {paragraph}{KrakEdgeWeightedDigraph \cite {sedgewickAndWayneEdgeWeightedDigraph}}{20}
+\contentsline {subsubsection}{\numberline {4.3.5}View}{20}
+\contentsline {paragraph}{JSConnector}{20}
+\contentsline {paragraph}{index.html}{20}
+\contentsline {subsection}{\numberline {4.4}Errorhandling}{20}
+\contentsline {section}{\numberline {5}User Manual}{22}
+\contentsline {paragraph}{Starting the Program}{22}
+\contentsline {paragraph}{Using the Program}{22}
+\contentsline {section}{\numberline {6}Testing}{23}
+\contentsline {subsection}{\numberline {6.1}Whitebox}{23}
+\contentsline {subsection}{\numberline {6.2}Blackbox}{26}
+\contentsline {subsection}{\numberline {6.3}Errors, bugs and list of needs}{26}
+\contentsline {subsection}{\numberline {6.4}Results}{27}
+\contentsline {section}{\numberline {7}Product conclusion}{28}
+\contentsline {section}{\numberline {8}Process description}{30}
+\contentsline {paragraph}{Collaboration tools}{30}
+\contentsline {paragraph}{Group dynamics}{30}
+\contentsline {section}{\numberline {9}Final thoughts}{32}
+\contentsline {section}{\numberline {10}Bibliography}{33}
+\contentsline {section}{\numberline {11}Appendix}{33}
+\contentsline {subsection}{\numberline {11.1}Specifications for Address Parsing - parseAddress(String)}{33}
+\contentsline {subsection}{\numberline {11.2}Resumes}{34}
+\contentsline {paragraph}{Tilstede: Alle}{34}
+\contentsline {paragraph}{Dagsorden:}{34}
+\contentsline {paragraph}{Beskrivelse af dagen:}{34}
+\contentsline {paragraph}{F\ae rdige ting:}{34}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{34}
+\contentsline {paragraph}{Hvem g\o r hvad:}{34}
+\contentsline {paragraph}{N\ae ste gang:}{34}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Mark}{34}
+\contentsline {paragraph}{Dagsorden:}{34}
+\contentsline {paragraph}{Beskrivelse af dagen:}{35}
+\contentsline {paragraph}{F\ae rdige ting:}{35}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{35}
+\contentsline {paragraph}{Hvem g\o r hvad:}{35}
+\contentsline {paragraph}{N\ae ste gang:}{35}
+\contentsline {paragraph}{Tilstede: Alle}{35}
+\contentsline {paragraph}{Dagsorden:}{35}
+\contentsline {paragraph}{Beskrivelse af dagen:}{35}
+\contentsline {paragraph}{F\ae rdige ting:}{35}
+\contentsline {paragraph}{Aftaler/Beslutninger}{35}
+\contentsline {paragraph}{Hvem g\o r hvad:}{35}
+\contentsline {paragraph}{N\ae ste gang:}{36}
+\contentsline {paragraph}{Tilstede: Alle}{36}
+\contentsline {paragraph}{Dagsorden:}{36}
+\contentsline {paragraph}{Beskrivelse af dagen:}{36}
+\contentsline {paragraph}{F\ae rdige ting:}{36}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{36}
+\contentsline {paragraph}{Hvor g\o r hvad:}{36}
+\contentsline {paragraph}{N\ae ste gang:}{36}
+\contentsline {paragraph}{Tilstede: Alle}{36}
+\contentsline {paragraph}{Dagsorden:}{36}
+\contentsline {paragraph}{Beskrivelse af dagen:}{36}
+\contentsline {paragraph}{F\ae rdige ting:}{36}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{36}
+\contentsline {paragraph}{Hvor g\o r hvad:}{36}
+\contentsline {paragraph}{N\ae ste gang:}{37}
+\contentsline {paragraph}{Tilstede: alle}{37}
+\contentsline {paragraph}{Dagsorden:}{37}
+\contentsline {paragraph}{Beskrivelse af dagen:}{37}
+\contentsline {paragraph}{F\ae rdige ting:}{37}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{37}
+\contentsline {paragraph}{Hvor g\o r hvad:}{37}
+\contentsline {paragraph}{N\ae ste gang:}{37}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{37}
+\contentsline {paragraph}{Dagsorden:}{37}
+\contentsline {paragraph}{Beskrivelse af dagen:}{37}
+\contentsline {paragraph}{F\ae rdige ting:}{38}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{38}
+\contentsline {paragraph}{Hvor g\o r hvad:}{38}
+\contentsline {paragraph}{N\ae ste gang:}{38}
+\contentsline {paragraph}{Tilstede:Alle, undtagen Jacob}{38}
+\contentsline {paragraph}{Dagsorden:}{38}
+\contentsline {paragraph}{Beskrivelse af dagen:}{38}
+\contentsline {paragraph}{F\ae rdige ting:}{38}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{38}
+\contentsline {paragraph}{Hvor g\o r hvad:}{38}
+\contentsline {paragraph}{N\ae ste gang:}{38}
+\contentsline {paragraph}{Tilstede:Lars, Filip og Anders}{38}
+\contentsline {paragraph}{Dagsorden:}{38}
+\contentsline {paragraph}{Beskrivelse af dagen:}{39}
+\contentsline {paragraph}{F\ae rdige ting:}{39}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{39}
+\contentsline {paragraph}{Hvor g\o r hvad:}{39}
+\contentsline {paragraph}{N\ae ste gang:}{39}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{39}
+\contentsline {paragraph}{Dagsorden:}{39}
+\contentsline {paragraph}{Beskrivelse af dagen:}{39}
+\contentsline {paragraph}{F\ae rdige ting:}{39}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{39}
+\contentsline {paragraph}{Hvor g\o r hvad:}{39}
+\contentsline {paragraph}{N\ae ste gang:}{40}
+\contentsline {paragraph}{Tilstede: Lars, Filip og Anders}{40}
+\contentsline {paragraph}{Dagsorden:}{40}
+\contentsline {paragraph}{Beskrivelse af dagen:}{40}
+\contentsline {paragraph}{F\ae rdige ting:}{40}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{40}
+\contentsline {paragraph}{Hvor g\o r hvad:}{40}
+\contentsline {paragraph}{N\ae ste gang:}{40}
+\contentsline {paragraph}{Tilstede: Alle}{40}
+\contentsline {paragraph}{Dagsorden:}{40}
+\contentsline {paragraph}{Beskrivelse af dagen:}{40}
+\contentsline {paragraph}{F\ae rdige ting:}{40}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{41}
+\contentsline {paragraph}{Hvor g\o r hvad:}{41}
+\contentsline {paragraph}{N\ae ste gang:}{41}
+\contentsline {paragraph}{Tilstede: Alle}{41}
+\contentsline {paragraph}{Dagsorden:}{41}
+\contentsline {paragraph}{Beskrivelse af dagen:}{41}
+\contentsline {paragraph}{F\ae rdige ting:}{42}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{42}
+\contentsline {paragraph}{Hvor g\o r hvad:}{42}
+\contentsline {paragraph}{N\ae ste gang:}{42}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{42}
+\contentsline {paragraph}{Dagsorden:}{42}
+\contentsline {paragraph}{Beskrivelse af dagen:}{42}
+\contentsline {paragraph}{F\ae rdige ting:}{42}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{43}
+\contentsline {paragraph}{Hvor g\o r hvad:}{43}
+\contentsline {paragraph}{N\ae ste gang:}{43}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{43}
+\contentsline {paragraph}{Dagsorden:}{43}
+\contentsline {paragraph}{Beskrivelse af dagen:}{43}
+\contentsline {paragraph}{F\ae rdige ting:}{44}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{44}
+\contentsline {paragraph}{Hvor g\o r hvad:}{44}
+\contentsline {paragraph}{N\ae ste gang:}{44}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{44}
+\contentsline {paragraph}{Dagsorden:}{44}
+\contentsline {paragraph}{Beskrivelse af dagen:}{44}
+\contentsline {paragraph}{F\ae rdige ting:}{44}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{44}
+\contentsline {paragraph}{Hvor g\o r hvad:}{44}
+\contentsline {paragraph}{N\ae ste gang:}{44}
+\contentsline {paragraph}{Tilstede:Alle}{44}
+\contentsline {paragraph}{Dagsorden:}{45}
+\contentsline {paragraph}{Beskrivelse af dagen:}{45}
+\contentsline {paragraph}{F\ae rdige ting:}{45}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{45}
+\contentsline {paragraph}{Hvor g\o r hvad:}{45}
+\contentsline {paragraph}{N\ae ste gang:}{45}
+\contentsline {paragraph}{Tilstede: Alle}{45}
+\contentsline {paragraph}{Dagsorden:}{45}
+\contentsline {paragraph}{Beskrivelse af dagen:}{45}
+\contentsline {paragraph}{F\ae rdige ting:}{45}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{45}
+\contentsline {paragraph}{Hvor g\o r hvad:}{46}
+\contentsline {paragraph}{N\ae ste gang:}{46}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Anders}{46}
+\contentsline {paragraph}{Dagsorden:}{46}
+\contentsline {paragraph}{Beskrivelse af dagen:}{46}
+\contentsline {paragraph}{F\ae rdige ting:}{46}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{46}
+\contentsline {paragraph}{Hvor g\o r hvad:}{47}
+\contentsline {paragraph}{N\ae ste gang:}{47}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{47}
+\contentsline {paragraph}{Dagsorden:}{47}
+\contentsline {paragraph}{Beskrivelse af dagen:}{47}
+\contentsline {paragraph}{F\ae rdige ting:}{47}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{47}
+\contentsline {paragraph}{Hvor g\o r hvad:}{47}
+\contentsline {paragraph}{N\ae ste gang:}{47}
+\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{47}
+\contentsline {paragraph}{Dagsorden:}{47}
+\contentsline {paragraph}{Beskrivelse af dagen:}{48}
+\contentsline {paragraph}{F\ae rdige ting:}{48}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{48}
+\contentsline {paragraph}{Hvor g\o r hvad:}{48}
+\contentsline {paragraph}{N\ae ste gang:}{48}
+\contentsline {paragraph}{Tilstede:}{48}
+\contentsline {paragraph}{Beskrivelse af dagen:}{48}
+\contentsline {paragraph}{F\ae rdige ting:}{49}
+\contentsline {paragraph}{Aftaler/Beslutninger:}{49}
+\contentsline {paragraph}{Hvem g\o r hvad:}{49}
+\contentsline {paragraph}{N\ae ste gang:}{49}
