@@ -84,6 +84,13 @@ The last requirement we were given was about making the user interface logical, 
 			In the former section we analyzed the requirements more deeply and we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices specified in the analysis.\\
 
 We have already decided that we need more than one data structure for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data by XML. We also need to think about the user interface design, and how it should support the features of the program.\\
+
+			\subsubsection{Design Patterns}
+			When we thought about how we should design the internal structure, we first took a look at the Model-View-Controller design, which we had used earlier and were quite familiar with. It seemed reasonable to use this design pattern as inspiration, because the client would use some kind of graphical interface and it would be an advantage if the server would be used by multiple users at different graphical interfaces. We knew we were going to use some heavy data structures for containing all the roads and searching for a route through the roads. This could be used nicely as some of the models while the controller ensures that the correct models is called and manipulated. In this way we could make a loose coupling and therefore have a system that could be easy to maintain.
+To avoid computing the same data twice we wanted to let the viewpart store the information for the route. This would lead to the view, not only being a passive player, but actually having some responsibility, which would be strictly against the MVC structure. Therefor we decided to go as far as possible with the MVC structure and divert a bit if necessary.\
+Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
+
+
 			\subsubsection{Datastructure and algorithms}
 				length : 1 - 2 side\\
 				Hvilke generelle overvejelser er skal der tager i forbindelse med valg af datastruktur? \\
@@ -98,9 +105,9 @@ We have already decided that we need more than one data structure for visualizat
 The type of data to be stored, should be considered as much as the data structure. Either the data could be roads with two points, a type and a priority, or it could be nodes with a point and references to road objects that it represents. As we want to draw roads and not nodes, it would be the most memory saving decision to store roads. However roads impose a complex problem, that is when searching for them(a range search) they should be returned when one or two of their coordinates are within the range. When storing roads in a grid file or a kd-tree, a road would appear twice because it has two points, making it very likely to return it twice when doing a range search. With around a million roads, filtering all similar roads requires another data structure and an appurtenant algorithm, which will slow down the search process. To avoid this complexity, roads could be referenced at only one of their points. This removes the possibility to return the same road twice, but imposes another problem. The illustration below shows roads, which are stored as points(the circles at the end of the line) and a range.
 
 \begin{figure}[H]
-%\includegraphics[width=120mm]{roadsDS.png}
-\caption{TODO - some text to describe the figure}
-\label{fig:roadsDS}
+%\includegraphics[width=120mm]{roadsRef.png}
+\caption{Roads referenced by different points}
+\label{fig:roads}
 \end{figure}
 
  When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads’ length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.
@@ -404,20 +411,11 @@ When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, 
 			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
 			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
 			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
-			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.
-			
-			/* maaske noget med de negative sider af vores system??*/ 	
-	\newpage		
-	\section{Technical Description}
-		length : 0.5 - 1 side\\
-		Beskrivelse af nogen af de meget tekniske og 'tunge' metoder\\
-Creation of the data structure is done by calling the expand method on a KDNode object, which will construct the tree recursively. The KDNode is a nested class, which serves as a container for the real node object. Each KDNode has references to its child nodes, the left is smaller than the nodes relevant coordinate and the right one is greater or equal to. The expand method finds the median node from the input collection and returns that node as the child node. It calls the same method twice, each with approximately half of the collection it was given, divided by the median node. By changing the axis, which the median is calculated from, a two dimensional tree is constructed.
-Searching in the tree is done from a region input. When visiting a node, a region is defined from the axis, which the node was chosen as median from. For instance the first node (root node) defines two regions that ranges from the largest to the smallest y-coordinate. The left region for this node ranges from the smallest x-coordinate to the nodes x-coordinate and the right ranges from the biggest x-coordinate to the nodes x-coordinate. For both regions the geometrical functions fullyContained and intersecting investigates how they relate to the input region. If the region is fully contained in the input region it returns all child nodes. If it is intersecting, this function is called recursively.
-			
+			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.\\
+		There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
-
 		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
@@ -492,6 +490,11 @@ Then we used the JUnit test tool, to write tests to see if all our if-statements
 
 
 		\subsection{Blackbox}
+		We have chosen to black-box test the kd-tree because its output is very important for the program to function. There are relatively few if-statements and “branches”, which makes white-box testing less relevant.
+To test the output JUnit are used because it is an easy way to construct and run automated tests. As the kd-tree is one of the few places that has been subject to a lot of development, automated test have been beneficial. The expected output of the kd-tree is nodes, which lies in the input region. The linearSizeRequest function runs through all nodes and picks the ones inside the input region, which it counts. It is used to compare against, and is viable because it is very simple and therefore is less likely to contain errors.
+As the input from the kd-tree is a region, there is an infinite amount of combinations possible. It is important to represent all kinds of inputs when testing, therefore the regions made to test the kd tree, represents both small and large regions, as well as regions that are in the north, south, west and east. The testing should reach all possible branches, which is done by both making regions that intersect and are fully contained in different levels of recursion.
+The support functions, intersecting and fullyContained are also tested on borderline cases, even though we haven’t spent as much time thinking for this part of the testing, because a failure in the part most likely would lead to failure in the kd-tree output.
+
 			
 		\subsection{Errors, bugs and list of needs}
 			length : 1 - 2 sider\\
@@ -524,6 +527,8 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 			length : 0.5 side\\
 			Forventningstabeller?\\
 			Hvad kan vi bruge de her test til i forhold til programmet?\\
+			Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\Because of the advantage testing gives, even without finding any bugs, we would have been better off testing more classes. Automated and manual tests would speed up the development of new features and would therefore be an essential fundament for expanding the program. 
+
 			
 	\newpage
 	\section{Product conclusion}
@@ -534,7 +539,7 @@ The choice of using Java, SVG, XML and JavaScript in contrast to Java and Swing 
 If the program was to be expanded and used on a larger data set, the first thing that should be improved is the data structure for visualization, because the HashSet solution does not scale well with large data sets. /*May add a couple of words why*/ The better data structure, which involves storing only roads in the kd-tree, discussed in the problem analysis would make the program perform very well, even for very large data sets. Keyboard and mouse controls would increase the usability of the client, and could be implemented along with more information at the visualization, such as names, cities and coastlines. A text instruction explaining the route to the user would significantly increase usability.  Turn restrictions would also be high priority, as it would make the routing function return a legally drivable route.\\
 		
 		\newpage
-		
+
 	\section{Process description}
 		lenght : 1 - sider\\
 		This part of the report is a reflection of the internal workprocess in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
@@ -607,11 +612,34 @@ In a course like this a list of required skills and abilities expected from the 
 	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
 	
 	\end{thebibliography}
-	*The class has been modified to fit the program.	
-		
+	*The class has been modified to fit the program.
 	\section{Appendix}
-		\subsection{resume}
-		
+
+	\subsection{Specifications for Address Parsing - parseAddress(String)}
+The method will receive a String, which may contain the following:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+Other than road name, none of these are required to be there, but if they are in the String, they must be in that order.\\
+A String must at least contain a road name. A road name is considered to be a collection of letters and spaces. Dots, dashes and apostrophes are all right too. It may only contain a number if it is followed by a dot and the letter ‘s’ (for instance as “Christian den 10.s vej”).\\
+The house number is considered to be a number higher than 1 and consisting of 3 digits at most.\\
+The house letter is to be one single letter, which is placed right after the house number – space between the house letter and house number is free of choice.\\
+The postal code must always be 4 digits long and minimum be 1000.\\
+The city name must be a collection of letters and spaces. The city names cannot start with a single letter.\\
+Any information left between the house letter and postal code will not be considered.\\
+A comma can be placed to separate road name, house number and house letter from postal code and city name – even if some of the fields are not included.\\
+The method will return an array of Strings, containing:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
+
+
+	\subsection{Resume}		
 		\begin{center}
 		06-02-12
 		\end{center}
@@ -620,8 +648,7 @@ In a course like this a list of required skills and abilities expected from the 
 				\begin{itemize}
 					\item Loesninger
 					\item Versionsstyring
-				\end{itemize}
-				
+				\end{itemize}	
 			\paragraph{Beskrivelse af dagen:}
 			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
 			\paragraph{Faerdige ting:}
