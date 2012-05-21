@@ -144,6 +144,20 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
+\subsection{Errorhandling}
+			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined error handling
+			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
+			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
+			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
+			the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
+			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
+			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
+			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errrorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
+			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
+			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.\\
+		There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
+
+		\newpage
 		\subsection{Limitations}
 		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
 				
@@ -348,19 +362,7 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 				\paragraph{index.html}\mbox{}\
 				
 				The index.html file contains both HTML and Java Script. The HTML part is responsible of positioning the map element, the buttons and the text fields. The Java Script part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 
-		
-		\subsection{Errorhandling}
-			A good idea to handle exceptional conditions and errors in a program is to form somekind of strategy or policy. This helps to a more streamlined error handling
-			when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide, is to
-			simply handle the exception exactly where it's created. This would be easy to implement and since this is the most standard way of dealing with
-			exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from
-			the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.\
-			When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will 
-			occur in the program. We have divided our errors and exceptions into tree areas. There is always a potential of startup-files missing, a loss of internet and many others like these two, that can cause a server to being unable to start. All this is put into the area of 'startup'-errors. The next area are errors that can happend any other time after the point of startup. These a called 'server-runtime' errors. This could be a case, where the program usage of ram exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \
-			To overcome this we will make a hierachy of exceptions classes, each for one of the tree types of errors. The idea with our own exceptions classes is that we will 'wrap' the actual exception and pass one of the above mentioned exception to a central errorhandling class, which will hold the responsibility of dealing which all exceptions. This will remove errorhandling responsibility from both the actual class, where the exception is thrown and from the controller class, which only passes the exceptions to the errorhandling class.\
-			In the errorhandling class will be tree types of methods and a reference to an enum class called 'StatusCode'. Since we need to handle the tree types of errors different, we decided to do so, by having tree different methods. For example no matter what kind of server-runtime exception the errorhandler class receives, it will always deal with it the same way, since it always will be the method for server-runtime exceptions that are called. The same goes for the two other exceptions classes.\
-			The advantages of doing it this way, is the overview that it gives and the /* OMFORMULERING easy way of expanding the system*/. All exceptions will be located in the StatusCode enum and inside the errorhandler class it's possible to see how each type of exception is handled. Futhermore since every exception has to be wrapped inside our own exceptions classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will make a new statuscode for this new error and then the controller and errorhandler class take care of the rest.\\
-		There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
+
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
@@ -482,8 +484,8 @@ A text instruction explaining the route to the user would significantly increase
 	This part of the report is a reflection of the internal work process in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
 	
 	\paragraph{Collaboration tools}\mbox{}\
-	For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam.\\ The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a speciel feature or not. All of this due to our collaboration agreement and discussion about ambitions.\\
-		We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, due to the fact that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time.\\
+	For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam.\\ The result of this meeting was a collaboration agreement, which can be viewed in the appendix. Underway in the project we haven't used the collaboration agreement, but we believe that it always remained in our conscious, which have been important. For example we were discussion what kind of features, that we wanted to implement. From the start we all agreed on to limit features and instead focus on the basic requirements and making those work. We put this in the collaboration agreement and even though, we haven't discussed it, it has never been hard to agree on if we should have a special feature or not. All of this due to our collaboration agreement and discussion about ambitions.\\
+		We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, since we were told that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time.\\
 		Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.\\
 		
 		\paragraph{Group dynamics}\mbox{}\
@@ -491,11 +493,11 @@ A text instruction explaining the route to the user would significantly increase
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
 
-In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both XML and javascript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
+In the start of the project, we decided to use an server/client solution, which included the use of both JavaScript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interesting decision, since it has been a lot more difficult to use both XML and JavaScript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
 
-Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knowledge about javascript and XML, that we hope will come in hand at some point later on.\\
+Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knowledge about JavaScript and XML, that we hope will come in hand at some point later on.\\
 
-In a course like this a list of required skills and abilities expected from the student is always given. The list includes both group work and problem analysis skills. By analysing and assessing different solutions and their effect on the product we have acquired the problem-oriented skills, and by discussing and dividing work we have acquired group skills.
+In a course like this a list of required skills and abilities expected from the student is always given. The list includes both group work and problem analysis skills. Through the process of analyzing and assessing different solutions and their effect on the product, and by discussing and dividing tasks and work load, we believe that we have shown proficiency in the skill set we are expected to learn during the course of this project.
 
 	 
 	\newpage
@@ -543,8 +545,8 @@ To conclude we feel that our project have succeeded in living up to both the req
 
 	\section{Appendix}
 
-	\subsection{Specifications for Address Parsing - parseAddress(String)}
-	
+	\subsection{Specifications for Address Parsing}
+
 The method will receive a String, which may contain the following:\\
 \\
 -	Road name\\
@@ -571,6 +573,70 @@ The method will return an array of Strings, containing:\\
 4	City name\\
 \\
 The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
+
+	\subsection{List of work}
+	\begin{table}[!htb]
+\caption{Oversigt over arbejde}
+\centering
+\begin{tabular}{c c c}
+Arbejdsopgave & Navn & Uge \\ [1.5ex] 
+\hline
+   & Report &  \\
+Preface & A, J & 19 \\
+Background And Data & A, J & 19 \\
+Problemanalysis & Everyone & 20\\
+Technical description & Everyone & 20 \\
+User Manual & F & 20 \\
+Testing &  & 20 \\
+Product conclusion & M & 20\\
+Process description & A & 19\\
+Final thoughts & Everyone & 21\\
+\\
+\\
+  & Program &  \\
+Controller & L & 18 \\
+AddressInputFormatException & J & 18 \\
+ClientInputException & J & 18 \\
+Errorhandler & A, J & 18 \\
+LoaderFileNotFoundException & J & 18 \\
+NoSuchAddressException & J & 18 \\
+NoSuchRoadNameException & J & 18 \\
+ServerRuntimeException & A, J & 18 \\
+ServerStartupException & A, J & 18 \\
+StatusCode & A, J, L & 18 \\
+XMLDocumentException & L & 20 \\
+XMLTransformerException & L & 20 \\
+KDTree & K, M & 18 \\
+Loader & K, M & 18 \\
+NodeComparator & K, M & 17 \\
+PathPreface & L, M & 18 \\
+RoadSelector & K, M & 18 \\
+RouteFinder & L & 18 \\
+XML	& L, F & 17 \\
+AddressParser & K & 16 \\
+EdgeParser & M & 18 \\
+EdgesAndRoadConverter & L, M & 18 \\
+JSConnector & F & 18 \\
+Index.html & A, F & 18 \\
+
+\end{tabular}
+\end{table}
+
+
+
+	\subsection{Timemeasurings}
+		\begin{table}[!htb]
+		\caption{table}
+		\centering
+		\begin{tabular}{c c c c c}
+Load factor & Average time to add all roads & Number of tries \\ [1.5ex] 
+\hline
+0.3 & 0.79 seconds & 6\\
+0.4 & 0.66 seconds & 10 \\
+0.5 & 0.71 seconds & 10 \\
+0.6 & 0.74 & 6
+\end{tabular}
+\end{table}
 
 
 	\subsection{Journals}		
@@ -1236,7 +1302,6 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 		
 		\paragraph{N\ae ste gang:}
 		Fredag: Fordeling af afsnit til rettelse.\\ 
-
 
 \begin{table}
 \caption{Oversigt over arbejde}
