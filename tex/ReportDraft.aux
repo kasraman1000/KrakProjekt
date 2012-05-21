@@ -1,0 +1,260 @@
+\relax 
+\select@language{english}
+\@writefile{toc}{\select@language{english}}
+\@writefile{lof}{\select@language{english}}
+\@writefile{lot}{\select@language{english}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Preface}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Data}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problemanalysis}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Requirements}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Design Patterns}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Data structure and algorithms}{4}}
+\@writefile{toc}{\contentsline {paragraph}{The data structure for visualization}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Roads referenced by different points}}{5}}
+\newlabel{fig:roads}{{1}{5}}
+\@writefile{toc}{\contentsline {paragraph}{Searching for a route}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Two different approaches to find the shortest path.}}{7}}
+\newlabel{fig:routeFinding}{{2}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}User Interface}{8}}
+\@writefile{toc}{\contentsline {paragraph}{Swing Solution}{8}}
+\@writefile{toc}{\contentsline {paragraph}{Browser solution}{8}}
+\@writefile{toc}{\contentsline {paragraph}{Features}{9}}
+\@writefile{toc}{\contentsline {paragraph}{Road displaying}{9}}
+\@writefile{toc}{\contentsline {paragraph}{Scalable Map}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of the scale options. To the left a figure illustrating the "slice-option" which we chose and on the right a figure showing the "meet-option".}}{10}}
+\newlabel{fig:mapSliceMeet}{{3}{10}}
+\@writefile{toc}{\contentsline {paragraph}{Zoom and Panning}{10}}
+\@writefile{toc}{\contentsline {paragraph}{Route Displaying}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Limitations}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Summary}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Technical description}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Flow description}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}UML Diagram}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces UML diagram showing the most relevant classes.}}{13}}
+\newlabel{fig:uml}{{4}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Classes and responsibility}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Controllers}{14}}
+\@writefile{toc}{\contentsline {paragraph}{Controller}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Error handling}{14}}
+\@writefile{toc}{\contentsline {paragraph}{ErrorHandler}{14}}
+\@writefile{toc}{\contentsline {paragraph}{StatusCode}{14}}
+\@writefile{toc}{\contentsline {paragraph}{ServerRuntimeException}{14}}
+\@writefile{toc}{\contentsline {paragraph}{ServerStartupException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{ClientInputException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{LoaderFileNotFoundException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{XMLTransformertException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{XMLDocumentException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{AddressInputFormatException}{15}}
+\@writefile{toc}{\contentsline {paragraph}{NoSuchRoadnametException}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Models}{15}}
+\@writefile{toc}{\contentsline {paragraph}{KDTree}{15}}
+\@writefile{toc}{\contentsline {paragraph}{Loader}{16}}
+\@writefile{toc}{\contentsline {paragraph}{Node}{16}}
+\@writefile{toc}{\contentsline {paragraph}{NodeComparator}{16}}
+\@writefile{toc}{\contentsline {paragraph}{PathPreface}{17}}
+\@writefile{toc}{\contentsline {paragraph}{Region}{17}}
+\@writefile{toc}{\contentsline {paragraph}{Road}{17}}
+\@writefile{toc}{\contentsline {paragraph}{RoadSelector}{17}}
+\citation{sedgewickAndWayneDijkstraSP}
+\@writefile{toc}{\contentsline {paragraph}{RouteFinder}{18}}
+\@writefile{toc}{\contentsline {paragraph}{XML}{18}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}Routing}{18}}
+\@writefile{toc}{\contentsline {paragraph}{AddressParser}{18}}
+\citation{sedgewickAndWayneBag}
+\citation{sedgewickAndWayneIn}
+\citation{sedgewickAndWayneIndexMinPQ}
+\citation{sedgewickAndWayneStack}
+\citation{sedgewickAndWayneDirectedEdge}
+\@writefile{toc}{\contentsline {paragraph}{DijkstraSP \cite  {sedgewickAndWayneDijkstraSP}}{19}}
+\@writefile{toc}{\contentsline {paragraph}{EdgeParser}{19}}
+\@writefile{toc}{\contentsline {paragraph}{EdgesAndRoadsConverter}{19}}
+\@writefile{toc}{\contentsline {paragraph}{KrakEdge \cite  {sedgewickAndWayneDirectedEdge}}{19}}
+\citation{sedgewickAndWayneEdgeWeightedDigraph}
+\@writefile{toc}{\contentsline {paragraph}{KrakEdgeWeightedDigraph \cite  {sedgewickAndWayneEdgeWeightedDigraph}}{20}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.5}View}{20}}
+\@writefile{toc}{\contentsline {paragraph}{JSConnector}{20}}
+\@writefile{toc}{\contentsline {paragraph}{index.html}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Errorhandling}{20}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}User Manual}{22}}
+\@writefile{toc}{\contentsline {paragraph}{Starting the Program}{22}}
+\@writefile{toc}{\contentsline {paragraph}{Using the Program}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Screendump of the browserwindow.}}{22}}
+\newlabel{fig:screendump}{{5}{22}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Testing}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Whitebox}{23}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces table}}{25}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Blackbox}{26}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Errors, bugs and list of needs}{26}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Results}{27}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Product conclusion}{28}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Process description}{30}}
+\@writefile{toc}{\contentsline {paragraph}{Collaboration tools}{30}}
+\@writefile{toc}{\contentsline {paragraph}{Group dynamics}{30}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Final thoughts}{32}}
+\bibcite{sedgewickAndWayne11}{1}
+\bibcite{sedgewickAndWayneBag}{2}
+\bibcite{sedgewickAndWayneDijkstraSP}{3}
+\bibcite{sedgewickAndWayneDirectedEdge}{4}
+\bibcite{sedgewickAndWayneEdgeWeightedDigraph}{5}
+\bibcite{sedgewickAndWayneIn}{6}
+\bibcite{sedgewickAndWayneIndexMinPQ}{7}
+\bibcite{sedgewickAndWayneStack}{8}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Bibliography}{33}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Appendix}{33}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1}Specifications for Address Parsing - parseAddress(String)}{33}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2}Resumes}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Hvem g\o r hvad:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Mark}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{34}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Hvem g\o r hvad:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Hvem g\o r hvad:}{35}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{36}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: alle}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{37}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede:Alle, undtagen Jacob}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede:Lars, Filip og Anders}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{38}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{39}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Lars, Filip og Anders}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{40}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{41}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{41}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{41}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{41}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{41}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{41}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{42}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{43}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{43}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{43}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{43}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{43}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{43}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede:Alle}{44}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{45}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Anders}{46}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{46}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Kasra}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede: Alle, undtagen Jacob}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Dagsorden:}{47}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{Hvor g\o r hvad:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{Tilstede:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{Beskrivelse af dagen:}{48}}
+\@writefile{toc}{\contentsline {paragraph}{F\ae rdige ting:}{49}}
+\@writefile{toc}{\contentsline {paragraph}{Aftaler/Beslutninger:}{49}}
+\@writefile{toc}{\contentsline {paragraph}{Hvem g\o r hvad:}{49}}
+\@writefile{toc}{\contentsline {paragraph}{N\ae ste gang:}{49}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Oversigt over arbejde}}{50}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces table}}{50}}
