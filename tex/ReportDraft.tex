@@ -5,8 +5,54 @@
 \usepackage[english]{babel}
 
 \begin{document}
-	\tableofcontents
+	\thispagestyle{empty} %fjerner sidetal 
+\begin{center}
+\textbf{\Huge {First Year Project}\\ \vspace{1cm}
+\huge{Krax}}
+\vspace{1.0cm}
+\end{center}
+	\begin{figure}[H]
+\includegraphics[width=110mm]{screendump.png}
+\centering
+\label{fig:screendump}
+\end{figure}
+\vspace{1.0cm}
+KF04, First Year Projekt, Group 1\\
+With guidance from Rasmus Pagh\\
+IT-University of Denmark\\
+\today\\
+\vspace{0.3cm}
+\begin{center}
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ \scriptsize Jacob Bang Helvind
+ \vspace{0.3cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ Kasra Tamasebi Shahrebabak
+  \vspace{0.4cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ Mark Thorhauge
+  \vspace{0.4cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+  Filip Hjermind Jensen
+   \vspace{0.4cm}
+
+\hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+Lars Yndal S\o rensen
+ \vspace{0.4cm}
+
+\hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+Anders Brorup J\o rgensen 
+\vspace{0.4cm}
+
+\end{center}
+
+\thispagestyle{empty}
 	
+	\tableofcontents
+
 	\newpage
 	\section{Preface}\mbox{}
  
@@ -44,16 +90,19 @@ manner with the user interface;
 The following section will be an analysis of the requirements for the project and the possible solutions.
 		\subsection{Requirements}\mbox{}
  
-To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.\\
+To get an understanding of the requirements stated in the previous section we will try to analyse what is needed to meet them, and what the different solutions could be. But first, we will list three points of focus, that all group members have agreed on, and use these as arguments for which solution to chose in the following analysis.
 
-We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
+\begin{itemize}
 
-Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
+\item We want to make a program that is simple and easy to use. This means focusing on making the basics work well, and not try to implement unnecessary features and functionality.\\
 
-The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
+\item Our next priority is speed over space. We want our program to perform fast, and if we can do that by using some extra     memory or heap-space, that will be the cost.\\
+
+\item The last priority of ours is more code minded, and is about designing a program that is easy to extend. Maybe with new functionality, or maybe changing one of the data structures, the user interface or the platform\\
+
+\end{itemize}
 
 The following analysis have been divided into four areas: "Design patterns", "Data structures and algorithms", "User interface" and "Errorhandling". During the analysis we are taking the points of focus and the project requirement into account.
-
 
 			\subsection{Design Patterns}\mbox{}
  
@@ -140,6 +189,7 @@ Based on the different advantages and disadvantages we have chosen the browser s
 
 The second step in fulfilling the above mentioned requirement is to analyse how we, by using a browser, can make a coherent user interface. Therefore we have to discuss which features should be implemented and how these features should be implemented, e.g. decide how much of the functionality should be located in the browser and how much should be located at the server. In the following we will discuss the different features.
 
+
 \paragraph{Road Displaying}\mbox{}\\
 
 To show the roads we have the option of using plain JavaScript or to use a combination of JavaScript and SVG. The advantage of using plain JavaScript is that we would have the ability to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both JavaScript and SVG. 
@@ -162,17 +212,21 @@ When discussing zoom and panning there are two aspects. The first one is to cons
 
 The other aspect is to decide in what way the user should be able to zoom and pan. Since we know that it takes a long time to get the JavaScript, HTML, SVG and XPath to work together we have chosen to settle for buttons in the browser as the only way for the user to navigate in the map. One could consider to make it possible for the user to use keyboard shortcuts and mouse events for zooming and panning. 
 
+\newpage
 \paragraph{Route Displaying}\mbox{}\\
 
 There are two different approaches of showing the route when the user zooms or pans after a route search. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
-\subsection{Errorhandling}\mbox{}\\
+\subsection{ErrorHandling}\mbox{}
 
 A good idea to handle exceptional conditions and errors in a program is to form some kind of strategy or policy. This helps to a more streamlined error handling when the program is written, but also if the program is to be expanded at some point. A very simple policy that one could decide to utilize, is to simply handle the exception exactly where it's thrown. This would be easy to implement and since this is the most standard way of dealing with exceptions, most programmers would know this policy and therefore wouldn't have any objections towards it. On the other hand, it is hard to see, from the outside, where and how an exception is handled and therefore also very hard to make a real policy for, specially when it comes to expansion.
 
 An idea could be to form a more centralized policy, to make it more transparent what happens with the exceptions. You could propagate all thrown exceptions as far as possible, and handle them in the main classes. But then you might end up with quite a big number of exceptions to handle, even when a lot of them needs to be handled in the same way. And what about the places where the program does not use a standard Java-library, that throws any exceptions? We would have to make our own exceptions here and throw and propagate them from here, if we want to centralize matters. We will try to design the middle way.
 
-When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of start up, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling.
+
+When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the variyng impact they can have on the program, it's clear that they each require different handling.
+
+	 When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the varying impact they can have on the program, it's clear that they each require different handling. \\
 
 To overcome this we will make hierarchies of exception-classes, one for each of the three types of errors. The idea with our own exceptions classes is that we will 'wrap' the original exception and pass one of the above mentioned exception to a central error handling class, which will hold the responsibility of dealing which all exceptions. This will remove error handling responsibility from both the actual classes, where the exceptions are thrown and from the controller class, which only passes the exceptions to the error handling class.
 
@@ -211,9 +265,10 @@ When the Java-program is started, the Loader class begins loading the text files
 
 When a user of the application wants to see a part of the map, a request is send to the Java server, which is first handled by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is sent as a XML in String form to the client. 
 
+\newpage
 		\subsection{UML Diagram}\mbox{}
  
-The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes. 
+The following UML diagram is a selection of the most important classes, for instance most of the exception classes have been left out for better readability. Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn because some of the classes are used primarily for storing data and are therefore used in many classes.\\
 
 \begin{figure}[H]
 \includegraphics[width=120mm]{umlArrows.png}
@@ -230,7 +285,7 @@ In this section every class will be presented and described. We will explain wha
 			\subsubsection{Controllers}
 			
 
-				\paragraph{Controller}\mbox{}\
+				\paragraph{Controller}\mbox{}\\
 				
 The Controller class is the main unit and the one to connect all the classes to a functioning program. It will never compute any data, but simple send the requests/data back and forth.  This is also the reason why all methods and fields are static.
 
@@ -362,12 +417,13 @@ The method createErrorString is used if something go wrong during the creation o
 The last method called createFile is made for debugging, to see what actually is sent to the client.
 
 			\newpage
-			\subsubsection{Routing}\mbox{}
-				\paragraph{AddressParser}\mbox{}\
+			\subsubsection{Routing}
+			
+				\paragraph{AddressParser}\mbox{}\\
 
 This class is responsible for interpreting a String and sorting it into a array of Strings. It uses regular expressions to identify the road name, road number and associated letter, postal code and city name. A specification of the format for the address, can be found in appendix 11.1.
 				
-				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\
+				\paragraph{DijkstraSP \cite{sedgewickAndWayneDijkstraSP}}\mbox{}\\
 				
 
 This class has been copied from Sedgewick and Wayne and modified to fit our program. 
@@ -380,7 +436,7 @@ Since the graph is made from a real set of roads, there can be no negative roads
 
 DijkstraSP will use some specific versions of Bag\cite{sedgewickAndWayneBag}, In\cite{sedgewickAndWayneIn}, IndexMinPQ\cite{sedgewickAndWayneIndexMinPQ} and Stack\cite{sedgewickAndWayneStack} (not the one from java.util.) to be functioning. These classes have also been taken from Sedgewick and Wayne and will not be mentioned elsewhere.
 				
-				\paragraph{EdgeParser}\mbox{}\
+				\paragraph{EdgeParser}\mbox{}\\
 				
 This class associates road names, numbers, postal codes, and city names with the correct directed edges in the graph. This is used to find a specific object based on the user search input. It takes an array of strings from the AddressParser (the parsed user search string), and based on these strings it tries to find the corresponding KrakEdges and pack them into a PathPreface object.
 
@@ -388,7 +444,7 @@ First, it looks for the road name as a key in a HashMap. If the road name exists
 
 Finally, it picks the first two remaining KrakEdge objects (or only one, if the road is one-way only) and packs them into a PathPreface object and returns it.\
 				
-				\paragraph{EdgesAndRoadsConverter}\mbox{}\
+				\paragraph{EdgesAndRoadsConverter}\mbox{}\\
 				
 This class is used as a part of our route searching system. It only has two purposes: The first is simply to transform a Stack of KrakEdges into an array of KrakEdges and the second is to make sure the correct start and target KrakEdge is used.
 
@@ -398,12 +454,12 @@ Then the length of the first and last edge will be computed to a length that app
 
 Another important thing this class takes care off is to determine what view that will be showed to the client. When the route is found and corrected, it will be transformed to an array of Roads and at the same time the class will find the minimum and maximum values for the routes coordinates. After that it will be set to the static field in Road, to be used when finding the other roads to be displayed and set in the XML, which is sent to the client.
 
-				\paragraph{KrakEdge \cite{sedgewickAndWayneDirectedEdge}}\mbox{}\
+				\paragraph{KrakEdge \cite{sedgewickAndWayneDirectedEdge}}\mbox{}\\
 				
 
 This class has been copied from Sedgewick and Wayne and modified to fit our program. The KrakEdge is a data object, representing a straight piece of road and used when searching for a route. It carries a lot more information than a Road object, like information of the house numbers or postal codes. One thing to notice is the static field isLenghtWeighted; which is used for knowing whether the weight of the route should be weighted by the length or travel time. The only method that can set anything is also just for this single field. For the rest of the class it consists of purely getters, since we take it that a road only can be changed if the server is restarted.
 				
-				\paragraph{KrakEdgeWeightedDigraph \cite{sedgewickAndWayneEdgeWeightedDigraph}}\mbox{}\
+				\paragraph{KrakEdgeWeightedDigraph \cite{sedgewickAndWayneEdgeWeightedDigraph}}\mbox{}\\
 				
 
 This class has been copied from Sedgewick and Wayne and modified to fit our program. The KrakEdgeWeightedDigraph contains one of our data structures, which is used when searching for a route. It is a directed graph that contains information of how many nodes there are and how many edges there are leaving from each node. This is the reason why it for instance can distinguish a one way road from a road with no limitations. Furthermore the nodes are based on numerical IDs which fits well in our program since the edges from the data files also are based on numerical IDs. \\
@@ -411,20 +467,20 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 			\newpage	
 			\subsubsection{View}
 			
-				\paragraph{JSConnector}\mbox{}\
+				\paragraph{JSConnector}\mbox{}\\
 				
 This class is responsible of listening for requests from the browser. When the class receives a request it parses the URL String. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both map data and route. The class then returns the resulting XML String to the browser. 
 						
-				\paragraph{index.html}\mbox{}\
+				\paragraph{index.html}\mbox{}\\
 				
 The index.html file contains both HTML and JavaScript. The HTML part is responsible of positioning the map element, the buttons and the text fields. The JavaScript part takes care of connecting to the server, adding the received SVG element to the HTML DOM, maintaining the viewport when the user zooms or pans and it takes care of receiving errors and displaying the right errors to the user. 
 
 	\newpage
 	\section{User Manual}
-		\paragraph{Starting The Program}\mbox{}\
+		\paragraph{Starting The Program}\mbox{}\\
 	
 The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine (minimum 1.6 version) installed on your computer. You can run the file using the command line by typing "java -jar Krax.jar". When you run it from the command line the program will tell you when it is ready. It is recommended to have at least 4 GB of ram available and to dedicate 2 GB ram to the JVM, by instead typing "java -Xmx2048M -jar Krax.jar". When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
-		\paragraph{Using the Program}\mbox{}\
+		\paragraph{Using the Program}\mbox{}\\
 		
 To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. I case you need to find a route you can fill in the From and To fields accordingly to the address specification (see appendix 11.1) and press the Find Route button. You can choose either to search for the fastest or the shortest, with the two check boxes 'Time' or 'Distance' If you want to clear the route you press the clear button.
 
@@ -438,7 +494,7 @@ To zoom in or out on the map you can use the button with the - or + sign and if 
 		
 		
 	\newpage
-	\section{Testing}\mbox{}\
+	\section{Testing}\mbox{}
 
 When building our program we have to ensure that the code we have written actually works as intended. When the program compiles without errors, that is unfortunately not a guarantee of the program working correctly. To ensure that it is functional in the way we have intended, we need to test it in several ways to see our code in action. Ideally we would have to check every component of our program in several ways, but this can be a very time consuming process. We have chosen to focus our testing on the parts that we felt are the most critical to the entire program.
 
@@ -452,17 +508,19 @@ We have chosen not to include usability test in our testing, because the client 
 
 	
 		
-		\subsection{Whitebox}		
+		\subsection{Whitebox}\mbox{}		
 
 In this part there will be a description of how our whitebox test of the program has been conducted and what results we got from the test. 
 
 Before writing the actual test, there a several things to take into consideration. Is it necessary to test every line of code in the whole program and at what level do we want to do the whitebox test bit. The right thing to do, would be to test the whole program and make sure that there a no lines or statements that is not executed at least one time doing runtime. Since this would be very time consuming and because it's stated in the project description that it's not necessary to perform whitebox testing of the whole program, we have chosen to limit this to one single class.  
 
-We have chosen our AddressParser class to be the target of our test. We have picked this class because of the many different scenarios that can happened when a user types an address and therefore is interesting to test and important, because of the criticalness of the address being parsed correct. One could argue for that other places in the program is equally important to test, but again, because of the limited time we have chosen only this place. 
+We have chosen our AddressParser class to be the target of our test. We have picked this class because of the many different scenarios that can happen when a user types an address and therefore it's interesting to test and important. One could argue for that other places in the program is equally important to test, but again, because of the limited time we have chosen only this place. 
 
 When doing a whitebox test there a several different levels and thoroughness of which the test can be performed. The least thorough way is to look at only the methods in the class. Are all methods executed at least one time? This would leave a lot of possibilities of statements and branches inside of some method, that wouldn't be executed. Therefore its also an option to look at every line of code, to see if all lines a executed at least ones. This would require a lot more time and work, but this way is more thorough. We have chosen a level, where we will test if all if-statements in the AddressParser in executed. 
 
-We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. We did this to make sure that we all if-statements both had a scenario that would turn the statement true and one turning it false. We chose input for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
+We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. We did this to make sure that we all if-statements both had a scenario that would turn the statement true and one turning it false. We chose input for these scenarios, and set them up in the expectancy table (next page), categorized according to which private sub-method they belong to.
+
+Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results matched in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions.
 
 \begin{landscape}
 \begin{table}
@@ -493,7 +551,7 @@ findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. 
 \end{tabular}
 \end{table}
 \end{landscape}
-Then we used the JUnit test tool, to write tests to see if all our if-statements were executed and did match the expected results from our table. The expected results matched in all cases. This assures us, that all branches of the methods have been reached properly, and acts according to our intentions.
+
 
 
 		\subsection{Blackbox}
@@ -507,11 +565,11 @@ As the input from the KD-tree is a region, there is an infinite amount of combin
 The support functions, intersecting and fullyContained are also tested on borderline cases, even though we haven't spent as much time thinking for this part of the testing, because a failure in the part most likely would lead to failure in the kd-tree output.
 			
 		\newpage
-		\subsection{Errors, Bugs And List Of Needs}
+		\subsection{Errors, Bugs And List Of Needs}\mbox{}
 
 In the following there will be a list of different errors and bugs and a list with all the things, that could and have been good to have in the program.
 
-		\paragraph{Errors And Bugs}\mbox{}
+		\paragraph{Errors And Bugs}\mbox{}\\
 		
 When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by Java and is very hard to recreate, we have not been able to find the root of it.
 
@@ -521,7 +579,7 @@ When panning the map 8 times in one direction, a white border may appear. This d
 
 The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
 
-		\paragraph{List Of Needs}\mbox{}
+		\paragraph{List Of Needs}\mbox{}\\
 		
 When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation
 
@@ -563,7 +621,7 @@ A text instruction explaining the route to the user would significantly increase
 
 This part of the report is a reflection of the internal work process in the group. It will try to explain how the process has been and what went good and what things that didn't work as good as it should have.
 	
-	\paragraph{Collaboration Tools}\mbox{}\
+	\paragraph{Collaboration Tools}\mbox{}\\
 
 For this project we were put into group by our teachers, which both have up- and downsides. One of the best things by doing it that way, is the individual qualities that each member posses and can bring to the group. On the other hand, this also means that every group member have very different programming experience and ambitions for the project. To overcome this we decided, on the first group meeting, that we needed some kind of 'contract' for the collaboration and the ambitions toward the final product and exam.
 
@@ -571,9 +629,10 @@ The result of this meeting was a collaboration agreement, which can be viewed in
 
 We also used another tool to enhance the collaboration process. This was revision control, which is a powerful tool in larger programming projects. Both github.org and SVN were discussed. We decided to go with Git, since we were told that this is this most widespread revision control system and therefore is good to know how to use, since its something that we all probably will encounter at some other time.
 
-Besides the collaboration agreement and the revision control, we also used a schedule to control the work process. This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.
+Besides the collaboration agreement and the revision control, we also used a schedule to control the work process (appendix 11.6). This helped us to make some kind of agreement of how much time, we were each devoted to use on the project and in what rate the process should take place. When making this schedule we found ourselves having a disagreement as to when we should stop writing code and when to start working on the report. We found ourselves discussion this for quite some while, since half of the group meant that we should start writing report as soon as possible, along with the code writing. And the other half of the group wanted to start the project by writing code and then in the project make report as the last thing. You could say the both ways have advantages, but when writing report as the last thing, there always a chance of forgetting important discussions and arguments, which always is to document well in a project like this. And because of that, we decided that we wanted to have a period of code freeze, where focus would be on the report. This period was planned to be around midway of the full project period, but this can be viewed more detailed in the appendix, where the schedule can be found.
 		
-		\paragraph{Group Dynamics}\mbox{}
+		\newpage
+		\paragraph{Group Dynamics}\mbox{}\\
 
 Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics.
 
@@ -1415,5 +1474,15 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 		
 		\paragraph{N\ae ste gang:}
 		Fredag: Fordeling af afsnit til rettelse.\\ 
+		
+	\newpage
+	\begin{landscape}
+		\subsection{Gantt Diagram}
+			\begin{figure}[H]
+			\includegraphics[width=220mm]{ganttDiagram.png}
+			\caption{Gantt Diagram for process}
+			\label{fig:ganttDiagram}
+			\end{figure}
+	\end{landscape}
 
 \end{document}
