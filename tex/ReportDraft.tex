@@ -368,10 +368,11 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
-		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine installed on your computer. If the JVM is installed you can either click on the kf04.jar file or you can run the file using the command line by typing java -jar kf04.jar. If you click on the file you have to wait for about 15 seconds and if you run it from the command line the program will tell you when it is ready. When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
+		
+		The program is divided into two parts - a server and a client. To start the server you need to have the Java Virtual Machine(minimum 1.6 version) installed on your computer. You can run the file using the command line by typing "java -jar Krax.jar". When you run it from the command line the program will tell you when it is ready. It is recommended to have at least 4 GB of ram available and to dedicate 2 GB ram to the JVM, by instead typing "java -Xmx2048M -jar Krax.jar". When the server is ready you can open the index.html file in the Chrome browser. It is important to notice that the program is only optimized for Chrome and may not work on other browsers. If you try to start running the server when the server is already running you might get an error because because the port already is being used. The only way to handle that problem is to close the JVM and run the program again.  
 		\paragraph{Using the Program}\mbox{}\
 		
-		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. I case you need to find a route you can fill in the From and To fields accordingly to the address specification (see appendix 11.1) and press the Find Route button. If you want to clear the route you press the clear button.
+		To zoom in or out on the map you can use the button with the - or + sign and if you want to navigate around on the same zoom level you can use the up, down, left or right button. I case you need to find a route you can fill in the From and To fields accordingly to the address specification (see appendix 11.1) and press the Find Route button. You can choose either to search for the fastest or the shortest, with the two checkboxes 'Time' or 'Distance' If you want to clear the route you press the clear button.
 
 		 \mbox{}\\
 		
@@ -445,26 +446,29 @@ The support functions, intersecting and fullyContained are also tested on border
 
 			
 		\subsection{Errors, bugs and list of needs}
-When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
-\\
-We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
-\\
-When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
-\\
-When searching for an address, the city name to postal code translator may make the request fail because one city district (K\o benhavn K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
-\\
-If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
-\\
-The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
-\\
-When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
-\\
-It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
-\\
-The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
-\\
 
-			
+		In the following there will be a list of different errors and bugs and a list with all the things, that could and have been good to have in the program.
+		\paragraph{Errors and bugs}\mbox{}\\
+		
+When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.\\
+
+When searching for an address, the city name to zip code translator may make the request fail because one city district (K\o benhavn K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.\\
+
+When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.\\
+
+The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+
+		\paragraph{List of needs}\mbox{}\\
+		
+When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.\\
+
+The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.\\
+
+It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.\\
+
+We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.\\
+
+If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
 			
 		\subsection{Results}
 		Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\
@@ -492,7 +496,7 @@ A text instruction explaining the route to the user would significantly increase
 		
 		\paragraph{Group dynamics}\mbox{}\
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \\
-		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
+		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program (A list of who have done what, can be found  in the appendix 11.2). The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
 
 In the start of the project, we decided to use an server/client solution, which included the use of both JavaScript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interesting decision, since it has been a lot more difficult to use both XML and JavaScript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
@@ -545,6 +549,8 @@ To conclude we feel that our project have succeeded in living up to both the req
 	\end{thebibliography}
 	*The class has been modified to fit the program.
 
+	\newpage
+
 	\section{Appendix}
 
 	\subsection{Specifications for Address Parsing}
@@ -576,8 +582,10 @@ The method will return an array of Strings, containing:\\
 \\
 The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
 
+	\newpage
+
 	\subsection{List of work}
-	\begin{table}[!htb]
+	\begin{table}[H]
 \caption{Oversigt over arbejde}
 \centering
 \begin{tabular}{c c c}
@@ -589,7 +597,7 @@ Background And Data & A, J & 19 \\
 Problemanalysis & Everyone & 20\\
 Technical description & Everyone & 20 \\
 User Manual & F & 20 \\
-Testing &  & 20 \\
+Testing & A, J, K, M  & 20 \\
 Product conclusion & M & 20\\
 Process description & A & 19\\
 Final thoughts & Everyone & 21\\
@@ -616,7 +624,7 @@ RoadSelector & K, M & 18 \\
 RouteFinder & L & 18 \\
 XML	& L, F & 17 \\
 AddressParser & K & 16 \\
-EdgeParser & M & 18 \\
+EdgeParser & K, M & 18 \\
 EdgesAndRoadConverter & L, M & 18 \\
 JSConnector & F & 18 \\
 Index.html & A, F & 18 \\
@@ -624,10 +632,10 @@ Index.html & A, F & 18 \\
 \end{tabular}
 \end{table}
 
-
+	\newpage
 
 	\subsection{Timemeasurings}
-		\begin{table}[!htb]
+		\begin{table}[H]
 		\caption{table}
 		\centering
 		\begin{tabular}{c c c c c}
@@ -640,6 +648,7 @@ Load factor & Average time to add all roads & Number of tries \\ [1.5ex]
 \end{tabular}
 \end{table}
 
+	\newpage
 
 	\subsection{Journals}		
 		\begin{center}
@@ -1304,71 +1313,5 @@ Vi skal have lavet produktkonklusion, skrevet testresultater, final thoughts og 
 		
 		\paragraph{N\ae ste gang:}
 		Fredag: Fordeling af afsnit til rettelse.\\ 
-
-\begin{table}
-\caption{Oversigt over arbejde}
-\centering
-\begin{tabular}{c c c}
-Arbejdsopgave & Navn & Uge \\ [1.5ex] 
-\hline
-   & Report &  \\
-Preface & A, J & 19 \\
-Background And Data & A, J & 19 \\
-Problemanalysis & Everyone & 20\\
-Technical description & Everyone & 20 \\
-User Manual & F & 20 \\
-Testing &  & 20 \\
-Product conclusion & M & 20\\
-Process description & A & 19\\
-Final thoughts & Everyone & 21\\
-\\
-\\
-  & Program &  \\
-Controller & L & 18 \\
-AddressInputFormatException & J & 18 \\
-ClientInputException & J & 18 \\
-Errorhandler & A, J & 18 \\
-LoaderFileNotFoundException & J & 18 \\
-NoSuchAddressException & J & 18 \\
-NoSuchRoadNameException & J & 18 \\
-ServerRuntimeException & A, J & 18 \\
-ServerStartupException & A, J & 18 \\
-StatusCode & A, J, L & 18 \\
-XMLDocumentException & L & 20 \\
-XMLTransformerException & L & 20 \\
-KDTree & K, M & 18 \\
-Loader & K, M & 18 \\
-NodeComparator & K, M & 17 \\
-PathPreface & L, M & 18 \\
-RoadSelector & K, M & 18 \\
-RouteFinder & L & 18 \\
-XML	& L, F & 17 \\
-AddressParser & K & 16 \\
-EdgeParser & M & 18 \\
-EdgesAndRoadConverter & L, M & 18 \\
-JSConnector & F & 18 \\
-Index.html & A, F & 18 \\
-
-\end{tabular}
-\end{table}
-
-
-
-
-\begin{table}
-\caption{table}
-\centering
-\begin{tabular}{c c c c c}
-Load factor & Average time to add all roads & Number of tries \\ [0.5ex] 
-\hline
-0.3 & 0.79 seconds & 6\\
-0.4 & 0.66 seconds & 10 \\
-0.5 & 0.71 seconds & 10 \\
-0.6 & 0.74 & 6
-
-
-
-\end{tabular}
-\end{table}
 
 \end{document}
