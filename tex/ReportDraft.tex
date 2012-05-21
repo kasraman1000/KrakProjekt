@@ -396,16 +396,17 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 		
 	\newpage
 	\section{Testing}
-	When building our program we have to ensure that the code we have written actually works as intended. When the program compiles without errors, that is unfortunatly not a guarantee of the program working correctly. To ensure that it is functional in the way we have intended, we need to test it in several ways to see our code in action. Ideally we would have to check every component of our program in several ways, but this can be a very time consuming process. We have chosen to focus our testing on the parts that we felt are the most critical to the entire program.
+	When building our program we have to ensure that the code we have written actually works as intended. When the program compiles without errors, that is unfortunatly not a guarantee of the program working correctly. To ensure this, we need to test it in several ways to see our code in action. Ideally we would have to check every component of our program in several ways, but this can be a very time consuming process. We have chosen to focus our testing on the parts that we felt are the most critical to the entire program.
 
-Since our program is split up into different independant modules, getting to test different parts is a stright forward process. Most of these classes are tested after a philosophy much like a "BlackBox"-test. We test what the publicly accesible methods of the class return when given some example input. If the return values are what we expect them to be, we can somewhat assume that it is working as we expect it to. The example input can and should be all kinds of valid (and invalid) input. We do not only test situation in which we expect the class to function properly, but also situations in which we expect it to fail, so we can see how it reacts as well.
+Since our program is split up into different independant modules, getting to test different parts is a straight forward process. Most of these classes are tested after a philosophy much like a "BlackBox"-test. We test what the publicly accessible methods of the class return when given some example input. If the return values are what we expect them to be, we can somewhat assume that it is working as we expect it to. The example input can and should be all kinds of valid (and invalid) input. We do not only test situation in which we expect the class to function properly, but also situations in which we expect it to fail, so we can see how it reacts as well.
 
-Few sections of the program have undergone a more thorough test, in which we comb every corner of the code to see if every line of the code is acting as we want it to, if conditional statements are checking the correct things, and wether branching is done correctly, among other things. We have restricted ourselves to only "WhiteBox"-test a certain few classes that are crucial, because it really takes up a lot of time. At this point in development we would have been better of using on other parts of the project.
+Few sections of the program have undergone a more thorough test, 
+which includes combing every corner of the code, to see if every line of the code is acting as we want it to do, to see if conditional statements are checking the right conditions, and if code flow and branching is as we expect it to be. We have restricted ourselves to only "WhiteBox"-test one class.
 
 If we had continued developing on this program, or if we extended the contents of our program substantially, we would have used more time on testing, and as a result, our testing methodology would be different. We could have made better use of JUnit to write and perform proper unit tests on our classes, and we would be more thorough with getting around and testing everything. It is generally recomended that you "test early, test often", and although we did test early in development, we have not been expanding the functionality of our program enough to justify testing more often. 
 
-We have not choosen to include usability test in our testing, because the client interface is very simple, and we are aware of simple obvious improvements such as dragging, keyboard controls and map information.
-
+We have chosen not to include usability test in our testing, because the client interface is very simple, and we are aware of simple obvious improvements such as dragging, keyboard controls and map information.
+	
 	
 		
 		\subsection{Whitebox}
