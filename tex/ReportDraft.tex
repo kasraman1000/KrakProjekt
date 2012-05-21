@@ -5,8 +5,54 @@
 \usepackage[english]{babel}
 
 \begin{document}
-	\tableofcontents
+	\thispagestyle{empty} %fjerner sidetal 
+\begin{center}
+\textbf{\Huge {First Year Project}\\ \vspace{1cm}
+\huge{Krax}}
+\vspace{1.0cm}
+\end{center}
+	\begin{figure}[H]
+\includegraphics[width=110mm]{screendump.png}
+\centering
+\label{fig:screendump}
+\end{figure}
+\vspace{1.0cm}
+KF04, First Year Projekt\\
+With guidance from Rasmus Pagh\\
+IT-University of Denmark\\
+\today\\
+\vspace{0.4cm}
+\begin{center}
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ \scriptsize Jacob Bang Helvind
+ \vspace{0.3cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ Kasra Tamasebi Shahrebabak
+  \vspace{0.4cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+ Mark Thorhauge
+  \vspace{0.4cm}
+
+ \hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+  Filip Hjermind Jensen
+   \vspace{0.4cm}
+
+\hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+Lars Yndal S\o rensen
+ \vspace{0.4cm}
+
+\hspace{0.5cm} \makebox[3.0in]{\hrulefill}\\
+Anders Brorup J\o rgensen 
+\vspace{0.4cm}
+
+\end{center}
+
+\thispagestyle{empty}
 	
+	\tableofcontents
+
 	\newpage
 	\section{Preface}
 		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal S\o rensen og
@@ -150,7 +196,7 @@ There are two different approaches of showing the route when the user zooms or p
 
 	An idea could be to form a more centralized policy, to make it more transparent what happens with the exceptions. You could propagate all thrown exceptions as far as possible, and handle them in the main classes. But then you might end up with quite a big number of exceptions to handle, even when alot of them needs to be handled in the same way. And what about the places where the program does not use a standard Java-library, that throws any exceptions? We would have to make our own exceptions here and throw and propagate them from here, if we want to centralize matters. We will try to design the middle way.\\
 
-	 When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the level of criticalness, it's clear that they each require different handling. \\
+	 When starting to form such a policy, one very central thing, is the ability to predict which kind of errors and exceptions that can and will occur in the program. We have divided our errors and exceptions into three areas. There is always a potential of startup-files missing, a loss of Internet-connection and many others like these two, that can cause a server to be unable to start. All this is put into the area of 'serverStartup'-errors. The next area are errors that can happen any other time after the point of startup, caused by the server malfunctioning. These are called 'server-runtime' errors. These could be a cases, where the programs ram usage exceeds the allowed maximum. The last is called 'client'-exceptions. These types of exceptions can only be caused by the user of the client. This could for example be bad input or missing input.  Because of the different times that errors and exceptions can occur and the varying impact they can have on the program, it's clear that they each require different handling. \\
 
 	 To overcome this we will make hierarchies of exception-classes, one for each of the three types of errors. The idea with our own exceptions classes is that we will 'wrap' the original exception and pass one of the above mentioned exception to a central error handling class, which will hold the responsibility of dealing which all exceptions. This will remove error handling responsibility from both the actual classes, where the exceptions are thrown and from the controller class, which only passes the exceptions to the error handling class.\\
 
