@@ -413,13 +413,6 @@ When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, 
 			The advantages of doing it this way, is the overview and transparency that it gives, but also how the centralized policy will help with and make it clear how expansion is possible. This is because all exceptions will be related with a StatusCode enum and inside the error handler class it is possible to see how each type of exception is handled. Furthermore since every exception has to be wrapped by our own exception classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will only need to make a new StatusCode for this new error and the controller and error handler class take care of the rest.\\
 			
 			There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
-	\newpage		
-	\section{Technical Description}
-		length : 0.5 - 1 side\\
-		Beskrivelse af nogen af de meget tekniske og 'tunge' metoder\\
-Creation of the data structure is done by calling the expand method on a KDNode object, which will construct the tree recursively. The KDNode is a nested class, which serves as a container for the real node object. Each KDNode has references to its child nodes, the left is smaller than the nodes relevant coordinate and the right one is greater or equal to. The expand method finds the median node from the input collection and returns that node as the child node. It calls the same method twice, each with approximately half of the collection it was given, divided by the median node. By changing the axis, which the median is calculated from, a two dimensional tree is constructed.
-Searching in the tree is done from a region input. When visiting a node, a region is defined from the axis, which the node was chosen as median from. For instance the first node (root node) defines two regions that ranges from the largest to the smallest y-coordinate. The left region for this node ranges from the smallest x-coordinate to the nodes x-coordinate and the right ranges from the biggest x-coordinate to the nodes x-coordinate. For both regions the geometrical functions fullyContained and intersecting investigates how they relate to the input region. If the region is fully contained in the input region it returns all child nodes. If it is intersecting, this function is called recursively.
-			
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
@@ -636,11 +629,32 @@ In a course like this a list of required skills and abilities expected from the 
 	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
 	
 	\end{thebibliography}
-	*The class has been modified to fit the program.	
-		
+	*The class has been modified to fit the program.
 	\section{Appendix}
-		\subsection{Specifications for Address Parsing}
-		TODO - can anyone please copy the text from "Specifikation af AddressParser.docx"
+		\subsection{Specifications for Address Parsing - parseAddress(String)}
+The method will receive a String, which may contain the following:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+Other than road name, none of these are required to be there, but if they are in the String, they must be in that order.\\
+A String must at least contain a road name. A road name is considered to be a collection of letters and spaces. Dots, dashes and apostrophes are all right too. It may only contain a number if it is followed by a dot and the letter ‘s’ (for instance as “Christian den 10.s vej”).\\
+The house number is considered to be a number higher than 1 and consisting of 3 digits at most.\\
+The house letter is to be one single letter, which is placed right after the house number – space between the house letter and house number is free of choice.\\
+The postal code must always be 4 digits long and minimum be 1000.\\
+The city name must be a collection of letters and spaces. The city names cannot start with a single letter.\\
+Any information left between the house letter and postal code will not be considered.\\
+A comma can be placed to separate road name, house number and house letter from postal code and city name – even if some of the fields are not included.\\
+The method will return an array of Strings, containing:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
+
+
 		\subsection{Resume}
 		
 		\begin{center}
@@ -651,8 +665,7 @@ In a course like this a list of required skills and abilities expected from the 
 				\begin{itemize}
 					\item Loesninger
 					\item Versionsstyring
-				\end{itemize}
-				
+				\end{itemize}	
 			\paragraph{Beskrivelse af dagen:}
 			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
 			\paragraph{Faerdige ting:}
