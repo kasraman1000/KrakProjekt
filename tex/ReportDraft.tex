@@ -86,6 +86,13 @@ The last requirement we were given was about making the user interface logical, 
 			In the former section we analyzed the requirements more deeply and we will now try to decide further what problems we need to deal with, and what decisions we need to make for our program to live up to the requirements and choices specified in the analysis.\\
 
 We have already decided that we need more than one data structure for visualization and route-planning. We need to look at how these will work best, in order to optimize towards our own priorities and goals. We have also chosen to work with a browser, javascript and SVG. This needs to be connected to the Java-server, and be able to acquire the map data by XML. We also need to think about the user interface design, and how it should support the features of the program.\\
+
+			\subsubsection{Design Patterns}
+			When we thought about how we should design the internal structure, we first took a look at the Model-View-Controller design, which we had used earlier and were quite familiar with. It seemed reasonable to use this design pattern as inspiration, because the client would use some kind of graphical interface and it would be an advantage if the server would be used by multiple users at different graphical interfaces. We knew we were going to use some heavy data structures for containing all the roads and searching for a route through the roads. This could be used nicely as some of the models while the controller ensures that the correct models is called and manipulated. In this way we could make a loose coupling and therefore have a system that could be easy to maintain.
+To avoid computing the same data twice we wanted to let the viewpart store the information for the route. This would lead to the view, not only being a passive player, but actually having some responsibility, which would be strictly against the MVC structure. Therefor we decided to go as far as possible with the MVC structure and divert a bit if necessary.\
+Another design pattern we thought of using is the decorator design pattern. This pattern is used to expand the functionality of a class. We thought it could be useful to add in front of a class with a data structure. In that way a kind of filter would be placed between the controller (which most likely was the one to receive the map data) and the class of the data structure.
+
+
 			\subsubsection{Datastructure and algorithms}
 				length : 1 - 2 side\\
 				Hvilke generelle overvejelser er skal der tager i forbindelse med valg af datastruktur? \\
@@ -410,13 +417,6 @@ When the graph’s edges are to by weighted by Dijkstra’s algorithm later on, 
 			The advantages of doing it this way, is the overview and transparency that it gives, but also how the centralized policy will help with and make it clear how expansion is possible. This is because all exceptions will be related with a StatusCode enum and inside the error handler class it is possible to see how each type of exception is handled. Furthermore since every exception has to be wrapped by our own exception classes, a programmer i forced to decide how a possible error or exception should be handled and then use either 'server-runtime'-, 'serverstartup'- or 'client'-exceptions. Then he will only need to make a new StatusCode for this new error and the controller and error handler class take care of the rest.\\
 			
 			There are though some disadvantages. This system will only scale so far. At some point, even with the gathering of exceptions in a hierarchy, the system will clutter with to many new exceptions. But for a system such as ours, it is quite fitting, and a solution to the problem could be, to make additional error handling classes for each part of the system, to split some of the work out.\\
-	\newpage		
-	\section{Technical Description}
-		length : 0.5 - 1 side\\
-		Beskrivelse af nogen af de meget tekniske og 'tunge' metoder\\
-Creation of the data structure is done by calling the expand method on a KDNode object, which will construct the tree recursively. The KDNode is a nested class, which serves as a container for the real node object. Each KDNode has references to its child nodes, the left is smaller than the nodes relevant coordinate and the right one is greater or equal to. The expand method finds the median node from the input collection and returns that node as the child node. It calls the same method twice, each with approximately half of the collection it was given, divided by the median node. By changing the axis, which the median is calculated from, a two dimensional tree is constructed.
-Searching in the tree is done from a region input. When visiting a node, a region is defined from the axis, which the node was chosen as median from. For instance the first node (root node) defines two regions that ranges from the largest to the smallest y-coordinate. The left region for this node ranges from the smallest x-coordinate to the nodes x-coordinate and the right ranges from the biggest x-coordinate to the nodes x-coordinate. For both regions the geometrical functions fullyContained and intersecting investigates how they relate to the input region. If the region is fully contained in the input region it returns all child nodes. If it is intersecting, this function is called recursively.
-			
 	\newpage
 	\section{User Manual}
 		\paragraph{Starting the Program}\mbox{}\
@@ -554,7 +554,8 @@ The server is not able to handle rapid zoom requests in a satisfying manner. Thi
 		Har vi indfriet de krav til programmet, som vi omtalte i tidligere afsnit?\\
 		Hvad ville vi goere anderleds, hvis vi havde muligheden?\\
 		Mangler der noget, for at vi kan sende det her program paa gaden?\\
-		To review how the product meets both the project and specific requirements, it is assessed and compared from different perspectives. The product is able to navigate around the map and draw the roads in the viewport and filter them depended on cluttering and priority. It can find the shortest path from one address to another, but it does not guarantee that the path reflects a legally drivable route. The user interface is fairly simple, intuitive and easy to use. Whether the user interface is responsive, is very depended on witch part of the map the user is looking at. As the client is another thread than the server, the user interface itself is responsive. The program is not responsive when exploring regions that are greater than half of the map, but when zoomed in it runs with sufficient speed. It can take a second for the server to complete a request for the entire map. Requests for small parts of the map are completed in less than ten milliseconds. There are many factors which contribute to this variation in performance, the primary being the data structure solution that involves a HashSet. Drawing roads with SVG has also shown to be much slower that other solutions such as Java Swing.
+		To review how the product meets both the project and specific requirements, it is assessed and compared from different perspectives. /
+		The product is able to navigate around the map and draw the roads in the viewport and filter them depended on cluttering and priority. It can find the shortest path from one address to another, but it does not guarantee that the path reflects a legally drivable route. The user interface is fairly simple, intuitive and easy to use. Whether the user interface is responsive, is very depended on witch part of the map the user is looking at. As the client is another thread than the server, the user interface itself is responsive. The program is not responsive when exploring regions that are greater than half of the map, but when zoomed in it runs with sufficient speed. It can take a second for the server to complete a request for the entire map. Requests for small parts of the map are completed in less than ten milliseconds. There are many factors which contribute to this variation in performance, the primary being the data structure solution that involves a HashSet. Drawing roads with SVG has also shown to be much slower that other solutions such as Java Swing.
 The specific requirements for the project, discussed in the problem analysis, have partially been reached. One of the requirements was making the basic functions work well and fast, which has been done, apart from navigating big parts of the map. The shortest path algorithm runs with sufficient speed, and by making the client save the route, subsequent navigation is done without any need for recalculating the route. To make the routing function work better, it would be obvious to implement turn restrictions and routing guides shown as text. This would make the route understandable for the user and legally drivable, presuming the dataset is up to date.
 Another requirement was to make the program expandable. To ensure this, the program parts have been divided into components roughly as the MVC design pattern, but also more carefully in the model as the routing component and visualization component. For instance if another data structure for visualization was to replace the current, the only class that should be changed is RoadSelector. The principle of loose coupling that we have tried to design for, have resulted in some classes being reusable, such as the KDTree.
 The choice of using Java, SVG, XML and JavaScript in contrast to Java and Swing is the choice that has had the greatest impact on the program. It allows the program to prioritize space and startup time down, because it would run on a server. However visualizing with the browser has its own performance issues, because drawing speed is depended on the client, SVG performance and the specific browser. 
@@ -635,11 +636,32 @@ In a course like this a list of required skills and abilities expected from the 
 	\bibitem{sedgewickAndWayneStack} 												http://algs4.cs.princeton.edu/13stacks/Stack.java.html
 	
 	\end{thebibliography}
-	*The class has been modified to fit the program.	
-		
+	*The class has been modified to fit the program.
 	\section{Appendix}
-		\subsection{Specifications for Address Parsing}
-		TODO - can anyone please copy the text from "Specifikation af AddressParser.docx"
+		\subsection{Specifications for Address Parsing - parseAddress(String)}
+The method will receive a String, which may contain the following:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+Other than road name, none of these are required to be there, but if they are in the String, they must be in that order.\\
+A String must at least contain a road name. A road name is considered to be a collection of letters and spaces. Dots, dashes and apostrophes are all right too. It may only contain a number if it is followed by a dot and the letter ‘s’ (for instance as “Christian den 10.s vej”).\\
+The house number is considered to be a number higher than 1 and consisting of 3 digits at most.\\
+The house letter is to be one single letter, which is placed right after the house number – space between the house letter and house number is free of choice.\\
+The postal code must always be 4 digits long and minimum be 1000.\\
+The city name must be a collection of letters and spaces. The city names cannot start with a single letter.\\
+Any information left between the house letter and postal code will not be considered.\\
+A comma can be placed to separate road name, house number and house letter from postal code and city name – even if some of the fields are not included.\\
+The method will return an array of Strings, containing:\\
+-	Road name\\
+-	House number\\
+-	House letter\\
+-	Postal code\\
+-	City name\\
+The structural patterns of addresses from Greenland or The Faroe Islands have not been considered.\\
+
+
 		\subsection{Resume}
 		
 		\begin{center}
@@ -650,8 +672,7 @@ In a course like this a list of required skills and abilities expected from the 
 				\begin{itemize}
 					\item Loesninger
 					\item Versionsstyring
-				\end{itemize}
-				
+				\end{itemize}	
 			\paragraph{Beskrivelse af dagen:}
 			Diskussion af begraesninger og loesningsforslag. Anders og Filip har skrevet TextIO.java. Jacob og Lars har skrevet Client.java. Kasra og Mark er begyndt på AddressParser.java.
 			\paragraph{Faerdige ting:}
