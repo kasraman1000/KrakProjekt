@@ -1,6 +1,7 @@
 \documentclass[a4paper,10pt,titlepage]{article}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{pdflscape}
 \usepackage[english]{babel}
 
 \begin{document}
@@ -8,7 +9,7 @@
 	
 	\newpage
 	\section{Preface}
-		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Soerensen og
+		This project and report is made by Jakob Bang Helvind, Kasra Tahmasebi Shahrebabak, Mark Thorhauge, Filip Hjermind Jensen, Lars Yndal Sørensen og
 		Anders Brorup Joergensen. It was written for the course ’First-Year Project’ on the bachelor ”Software Development” in the Spring of 2012 at the
 		IT-University of Denmark. The report is written in terms, that we believe fellow students possesses and will understand. We hope that this 
 		report will give insight in the workprocess as well as the product and that all readers will enjoy reading it.
@@ -23,21 +24,21 @@
 		and a file with all connections between those points.  
 		\\The application should meet the following requirements:
 		\begin{itemize}
-		\item Draw all roads in the dataset
-		\item The map-visualization should adjust acordingly to changes of the windows size
-		\item The user should be able to navigate in the visualization
-		\item The application should have a minimum of clutter and therefore be able to set a priority of the roads
-		\item Be able to compute and show the shortest path between two points given by the user
-		\item The application should have a logical, consistent and reasonable fast and responsive user interface\\
+		\item draw all roads from a given rectangular segment of the map, using different colors to indicate types of road;
+\item the drawing should be adjusted when the size of the window changes;
+\item it should be possible to “explore” the map by changing the portion of the map viewed;
+\item to get a responsive application that shows maps with a minimum of clutter, your application should show only the “highest priority” road segments.
+\item be able to compute a shortest path on the map between two points specified by the user (e.g. by typing addresses or clicking on the map); we suggest that you (initially) implement Dijkstra’s algorithm as taught in BADS;
+\item design a coherent user interface, which includes the map, but probably also other components;
+\item decide how the mouse and keyboard is used to interact in a user-friendly and consistent
+manner with the user interface;
+\item decide which additional functionality your product should have and implement that — see the list below for some ideas;
+\item make the user interface fast enough that it is convenient to use, also when working with the whole data set for all of Denmark. The start-up time can be hard to improve as long as the data is stored in text files, but after the start-up the user interface should react reasonably quickly.
 		\end{itemize}
 		
 		In other words, a user should be able to see a map of Denmark with a selective amount of major roads, then explore this map by zooming in and out and navigating around. A user should also be able to select two adresses, and get the shortest route between these two points calculated and shown on the map, with the map cut out to a fitting view of the route.
 		 
 	\newpage
-	\section{Limitations}
-		
-		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
-
 
 	\section{Problemanalysis}
 		\subsection{Requirements}
@@ -84,11 +85,11 @@ The illustration below shows roads, which are stored as points (the circles at t
 \label{fig:roads}
 \end{figure}
 
- When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads' length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for that particular solution.\\
+ When searching in this range, all the roads should be returned. With roads referenced as a single point, R2 would not be returned, but R1 would. R3 would never be returned, even when referenced by two points. To solve this, an extra part of the map could be loaded, increasing the width and height of the rectangle by x, where x is the longest road in the map. Of course this would be inefficient if the roads' length is not systematically broken down, and this would require the data to be restructured. To be able to guarantee that all roads within an area are shown, we will need to take this approach for the solution using roads referenced by one point.\\
 The node has references to the roads that it is a part of. Storing nodes in the data structure has the same problem as storing roads referenced by two points. The difference is that nodes require more memory because an object is created for each one, but it makes the data structure contain less elements. As there are fewer nodes than road endpoints, it makes the kd-tree (discussed later in this chapter) more shallow, and therefore faster.\\
-The most important requirement for our data structure is that it should be fast, while memory usage and start up time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Empirical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 52 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.\\
+The most important requirement for our data structure is that it should be fast, while memory usage and start up time is less important. When looking at smaller parts of the map the improvement should be most significant. We chose the kd-tree because its binary structure and adaptive construction makes it efficient to access data, no matter how much it clumps(how numerically close the keys are to each other). While grid-file is potentially faster, the kd-tree is stable and does not depend on bucket size or other factors such as cluttering.  The Quad-tree data structure is also a viable choice to consider. The Quad-tree is potentially shallower, but it does get deeper when the data clutters. Empirical testing with both solutions reveals that a perfectly balanced kd-tree have a depth of 20, while the Quad-tree have a maximum depth of 52 on this data set. One of the kd-tree’s weaknesses is to return data from a rectangular query, which our aspect ratio does not allow, making it very suitable for our problem. We chose the solution including nodes as data objects because it is easier to implement, but to our best knowledge, roads referenced by one point should be the fastest and best solution.\\
 \\
-The algorithm used to search in the kd-tree should be as fast as the kd-tree allows it to. The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.\\
+The data structure has an associated algorithm, which runs in logarithmic time making it very suitable for large data sets.\\
 Construction of the kd-tree requires a median finding function, which is used for balancing the tree. The algorithm is not required to find the median, but it makes the tree shallower the closer it comes to the true median. The choice is either a median finding algorithm that runs in amortized linear time or an algorithm based on random picking elements to sort and find the median from. The first is much slower when constructing the tree, but makes the search faster. Empirical testing reveals that the difference in search time is very small when switching between the two ways of constructing the tree. Because the difference is small when searching and big when constructing the tree, we chose the random algorithm.\\
 
 \paragraph{Searching for a route}
@@ -127,9 +128,9 @@ We will mention two advantages of using the Swing API. First advantage is that w
 
 \paragraph{Browser solution}\mbox{}\
 
-For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experiece this startuptime. That gives us the possibility to favor performance over memory usage. The second advantage is that we will acquire knowledge about javascript, xml and svg, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited access to the implementation. We don't know how the different browsers implements the different svg commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
+For the browser solution we will also mention two advantages. The first one is that long startup time and memory usage is acceptable for the server part because this part is running on a powerful computer and the user will not experience this startuptime. That gives us the possibility to favor performance over memory usage. The second advantage is that we will acquire knowledge about Javascript, XML and SVG, which are widespread technologies. We will also mention two disadvantages. The first one is that we have limited access to the implementation. We don't know how the different browsers implements the different SVG commands and therefore we have no possibility of improving performance in that part of the program. The other disadvantage is time consumption. Chosing a browser solution involves knowledge about a wide range of technologies such as HTMLl, CSS, Javascript, XPath, XML, SVG and HTTP. None of the group members had in depth knowledge about these technolgies beforehand.    
 
-Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memoryusage, that the browser solution is more userfriendly and that we get the chance to learn new technologies leads us to that descision.
+Based on the different advantages and disadvantages we have chosen the browser solution. The fact that we can focus on performance rather than memory usage, that the browser solution is more user friendly and that we get the chance to learn new technologies leads us to that decision.
 
 \paragraph{Features}\mbox{}\
 
@@ -137,7 +138,7 @@ The second step in fulfilling the above mentioned requirement is to analyze how 
 
 \paragraph{Road displaying}\mbox{}\
 
-To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and svg. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
+To show the roads we have the option of using plain Java Sript or to use a combination of Java Script and SVG. The advantage of using plain Java Script is that we would have the abillity to completely control the drawing of the roads and maybe optimize performance. The advantage of using SVG is that SVG supports a wide range of functionality and therefore we could save some time. Futhermore SVG seams to become a widely recognised technology, which means that more people might be able to understand and use our program in other contexts. Our choice fell on the combined solution with both Java Script and SVG. 
  
 \paragraph{Scalable Map}\mbox{}\
 
@@ -158,7 +159,9 @@ The other aspect is to decide in what way the user should be able to zoom and pa
 
 There are to different approaches of showing the route when the user zooms or pans after a routesearch. The first approach is to request the server for more map data and the same route. This approach is good because it keeps functionality at the server but it can be slow if for instance the user asks for a route from Copenhagen to Skagen, because the Dijkstra algorithm would run every time. The other approach is to save the route in the browser, which is relatively uncomplicated when using SVG. The last approach is the one we chose.	
 
-				
+		\subsection{Limitation}	
+		There are certain limitations that we have taken to simplify the development process and make the goal more reachable. When judging performance, memory usage, usability or other factors, we do not consider other map data than the dataset given (or a modified version), but we do develop the program in a way, so other map data can be used. We do not optimize the program for a certain browser, nor do we secure that the client can be run on all leading browsers. We develop the client user interface, but we do not develop the server user interface because it does not involve any design choices that are interesting from a learning perspective.
+					
 				
 		\subsection{Summary}
 Through this analysis and these design choices, we have chosen a way to develop a program that meets the given requirements, and follow our own guidelines for what we want to focus on.\\
@@ -169,12 +172,11 @@ With these design choices we have made a solution, that consistently focus to ov
 			
 	\newpage		
 	\section{Technical description}
-		length : 0.5 - 1 side\\
-		Her beskrives kort hvad der kommer til at være i det kommende afsnit..
+		In the following section a technical presentation of the program is. This will be compliment our analasys and descriptions in the former sections.  
 		
 		\subsection{Flow description}
 		When the java-program is started, the Loader class begins loading the text files, which contains the necessary information about Denmark’s infrastructure. The Loader holds the information in suitable collections until other parts of the program is called from the controller. The kd-tree builds the tree structure from nodes and the graph is built from the directed roads. From there on, the program listens for browser requests, returning xml files containing roads from a region of the map and possibly a route.\\
-When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from different components of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
+When a user of the application wants to see a part of the map, a request is send to the java server, which is first caught by the JSConnector class.  The connector component gets the information for the client from the Controller, which gets information to complete the request from the model part of the program. The KDTree and RoadSelector classes retrieves the relevant road objects, while the Routing component finds the route if it is requested. When the region and route information has been generated it is send as an xml in String form to the client. 
 
 		\subsection{UML Diagram}
 		The following UML diagram is a selection of the most important classes. We have left out three groups of classes for better readability. It concerns the exception classes, the data classes and the classes which we have borrowed from Sedgewick and Wayne (see bibliography). Also, for clarity, not all of the relationships (symbolized by arrows) between classes have been drawn.
@@ -187,8 +189,7 @@ When a user of the application wants to see a part of the map, a request is send
 		
 		\newpage
 		\subsection{Classes and responsibility}
-			length : 0.5 - 1 side\\
-			Kort beskrivelse af hver klasse plus deres ansvar\\
+		In this section every class will be presented and described. We will explain what the class has responsibility  for and how it fulfils this. 
 			
 			\subsubsection{Controllers}
 			
@@ -230,7 +231,7 @@ A class extending ServerStartupException responsible for wrapping Java's FileNot
 
 				\paragraph{XMLTransformertException}\mbox{}\
 
-A class extending ServerRuntimeException responsible for wrapping Java's TransformerException in the XML class. Thrown when the Document could not be properbly transformed to either an XML-string or to a file.
+A class extending ServerRuntimeException responsible for wrapping Java's TransformerException in the XML class. Thrown when the Document could not be properbly transformed to either an XML-String or to a file.
 
 				\paragraph{XMLDocumentException}\mbox{}\
 
@@ -288,7 +289,9 @@ A final thing to notice about the Road class is that it stores only some of the 
 				\paragraph{RoadSelector}\mbox{}\
 				
 This class is a result of keeping the KD-Tree as a purely data structure class. It adds additional functionality when it comes to determining what Road objects to show to the user, based on a given Region. It offers additional filtering based on prioritising different Road types.\\
-The RoadSelector class gets a collection of nodes as output from the KDTree. To get a collection of roads, it iterates trough every node object and collects the roads, which the node has references to. With this technique, a lot of duplicate road objects exist. To solve this, we collect the roads in a HashSet, which only allows one instance of every object. As the HashSet handles up to a half million roads, it has been subject to optimization. Different load factors (The percentage amount of the collect that is filled, before it is resized and rehashed) and initial capacities have been empirically tested.\\
+
+The RoadSelector class gets a collection of nodes as output from the KDTree. To get a collection of roads, it iterates trough every node object and collects the roads, which the node has references to. With this technique, a lot of duplicate road objects exist. To solve this, we collect the roads in a HashSet, which only allows one instance of every object. As the HashSet handles up to a half million roads, it has been subject to optimization. Different load factors (The percentage amount of the collect that is filled, before it is resized and rehashed) and initial capacities have been empirically tested (included in appendix 1).\\
+
 The hashCode function of the Road class has been automatically generated by eclipse, and are calculated when the road is made. This is to save operations when the road is filtered by a HashSet and it is correct because the Road objects never are changed after they are made.
 				
 				\paragraph{RouteFinder}\mbox{}\
@@ -354,7 +357,9 @@ This class has been copied from Sedgewick and Wayne and modified to fit our prog
 			
 				\paragraph{JSConnector}\mbox{}\
 				
-				This class is responsible of listening for requests from the browser. When the class receives a request it parses the url string. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both map data and route. The class then returns the resulting xml string to the browser. 
+				This class is responsible of listening for requests from the browser. When the class receives a request it parses the url String. Based on the parameters it either calls a method for receiving map data only or it calls a method for receiving both map data and route. The class then returns the resulting XML String to the browser. 
+
+
 						
 				\paragraph{index.html}\mbox{}\
 				
@@ -415,6 +420,7 @@ When doing a whitebox test there a several different levels and thouroughness of
 
 We started out by looking at all the methods and if-statements in the AddressParser and on the basis of that, we created some scenarios. These would make sure that we at all if-statements both had a scenario that would that turn the statement true and one turning it false. We chose input, and for these scenarios, and set them up in this expectancy table, categorized according to which private sub-method they belong to:
 
+
 \begin{table}
 \caption{table}
 \centering
@@ -440,6 +446,7 @@ findHouseLetter & Valid houseletter, different from city name letter & "Langvej 
 findHouseLetter & Houseletter found, matching city name letter & "Langvej 5, 5. sal, 2300 Kbh S" & "" & Success
 
 
+
 \end{tabular}
 \end{table}
 
@@ -454,26 +461,29 @@ The support functions, intersecting and fullyContained are also tested on border
 
 			
 		\subsection{Errors, bugs and list of needs}
-When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
-\\
-We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
-\\
-When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
-\\
-When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
-\\
-If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
-\\
-The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
-\\
-When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
-\\
-It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
-\\
-The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
-\\
+		This is a compilation of known errors and obvious needs.
+\paragraph{Errors}
+		\begin{itemize}
+\item When requesting a large area of the map, the HashSet function sometimes uses approximately 8 times the normal time to filter the roads. As the error occurs differently on different computers, include classes implemented by java and is very hard to recreate, we have not been able to find the root of it.
 
-			
+\item When searching for an address, the city name to zip code translator may make the request fail because one city district (København K for instance) can contain roads registered under different postal codes. The translator (EdgeParser) will translate the district to only one postal code.
+
+\item When panning the map 8 times in one direction, a white border may appear. This disappears when navigating the 9th time. We suspect that the root of the problem is a difference in the way the server and the client calculates the buffer.
+
+\item If a road is included in a region, but both of its reference points are outside the region, it is not shown. This is a result of choosing the data structure which is easier to implement.
+		\end{itemize}
+\paragraph{Needs}
+\begin{itemize}
+\item We do not take turn restrictions into consideration when finding the shortest path. This is a result of prioritizing other parts of the program.
+
+\item When finding the shortest path with a house number, the path-finding algorithm splits the edge which contains the house numbers to make it possible to navigate from the middle of an edge. However there is no guarantee for the correctness of this split, as the data set does not contain the necessary data for this operation.
+
+\item The region shown when showing shortest path does not include the entire route. This is a result of the way that the client adjust the viewport to match the aspect ratio, which the server does not know about.
+
+\item It is not possible for the user to navigate with the keyboard. This is a result of prioritizing other program functions, but if we had more time, we would make that work.
+
+\item The server is not able to handle rapid zoom requests in a satisfying manner. This could be handled by making a time delay after the user requests the zoom, where the client waits for another request to overwrite the first with. This would result in the server only answering once, and the user waiting less. If we had more time we would implement this feature.
+		\end{itemize}
 			
 		\subsection{Results}
 		Initially testing did not play a critical role in this project, because we did only find few errors in the classes we systematically tested. However testing made sure that these classes worked early in the development, which saved us a lot of time. When encountering a program error, finding the root of it is easier when certain parts of the program can be excluded from the error search. We had a lot of errors with the visualization of the roads, with could root in a lot of different classes. Having JUnit tests for the KDTree insured that it worked, which helped trace the bug.\\
@@ -503,7 +513,9 @@ A text instruction explaining the route to the user would significantly increase
 		Throughout this process we have all been interested in meeting as much as possible, because we believe that this will contribute to staying focused doing the relative long project period and at the same time being able to help each other with the work. Because this was decided on an early state, if was put into the collaboration agreement. From the start of the project, this arrangement worked very well, but after a while some group members began to ignore this meeting culture. Most of the times that didn't influence the work process, but we have experienced a few times where it has literally stopped other group members from finishing a part of either the program or report. Even though this have been going on for some time, we haven't discussed the problem as a group nor talked about it with the responsible persons. When looking back, this problem should have been taken care of. Even though it haven't influence the process a great bit, it has had some negative effect on the group dynamics. \\
 		Beside this little issue the group as a unit has worked well. All members have contributed to the final product and process, and even though some have written a lot more code than others, we all feel that we have a part in the program. The best part of the project have without a doubt been the 'lack of stress'. Even though we have worked a lot and have made a lot of things, it haven't felt like we weren't able to finish before the deadline. We believe that this is due to experience that we all gained last semester and due to a well predisposed project plan and schedule. \\
 
-In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both xml and javascript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
+
+In the start of the project, we decided to use an server/klient solution, which included the use of both Javascript and XML. All group members were aware of the extra work this could required to use this instead of Java Swing, but we decided to use it anyway. This have proved to be an interessting decision, since it has been a lot more difficult to use both XML and javascript. We have spend a lot time of both reading and performing experimental code and at the same time finding solutions, which we believe is both simple to have and works well.\\
+
 Even though we used a lot of time, we still feel that the time has been well spent and rewarding. We have gained knowledge about javascript and XML, that we hope will come in hand at some point later on.\\
 
 In a course like this a list of required skills and abilities expected from the student is always given. The list for this course contains following skillset:
@@ -796,7 +808,7 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		\end{itemize}
 		
 		\paragraph{Beskrivelse af dagen:}
-		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar string, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
+		Da vi kun var tre til dette møde, blev der ikke lavet en decideret dagsorden, men planen var at vi skulle samle op på det vi kunne og så ellers bare finpudse det vi gad. En af dagens helt store udfordringer var stadig kommunikationen mellem server og klient. Vi havde tidligere fået klienten til at sende en parametre til serveren, men svaret fra serveren havde vi problemer med at få igennem. I løbet af dagen fik vi dog løst dette ved at tilføje noget ekstra information i den XML-svar String, som serveren sender. Det var primært det, som Anders og Filip fik dagen til at gå med, hvor Lars han fik tilføjet nogle småting i selve serveren og ellers hjalp til med kommunikationen, som var dagens store tema. Det blev aftalt at vi frem til næste møde alle skulle have skrevet om hver vores komponent, som skal indgå i rapporten. 
 		\paragraph{Faerdige ting:}
 		
 		\paragraph{Aftaler/Beslutninger:}
@@ -840,7 +852,7 @@ Anders har kigget på overføringsmuligheder fra java til javascript, eventuelt 
 		
 		\paragraph{Beskrivelse af dagen:}
 		I dag var sidste dag inden afleveringen af første del af det samlede projekt. Vi skulle få vores zoom funktioner til at fungere 100%, få samlet op på en masse småting og så selvfølgelig få skrevet det sidste på vores rapport.
-Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny svg fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
+Da vi var lidt mindre tilstede, end forventet, havde vi en lidt mere travl dag, men heldigvis nåede vi det vi skulle. Vi fik zoom til at virke korrekt og sørgede for at der kun kunne zoomes ind og ud til et vist niveau. Samtidig skulle vi også få fjernet alt gammelt SVG, når der blev requested ny SVG fra serveren. Dette fik Filip styr på og det spiller nu. Sidst på dagen gjorde vi klart, hvilket ting der manglede i rapporten og fik skrevet dem færdige og gjort alt klar til aflevering. Filip står for at det bliver afleveret og de ikke-tilstedeværende personer skal så kigge deres kode igennem og skrive kommentarer og rette deres ting i rapporten inden afleveringsfristen.
 
 		\paragraph{Faerdige ting:}
 		
@@ -1291,6 +1303,22 @@ EdgesAndRoadConverter & L, M & 18 \\
 JSConnector & F & 18 \\
 Index.html & A, F & 18 \\
 
+\end{tabular}
+\end{table}
+
+
+
+
+\begin{table}
+\caption{table}
+\centering
+\begin{tabular}{c c c c c}
+Load factor & Average time to add all roads & Number of tries \\ [0.5ex] 
+\hline
+0.3 & 0.79 seconds & 6\\
+0.4 & 0.66 seconds & 10 \\
+0.5 & 0.71 seconds & 10 \\
+0.6 & 0.74 & 6
 
 
 
